@@ -24,6 +24,7 @@
 * [Messaging System](crew-management/messaging-system.md)
 * [Base management](crew-management/base-management.md)
 * [Pilot currency checks](crew-management/pilot-currency-checks.md)
+* [Duty and Flight time storage](crew-management/duty-and-flight-time-storage.md)
 
 ## Aircraft
 
