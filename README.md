@@ -15,3 +15,6 @@ This documentation will be updated continuously to integrate new changes as they
 
 {% embed url="https://www.youtube.com/watch?v=wSXQfCJkn6Q" %}
 
+Flylogs is built by pilots world wide and designed to save time to other pilots and company operators.
+
+If you are a pilot and frontend or backend developer, and you find our project interesting, contact us!
