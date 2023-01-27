@@ -1,24 +1,30 @@
-# First steps for pilots and students
+# First steps for pilots
 
-### Navigation
+### What to expect
 
-Once you log in, you will see your Student Dashboard. Flylogs stores your academic information, trainings, flight history and flight availability.
+Once you log in as a pilot or student, you will see your Student Dashboard. \
+Flylogs stores your academic information, trainings, flight history and flight availability in a single place, so you can easily crosscheck all this data from your home computer or your smartphone.
+
+To access your information, the company you belong to should have invited. You should have receive an email to access the system and create your password.
+
+If you have done this already, you can login at your company login URL or in the general login page: [https://www.flylogs.com/login](https://www.flylogs.com/login)
+
+
+
+### The Interface
+
+Once you login, the interface is really easy to use and adapts to the size of your screen.
 
 On the left side, you will see your MAIN MENU with these 6 elements:
 
-
-
-• Cockpit,
-
-• My Profile,
-
-• Schedule,
-
-• Trainings,
-
-• Flights
-
+• Cockpit,\
+• My Profile,\
+• Schedule,\
+• Trainings,\
+• Flights\
 • And Documents.
+
+If you do not see some of these options do not worry, they depend on your company settings.
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/mtLg\_7E61C.png)
 
@@ -30,7 +36,7 @@ On the bottom part, you will find the published company news. Make sure to read 
 
 ### My Profile
 
-Just your personal information, flight history and trainings.
+Here you will find all your personal information, flight history and trainings.
 
 Please, make sure your personal information is accurate at all times. You will also be required to publish your Medical Certificate and other licenses you may have that are required for the training you are taking.
 

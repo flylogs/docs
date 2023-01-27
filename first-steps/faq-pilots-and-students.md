@@ -2,7 +2,7 @@
 
 #### I did not receive the welcome email to access Flylogs.
 
-Contact your company training manager in order to create your account. Make sure they have your email address properly spelled so you can receive the welcome email.
+Contact your company training manager  in order to create your account. - Do not try to sign up your self - Make sure they have your email address properly spelled so you can receive the welcome email.&#x20;
 
 \
 
