@@ -1,5 +1,8 @@
 ---
 description: Create your account easily and start your Flylogs premium trial
+cover: >-
+  https://images.unsplash.com/photo-1583373771610-8cd1d074b6b2?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw1fHxwaXBlcnxlbnwwfHx8fDE2NzQ3NzQ5NjQ&ixlib=rb-4.0.3&q=80
+coverY: 41
 ---
 
 # Flylogs account sign up
