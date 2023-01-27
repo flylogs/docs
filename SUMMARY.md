@@ -49,6 +49,7 @@
 
 ## Training courses
 
+* [Training basics](training-courses/training-basics.md)
 * [Create a training](training-courses/create-a-training.md)
 * [Edit a training](training-courses/edit-a-training.md)
 * [Schedule a class or an exam](training-courses/schedule-a-class-or-an-exam.md)

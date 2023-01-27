@@ -59,4 +59,4 @@ This function is an optimized form, in which you can create same profile pilots 
 
 The system will apply all the other common options you select to all profiles and send the invites instantly to all the new pilot accounts.
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>

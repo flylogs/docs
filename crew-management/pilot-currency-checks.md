@@ -22,4 +22,4 @@ By default the system will be set for 30 and 90 days as it is the most common re
 
 Change the number of days and it will automatically be applied. Now if you navigate to any pilot, the new currency check days will be displayed.
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
