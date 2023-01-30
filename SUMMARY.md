@@ -5,7 +5,7 @@
 ## First Steps
 
 * [Flylogs Account Sign Up](first-steps/flylogs-account-sign-up.md)
-* [How to login](first-steps/how-to-login.md)
+* [User Login](first-steps/user-login.md)
 * [First steps for pilots](first-steps/first-steps-for-pilots.md)
 * [FAQ pilots and students](first-steps/faq-pilots-and-students.md)
 
