@@ -1,8 +1,8 @@
 ---
 description: Learn how to start using your Flylogs account
 cover: >-
-  https://images.unsplash.com/photo-1530469353049-18df0403f42b?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw4fHxwaWxvdHxlbnwwfHx8fDE2NzQ3MTg1Nzg&ixlib=rb-4.0.3&q=80
-coverY: 81
+  https://images.unsplash.com/photo-1571406172996-99dcf29b2f7a?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw1fHxoYW5nYXJ8ZW58MHx8fHwxNjc1MTA1NDEz&ixlib=rb-4.0.3&q=80
+coverY: 0
 ---
 
 # User Login

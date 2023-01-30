@@ -1,8 +1,8 @@
 ---
 description: Welcome to the main help and information resource for Flylogs.
 cover: >-
-  https://images.unsplash.com/photo-1511140276483-30c1217ca449?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw5fHxjb2NrcGl0fGVufDB8fHx8MTY3NDcyMTAwNw&ixlib=rb-4.0.3&q=80
-coverY: 156
+  https://images.unsplash.com/photo-1638555063519-d009e6f3b28b?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw0fHxydW53YXl8ZW58MHx8fHwxNjc1MTA1NTUx&ixlib=rb-4.0.3&q=80
+coverY: 57
 ---
 
 # Flylogs FCOM
