@@ -5,7 +5,7 @@ cover: >-
 coverY: 41
 ---
 
-# Flylogs account sign up
+# Flylogs Account Sign Up
 
 If you have decided that it is time to try Flylogs, you are in the right place.
 
@@ -19,20 +19,20 @@ Navigate to the sign up page: [https://www.flylogs.com/users/signup](https://www
 
 
 
-**This form is divided in 2 sections.**&#x20;
+**This form is divided into 2 sections**
 
 On the left, information about your company. On the right, information about you and your personal account.\
 
 
-Fill in the left side with company information such as your company's name, company operations airport in ICAO 4 letter format, phone number and type of operation.
+Fill in the left-hand side of the form with company information, such as your company's name, company operations airport in ICAO 4 letter format, phone number and type of operation.
 
-On the right side, make sure to enter your email address correctly, since email validation is a required step to log into your account.
+On the right-hand side, make sure to enter your email address correctly, since email validation is a required step to log into your account.
 
 \
 
 
-**Once everything is filled up, check the legal terms acceptance box after reading them and you are set.**
+**Once everything is filled in, check the legal terms acceptance box after reading them and you are all set.**
 
-You will receive an email in the provided email address. Click on the received URL and your account will be activated inmidiately.
+You will receive an email at the email address you provided. Click on the URL in the email and your account will be activated inmediately.
 
-At this point, your account has no restrictions and you can enjoy the Flylogs Premium features without any payment for 90 days.
+At this point, your account has no restrictions and you can enjoy the Flylogs Premium features free of charge for 90 days!
