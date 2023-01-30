@@ -5,8 +5,8 @@
 ## First Steps
 
 * [Flylogs Account Sign Up](first-steps/flylogs-account-sign-up.md)
-* [User Login](first-steps/user-login.md)
-* [First steps for pilots](first-steps/first-steps-for-pilots.md)
+* [User Login](first-steps/how-to-login.md)
+* [Getting Started - Pilots](first-steps/getting-started-pilots.md)
 * [FAQ pilots and students](first-steps/faq-pilots-and-students.md)
 
 ## Company Management
