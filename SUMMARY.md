@@ -37,8 +37,13 @@
 
 * [Flight records](flights/flight-records.md)
 * [Create a flight](flights/create-a-flight.md)
-* [Flight Billing](flights/flight-billing/README.md)
-  * [Automatic flight billing](flights/flight-billing/automatic-flight-billing.md)
+
+## Billing
+
+* [Flight Billing](billing/flight-billing.md)
+* [Billing Rates](billing/billing-rates.md)
+* [Automatic flight billing](billing/automatic-flight-billing.md)
+* [Prepaid packages](billing/prepaid-packages.md)
 
 ## Schedules
 
