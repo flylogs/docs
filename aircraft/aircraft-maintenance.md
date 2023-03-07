@@ -4,15 +4,11 @@ description: Track and store all aircraft maintenance details
 
 # Aircraft maintenance
 
-[Flylogs](https://www.flylogs.com/) gives you a very straight forward tool to store any past or future maintenance jobs affecting your aircraft.
+[Flylogs](https://www.flylogs.com/) provides you with a straightforward tool to store information on any past or future maintenance jobs that affect your aircraft. This tool enables better communication throughout your company and improves situational awareness for your crew, flight scheduling, and aircraft mechanics.&#x20;
 
-This tool enables you better information communication through your company and better situational awareness for your crew, your flight scheduling and your aircraft mechanics.
+Future maintenance windows will automatically block the scheduling agenda of the plane, and after the maintenance is performed and the **CRS** maintenance record is signed, the information will remain stored in the aircraft maintenance logs for ever.
 
-***
 
-Once an aircraft maintenance is performed and the CSR is signed, we can store this information in the aircraft maintenance books.
-
-Flylogs allows you to not only store this information, but also set future alerts and share this information with the relevant people across your company.
 
 ### Maintenance edit form
 

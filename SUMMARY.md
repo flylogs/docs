@@ -30,8 +30,8 @@
 
 * [Aircraft basics](aircraft/aircraft-basics.md)
 * [Create your aircraft](aircraft/create-your-aircraft.md)
-* [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
-  * [Schedule maintenance windows](aircraft/aircraft-maintenance/schedule-maintenance-windows.md)
+* [Aircraft maintenance](aircraft/aircraft-maintenance.md)
+* [Scheduled maintenance windows](aircraft/scheduled-maintenance-windows.md)
 
 ## Flights
 
@@ -44,6 +44,7 @@
 * [Billing Rates](billing/billing-rates.md)
 * [Automatic flight billing](billing/automatic-flight-billing.md)
 * [Prepaid packages](billing/prepaid-packages.md)
+* [Online payments](billing/online-payments.md)
 
 ## Schedules
 
@@ -58,6 +59,7 @@
 * [Create a training](training-courses/create-a-training.md)
 * [Edit a training](training-courses/edit-a-training.md)
 * [Schedule a class or an exam](training-courses/schedule-a-class-or-an-exam.md)
+* [Flight Training](training-courses/flight-training.md)
 
 ## Documents
 

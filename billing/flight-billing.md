@@ -4,7 +4,7 @@ At Flylogs we strive to get what our customers really need, specially things to 
 
 One of our most used tools to improve efficiency, and also customer engagement, is the Flight Billing System.&#x20;
 
-Flylogs Flight Billing System, allows you to create bills directly from your existings flights in a single click. Just by selecting the flight you want to bill, you can open the Flight Billing Panel that you can see on the image on the left.
+**Flylogs Flight Billing System**, allows you to create bills directly from your existings flights in a single click. Just by selecting the flight you want to bill, you can open the Flight Billing Panel that you can see on the image on the left.
 
 Enter additional details like FBO expenses, fuel or taxes, and create the bill instantly. It only takes 30 seconds!
 

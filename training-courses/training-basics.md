@@ -6,11 +6,12 @@ coverY: -12
 
 # Training basics
 
-#### Flylogs trainings offers an evolving low efford online training management tool that competes directly with any existing industry standard tools.
+**Flylogs Training offers an evolving, low-effort online training management tool that directly competes with any existing industry-standard tools.**
 
-Flylogs trainings is focused in pilot training providing only the required tools in the most directly and accessible possible way.
+Our Trainings system is focused on pilot training and provides only the necessary tools in a direct and accessible way. It is included with Flylogs Premium subscription at no additional cost and allows you to have as many courses as you need.\
+Additionally, there is no limit in the amount of students you enrolle.
 
-The trainings system is included within Flylogs Premium subscription without any additional costs and allows you to have as many trainings as needed with as many students as you can get.
+
 
 ![Trainings edit main page](<../.gitbook/assets/image (3).png>)
 
@@ -29,13 +30,13 @@ Flylogs has 3 types of trainings you can create.
 
 ### Training templates
 
-When you click the CREATE NEW TRAINING BUTTON, you get to a wizard type modal window asking you for the basic information about the training and offering you the option to inherit some information into your new training.
+When you click the **CREATE NEW TRAINING BUTTON**, a wizard window will open asking you for the basic information about the course.
 
 ![Training create modal window.](<../.gitbook/assets/image (4).png>)
 
-You can inherit or copy any of your existing trainings. This is useful to duplicate trainings and do small changes as needed for a new program.
+You can create a brand new training, or copy an existing one, or use one of the available templates.
 
-Flylogs also offers pre built templates for the EASA PPL and ATPL programs. This templates come directly from the published training requirements and learning objectives existing in the PART FCL.
+Flylogs also offers pre built templates for the EASA PPL and ATPL programs. This templates come directly from the published training requirements and learning objectives existing in the respective FCL parts.
 
 ### Training reports
 

@@ -1,14 +1,10 @@
 # Schedule a class or an exam
 
-Flylogs gives you the tools for the whole training cycle, and part of that cycle are the daily lessons that are given to students.
+Flylogs provides you with tools for the entire training cycle, including daily lessons for students.&#x20;
 
-Flylogs allows you to schedule this classes, select the teacher and the students and notify everybody at the same time.
+With Flylogs, you can easily schedule these classes, select the teacher and students, and notify everyone at once. The process is simple and fast, and the teacher has instant access to manage the scheduled classes and upload relevant content. Similarly, students have access to the scheduled lessons, where they can read class content, view published descriptions, and download uploaded documents.&#x20;
 
-The process is simple and fast, and the teacher has instant access to the scheduled class management to upload the contents that he/she thinks may be appropriate.
-
-The students at the same time, have access to the scheduled lesson. They can read the content of the class, the published description and download the documents the teacher uploaded.
-
-There is also a comment box, which can be enabled or disabled, but which could be very useful for questions that the students may have.
+Additionally, a comment box is available, which can be enabled or disabled, and is useful for students who may have questions.
 
 ### Student exam results and attendance records
 
