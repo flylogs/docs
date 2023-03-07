@@ -1,8 +1,8 @@
 ---
-description: Create your account easily and start your Flylogs premium trial
+description: Create your company account easily and start your Flylogs premium
 ---
 
-# Flylogs Account Sign Up
+# Company Sign Up
 
 If you have decided that it is time to try Flylogs, you are in the right place.
 

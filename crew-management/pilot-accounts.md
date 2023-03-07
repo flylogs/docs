@@ -5,7 +5,7 @@ cover: >-
 coverY: -32
 ---
 
-# Pilot account types and options
+# Pilot accounts
 
 You can create different access level pilot profiles. Each with different permissions that you can customize in your company settings page.
 
@@ -59,23 +59,4 @@ By deactivating a pilot account, this user will disappear from all your forms an
 
 ***
 
-#### Email validation
-
-Company management accounts need to have an email address.
-
-FI, pilot or mechanic accounts do not have this requirement.
-
-When a new email is entered for a new or an existing user, the system requires the email address to be confirmed.
-
-The confirmation is process is the same used in the sign up process. Just click on the received email with a confirmation link.
-
-**Only confirmed email addresses will be able to login and receive emails from Flylogs.**\
-
-
-#### Bounces and complaints
-
-If an email address bounces the emails Flylogs sends, this account will be set back to NOT CONFIRMED. **This is an automatic process.**\
-If the bounces persist, the email address will be completely removed from FLYLOGS, leaving the account without login option.\
-
-
-If we receive a complaint for a given email address, Flylogs will automatically remove all notification options from that user account to avoid sending any non-essential emails to that address.
+####

@@ -1,4 +1,4 @@
-# Schedule maintenance windows
+# Scheduled maintenance windows
 
 ### **Basic aircraft maintenance job tracking**
 

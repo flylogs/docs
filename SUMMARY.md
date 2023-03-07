@@ -4,7 +4,7 @@
 
 ## First Steps
 
-* [Flylogs Account Sign Up](first-steps/flylogs-account-sign-up.md)
+* [Company Sign Up](first-steps/company-sign-up.md)
 * [User Login](first-steps/how-to-login.md)
 * [Getting Started - Pilots](first-steps/getting-started-pilots.md)
 * [FAQ pilots and students](first-steps/faq-pilots-and-students.md)
@@ -18,7 +18,7 @@
 
 ## Crew management
 
-* [Pilot account types and options](crew-management/pilot-account-types-and-options.md)
+* [Pilot accounts](crew-management/pilot-accounts.md)
 * [Create Pilots or Students](crew-management/create-pilots-or-students.md)
 * [Pilot Certificate Control System](crew-management/pilot-certificate-control-system.md)
 * [Messaging System](crew-management/messaging-system.md)
@@ -30,8 +30,8 @@
 
 * [Aircraft basics](aircraft/aircraft-basics.md)
 * [Create your aircraft](aircraft/create-your-aircraft.md)
-* [Aircraft maintenance](aircraft/aircraft-maintenance.md)
-* [Scheduled maintenance windows](aircraft/scheduled-maintenance-windows.md)
+* [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
+* [Scheduled maintenance windows](aircraft/aircraft-maintenance/schedule-maintenance-windows.md)
 
 ## Flights
 

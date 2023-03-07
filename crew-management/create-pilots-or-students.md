@@ -31,7 +31,7 @@ Additionally, if the account is Active, you can set an account expiration date a
 
 Note that Inactive pilots can still access to their Flylogs account with READ ONLY permissions with the aim to have access to their own logbook.
 
-If you want to read more about pilot permissions and access levels, read the [Pilot Account Types and options](pilot-account-types-and-options.md) help article.
+If you want to read more about pilot permissions and access levels, read the [Pilot Account Types and options](pilot-accounts.md) help article.
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/hf9yjThipE.png)
 
