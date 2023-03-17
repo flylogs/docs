@@ -20,22 +20,21 @@ Our servers, will automatically request your aircraft information, and if any, w
 
 
 
-Aircraft that meet those requirements, will automatically be tracked by Flylogs. Flylogs will store all received positions using the following criteria:
+#### Flylogs will store all received positions using the following criteria:
 
-* **Get adsb positions every 4 minutes for aircraft:**
-  * That belong to a premium company
-  * That are active
-  * That have a valid ADSB hex code
-* **Position is requested every 3 minutes if:**
-  * Aircraft last received position was less than 15 minutes ago
-  * Vertical speed is more than 1000ft/min
-* **Position is requested every 2 minutes if:**
-  * Aircraft last received position was less than 15 minutes ago
-  * Speed is less than 1kts
-* **Position is requested every 1 minute if:**
-  * Aircraft last position was less than 5 minutes ago
-  * Speed is less than 250kts
-  * Alt is below 12000 feet
+Eligible aircraft, will automatically be tracked by Flylogs at least **once every 15 minutes,** with the following improvements:
+
+* **Every 5 minutes** for aircraft that have a live position in the **last 30 minutes.**
+* **Every 3 minutes if:**
+  * Aircraft last received position was less than 15 minutes ago,
+  * and vertical speed is more than 1000ft/min or less than -1000ft/min.
+* **Every 2 minutes if:**
+  * Aircraft last received position was less than 15 minutes ago,
+  * and speed is less than 1kt.
+* **Every minute if:**
+  * Aircraft last position was less than 5 minutes ago,
+  * and speed is less than 250kts,
+  * and altitude is below 12000 feet.
 
 ### Position usage
 
