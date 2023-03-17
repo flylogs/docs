@@ -32,7 +32,7 @@ Eligible aircraft, will automatically be tracked by Flylogs at least **once ever
   * Aircraft last received position was less than 15 minutes ago,
   * and speed is less than 1kt.
 * **Every minute if:**
-  * Aircraft last position was less than 5 minutes ago,
+  * Aircraft last stored position within the last 10 minutes,
   * and speed is less than 250kts,
   * and altitude is below 12000 feet.
 
