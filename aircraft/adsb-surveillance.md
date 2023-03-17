@@ -34,7 +34,7 @@ Aircraft that meet those requirements, will automatically be tracked by Flylogs.
   * Speed is less than 1kts
 * **Position is requested every 1 minute if:**
   * Aircraft last position was less than 5 minutes ago
-  * Speed is less than 200kts
+  * Speed is less than 250kts
   * Alt is below 12000 feet
 
 ### Position usage
