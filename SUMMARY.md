@@ -29,6 +29,7 @@
 ## Aircraft
 
 * [Aircraft basics](aircraft/aircraft-basics.md)
+* [ADSB surveillance](aircraft/adsb-surveillance.md)
 * [Create your aircraft](aircraft/create-your-aircraft.md)
 * [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
 * [Scheduled maintenance windows](aircraft/aircraft-maintenance/schedule-maintenance-windows.md)
