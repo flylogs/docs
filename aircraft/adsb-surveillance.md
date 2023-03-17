@@ -36,7 +36,7 @@ Eligible aircraft, will automatically be tracked by Flylogs at least **once ever
   * and speed is less than 250kts,
   * and altitude is below 12000 feet.
 
-### Position usage
+### ADSB data usage and display:
 
 1- You can see a summary of your aircraft location in your Manager home page. A small moving map displays all your aircraft, on which you can click to see more details.
 
