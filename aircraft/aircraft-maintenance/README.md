@@ -47,3 +47,11 @@ So the aircraft will have potential to fly until **134:39 hours, that is the mom
 Flylogs displays you this information in your aircraft page and also in your manager home page with a gauge graph:
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/ZvqEAD18Km.png)
+
+### Before maintenance hour checker
+
+Every time a new flight is created, Flylogs will check the aircraft maintenance period. If the remaining hours are less than the entered flight hours, an error will be triggered alerting the crerw of the fact that the aircraft is overdue for maintenance.
+
+This message is an advisory, and the crew has the option to by-pass it.
+
+<figure><img src="../../.gitbook/assets/Screenshot 2023-03-24 at 16.05.50.png" alt="Aircraft maintenance required advisory message"><figcaption></figcaption></figure>
