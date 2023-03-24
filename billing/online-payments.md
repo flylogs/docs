@@ -1,28 +1,23 @@
 ---
-description: Online payments for your pilots with Stripe
+description: Enable online payments in Flylogs via Stripe
 ---
 
 # Online payments
 
-On top of having your full pilot billing automated in Flylogs, you can now also automate the payment process directly into your Stripe account.
+In addition to an efficient way to manage flight billing, Flylogs also offers the possibility to automate payments via an integration with Stripe.
 
-Stripe is a payment processing platform that allows businesses to accept payments from their customers online. It's a popular payment gateway that is used by many companies around the world because it provides a secure and reliable way to accept online payments.
-
-<mark style="background-color:yellow;">One of the key benefits of using Stripe is that it allows Flylogs operators to easily accept payments from their customers or pilots for outstanding amounts that are owed.</mark>
+Stripe is a payment processing platform that allows businesses to accept payments from their customers online. Stripe provides a secure and reliable way to accept online payments and has become one of the most widely used payment gateways worldwide.
 
 __
 
 ### Initial Configuration
 
-In order to enable the safe communication between your Flylogs and Stripe accounts, you need to perform a very simple setup. Follow these steps in order:
+In order to enable a safe communication between your Flylogs account and your Stripe account, you need to perform a very simple setup. Follow these steps in order:
 
-1. Create a Stripe account for your company.
-2. Configure your bank account and automatic payout method in Stripe.
-3. Get the publishable\_key and the private\_key from your [Stripe LIVE Keys page](https://dashboard.stripe.com/apikeys).
-4. Enable the Stripe payments in your [Billing Settings page](https://www.flylogs.com/manager/companies/billing) and copy both keys before clicking on Save.
+1. If you do not have a company Stripe account, visit [Stripe website](https://dashboard.stripe.com/register) and create one.
+2. In Stripe, configure your bank account and automatic payout method.
+3. Obtain the publishable\_key and the private\_key from your [Stripe LIVE Keys page](https://dashboard.stripe.com/apikeys).
+4. Go to the [Billing Settings page](https://www.flylogs.com/manager/companies/billing) in Flylogs and enable Stripe payments.
+5. Copy past your Stripe **publishable\_key** and the **private\_key**, before hitting Save.
 
-After completing those four easy steps, your pilots will have the option to make online payments that will be deposited directly into your Stripe account. If the payment is successful, the pilot's balance in Flylogs will be automatically updated.
-
-
-
-__
+Once completed, your pilots will have the option to make online payments in Flylogs via Stripe that will be deposited directly into your Stripe account. If the payment is successful, the pilot's balance in Flylogs will be automatically updated.
