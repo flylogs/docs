@@ -7,3 +7,13 @@ Once you have created the flight missions for your training, you will be prompte
 > When adding a flight, if both the Pilot-In-Command (PIC) and Second-In-Command (SIC) are enrolled in any training, you will see boxes that allow you to select which exercises they performed on that particular flight. This feature enables you to evaluate each pilot individually.
 
 After the flight is confirmed, the flight time will be added to the training reports of both pilots and included in their training flight time.
+
+#### Multiple missions
+
+You can have multiple missions per flight, and multiple flights for each mission. This can be done for any of the crew members of the flight.
+
+Single flight, multiple missions example:
+
+![](<../.gitbook/assets/Screenshot 2023-03-27 at 16.11.44.png>)
+
+Also, you can have the same mission, repeated as many times as needed in following flights.
