@@ -16,4 +16,6 @@ Single flight, multiple missions example:
 
 ![](<../.gitbook/assets/Screenshot 2023-03-27 at 16.11.44.png>)
 
-Also, you can have the same mission, repeated as many times as needed in following flights.
+Also, you can have the same mission, repeated as many times as needed in following flights. In this case, all repetitions will appear in the training report of the pilot:
+
+<figure><img src="../.gitbook/assets/Screenshot 2023-03-27 at 16.54.04.png" alt="Repeated flight missions"><figcaption></figcaption></figure>
