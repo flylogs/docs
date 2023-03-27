@@ -18,8 +18,6 @@ For each document you publish, you can choose which user groups can access the f
 
 You can choose one or many user groups based on your needs.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/WLTklPQ-vI.png)
-
 ### File version control
 
 Each time you update any of your published documents, you can publish the new version. Flylogs will keep old versions hidden but still available for you in the future.\
