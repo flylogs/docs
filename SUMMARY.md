@@ -53,6 +53,7 @@
 * [Pilot availability records](schedules/pilot-availability-records.md)
 * [Schedule notifications](schedules/schedule-notifications.md)
 * [Schedule cancellations](schedules/schedule-cancellations.md)
+* [Self scheduling](schedules/self-scheduling.md)
 
 ## Training courses
 
