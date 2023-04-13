@@ -51,7 +51,7 @@ If you provide a ADSB-out hex code, Flylogs will gather location data of your ai
 
 _- This feature only works on Premium accounts._
 
-__
+
 
 ### Aircraft Maintenance records
 

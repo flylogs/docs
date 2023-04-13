@@ -42,7 +42,7 @@ If Flylogs automatically calculates the duty time, we notify the pilot with a me
 ### Duty Time reports
 
 Company manages can access the pilot duty time reports in **Pilots** > **Duty times**\
-****This report contains a list of all pilots with a filter, and another axis with all days of the selected month.
+This report contains a list of all pilots with a filter, and another axis with all days of the selected month.
 
 If any record is over the configured MAX DUTY TIME, the time will appear highlighted in red.
 

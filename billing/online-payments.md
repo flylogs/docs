@@ -8,7 +8,7 @@ In addition to an efficient way to manage flight billing, Flylogs also offers th
 
 Stripe is a payment processing platform that allows businesses to accept payments from their customers online. Stripe provides a secure and reliable way to accept online payments and has become one of the most widely used payment gateways worldwide.
 
-__
+
 
 ### Initial Configuration
 

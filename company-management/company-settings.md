@@ -4,28 +4,25 @@ description: Setup Flylogs behavior and flight data storage characteristics
 
 # Company Settings
 
-Flylogs allows you to customize how your data is managed and what limits you want to enforce.
+Flylogs allows you to customize how your data is managed and what limits you want to enforce within your organization.
 
-Among the all the options, you can:
+**Among the all the options, you can:**
 
 * enable and disable Flylogs features,&#x20;
 * manage flight permissions for each user type,&#x20;
+* block logbook changes in the past,
 * change flight document retention policies and
 * customize pilot duty time limitations.
 
+You can customize all this settings from your Company Settings page.
 
-
-To do so, navigate to your company's Settings page with your manager account.
-
-Edit profile permissions for flight data management
+<figure><img src="../.gitbook/assets/Screenshot 2023-04-13 at 13.23.10.png" alt=""><figcaption><p>Edit flight data modification permissions for each user type.</p></figcaption></figure>
 
 You can customize which profiles can create flights, confirm them or edit and delete them once they are on the logbooks.
 
-Additionally, to enhance the security in common use computers at your offices, you can require the users to enter their password in order to confirm the flights.
+Additionally, to enhance the security in shared office computers, the last checkbox "**Require user Password to confirm flights into logbooks**" enables a second validation step by asking for the user´s password in order to confirm the flights.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/UrmJs15IzM.png)
 
-***
 
 ### Pilot flight duty time limitations
 

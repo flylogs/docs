@@ -31,7 +31,7 @@ When managers select any pilot to create a schedule record, Flylogs automaticall
 
 This includes all certificates, ordered by expiration date.
 
-****
+
 
 **If any certificates are expired, a visual alert will pop up, and depending on your company settings, it will block the pilot from being scheduled.**
 
