@@ -1,4 +1,4 @@
-# Flight Billing
+# Introduction
 
 At Flylogs we strive to get what our customers really need, specially things to improve their flight data management efficiency.&#x20;
 
@@ -12,9 +12,9 @@ Your customer, will receive a notification of the new bill and the amount billed
 
 This is a great tool, because not only you have a single click billing solution in a single place, but also, your customers have full view of their expenses linked to their flights, creating a satisfying sensation of payment for a great service received.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/0L9nSaZUK1.png)
+<figure><img src="https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/0L9nSaZUK1.png" alt="Manual billing window"><figcaption><p>Manual billing window</p></figcaption></figure>
 
-Your customer receives an instant notification about the new flight bill. The balance is updated immediately and the bill is available in the customer's profile page.
+If set in your company settings, your customer receives an instant email notification with the bill information and link. The balance is updated immediately and the bill is available in the customer's profile page too.
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/w00p-6goZ9.png)
 

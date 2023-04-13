@@ -43,8 +43,8 @@
 
 ## Billing
 
-* [Flight Billing](billing/flight-billing/README.md)
-  * [Billing setup](billing/flight-billing/billing-setup.md)
+* [Introduction](billing/introduction.md)
+* [Billing setup](billing/billing-setup.md)
 * [Billing Rates](billing/billing-rates.md)
 * [Prepaid packages](billing/prepaid-packages.md)
 * [Online payments](billing/online-payments.md)

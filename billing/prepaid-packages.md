@@ -14,7 +14,7 @@ To view the details of any package, just click on the name, and a new window wil
 
 ![](<../.gitbook/assets/Screenshot 2023-03-02 at 20.03.32.png>)![](<../.gitbook/assets/Screenshot 2023-03-02 at 20.03.58.png>)
 
-Every time that a [flight is automatically billed](flight-billing/billing-setup.md), Flylogs will first check if the pilot has a valid package for that type of flight and aircraft. If so, the bill will be first deducted from valid packages, and if no enought credit available, the outstanding balance will be removed from the pilot´s balance.
+Every time that a [flight is automatically billed](billing-setup.md), Flylogs will first check if the pilot has a valid package for that type of flight and aircraft. If so, the bill will be first deducted from valid packages, and if no enought credit available, the outstanding balance will be removed from the pilot´s balance.
 
 ### Automatic Invoice generation
 
