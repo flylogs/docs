@@ -15,6 +15,7 @@
 * [Company Settings](company-management/company-settings.md)
 * [Billing System](company-management/billing-system.md)
 * [Base management](company-management/base-management.md)
+* [Account limitations](company-management/account-limitations.md)
 
 ## Crew management
 
