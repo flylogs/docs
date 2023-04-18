@@ -13,19 +13,16 @@ It is very easy to initiate a Safety Report for one of your flights. After confi
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/fHUiacthHN.png)
 
-Once saved, your report will automatically be associated to the flight, showing all flight information, aircraft maintenance and airworthiness status at the time of the event.
-
-Flylogs helps you gather all the information on any event by requesting to the flight's crew members to create a report for the same event.
+Once saved, your report will automatically be associated to the flight, showing all flight information, aircraft maintenance and airworthiness status at the time of the event.Flylogs helps you gather all the information on any event by requesting to the flight's crew members to create a report for the same event.
 
 Every time a new safety report is created or modified, a notification will be delivered to all company Safety and Operations Managers.
 
-> Anonymous reports are available too!&#x20;
-
-If you choose to submit your report anonymously, your profile ID will not be saved on the event.\
-
+> You may choose to create the report **Anonymously**. In this case, Flylogs will NOT store your user id in the report.
+>
+> Bear in mind that if you create a report anonymously, you will not receive any notifications for future updates or changes done to the reported event because the system does not know who is the reporter.
 
 ### For The Flight Safety Manager
 
-Different reports on a same event are grouped and the kept with the same IDENTIFICATION number.
+Different reports on a same event are grouped and the kept with the same IDENTIFICATION number as shown in the image below.
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/d\_DPS1qYAB.jpeg)
