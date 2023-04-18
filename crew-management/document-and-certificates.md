@@ -14,14 +14,14 @@ Using "My Certificates", users can create various types of documents, attach fil
 
 ### Automatic Alerting
 
-Flylogs will send automatic alerts to the document owner, these alerts depend on the document type.
+Flylogs will mark highlight documents in orange and will start sending automatic alerts to the user's email address when the document's expiration date approaches. The alert threshold is different depending on the type of doc:
 
 * Ratings and licences; 90 days.
 * Medical certificates: 45 days.
 * IDs; 180 days.
 * Passports; 365 days.
 
-
+When this thresholds for expiration are reached, the document is highlighted in orange and reminder emails are sent to the user once a month or every 15 days if the expiration is within 45 days.
 
 ### Manager alert and audit tools
 
