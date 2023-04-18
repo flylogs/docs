@@ -4,7 +4,7 @@ description: Document library and alerting system
 
 # Document & Certificates
 
-Flylogs offers a feature called "My Certificates" which is a system to track and remind users about their important documents and certificates. This feature is available on each user's personal details edit page.&#x20;
+Flylogs offers a feature called "My Certificates" which is a system to track and remind users about their important documents and certificates. This system is part of the [**Pilot Documentation Control System (PDCS)**](document-and-certificate-requirements.md) and it is available on each user's personal details edit page.&#x20;
 
 Using "My Certificates", users can create various types of documents, attach files, and set deadlines for expiration.
 

@@ -21,12 +21,12 @@
 
 * [Pilot accounts](crew-management/pilot-accounts.md)
 * [Create Pilots or Students](crew-management/create-pilots-or-students.md)
-* [Pilot Certificate Control System](crew-management/pilot-certificate-control-system.md)
 * [Messaging System](crew-management/messaging-system.md)
 * [Base management](crew-management/base-management.md)
 * [Pilot currency checks](crew-management/pilot-currency-checks.md)
 * [Duty and Flight time storage](crew-management/duty-and-flight-time-storage.md)
 * [Document & Certificates](crew-management/document-and-certificates.md)
+* [Document & Certificate Requirements](crew-management/document-and-certificate-requirements.md)
 
 ## Aircraft
 
