@@ -26,6 +26,7 @@
 * [Base management](crew-management/base-management.md)
 * [Pilot currency checks](crew-management/pilot-currency-checks.md)
 * [Duty and Flight time storage](crew-management/duty-and-flight-time-storage.md)
+* [Document & Certificates](crew-management/document-and-certificates.md)
 
 ## Aircraft
 
