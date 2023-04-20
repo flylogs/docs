@@ -33,8 +33,12 @@ Activating the Flight training checkbox, you will have the option to create a li
 
 ### Training availability and validity
 
-**Training availability** stands for the date range in between the training course will be open to the students to be studied.
+**Training availability** sets a timeframe when the training course will be open to students enrolled in the course. You can define either the start date or the end date or both.
 
-**Training validity**, refers to the time the training endorsement is valid to the user after finishing the training. It works like an expiration period for the training endorsement in the pilot profile page.
+**Training validity** defines until when the training endorsement is valid (after training completion). It works like an expiration period for the training endorsement in the pilot profile page.
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-04-20 at 12.54.17.png" alt=""><figcaption><p>Training  availability and validity dates</p></figcaption></figure>
+
+Example of pilot valid and expired training endorsements:
+
+<figure><img src="../.gitbook/assets/Screenshot 2023-04-20 at 12.43.36.png" alt=""><figcaption><p>Pilot trainings displaying the finished trainings.</p></figcaption></figure>
