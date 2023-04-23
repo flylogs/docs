@@ -43,6 +43,7 @@ If any damage is reported to an aircraft, the SMS form allows the reporter to de
 * At least one aircraft should be selected
 * The damage to the aircraft should be selected at least to MINIMAL
 * The date of the event should be within the last 72 hours.
+* The reporter is not a Student Pilot
 
 If the option to deactivate the aircraft is selected by the reporter, an additional notification will be sent inmediately to the operations managers to let them know about it.
 
