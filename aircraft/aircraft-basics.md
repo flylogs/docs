@@ -17,4 +17,4 @@ Remember, you have no limits on the amount of users you create, but choose caref
 
 View account limitations [here](../company-management/account-limitations.md).
 
-View the user account types [here](../company-management/account-limitations.md).
+View the user account types [here](../company-management/account-types.md).

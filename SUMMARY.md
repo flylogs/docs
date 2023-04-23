@@ -31,7 +31,7 @@
 
 ## Aircraft
 
-* [Aircraft management](aircraft/aircraft-management.md)
+* [Aircraft management](aircraft/aircraft-basics.md)
 * [Create your aircraft](aircraft/create-your-aircraft.md)
 * [ADSB surveillance](aircraft/adsb-surveillance.md)
 * [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
