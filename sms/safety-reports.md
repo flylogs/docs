@@ -7,15 +7,14 @@ coverY: 0
 
 # Safety Reports
 
-[Our SMS](https://www.flylogs.com/features/safety-management) system allows to receive safety events, related to your flights, or independent of any flight.
+Flylogs SMS, is an integrated Safety Management System based on the [ICAO recommendations](https://www.unitingaviation.com/publications/safetymanagementimplementation/content/#/) fully compliant with the [ICAO Doc 9859](https://www.icao.int/safety/safetymanagement/pages/guidancematerial.aspx). It allows to receive safety events directly in your Flylogs account linked with all the relevant information like flight crew, aircraft, maintenance, flight crew, trainings, duty times, etc.
 
 **Any member** of your organization **has the ability to** access the Safety Reporting System and **create a new report.**
 
 These reports can be specifically related to a flight, or not, allowing any of your users to inform about more other types of risks.\
 
 
-The safety manager and other company managers can see the whole list of events and access to the statistics.
-
+The safety manager and other company managers can see the whole list of events and access to the statistics.\
 They can also request third parties to complete a report on an existing event, giving you more information of the a single event.
 
 Related events will appear grouped together and will share some common details like date, location, type of event, etc.

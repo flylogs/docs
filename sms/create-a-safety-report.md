@@ -36,6 +36,16 @@ Reports can always be created anonymously. In this case, Flylogs will NOT store 
 
 > **Note;** if you create a report anonymously, you will not receive any notifications for future updates or changes done to the reported event. This is because the system does not know who is the initial reporter.
 
+### Aircraft damage
+
+If any damage is reported to an aircraft, the SMS form allows the reporter to deactivate the aircraft. In order to get this option, these are the conditions that the system requires:
+
+* At least one aircraft should be selected
+* The damage to the aircraft should be selected at least to MINIMAL
+* The date of the event should be within the last 72 hours.
+
+If the option to deactivate the aircraft is selected by the reporter, an additional notification will be sent inmediately to the operations managers to let them know about it.
+
 ### Automatic grouping of reports
 
 Different reports on a same flight are grouped and the kept with the same IDENTIFICATION number as shown in the image below. Additionally, from the second report you will always find a link to the first one.
