@@ -15,7 +15,7 @@ Flylogs offers an unlimited account type for bigger organizations, get in contac
 |                     | Free     | Premium   |
 | ------------------- | -------- | --------- |
 | Aircraft\*          | 5        | 20        |
-| Cloud Storage       | 10GB     | 100GB     |
+| Cloud Storage       | 10GB     | 50GB      |
 | Email notifications | 1000/mo. | 10000/mo. |
 | ADSB                | NO       | YES       |
 

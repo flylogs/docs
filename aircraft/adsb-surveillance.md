@@ -40,14 +40,14 @@ Eligible aircraft, will automatically be tracked by Flylogs at least **once ever
 
 1- You can see a summary of your aircraft location in your Manager home page. A small moving map displays all your aircraft, on which you can click to see more details.
 
-![](<../.gitbook/assets/Screenshot 2023-03-17 at 11.54.47.png>)
+<figure><img src="../.gitbook/assets/Screenshot 2023-03-17 at 11.54.47.png" alt=""><figcaption></figcaption></figure>
 
 
 
 2- On each aircraft details page, if the aircraft is flying, you will see again a moving map, that in this case, will display the flown route.
 
-![](<../.gitbook/assets/Screenshot 2023-03-17 at 11.56.11.png>)
+<figure><img src="../.gitbook/assets/Screenshot 2023-03-17 at 11.56.11.png" alt=""><figcaption></figcaption></figure>
 
 3- Every time you create a new flight, Flylogs will check if there are any received ADSB positions for that aircraft on the specified AOBT/ATOT and ALDT. If there is, a flight map will appear with all recorded ADSB data.
 
-![](<../.gitbook/assets/Screenshot 2023-03-17 at 12.03.54.png>)
+<figure><img src="../.gitbook/assets/Screenshot 2023-03-17 at 12.03.54.png" alt=""><figcaption></figcaption></figure>

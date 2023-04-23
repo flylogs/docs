@@ -16,6 +16,7 @@
 * [Billing System](company-management/billing-system.md)
 * [Base management](company-management/base-management.md)
 * [Account limitations](company-management/account-limitations.md)
+* [Account types](company-management/account-types.md)
 
 ## Crew management
 
@@ -30,9 +31,9 @@
 
 ## Aircraft
 
-* [Aircraft basics](aircraft/aircraft-basics.md)
-* [ADSB surveillance](aircraft/adsb-surveillance.md)
+* [Aircraft management](aircraft/aircraft-management.md)
 * [Create your aircraft](aircraft/create-your-aircraft.md)
+* [ADSB surveillance](aircraft/adsb-surveillance.md)
 * [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
 * [Scheduled maintenance windows](aircraft/aircraft-maintenance/schedule-maintenance-windows.md)
 

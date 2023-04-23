@@ -36,6 +36,8 @@ You can schedule future maintenance jobs. Select a future date for start/finish 
 
 In this case, there is no need to specify a validity period, you can do this once the maintenance has been performed and the **CRS** has been signed.
 
+Read more about [scheduled maintenance windows](schedule-maintenance-windows.md).
+
 <figure><img src="../../.gitbook/assets/Screenshot 2023-04-23 at 11.53.10.png" alt=""><figcaption><p>Future maintenance windows block the aircraft schedule.</p></figcaption></figure>
 
 ### Maintenance validity tracker
