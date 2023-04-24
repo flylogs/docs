@@ -77,3 +77,7 @@
 * [Safety Reports](sms/safety-reports.md)
 * [Create a Safety Report](sms/create-a-safety-report.md)
 * [Safety report analytics](sms/safety-report-analytics.md)
+
+## 🤖 API
+
+* [API Description](api/api-description.md)
