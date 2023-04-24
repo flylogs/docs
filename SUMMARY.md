@@ -80,4 +80,5 @@
 
 ## 🤖 API
 
-* [API Description](api/api-description.md)
+* [Description](api/description.md)
+* [Usage](api/usage.md)
