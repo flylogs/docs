@@ -6,7 +6,8 @@ Get in [contact with our support team](https://www.flylogs.com/home/contact) to 
 **NOTES ABOUT THE API USAGE:**
 
 * API access is limited to Premium and Unlimited Flylogs Account users.
-* This API requires an existing active Flylogs user.
-* Every API requests requires an AUTHORIZATION token called X-USER-TOKEN. The token is received from the server on the login response.
-* The token is destroyed on loggout or every 14 days, what ever happens first.
+* Access to the API has to be requested to the Flylogs Support team in order to be activated for your company.
+* The API requires an existing active Flylogs user, the access level to features and functions will depend on the user type and its privileges.
+* Every API requests requires an AUTHORIZATION BEARER token. The token is received from the Flylogs server on the login response.
+* The token is destroyed on each login, logout or every 14 days, what ever happens first.
 * API usage is limited and throttled. Any user abusing the system or performing an abusive number of requests will be banned from the system automatically for 14 days.
