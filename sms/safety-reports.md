@@ -32,3 +32,21 @@ All other report information is displayed below and only the safety manager or o
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/J6eXYFldiB.png)
 
 Additionally, the person writing the report or any manager can comment on the report and upload files as needed that will be attached to the existing report.
+
+
+
+### Report status
+
+A report has 5 possible status in which can be.
+
+* **New.** Default status when the report is created.
+* Reviewed. Initial review performed, waiting for more details or further processing.
+* **Closed.** Report is closed and no further actions are expected.
+* Deleted. Useful for test reports.
+* **Published.** The report is closed and published to all members in the organization.
+
+#### Published Reports
+
+Published SMS reports are public to all members of your organization. This enables that every body learns from the findings of a report, which is the final goal of the Safety System.
+
+All members can see all published reports, and a summary of them are also available on the aircraft page. Each aicraft, has a summary of SMS reports in which it has been involved.
