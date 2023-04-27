@@ -18,8 +18,14 @@ Every time that a [flight is automatically billed](billing-setup.md), Flylogs wi
 
 ### Automatic Invoice generation
 
-When billing a flight, manually or automatically an automatic invoice is generated. When prepaid packages this also applies.\
-Flylogs generates an invoice for the total amount of the flight after deducting the amount from the package. If the total amount was paid using a package, then the invoice will be paid in full, but there can be times, when you client does not have enough balance left on a package. In this cases, the invoice will have the amount left to paid remaining and will not be marked as paid.
+When a new bill is created, an automatic invoice is generated.\
+Flylogs generates an invoice that includes your company details and logo, as well as the customers information.
+
+The receipt will have a consecutive number starting from 1 on every January 1st.
+
+On the bottom part of the receipt, you will find the tax included if any, and the usage of the Prepaid packages.
+
+![Invoice screenshot](<../.gitbook/assets/Screenshot 2023-04-27 at 19.07.11.png>)
 
 ### Customizing the paying customer
 
