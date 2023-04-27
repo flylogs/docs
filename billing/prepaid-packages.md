@@ -16,6 +16,22 @@ To view the details of any package, just click on the name, and a new window wil
 
 Every time that a [flight is automatically billed](billing-setup.md), Flylogs will first check if the pilot has a valid package for that type of flight and aircraft. If so, the bill will be first deducted from valid packages, and if no enought credit available, the outstanding balance will be removed from the pilot´s balance.
 
+### Manually billing using packages
+
+If your customer has a valid Prepaid Package available, the billing window will display a checkbox to use it. If you decide to bill using packages, Flylogs will hide and disable the hourly rate input as well as any othe extra expese input.
+
+This is because Flylogs automatizes the usage of packages in order to apply the correct billing rate.
+
+<figure><img src="../.gitbook/assets/Screenshot 2023-04-27 at 19.16.36.png" alt=""><figcaption><p>Billing with packages</p></figcaption></figure>
+
+### Edit or delete a bill
+
+With packages, you can still edit or delete a bill like you would normally do. If your decide to edit and manually imput the amounts, no packages will be used and the bill amount will be deducted from your customer´s balance.&#x20;
+
+If you click on an existing bill, Flylogs will show you the following warning message:
+
+<figure><img src="../.gitbook/assets/Screenshot 2023-04-27 at 19.15.24.png" alt=""><figcaption><p>Warning message of existing bill</p></figcaption></figure>
+
 ### Automatic Invoice generation
 
 When a new bill is created, an automatic invoice is generated.\
