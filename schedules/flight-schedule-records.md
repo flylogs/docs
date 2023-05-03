@@ -1,3 +1,9 @@
+---
+cover: >-
+  https://images.unsplash.com/photo-1601342630314-8427c38bf5e6?crop=entropy&cs=srgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw5fHxjYWxlbmRhcnxlbnwwfHx8fDE2ODMxMDEyNDI&ixlib=rb-4.0.3&q=85
+coverY: 0
+---
+
 # Flight Schedule Records
 
 Flylogs flight scheduling has been designed to fit precisely the needs of ATO organizations with or without multiple operational bases and multiple aircraft on each location. Schedule records or bookings may be created by the **company manager**, **roster manager**, **aircraft manager** or even directly by your **pilots** or **students**.
