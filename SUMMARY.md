@@ -54,7 +54,8 @@
 
 ## Schedules
 
-* [Flight Schedule](schedules/flight-schedule.md)
+* [Flight Schedule Records](schedules/flight-schedule-records.md)
+* [Schedule Views](schedules/schedule-views.md)
 * [Pilot availability records](schedules/pilot-availability-records.md)
 * [Schedule notifications](schedules/schedule-notifications.md)
 * [Schedule cancellations](schedules/schedule-cancellations.md)
