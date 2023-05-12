@@ -10,7 +10,11 @@ In this window you can, Enable the billing system, select who is the default cre
 
 You can also specify your Value-added tax if any.
 
+<div align="left">
+
 <figure><img src="../.gitbook/assets/Screenshot 2023-03-02 at 20.11.34.png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### Creating Billing rates
 
