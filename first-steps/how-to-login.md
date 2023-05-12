@@ -7,11 +7,17 @@ coverY: 0
 
 # User Login
 
+### Login
+
+Login to Flylogs occurs like in any other website. In order to do so, you need an account that only company Managers can create. If you already have a Flylogs account, go to [https://www.flylogs.com/login](https://www.flylogs.com/login) and user your account details to login.
+
 {% hint style="info" %}
 You can not create your own **pilot** account. Your company needs to create it for you. When this happens, you will receive the email invitation to access.
 {% endhint %}
 
-#### Welcome Email
+For each login, your IP address, location and time will be saved to your company history for your own security. This information is not reviewed by Flylogs or your company, it is only stored for your information and usage as needed.
+
+### Welcome Email
 
 Your company manager will create your pilot account for you with your email address. When this happens, you will  receive an email from atc@flylogs.com with instructions to login.
 
@@ -58,7 +64,7 @@ When a new email is entered for a new or an existing user, the system requires t
 **Only confirmed email addresses will be able to login and receive email alerts from Flylogs.**\
 
 
-#### Email bounces and complaints
+### Email bounces and complaints
 
 If an email address bounces an email, the associated user account will be automatically set back to **NOT CONFIRMED**. If an account is marked as NOT CONFIRMED, the user must confirm the email address again the next time the user tries to log in. In the meantime, Flylogs will stop to send email notifications and alerts to that email address.
 
