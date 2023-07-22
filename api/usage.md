@@ -1,7 +1,7 @@
 # Usage
 
 The usage of Flylogs API requires acceptance of our [Terms and conditions](https://www.flylogs.com/static/legal).\
-Get in [contact with our support team](https://www.flylogs.com/home/contact) to get a valid API key.
+Get in [contact with our support team](https://www.flylogs.com/home/contact) to get the API service active on your company account.
 
 **NOTES ABOUT THE API USAGE:**
 
@@ -11,3 +11,5 @@ Get in [contact with our support team](https://www.flylogs.com/home/contact) to 
 * Every API requests requires an AUTHORIZATION BEARER token. The token is received from the Flylogs server on the login response.
 * The token is destroyed on each login, logout or every 14 days, what ever happens first.
 * API usage is limited and throttled. Any user abusing the system or performing an abusive number of requests will be banned from the system automatically for 14 days.
+
+**Upon API service activation, you will receive the POSTMAN collection link.**
