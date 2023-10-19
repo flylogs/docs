@@ -17,24 +17,22 @@ Our servers, will automatically request your aircraft information, and if any, w
 * The coverage is limited, you can review it [here](https://opensky-network.org/network/facts)
 * Enter the ADSB HEX identifier in the aircraft properties page
 * The aircraft needs to be operational (Acitve in Flylogs)
+* Aircraft last recorded flight in Flylogs is within the last 10 days or the aircraft has been scheduled to fly in Flylogs Schedules within the next 24 hours.
 
 
 
 #### Flylogs will store all received positions using the following criteria:
 
-Eligible aircraft, will automatically be tracked by Flylogs at least **once every 15 minutes,** with the following improvements:
+Eligible aircraft, will automatically be tracked by Flylogs at least **once every 5 minutes,** with the following improvements:
 
-* **Every 5 minutes** for aircraft that have a live position in the **last 30 minutes.**
-* **Every 3 minutes if:**
-  * Aircraft last received position was less than 15 minutes ago,
-  * and vertical speed is more than 1000ft/min or less than -1000ft/min.
+* **Every 3 minutes** for aircraft that have a live position in the **last 30 minutes.**
 * **Every 2 minutes if:**
   * Aircraft last received position was less than 15 minutes ago,
   * and speed is less than 1kt.
 * **Every minute if:**
   * Aircraft last stored position within the last 10 minutes,
-  * and speed is less than 250kts,
-  * and altitude is below 12000 feet.
+  * and speed is less than 150kts,
+  * and altitude is below 10000 feet.
 
 ### ADSB data usage and display:
 
