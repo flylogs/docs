@@ -15,7 +15,7 @@ Each user type has a different dashboard, pilots dashboard are more focused on f
 
 Student dashboards are optimized to display training calendar, company news and upcoming classes, exams and flights.
 
-***
+
 
 ### Dashboard evolution
 

@@ -63,7 +63,7 @@ You will only need to enter the flight time of the aircraft at the time of creat
 
 You can schedule future maintenance windows just by specifying a future date.
 
-***
+
 
 ### Aircraft permissions, rental and billing
 

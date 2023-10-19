@@ -24,7 +24,7 @@ The window that will open, will ask for rate name and hourly rate in your local 
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/AnE2LZKoqk.png)
 
-***
+
 
 ### Flight Hour Packages
 
@@ -45,7 +45,7 @@ Flylogs will automatically remove the time from the package once every flight is
 
 If there are several packages, these will be expensed in order. If the pilot has no more packages to pay for a given flight, the flight will automatically billed using the default aircraft rate.
 
-***
+
 
 ### Automatic billing
 

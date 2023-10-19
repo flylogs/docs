@@ -8,7 +8,7 @@ My availability tool allows your pilots to store their flight availability recor
 
 The tool is available for any pilot or company user with pilot functions enabled and can be accessed from the pilot dashboard using any desktop computer or smartphone browser.
 
-***
+
 
 ### Access to the tool
 
@@ -36,7 +36,7 @@ You can click on the 10am of the Monday, and drag the mouse to the Thursday 5pm 
 > The system allows to mark my self as I am always available or choose the desired time frames with 30 minute accuracy.\
 > Additionally, just underneath the I am always available option, the pilot can enter some comments for the Roster Manager.
 
-***
+
 
 ### How to enter custom time frames
 
