@@ -21,7 +21,7 @@ Related events will appear grouped together and will share some common details l
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/cYPNBm9ROy.png)
 
-
+***
 
 ### Flight safety reports
 

@@ -38,7 +38,7 @@ On the same aircraft edit page you can find the **Qualified pilots** list, where
 
 
 
-### Usage as a pilot
+### Flight self-booking for pilots
 
 As a pilot, on my dashboard, I can find a **Schedule a flight** box, see below:
 
@@ -48,10 +48,12 @@ When accesing the scheduling tool, the pilot will be able to see all aircraft fo
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-03-31 at 18.15.07.png" alt=""><figcaption><p>Calendar of aircraft availability</p></figcaption></figure>
 
-Once the pilot clicks and holds on a time slot, the system will automatically pop up the booking confirmation window to select the type of flight and a Flight Instructor if required.
+Once the pilot clicks and holds on a time slot, the system will automatically pop up the booking confirmation window that you can see in the following screenshot:
 
-Once the pilot clicks on the Book this Slot button, the system locks the slot and notifies with an email to the pilot and also the company managers.
+<figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.26.48.png" alt=""><figcaption><p>Self-booking modal window</p></figcaption></figure>
 
-![](<../.gitbook/assets/Screenshot 2023-03-31 at 18.15.38.png>)
+The self-booking modal that you see above, has a different behavior depending on the pilot profile making the appointment. Students will have to select a PIC, while pilots, Flight instructors and higher ranks can select themselves as PIC or leave the field empty.
+
+Once the pilot clicks on the **Book this Slot** button, the system locks the slot and notifies the PIC requesting confirmation. Once the PIC confirmes the flight, the SIC will not be able to change the booking.
 
 [^1]: \- Remember that to give your pilots the option to self schedule a flight, you also have to enable this on each one of your aircraft. -&#x20;
