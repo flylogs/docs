@@ -1,13 +1,12 @@
 # Publishing multiple schedule records
 
-Flylogs schedule records have different status, by default, as you create each schedule record, it will be Scheduled, but unpublished. Only you and other company managers will be able to see this schedule records you just created. \
-This behavior is intended for complex schedules where several changes can take place to each record before the final schedule is ready.
+Flylogs schedule records have varying statuses. By default, when you create a new schedule record, it will be set to "Scheduled" but remain unpublished. Only you and other company managers will have access to the schedule records you've just created.
 
-You can manage this behaviour when creating each schedule record by activating or deactivating the **Publish Immediately** checkbox on the schedule record edit window. By default, for new records, it will be deactivated.
+This default behavior is designed for complex schedules where multiple changes may occur to each record before the final schedule is ready. You have the option to control this behavior when creating each schedule record by enabling or disabling the "**Publish Immediately**" checkbox in the schedule record editing window. By default, for new records, this option will be disabled.
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.38.31.png" alt=""><figcaption></figcaption></figure>
 
-The result of creating a full schedule without publishing each record at the moment of creating it, is that   you will have a big amount of scheduled flights that are not published, hence only you and company managers can see them.
+If you create a complete schedule without publishing each record at the moment of creation, you will end up with a large number of scheduled flights that remain unpublished. Consequently, only you and company managers will have visibility of them.
 
 
 
@@ -17,7 +16,7 @@ The result of creating a full schedule without publishing each record at the mom
 
 ### Publish multiple records at once
 
-To publish multiple scheduled records just click on the **Publish schedule to pilots** button on the top right corner of the schedules review page.
+To publish multiple scheduled records just click on the **"Publish schedule to pilots"** button on the top right corner of the schedules review page.
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.42.45.png" alt=""><figcaption><p>Schedule records review page</p></figcaption></figure>
 
