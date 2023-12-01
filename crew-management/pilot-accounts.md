@@ -57,6 +57,6 @@ By deactivating a pilot account, this user will disappear from all your forms an
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/23bhSItsv4.png)
 
-***
+
 
 ####

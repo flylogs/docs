@@ -8,7 +8,7 @@ In your Manager account, navigate to the pilots management area and on the right
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/U1UnrD42K0.png)
 
-***
+
 
 ### Required information
 

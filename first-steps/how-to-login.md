@@ -27,7 +27,7 @@ On your first login, you will be asked to create your account password.
 
 If you did not receive the confirmation email, check your spam folder for emails from atc@flylogs.com. Otherwise, contact your company manager or CTKI; or follow the Password Recovery procedure described below.
 
-***
+
 
 ### Forgotten password recovery procedure
 
