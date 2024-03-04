@@ -34,7 +34,7 @@ Drafts are automatically cleaned from the system after 60 days if they are not c
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/5sPPuW-y6L.png)
 
-
+***
 
 ### CONFIRMED flights
 
@@ -52,7 +52,7 @@ Also, depending on the company settings, you may be required to enter your passw
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/x6ZL5XJ0Mo.png)
 
-
+***
 
 ###
 

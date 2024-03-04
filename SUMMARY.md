@@ -69,6 +69,7 @@
 * [Edit a training](training-courses/edit-a-training.md)
 * [Schedule a class or an exam](training-courses/schedule-a-class-or-an-exam.md)
 * [Flight Training](training-courses/flight-training.md)
+* [Competence evaluation](training-courses/competence-evaluation.md)
 
 ## Documents
 
