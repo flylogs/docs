@@ -6,9 +6,9 @@ description: Evaluate based on competencies
 
 Any training can be set to have certain competencies to be evaluated. You can activate this feature from the Training > Edit page.&#x20;
 
-Check the Evaluate based on Competencies and create the competencies you need. By default **Knowledge**, **Skills** and **Attitude** should appear already created, you can edit or delete these.
+Mark the **Evaluate Student competencies** checkbox and create the competencies you need. By default **Knowledge**, **Skills** and **Attitude** should appear already created, you can edit or delete these.
 
-<figure><img src="../.gitbook/assets/Screenshot 2024-03-04 at 20.53.44.png" alt="" width="375"><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot 2024-03-04 at 20.53.44.png" alt="" width="375"><figcaption><p>1) Activate the competencies, 2) create them and  3) save the changes.</p></figcaption></figure>
 
 Once the competencies are created and you click on SAVE training changes, your FIs evaluating flight exercises will have the option to evaluate any of the competencies you just created.
 
