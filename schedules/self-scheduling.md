@@ -16,12 +16,12 @@ Within your company settings page, you'll discover the general Schedule settings
 Remember that self scheduling has to be enabled on each aircraft!
 {% endhint %}
 
-You have the flexibility to decide whether you want to restrict night-time reservations or prevent pilots with insufficient billing credit. Furthermore, you can set the maximum number of reservations per day and define minimum and maximum slot times as well.
+You have the flexibility to decide whether you want to restrict the reservations times or prevent pilots with insufficient billing credit. Furthermore, you can set the maximum number of reservations per day, the default length of the slot and define minimum and maximum slot durations as well.
 
-\
-![](<../.gitbook/assets/Screenshot 2023-10-19 at 10.34.41.png>)
+![](<../.gitbook/assets/Screenshot 2024-09-10 at 03.08.59.png>)\
 
-#### Aircraft setup for Self Scheduling
+
+### Aircraft setup for Self Scheduling
 
 You need to activate self scheduling on each aircraft.
 
@@ -39,11 +39,11 @@ As a pilot, on my dashboard, I can find a **Schedule a flight** box, see below:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-03-31 at 17.55.06.png" alt=""><figcaption><p>Pilots automatically see the Schedule a flight option if they are entitled to do so.</p></figcaption></figure>
 
-When accesing the scheduling tool, the pilot will be able to see all aircraft for which he or she is authorized as PIC to rent. The calendar displays other flights blocking the calendar slots and the pilot only has to click and drag on the desired time slot.
+When accessing the scheduling tool, the pilot can see a form called "BOOK A FLIGHT." By selecting the desired date, aircraft, and PIC, the system will display the available slots within the permitted times that the aircraft and PIC are available.
 
-<figure><img src="../.gitbook/assets/Screenshot 2023-03-31 at 18.15.07.png" alt=""><figcaption><p>Calendar of aircraft availability</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot 2024-09-10 at 03.13.04.png" alt=""><figcaption></figcaption></figure>
 
-Once the pilot clicks and holds on a time slot, the system will automatically pop up the booking confirmation window that you can see in the following screenshot:
+Once the pilot clicks on a time slot, the system will automatically pop up the booking confirmation window that you can see in the following screenshot:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.26.48.png" alt=""><figcaption><p>Self-booking modal window</p></figcaption></figure>
 
