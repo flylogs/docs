@@ -63,3 +63,11 @@ Every time a new flight is created, Flylogs will check the aircraft maintenance 
 This message is an advisory, and the crew has the option to by-pass it.
 
 <figure><img src="../../.gitbook/assets/Screenshot 2023-03-24 at 16.05.50.png" alt="Aircraft maintenance required advisory message"><figcaption></figcaption></figure>
+
+### Maintenance prediction
+
+Flylogs will now predict based on previous maintenance records and aircraft utilization, when the next maintenance action will be required.
+
+<figure><img src="../../.gitbook/assets/Screenshot 2024-09-10 at 02.23.58.png" alt=""><figcaption></figcaption></figure>
+
+The prediction will appear as a date below the NEW MAINTENANCE button. It is a logarithmic prediction based on the aircraft's trends and historical data. The prediction will be shown only if there is previous maintenance and the aircraft has logged more than 50 flight hours. Predictions more than 180 days away will not be displayed.
