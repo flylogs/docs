@@ -8,7 +8,7 @@ If you have activated the Flight Training Missions checkbox in your training edi
 
 Once you have created the flight missions for your training, you will be prompted to enter the mission results for each student when creating a flight.
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption><p>New Flight Training missions tab</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>New Flight Training missions tab</p></figcaption></figure>
 
 ### Edit Flight missions
 

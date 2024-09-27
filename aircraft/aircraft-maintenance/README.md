@@ -21,10 +21,11 @@ Open the maintenance, or create a new one, and enter the data of the job.
 * Start and Finish date time of the job (past or future)
 * Maintenance descriptive job name
 * Airframe hours at the time of the job is done
-* Validity flight hours\
+* Validity flight hours
+* If you have a CRS file or any inportant file to attach to the maintenance, you can upload it!\
 
 
-![Form to create new maintenance jobs or windows](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/QBVim\_Eg0P.png)
+<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption><p>Form to create new maintenance jobs or windows</p></figcaption></figure>
 
 #### **For already performed maintenance jobs:**
 
