@@ -13,7 +13,7 @@ Additionally, there is no limit in the amount of students.
 
 
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption><p>Trainings management main page</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>Trainings management main page</p></figcaption></figure>
 
 
 
@@ -32,7 +32,7 @@ Flylogs has 3 types of trainings you can create.
 
 When you click the **CREATE NEW TRAINING BUTTON**, a wizard window will open asking you for the basic information about the course.
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption><p>Create a new training window</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (2).png" alt=""><figcaption><p>Create a new training window</p></figcaption></figure>
 
 You can create a brand new training, copy an existing one, or use one of the available templates.
 

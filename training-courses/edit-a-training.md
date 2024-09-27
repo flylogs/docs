@@ -25,11 +25,13 @@ All this training settings can be modified at any time and will change the setti
 
 ### Flight Missions
 
-Activating the Flight training checkbox, you will have the option to create a list of flight missions with exercises for the current training course.
+Activating the Flight training checkbox, you will have the option to create a list of flight missions with exercises for the current training course. \
+Also, when enabling Flight training this box shown below will appear.\
+This additional box, allows you to select the exercise grading scale, require student signature of debriefings and it will also give you the option to activate the competence evaluation system.
 
-<figure><img src="../.gitbook/assets/Screenshot 2023-04-20 at 12.53.35.png" alt=""><figcaption><p>Flight missions and evaluations</p></figcaption></figure>
 
 
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 ### Training availability and validity
 
