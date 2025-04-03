@@ -8,7 +8,9 @@ description: Track and store all aircraft maintenance details
 
 Future maintenance windows will automatically block the scheduling agenda of the plane, and after the maintenance is performed and the **CRS** maintenance record is signed, the information will remain stored in the aircraft maintenance logs for ever.
 
+Each maintenance job, can have as many work orders as neccesary. You can link files, comments and Inventory items to each of the work orders. The list below, shows all maintenance jobs along with location information, CRS status, pending Work Orders, timeframes and job expiration dates.
 
+<figure><img src="../../.gitbook/assets/Screenshot 2025-04-03 at 10.56.43.png" alt=""><figcaption><p>List of all company maintenance jobs.</p></figcaption></figure>
 
 ### Maintenance edit form
 
