@@ -36,6 +36,8 @@
 * [Create your aircraft](aircraft/create-your-aircraft.md)
 * [ADSB surveillance](aircraft/adsb-surveillance.md)
 * [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
+  * [Workorders](aircraft/aircraft-maintenance/workorders.md)
+  * [Inventory](aircraft/aircraft-maintenance/inventory.md)
 * [Scheduled maintenance windows](aircraft/aircraft-maintenance/schedule-maintenance-windows.md)
 
 ## Flights
