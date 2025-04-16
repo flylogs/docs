@@ -9,6 +9,10 @@
 * [Getting Started - Pilots](first-steps/getting-started-pilots.md)
 * [FAQ pilots and students](first-steps/faq-pilots-and-students.md)
 
+***
+
+* [FAQ company managers](faq-company-managers.md)
+
 ## Company Management
 
 * [Your Flylogs dashboard](company-management/your-flylogs-dashboard.md)
