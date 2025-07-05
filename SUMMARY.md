@@ -88,6 +88,7 @@
 
 * [Safety Reports](sms/safety-reports.md)
 * [Create a Safety Report](sms/create-a-safety-report.md)
+* [ICAO 8951 Risk Matrix](sms/icao-8951-risk-matrix.md)
 * [Safety report analytics](sms/safety-report-analytics.md)
 
 ## 🤖 API
