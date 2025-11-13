@@ -8,10 +8,8 @@
 * [User Login](first-steps/how-to-login.md)
 * [Getting Started - Pilots](first-steps/getting-started-pilots.md)
 * [FAQ pilots and students](first-steps/faq-pilots-and-students.md)
-
-***
-
-* [FAQ company managers](faq-company-managers.md)
+* [FAQ company managers](first-steps/faq-company-managers.md)
+* [Account security](first-steps/account-security.md)
 
 ## Company Management
 
