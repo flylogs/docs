@@ -6,6 +6,10 @@ description: Automatic flight billing with custom rates and hour packages
 
 Flylogs includes a company wide flight billing tool. The tool is deactivated by default when your company account is created.
 
+
+
+<figure><img src="../.gitbook/assets/Flight billing - visual selection.png" alt=""><figcaption></figcaption></figure>
+
 ### Enable the billing system
 
 **Navigate to:** Company > Billing system > Configure Billing

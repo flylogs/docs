@@ -28,6 +28,20 @@ Flylogs has 3 types of trainings you can create.
 * **Distance learning**\
   Students use online content and self assessment tools to study and complete each lesson in their own time. You can assign a supervisor that will support the student in their Distance Learning. The time each student spends studying will be tracked.
 
+<figure><img src="../.gitbook/assets/Training types - visual selection.png" alt=""><figcaption></figcaption></figure>
+
+### Training life cycle and expirations
+
+You can enroll students into trainings individually, or enroll an entire pilot group at once.
+
+After enrollment, you can assign a training tutor to each student and set a **“finish before”** date by which the student must complete the training.
+
+You can also define an **expiration date** for the resulting training qualification endorsement. Once a student completes the training, the endorsement will appear in their endorsement list for the defined validity period.
+
+When the endorsement expires, it is automatically marked as expired and removed. The student will need to complete the training again to regain the endorsement.
+
+<figure><img src="../.gitbook/assets/Training types - visual selection-2.png" alt=""><figcaption></figcaption></figure>
+
 ### Training templates
 
 When you click the **CREATE NEW TRAINING BUTTON**, a wizard window will open asking you for the basic information about the course.

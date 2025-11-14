@@ -20,7 +20,7 @@ A flight can be in any of the following status:
 
 > A flight can be cancelled if the DRAFT was created by a crew member from a schedule record.
 
-###
+<figure><img src="../.gitbook/assets/Flights - visual selection.png" alt=""><figcaption></figcaption></figure>
 
 ### DRAFT
 
