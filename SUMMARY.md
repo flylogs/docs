@@ -66,6 +66,7 @@
 * [Schedule notifications](schedules/schedule-notifications.md)
 * [Schedule cancellations](schedules/schedule-cancellations.md)
 * [Self scheduling](schedules/self-scheduling.md)
+* [Using the Flight Dispatch Function](schedules/using-the-flight-dispatch-function.md)
 
 ## Training courses
 
