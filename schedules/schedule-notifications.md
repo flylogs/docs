@@ -2,8 +2,7 @@
 
 Every time the flight schedule is published by your Roster Manager, Flylogs will deliver all flights to each pilot in a single email summarizing all flights.
 
-If you require your pilots to confirm, they will have the option to do so.\
-
+If you require your pilots to confirm, they will have the option to do so.<br>
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/nB2P5d4z42.png)
 

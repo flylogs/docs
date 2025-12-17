@@ -18,15 +18,13 @@ Otherwise, Flylogs may block your account temporarily until we manually verify y
 
 **The sign up form is divided into 2 sections**
 
-On the left, information about your company. On the right, information about you and your personal account.\
-
+On the left, information about your company. On the right, information about you and your personal account.<br>
 
 Fill in the left-hand side of the form with company information, such as your company's name, company operations airport in ICAO 4 letter format, phone number and type of operation.
 
 On the right-hand side, make sure to enter your email address correctly, since email validation is a required step to log into your account.
 
-\
-
+<br>
 
 **Once everything is filled in, check the legal terms acceptance box after reading them and you are all set.**
 

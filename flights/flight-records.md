@@ -40,15 +40,13 @@ Drafts are automatically cleaned from the system after 60 days if they are not c
 
 If we have the permission to do so, after filling in the date, and flight time information in a draft, we will see a GREEN confirmation button on the flight view page top right corner.
 
-_To learn more about company permissions, red the_ [_permissions in the company settings article_](https://docs.flylogs.com/flylogs-fcom-welcome/company-management/company-settings)_._\
-
+_To learn more about company permissions, red the_ [_permissions in the company settings article_](https://docs.flylogs.com/flylogs-fcom-welcome/company-management/company-settings)_._<br>
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/o-8DINhaSx.png)
 
 When pressed a confirmation dialog will ask to please check the data before proceeding.
 
-Also, depending on the company settings, you may be required to enter your password to sign the action.\
-
+Also, depending on the company settings, you may be required to enter your password to sign the action.<br>
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/x6ZL5XJ0Mo.png)
 
@@ -62,7 +60,6 @@ Flights can be completely deleted when they are a DRAFT. Once a flight has been 
 
 Only the user profiles that you setup in your company settings are allowed to delete flights.
 
-_To learn more about company permissions, red the_ [_permissions in the company settings article_](https://docs.flylogs.com/flylogs-fcom-welcome/company-management/company-settings)_._\
-
+_To learn more about company permissions, red the_ [_permissions in the company settings article_](https://docs.flylogs.com/flylogs-fcom-welcome/company-management/company-settings)_._<br>
 
 Flight modification history will be preserved but flight attachments like PDF documents will be erased after 24 hours.

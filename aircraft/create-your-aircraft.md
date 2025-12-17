@@ -14,8 +14,7 @@ In order to start you will first need the following details about the aircraft y
 * Aircraft manufacturer and model
 * Current aircraft flight time
 
-\
-
+<br>
 
 **Optional details:**
 
@@ -36,14 +35,13 @@ The main form is divided in 4 sections:
 * Aircraft logbook and maintenance.
 * Aircraft permissions, rentals and billing settings.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/jGOpVt\_GmE.png)
+![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/jGOpVt_GmE.png)
 
 **Note that** Flylogs allows you to create not only aircraft, but also simulators.
 
 Simulator time will be separated in pilot logbooks but management is unified in this single form.
 
-\
-
+<br>
 
 ### Aircraft ADSB location tracking
 

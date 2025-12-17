@@ -22,8 +22,7 @@ The account type and limits are the basic settings for the new account you are c
 
 This settings include the option to activate the account, grant the pilot Fly privileges and most importantly, the Pilot Type account, which will define the permissions given to the user.
 
-\
-
+<br>
 
 Additionally, if the account is Active, you can set an account expiration date at which, this user will be automatically deactivated by the system.
 

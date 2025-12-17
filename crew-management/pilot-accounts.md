@@ -9,8 +9,7 @@ coverY: -32
 
 You can create different access level pilot profiles. Each with different permissions that you can customize in your company settings page.
 
-\
-
+<br>
 
 ### Pilot account types
 

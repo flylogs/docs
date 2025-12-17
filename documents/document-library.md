@@ -20,8 +20,7 @@ You can choose one or many user groups based on your needs.
 
 ### File version control
 
-Each time you update any of your published documents, you can publish the new version. Flylogs will keep old versions hidden but still available for you in the future.\
-
+Each time you update any of your published documents, you can publish the new version. Flylogs will keep old versions hidden but still available for you in the future.<br>
 
 Every new version you publish, will renew the process by which each member needs to download the file again.&#x20;
 

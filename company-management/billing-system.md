@@ -36,8 +36,7 @@ You can create hour packages in your billing rates. These packages are available
 
 Once you have created your rates and packages, you can select the ones you want to apply for each aircraft, to do so, go into your aircraft edit page, and within the billing settings, select the appropriate rate or packages.
 
-\
-
+<br>
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/lEHBKSvk8g.png)
 

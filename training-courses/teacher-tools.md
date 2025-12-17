@@ -1,4 +1,8 @@
-# Teacher evaluations
+---
+description: Classroom management and teacher tools
+---
+
+# Teacher tools
 
 Once a class or exam is scheduled, the assigned teacher and students get access to the scheduled event page details. Additionally, the selected teacher and all company managers, can add some extra content to the event, communicate with students and rate them. \
 \
@@ -9,7 +13,7 @@ Once a class or exam is scheduled, the assigned teacher and students get access 
 * Add documents or files for the class
 * Comment on and answer students' questions
 * View and update the student list
-* Record class attendance and evaluate student aptitudes, add remarks and corrective measures if needed.
+* Record class attendance and evaluate student performance, add remarks and corrective measures if needed.
 
 **In exams:**
 
@@ -20,7 +24,7 @@ Once a class or exam is scheduled, the assigned teacher and students get access 
 
 #### Class evaluation tool for teachers and managers:
 
-<figure><img src="../.gitbook/assets/Screenshot 2025-11-14 at 18.06.08.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot 2025-12-16 at 17.36.18.png" alt=""><figcaption></figcaption></figure>
 
 The class teacher or any company manager can select student attendance and enter additional details.&#x20;
 

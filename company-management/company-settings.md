@@ -26,11 +26,10 @@ Additionally, to enhance the security in shared office computers, the last check
 
 ### Pilot flight duty time limitations
 
-Flylogs can be a great help to track flight time and duty time limitations. \
-
+Flylogs can be a great help to track flight time and duty time limitations. <br>
 
 Flylogs scheduling tool will alert your roster manager when creating the flight schedule if any slot does not comply with your legal requirements.
 
 On top of that, our servers run daily background checks on all the flight time stored in our database and triggers alarms if any of your setup limits are reached.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/enhEbo64\_N.png)
+![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/enhEbo64_N.png)

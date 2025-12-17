@@ -31,7 +31,7 @@ If you did not receive the confirmation email, check your spam folder for emails
 
 ### Forgotten password recovery procedure
 
-If you forget your password, go to the login page and on the lower part of the white box, click the link: [Recover my password](https://www.flylogs.com/users/password\_recover/)
+If you forget your password, go to the login page and on the lower part of the white box, click the link: [Recover my password](https://www.flylogs.com/users/password_recover/)
 
 Enter your email address, and if it is in the database, you will receive a password recovery email.
 
@@ -61,8 +61,7 @@ Company management accounts need to have an email address. FI, pilot or mechanic
 
 When a new email is entered for a new or an existing user, the system requires the email address to be confirmed.The confirmation is process is the same used in the sign up process. Just click on the received email with a confirmation link.
 
-**Only confirmed email addresses will be able to login and receive email alerts from Flylogs.**\
-
+**Only confirmed email addresses will be able to login and receive email alerts from Flylogs.**<br>
 
 ### Email bounces and complaints
 

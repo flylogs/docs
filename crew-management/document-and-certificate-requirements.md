@@ -2,7 +2,7 @@
 description: Store licenses or certificates and get notified before they expire
 ---
 
-# Pilot Certificate Control System
+# Document & Certificate Requirements
 
 We are glad to announce the new **Pilot Documentation Control System (PDCS)**, which can be enabled today in any Flylogs account from the Company Settings page.
 
@@ -12,8 +12,7 @@ The **PDCS** allows you to have a better control of pilot documentation and expi
 
 * publishing their flight availability,
 * confirming any scheduled flights,
-* and logging any flights.\
-
+* and logging any flights.<br>
 
 Student pilots will only be required to upload a valid medical certificate in order to publish their schedule and confirm it.
 

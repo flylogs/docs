@@ -1,7 +1,6 @@
 # Schedule Views
 
-There are several ways to see or manage the schedules. The **flight schedule calendar** view is the main management view available in which all schedulled flights appear and can be easily edited just by clicking on the record desired to edit.\
-
+There are several ways to see or manage the schedules. The **flight schedule calendar** view is the main management view available in which all schedulled flights appear and can be easily edited just by clicking on the record desired to edit.<br>
 
 **The flight schedule calendar view, has 3 modes:**
 
@@ -31,7 +30,7 @@ Additionally, the member that has not confirmed the flight will appear boxed, an
 
 #### Daily View
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/nCVI\_-KOCv.png)
+![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/nCVI_-KOCv.png)
 
 Daily view is perfect for operators like flight schools with up to ten aircraft. This view allows to easily view all day schedule.
 

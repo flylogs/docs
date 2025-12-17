@@ -8,8 +8,7 @@ description: All your company data in just a click
 
 The Flylogs dashboard is a dynamic environment that will change over time to show you the most important data right at the first screen you see when you log in.
 
-\
-
+<br>
 
 Each user type has a different dashboard, pilots dashboard are more focused on flight availability and flight schedule.
 
@@ -19,15 +18,13 @@ Student dashboards are optimized to display training calendar, company news and 
 
 ### Dashboard evolution
 
-As you enter more data in Flylogs, the dashboard continues to change and show you more relevant information.\
-
+As you enter more data in Flylogs, the dashboard continues to change and show you more relevant information.<br>
 
 * Flight time history for 1,2,3,5 and 10 years back.
 * Aircraft maintenances,&#x20;
 * Live aircraft ADSB location
 * Aircraft certificate expiration dates,&#x20;
 * Pilot duty and flight overtimes,
-* Pilot medical and License expirations\
-
+* Pilot medical and License expirations<br>
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/immxiDJuzO.png)

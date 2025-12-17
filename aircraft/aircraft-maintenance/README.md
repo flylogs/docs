@@ -24,8 +24,7 @@ Open the maintenance, or create a new one, and enter the data of the job.
 * Maintenance descriptive job name
 * Airframe hours at the time of the job is done
 * Validity flight hours
-* If you have a CRS file or any inportant file to attach to the maintenance, you can upload it!\
-
+* If you have a CRS file or any inportant file to attach to the maintenance, you can upload it!<br>
 
 <figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption><p>Form to create new maintenance jobs or windows</p></figcaption></figure>
 
@@ -52,8 +51,7 @@ Once a maintenance is performed and you or your mechanic check the **CRS signed*
 As example taken from the first screenshot on this page, the aircraft airframe was at **84:39** and the validity of the maintenance is **50 hours**.\
 **Flylogs will SUM the airframe hours of the last CRS with the entered validity flight hours.**
 
-So the aircraft will have potential to fly until **134:39 hours**. **Remember to check the CRS signed checkbox and save the maintenance.**\
-
+So the aircraft will have potential to fly until **134:39 hours**. **Remember to check the CRS signed checkbox and save the maintenance.**<br>
 
 Flylogs displays this information in your aircraft page and also in your manager home page:
 

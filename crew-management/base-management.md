@@ -18,8 +18,7 @@ Bases provide separation for better organization of:
 * news and&#x20;
 * schedules.
 
-\
-
+<br>
 
 Bases can have also separate documents and even a small comments section for news related to the specific location.
 

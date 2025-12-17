@@ -20,8 +20,7 @@ Every pilot has 2 main options in their availability management page:
 
 * An option to enable the ALWAYS AVAILABLE option.
 * A big text box to input any comments for the roster manager
-* A big calendar, that will be enabled if the ALWAYS AVAILABLE is not checked. This is the calendar that just by click and dragging, the pilot can mark the availability for any future dates.\
-
+* A big calendar, that will be enabled if the ALWAYS AVAILABLE is not checked. This is the calendar that just by click and dragging, the pilot can mark the availability for any future dates.<br>
 
 Availability slots can be more than 24 hours long, so the pilot can easily mark 1 hours, or full days as available.
 

@@ -11,9 +11,7 @@ coverY: -12
 Our Trainings system is focused on pilot training and provides only the necessary tools in a direct and accessible way. It is included with Flylogs Premium subscription at no additional cost and allows you to have as many courses as you need.\
 Additionally, there is no limit in the amount of students.
 
-
-
-<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>Trainings management main page</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot 2025-12-17 at 11.03.45.png" alt=""><figcaption></figcaption></figure>
 
 
 
@@ -29,6 +27,36 @@ Flylogs has 3 types of trainings you can create.
   Students use online content and self assessment tools to study and complete each lesson in their own time. You can assign a supervisor that will support the student in their Distance Learning. The time each student spends studying will be tracked.
 
 <figure><img src="../.gitbook/assets/Training types - visual selection.png" alt=""><figcaption></figcaption></figure>
+
+***
+
+### Competency-Based Evaluation (KSA)
+
+Flylogs Trainings provides functionality to support **Competency-Based Training and Assessment (CBTA)** in accordance with EASA principles, enabling the structured assessment of **Knowledge, Skills, and Attitudes (KSA)**&#x61;gainst predefined **learning objectives** at lesson level.
+
+The system ensures that:
+
+* Training objectives are defined in advance
+* Assessments are conducted against observable criteria
+* Records are traceable to the specific lesson, instructor, and student
+* Corrective actions can be documented where performance is below standard
+
+***
+
+### Scope and Applicability
+
+This functionality applies to:
+
+* **ONSITE** and **REMOTE** theoretical or practical training
+* Lessons delivered under CBTA or traditional training frameworks
+*   Evaluations performed by:
+
+    * Assigned instructors
+    * Training managers with appropriate permissions
+
+
+
+***
 
 ### Training life cycle and expirations
 
@@ -46,7 +74,7 @@ When the endorsement expires, it is automatically marked as expired and removed.
 
 When you click the **CREATE NEW TRAINING BUTTON**, a wizard window will open asking you for the basic information about the course.
 
-<figure><img src="../.gitbook/assets/image (4) (2).png" alt=""><figcaption><p>Create a new training window</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot 2025-12-17 at 11.05.14.png" alt="Create new training modal window"><figcaption></figcaption></figure>
 
 You can create a brand new training, copy an existing one, or use one of the available templates.
 

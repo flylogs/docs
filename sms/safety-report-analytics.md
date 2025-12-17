@@ -12,8 +12,7 @@ For that reason, our [SMS tool ](https://www.flylogs.com/features/safety-managem
 
 Having this amount of information in just one click is a great value and a huge pusher for the implementation of this kind of systems in any flight operator.
 
-\
-
+<br>
 
 Flylogs offers this tool with no extra cost in order to empower flight safety in all organizations, no matter its size.
 

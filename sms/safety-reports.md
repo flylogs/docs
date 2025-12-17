@@ -11,8 +11,7 @@ Flylogs SMS, is an integrated Safety Management System based on the [ICAO recomm
 
 **Any member** of your organization **has the ability to** access the Safety Reporting System and **create a new report.**
 
-These reports can be specifically related to a flight, or not, allowing any of your users to inform about more other types of risks.\
-
+These reports can be specifically related to a flight, or not, allowing any of your users to inform about more other types of risks.<br>
 
 The safety manager and other company managers can see the whole list of events and access to the statistics.\
 They can also request third parties to complete a report on an existing event, giving you more information of the a single event.

@@ -10,8 +10,7 @@ Your TMAs, can even add details to each maintenance windows, upload documents or
 
 ### Create a future maintenance
 
-To create any maintenance windows, past or future, go into the aircraft details page and click on the **ADD MAINTENANCE** button  you will find on top of the job list.\
-
+To create any maintenance windows, past or future, go into the aircraft details page and click on the **ADD MAINTENANCE** button  you will find on top of the job list.<br>
 
 The new maintenance record window will pop up:
 

@@ -76,7 +76,8 @@
 * [Flight Training](training-courses/flight-training.md)
 * [Schedule a class or an exam](training-courses/schedule-a-class-or-an-exam.md)
 * [Student evaluation](training-courses/student-evaluation.md)
-* [Teacher evaluations](training-courses/teacher-evaluations.md)
+* [Competency-Based Evaluation (KSA)](training-courses/competency-based-evaluation-ksa.md)
+* [Teacher tools](training-courses/teacher-tools.md)
 * [Student management](training-courses/student-management.md)
 
 ## Documents

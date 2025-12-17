@@ -18,8 +18,7 @@ Remember that self scheduling has to be enabled on each aircraft!
 
 You have the flexibility to decide whether you want to restrict the reservations times or prevent pilots with insufficient billing credit. Furthermore, you can set the maximum number of reservations per day, the default length of the slot and define minimum and maximum slot durations as well.
 
-![](<../.gitbook/assets/Screenshot 2024-09-10 at 03.08.59.png>)\
-
+![](<../.gitbook/assets/Screenshot 2024-09-10 at 03.08.59.png>)<br>
 
 ### Aircraft setup for Self Scheduling
 
