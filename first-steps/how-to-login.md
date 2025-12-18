@@ -11,17 +11,17 @@ coverY: 0
 
 Login to Flylogs occurs like in any other website. In order to do so, you need an account that only company Managers can create. If you already have a Flylogs account, go to [https://www.flylogs.com/login](https://www.flylogs.com/login) and user your account details to login.
 
-{% hint style="info" %}
-You can not create your own **pilot** account. Your company needs to create it for you. When this happens, you will receive the email invitation to access.
+{% hint style="warning" %}
+You can not create your own **pilot** account. Your company needs to create it for you. When this happens, you will receive an invitation in your email inbox.
 {% endhint %}
 
-For each login, your IP address, location and time will be saved to your company history for your own security. This information is not reviewed by Flylogs or your company, it is only stored for your information and usage as needed.
+For each login, your IP address, location and time will be saved to your account history. This information is not reviewed by Flylogs or your company, it is stored for your own information and usage.
 
 ### Welcome Email
 
 Your company manager will create your pilot account for you with your email address. When this happens, you will  receive an email from atc@flylogs.com with instructions to login.
 
-{% hint style="info" %}
+{% hint style="success" %}
 On your first login, you will be asked to create your account password.
 {% endhint %}
 
@@ -62,6 +62,10 @@ Company management accounts need to have an email address. FI, pilot or mechanic
 When a new email is entered for a new or an existing user, the system requires the email address to be confirmed.The confirmation is process is the same used in the sign up process. Just click on the received email with a confirmation link.
 
 **Only confirmed email addresses will be able to login and receive email alerts from Flylogs.**<br>
+
+### Flylogs Authentication process
+
+<figure><img src="../.gitbook/assets/Screenshot 2025-12-18 at 12.36.00.png" alt="Authentication process possible outcomes" width="563"><figcaption><p>Authentication process possible outcomes</p></figcaption></figure>
 
 ### Email bounces and complaints
 
