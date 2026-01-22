@@ -4,9 +4,10 @@ Every time you create a new Flylogs user within your account, you need to carefu
 
 **You can create:**&#x20;
 
-* STAFF MEMBERS, which can also be PILOTS.
-* Pilots with no company management privileges.
+* **STAFF MEMBERS**, which can also have PILOT privileges.
+* **Pilots** with no company management privileges.
 * Audit users
+* Mechanics
 
 ### Staff members
 
@@ -23,13 +24,13 @@ All staff members require at least the following fields:
 * Email address
 * User type
 
-### User Types
+#### Management Account Types
 
 * **Company administrator:** It is the highest level. The user that creates the company is usually a company administrator, but new administrators can be created and the initial  can be downgraded or deleted.
 * **Operations manager:** This profile has access to all options except the management of the administrator account.
 * **Compliance & Safety manager:** Access to reporting tools, docs, flights, trainings and SMS.
 * **Human resources manager:** Create and manage any other company user.
-* **Financial manager:** Access to manage company billing and user account balances. Also has the hability to manage the Flylogs Premium subscription and download the bills.
+* **Financial manager:** Access to manage company billing and user account balances. Also has the ability to manage the Flylogs Premium subscription and download the bills.
 * **Crew Scheduling:** Limited access with privilege to manage the flight schedule and pilot info and availability.
 * **Flight Dispatcher:** This profile can edit or cancel scheduled flights. Also can confirm and enter flight details after their landings.
 * **Mechanic:** Access to all aircraft details. Management of the maintenances and all aircraft flight and logbook view+download options.
@@ -48,7 +49,7 @@ In contrast with STAFF members, **pilots can be created without email address**.
 
 Pilots can also be created with or without flying privileges. This way, you can control who can or can not fly. This is usefull for student pilots still in their first stages of the trainings. It will remove non-flying pilots from flight/scheduling forms to avoid errors and remove clutter.
 
-Pilot account types:
+#### Pilot account types:
 
 * **Chief Pilot:** This pilot has access to view all other pilots, flights, documents, SMS and schedules.
 * **Flight Instructors,** have a more limited access to view all their own flights, schedules and SMS. They can also view all students.
@@ -62,7 +63,7 @@ You can deactivate users to hide them from any list and archive them. The user i
 
 You can delete staff members and pilots also, but in this case, Flylogs will mark the user as deleted with the same result and this action can not be undone unless you request it to our support service.
 
-### Deactivated pilots
+#### Deactivated pilots
 
 If you deactivate a pilot, this user will dissapear from your list as expected, but the user will still have access and login option to the Flylogs account without edit capabilities.
 
