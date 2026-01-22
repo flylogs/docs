@@ -10,6 +10,7 @@
 * [FAQ pilots and students](first-steps/faq-pilots-and-students.md)
 * [FAQ company managers](first-steps/faq-company-managers.md)
 * [Account security](first-steps/account-security.md)
+* [Quick start guide](first-steps/quick-start-guide.md)
 
 ## Company Management
 
