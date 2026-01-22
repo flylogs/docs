@@ -272,3 +272,9 @@ For additional guidance:
 * Support: support@flylogs.com
 
 If you require **assistance or data migration**, contact Flylogs support for a faster and smoother onboarding experience.
+
+***
+
+Download this guide in a quick checklist for the final implementation check:&#x20;
+
+{% file src="../.gitbook/assets/FlylogsImplementationChecklist.pdf" %}
