@@ -2,17 +2,15 @@
 
 Flylogs schedule records have varying statuses. By default, when you create a new schedule record, it will be set to "Scheduled" but remain unpublished. Only you and other company managers will have access to the schedule records you've just created and not published.
 
-This default behavior is designed for complex schedules where multiple changes may occur to each record before the final schedule is ready. You have the option to control this behavior when creating each schedule record by enabling or disabling the "**Publish Immediately**" checkbox in the schedule record editing window. By default, for new records, this option will be unchecked.
+This default behavior is designed for complex schedules where multiple changes may occur to each record before the final schedule is ready. You have the option to control this behavior when creating each schedule record by choosing the "**STATUS**" select in the schedule record editing window. By default, for new records, this option will be selected to "**DRAFT**".
 
-<figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.38.31.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot 2026-03-03 at 15.47.28.png" alt=""><figcaption></figcaption></figure>
 
-If you create a complete schedule without publishing each record at the moment of creation, you will end up with a large number of scheduled flight records that remain unpublished. Consequently, only you and company managers will have visibility of them.
+If you create a complete schedule without publishing each record at the moment of creation, you will end up with a large number of **DRAFT** flight records that remain unpublished. Consequently, only you and company managers will have visibility of them.
 
+<figure><img src="../.gitbook/assets/Screenshot 2026-03-03 at 15.49.17.png" alt=""><figcaption></figcaption></figure>
 
-
-<figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.41.06.png" alt=""><figcaption><p>Published and unpublished schedule records</p></figcaption></figure>
-
-> The unpublished scheduled flights will appear in your schedule review window with a crossed  eye indication in black background.
+> This **DRAFT** schedule records are meant to be temporary for your management purposes, you should either publish or delete them at some point.
 
 ### Publish multiple records at once
 

@@ -52,6 +52,6 @@ The form has only 5 fields that are mandatory:
 All other fields are optional. Note that additional fields may appear dynamically, like the flight mission, if the PIC or SIC are enrolled in a flight training with pending flight missions.
 {% endhint %}
 
-> You can directly choose to publish the new record as you create it if you click the checbox on the bottom labeled "**Publish immediately**".
+> You can directly choose to publish the new record as you create it if select in the status box "**SCHEDULED**".
 
-<figure><img src="../.gitbook/assets/Screenshot 2023-05-03 at 09.58.46.png" alt=""><figcaption><p>Flight Schedule Record editing form</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot 2026-03-03 at 15.43.52.png" alt="Flight Schedule Record editing form"><figcaption></figcaption></figure>
