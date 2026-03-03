@@ -1,4 +1,4 @@
-# Using the Flight Dispatch Function
+# Flight Dispatch Function
 
 The **Flight Dispatch** feature allows operations staff to provide pilots with all necessary operational details before a flight.\
 When a flight is dispatched, the system automatically creates a **Flight Draft** with the additional information entered, ensuring pilots have clear, accurate, and standardized pre-flight data.
@@ -56,6 +56,13 @@ The pilot view includes:
 <figure><img src="../.gitbook/assets/Screenshot 2025-11-14 at 12.59.25.png" alt=""><figcaption></figcaption></figure>
 
 This ensures pilots can review all important details immediately, without needing additional communication from operations.
+
+***
+
+### **Remarks**
+
+1. If a schedule record is **published** and **dispatched** and the PIC is changed, the record will automatically be switched back to SCHEDULED and the associated flight will be unlinked.
+2. If a PIC or SIC tries to dispatch the flight, the system will check for required pilot certificates, and if the user lacks any of the required certificates (medical, license, rating), Flylogs will reject the flight dispatch function.
 
 ***
 
