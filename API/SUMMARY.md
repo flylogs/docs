@@ -1,14 +1,23 @@
 # Table of contents
 
-* [Welcome!](README.md)
+* [Flylogs API](README.md)
+* [Description](description.md)
+* [Usage](usage.md)
 * [Quick Start](quick-start.md)
-* ```yaml
-  type: builtin:openapi
-  props:
-    models: false
-  dependencies:
-    spec:
-      ref:
-        kind: openapi
-        spec: flylogs-api-119
-  ```
+
+## Reference
+
+* [Authentication](authentication.md)
+* [Users](users.md)
+* [Company](company.md)
+* [Flights](flights.md)
+* [Aircraft](aircraft.md)
+* [Pilots](pilots.md)
+* [Schedules](schedules.md)
+* [Messages](messages.md)
+* [Trainings](trainings.md)
+* [Safety Reports](safety-reports.md)
+* [Documents](documents.md)
+* [News](news.md)
+* [Reports](reports.md)
+* [Manager Users](manager-users.md)

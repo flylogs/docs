@@ -1,77 +1,121 @@
 # Quick Start
 
-{% hint style="info" %}
-**Good to know:** A quick start guide can be good to help folks get up and running with your API in a few steps. Some people prefer diving in with the basics rather than meticulously reading every page of documentation!
-{% endhint %}
+Get up and running with the Flylogs API in three steps.
 
-## Get your API keys
+## 1. Get API Access
 
-Your API requests are authenticated using API keys. Any request that doesn't include an API key will return an error.
+API access must be activated by the Flylogs team:
 
-You can get your API keys from our support team, contact us here: [https://www.flylogs.com/pages/contact](https://www.flylogs.com/home/contact).
+1. Contact [Flylogs Support](https://www.flylogs.com/home/contact) to request API activation
+2. You need a **Premium** or **Unlimited** account
+3. Once activated, use your existing Flylogs user credentials
 
-## Make your first request
+## 2. Authenticate
 
-To make your first request, send an authenticated request to the users login url. This will store a session token in the database that you will need to send in each following requests.
+Obtain a session token by logging in:
 
-## Log into a users account.
+```bash
+curl -X POST https://fmc.flylogs.com/v1/login.json \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "your@email.com",
+    "password": "your-password"
+  }'
+```
 
-<mark style="color:green;">`POST`</mark> `https://www.flylogs.com/users/login.json`
+#### Response
 
-This is the first call required to use any other functions.
-
-#### Request Body
-
-| Name                                       | Type   | Description                                              |
-| ------------------------------------------ | ------ | -------------------------------------------------------- |
-| email<mark style="color:red;">\*</mark>    | string | Valid email address of an existing user in your company. |
-| password<mark style="color:red;">\*</mark> | string | The user password.                                       |
-| code                                       | int    | 2FA code                                                 |
-
-{% tabs %}
-{% tab title="200 Processed login" %}
 ```json
 {
-    "response": {
-        "result": true,
-        "two_factor": null
-        "message": null,
-        "url": "/users",
-        "token": "kub0bmm3immamk6q1brojrq527"
-    }
+  "response": {
+    "result": true,
+    "token": "kub0bmm3immamk6q1brojrq527",
+    "user_id": 1234,
+    "two_factor": "OFF"
+  }
 }
 ```
-{% endtab %}
 
-{% tab title="401 Permission denied" %}
-```json
-{
-    "response": {
-        "result": false,
-        "message": "Incorrect email or password",
-        "url": null
-    }
-}j
-```
-{% endtab %}
-{% endtabs %}
+Save the `token` value — you'll need it for all subsequent requests.
 
 {% hint style="info" %}
-**2FA implementation:** You should make an initial request and check code field to be null or true. If **two\_factor** field is false, the provided code was not correct or empty. This case, triggers a code generation process and email.
-
-Provide the correct code and Flylogs will return **result**=**true** for email and password validation, and **two\_factor**=**true** for correct 2FA authentication.
+**2FA:** If `two_factor` is not `"OFF"`, the server will send a verification code. Make a second login request with the `code` field included.
 {% endhint %}
 
-Take a look at how you might call this method using our official libraries, or via `curl`:
+## 3. Make Your First Request
 
-{% tabs %}
-{% tab title="curl" %}
+Use the token to fetch your user profile:
+
+```bash
+curl https://fmc.flylogs.com/v1/users/view.json \
+  -H "Authorization: Bearer kub0bmm3immamk6q1brojrq527"
 ```
-curl https://www.flylogs.com.com/users/login.json
-    -u YOUR_API_KEY:  
-    -d email='email@address.com'  
-    -d species='Secret-Password'  
-    -d code=''
+
+#### Response
+
+```json
+{
+  "User": {
+    "id": "1234",
+    "email": "your@email.com",
+    "active": true,
+    "pilot": true
+  },
+  "UserDetail": {
+    "name": "John",
+    "surname": "Doe"
+  },
+  "UserGroup": {
+    "name": "Pilot",
+    "id": "110"
+  }
+}
 ```
-{% endtab %}
-{% endtabs %}
+
+## Common Patterns
+
+### Pagination
+
+List endpoints (flights, pilots) return paginated results:
+
+```bash
+# Page 1 of flights
+curl https://fmc.flylogs.com/v1/flights/load/page:1/from:/to:/aircraft:/pilot:/base:/flight_type:/.json \
+  -H "Authorization: Bearer <token>"
+```
+
+Check `paginate.nextPage` in the response to know if more pages exist.
+
+### Filters in URL Path
+
+Many endpoints encode filters in the URL path rather than query parameters:
+
+```
+/flights/load/page:1/from:2025-01-01/to:2025-03-31/aircraft:45/pilot:/base:/flight_type:/.json
+```
+
+Use empty string for filters you want to skip.
+
+### File Downloads
+
+Export endpoints (XLS, PDF) require the token as a query parameter:
+
+```
+https://fmc.flylogs.com/v1/safety_reports/view/150/pdf:true?token=<token>
+```
+
+### Error Handling
+
+All errors return a JSON response with a `message` field:
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+| Status | Action |
+|--------|--------|
+| 401 | Token expired or invalid — re-authenticate |
+| 403 | Insufficient permissions for this endpoint |
+| 429 | Rate limited — reduce request frequency |

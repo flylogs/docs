@@ -94,5 +94,20 @@
 
 ## 🤖 API
 
-* [Description](api/description.md)
-* [Usage](api/usage.md)
+* [Description](API/description.md)
+* [Usage](API/usage.md)
+* [Quick Start](API/quick-start.md)
+* [Authentication](API/authentication.md)
+* [Users](API/users.md)
+* [Company](API/company.md)
+* [Flights](API/flights.md)
+* [Aircraft](API/aircraft.md)
+* [Pilots](API/pilots.md)
+* [Schedules](API/schedules.md)
+* [Messages](API/messages.md)
+* [Trainings](API/trainings.md)
+* [Safety Reports](API/safety-reports.md)
+* [Documents](API/documents.md)
+* [News](API/news.md)
+* [Reports](API/reports.md)
+* [Manager Users](API/manager-users.md)

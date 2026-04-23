@@ -1,0 +1,579 @@
+# Trainings
+
+## My Trainings
+
+<mark style="color:blue;">`GET`</mark> `/trainings.json`
+
+Retrieve the authenticated user's training enrollments, teaching assignments, and upcoming classes.
+
+#### Response
+
+```json
+{
+  "trainings": [
+    {
+      "Training": {
+        "active": true,
+        "type": "ground",
+        "name": "PPL Ground School",
+        "validity": null,
+        "flights": false,
+        "flights_count": "0",
+        "theory": true,
+        "time_online": true,
+        "id": "10",
+        "training_id": "10",
+        "enrollment_id": "500",
+        "enrollment": "500",
+        "supervisor_id": "101",
+        "flight_phase": null,
+        "finished": false,
+        "finish_date": null,
+        "TrainingSubject": [
+          { "id": "20", "name": "Meteorology", "training_id": "10", "LessonClass": [] }
+        ],
+        "Progress": {
+          "total": 12,
+          "completed": 5,
+          "finished": false,
+          "lessons": { "1": true, "2": true, "3": null }
+        }
+      }
+    }
+  ],
+  "teacher": [
+    {
+      "TrainingSubject": {
+        "id": "20",
+        "code": "MET",
+        "name": "Meteorology",
+        "hours": "40",
+        "lessons": "12"
+      },
+      "Training": { "name": "PPL Ground School", "id": "10" }
+    }
+  ],
+  "myClasses": [
+    {
+      "LessonClass": {
+        "id": "300",
+        "training_subject_id": "20",
+        "training_subject_lesson_id": "50",
+        "training_subject_exam_id": "0",
+        "datetime": "2025-03-15 09:00:00",
+        "status": "scheduled",
+        "teacher_id": "101",
+        "signature": null,
+        "minutes": "120",
+        "location_id": "5",
+        "remarks": ""
+      },
+      "TrainingSubjectLesson": {
+        "name": "Cloud Formation",
+        "training_subject_id": "20",
+        "TrainingSubject": { "name": "Meteorology" }
+      },
+      "TrainingSubjectExam": { "name": null, "training_subject_id": null },
+      "Teacher": {
+        "id": "101",
+        "UserDetail": { "name": "Maria", "surname": "Garcia", "id": "101" }
+      }
+    }
+  ]
+}
+```
+
+---
+
+## Training View
+
+<mark style="color:blue;">`GET`</mark> `/trainings/trainings/view/{id}.json`
+
+Retrieve full details for a specific training enrollment.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Training ID |
+
+#### Response
+
+```json
+{
+  "training": {
+    "TrainingsUser": {
+      "id": "500",
+      "training_id": "10",
+      "user_id": "123",
+      "supervisor_id": "101",
+      "finish_before": "2025-12-31",
+      "finished": false,
+      "validity": null,
+      "flight_phase": null,
+      "notes": null,
+      "created": "2025-01-15",
+      "modified": "2025-03-10"
+    },
+    "Training": {
+      "id": "10",
+      "name": "PPL Ground School",
+      "type": "ground",
+      "active": true,
+      "theory": true,
+      "flights": false,
+      "competencies": false,
+      "metrics": false,
+      "description": "Private Pilot Licence ground theory",
+      "TrainingSubject": [
+        {
+          "id": "20",
+          "code": "MET",
+          "name": "Meteorology",
+          "hours": "40",
+          "lessons": "12",
+          "training_id": "10",
+          "TrainingSubjectLesson": [
+            { "id": "50", "minutes": "120", "training_subject_id": "20" }
+          ],
+          "TrainingSubjectExam": [],
+          "Progress": { "total": 12, "completed": 5, "finished": false, "lessons": {} }
+        }
+      ],
+      "TrainingFlight": [],
+      "Manager": {
+        "id": "100",
+        "UserDetail": { "name": "Admin", "surname": "User", "id": "100" }
+      }
+    },
+    "User": {
+      "id": "123",
+      "UserDetail": { "name": "John", "surname": "Doe", "id": "123" }
+    },
+    "Supervisor": {
+      "id": "101",
+      "email": "maria@example.com",
+      "UserDetail": { "name": "Maria", "surname": "Garcia", "photo": null, "id": "101" }
+    },
+    "Function": "student",
+    "weeklytime": [
+      { "week_name": "Week 10", "year": "2025", "week": "10", "week_time": "480" }
+    ],
+    "Progress": { "total": 12, "completed": 5, "finished": false },
+    "TrainingFlightTypes": {}
+  },
+  "performedFlightTrainings": []
+}
+```
+
+---
+
+## My Subjects
+
+<mark style="color:blue;">`GET`</mark> `/trainings/subjects/mine.json`
+
+Retrieve subjects assigned to the authenticated user (as student).
+
+#### Response
+
+```json
+[
+  {
+    "Training": { "id": "10", "name": "PPL Ground School" },
+    "TrainingSubject": [
+      { "id": "20", "code": "MET", "name": "Meteorology", "teacher_id": "101", "training_id": "10" }
+    ]
+  }
+]
+```
+
+---
+
+## Subject View
+
+### Manager View
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/subjects/view/{id}.json`
+
+### Student View
+
+<mark style="color:blue;">`GET`</mark> `/trainings/subjects/view/{enrollmentId}/{subjectId}.json`
+
+Retrieve subject details with lessons, exams, and progress.
+
+#### Response
+
+```json
+{
+  "subject": {
+    "TrainingSubject": {
+      "id": "20",
+      "name": "Meteorology",
+      "code": "MET",
+      "description": "Weather theory for pilots",
+      "hours": "40",
+      "teacher_id": "101",
+      "total_minutes": 2400
+    },
+    "Training": {
+      "id": "10",
+      "name": "PPL Ground School",
+      "type": "ground",
+      "active": true,
+      "flights": false,
+      "time_online": true
+    },
+    "Teacher": {
+      "UserDetail": { "name": "Maria", "surname": "Garcia" }
+    },
+    "TrainingSubjectLesson": [
+      {
+        "id": "50",
+        "name": "Cloud Formation",
+        "minutes": "120",
+        "mandatory": true,
+        "order": "1",
+        "TrainingSubjectAttendance": [
+          { "value": true, "LessonClass": { "datetime": "2025-03-01 09:00:00" } }
+        ]
+      }
+    ],
+    "TrainingSubjectExam": [],
+    "Progress": { "total": 12, "completed": 5, "finished": false, "lessons": {} }
+  }
+}
+```
+
+---
+
+## Lessons
+
+### View Lesson
+
+<mark style="color:blue;">`GET`</mark> `/trainings/lessons/view/{lessonId}/{enrollmentId}.json`
+
+Retrieve lesson details and attendance records.
+
+### Lesson Slides
+
+<mark style="color:blue;">`GET`</mark> `/trainings/lessons/slides/{lessonId}.json`
+
+Retrieve e-learning slides for a lesson.
+
+### View Slide
+
+<mark style="color:blue;">`GET`</mark> `/trainings/lessons/slide/{slideId}.json`
+
+Retrieve a single slide with content and navigation.
+
+### Complete Lesson
+
+<mark style="color:green;">`POST`</mark> `/trainings/lessons/complete.json`
+
+Mark a lesson's slides as completed. Sent as `application/x-www-form-urlencoded`.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| lessonId | string | Yes | Lesson ID |
+| timeSpent | number | Yes | Time spent in seconds |
+| enrollmentId | string | Yes | Enrollment ID |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "finished": false,
+  "trainingId": "10",
+  "next": {
+    "title": "Wind Patterns",
+    "action": "lesson",
+    "id": "51",
+    "enrollmentId": "500"
+  }
+}
+```
+
+### Lesson Attendance
+
+<mark style="color:blue;">`GET`</mark> `/trainings/lessons/attendance/{subjectId}.json`
+
+Retrieve attendance records for all lessons in a subject.
+
+---
+
+## Class Sessions
+
+### View Class
+
+<mark style="color:blue;">`GET`</mark> `/trainings/onsite/class/{id}.json`
+
+Retrieve class session details including attendance.
+
+### Schedule Class
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/onsite/class.json`
+
+Create or update a class session. Sent as `application/x-www-form-urlencoded`.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| training_subject_id | string | Yes | Subject ID |
+| training_subject_lesson_id | string | No | Lesson ID (if class covers a specific lesson) |
+| training_subject_exam_id | string | No | Exam ID (if class is an exam session) |
+| start | string | Yes | Start datetime |
+| teacher_id | string | Yes | Teacher user ID |
+| location_id | string | No | Location ID |
+| remarks | string | No | Notes |
+| notify | boolean | No | Send notification to students |
+| students | string | Yes | Comma-separated student user IDs |
+
+### Delete Class
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/onsite/delete_class/{classId}/true.json`
+
+Delete a scheduled class session.
+
+### Store Attendance
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/store_attendance.json`
+
+Record attendance for a class session.
+
+### Sign Attendance
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/sign_class.json`
+
+Digitally sign class attendance (teacher confirmation).
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| classId | string | Yes | Class session ID |
+| password | string | Yes | Teacher's password for verification |
+
+### Unsign Class
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/unsign_class.json`
+
+Remove digital signature from a class.
+
+---
+
+## Student Evaluation
+
+### Get Evaluation
+
+<mark style="color:blue;">`GET`</mark> `/trainings/onsite/get_student_evaluation/{classId}/{userId}.json`
+
+Retrieve evaluation data for a student in a class.
+
+### Save Evaluation
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/save_student_evaluation.json`
+
+Save student evaluation for a class session.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| class_id | string | Yes | Class session ID |
+| student_id | string | Yes | Student user ID |
+| remarks | string | No | Evaluation remarks |
+| measures | string | No | Evaluation measures |
+| objectives | string | No | Learning objectives assessment |
+
+---
+
+## Online Exams
+
+### Exam Info
+
+<mark style="color:blue;">`GET`</mark> `/trainings/exams/index/{type}:{id}.json`
+
+Retrieve exam information. Type can be `subject` or `lesson`.
+
+### Preview Exam
+
+<mark style="color:blue;">`GET`</mark> `/trainings/exams/start/{enrollmentId}/{examId}.json`
+
+Preview exam details and previous attempts before starting.
+
+### Start Exam
+
+<mark style="color:green;">`POST`</mark> `/trainings/exams/start/{enrollmentId}/{examId}.json`
+
+Begin an exam attempt.
+
+#### Response
+
+```json
+{
+  "result": true,
+  "message": "Exam started",
+  "attempt_id": "1500"
+}
+```
+
+### Take Exam
+
+<mark style="color:blue;">`GET`</mark> `/trainings/exams/do/{attemptId}.json`
+
+Retrieve exam questions for an active attempt.
+
+### Submit Answer
+
+<mark style="color:green;">`POST`</mark> `/trainings/exams/answer.json`
+
+Submit an answer to an exam question.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| attemptDetailId | string | Yes | ExamAttemptDetail ID |
+| questionOptionId | string | Yes | Selected option ID |
+
+### Finish Exam
+
+<mark style="color:blue;">`GET`</mark> `/trainings/exams/finish/{attemptId}.json`
+
+Submit the exam for grading.
+
+### View Result
+
+<mark style="color:blue;">`GET`</mark> `/trainings/exams/view/{attemptId}.json`
+
+Retrieve exam results and (when enabled) correct answers.
+
+---
+
+## Students Management
+
+### List Students
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/list/training:{trainingId}/finished:{finished}/group:{groupId}/pilot_group:{pilotGroupId}/username:{search}.json`
+
+Retrieve students with filtering. All filter parameters optional (use empty string to skip).
+
+### View Student
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/view/{enrollmentId}.json`
+
+Retrieve full student enrollment details.
+
+### Enroll Students
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/students/enroll.json`
+
+Enroll students in a training. Sent as `application/x-www-form-urlencoded`.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| training_id | string | Yes | Training ID |
+| students | string | Yes | Comma-separated user IDs |
+| supervisor_id | string | No | Assigned supervisor/instructor |
+| finish_before | string | No | Deadline date |
+
+### Save Student Notes
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/students/notes.json`
+
+Update notes for a student enrollment.
+
+---
+
+## Training Calendar
+
+<mark style="color:blue;">`GET`</mark> `/trainings/trainings/calendar.json`
+
+Retrieve training-related calendar events.
+
+#### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| start | string | Yes | Start date |
+| end | string | Yes | End date |
+| timeZone | string | Yes | IANA timezone |
+| training | string | No | Filter by training ID |
+
+---
+
+## Training Certificate
+
+<mark style="color:blue;">`GET`</mark> `/trainings/trainings/certificate/{enrollmentId}.json`
+
+Retrieve training completion certificate data.
+
+---
+
+## Locations
+
+### List Locations
+
+<mark style="color:blue;">`GET`</mark> `/trainings/locations.json`
+
+Retrieve all training locations.
+
+### View Location
+
+<mark style="color:blue;">`GET`</mark> `/trainings/locations/view/{id}.json`
+
+Retrieve location details and scheduled classes.
+
+### Edit Location
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/locations/edit.json`
+
+Create or update a training location. Sent as `application/x-www-form-urlencoded`.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string | No | Location ID (omit to create new) |
+| name | string | Yes | Location name |
+| type | string | Yes | Location type |
+| phone | string | No | Contact phone |
+| address | string | No | Address |
+| country_id | string | Yes | Country ID |
+| timezone_id | string | Yes | Timezone ID |
+| description | string | No | Description |
+
+---
+
+## Manager Training Operations
+
+### List Trainings
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings.json`
+
+List all trainings with student counts (admin view).
+
+### Create Training
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/create.json`
+
+Create a new training course.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| name | string | Yes | Training name |
+| type | string | Yes | Training type |
+| theory | boolean | No | Has theory component |
+| flights | boolean | No | Has flight component |
+| competencies | boolean | No | Uses competency-based evaluation |
+| template_id | string | No | Base on existing template |
+
+### Training Templates
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/templates.json`
+
+List available training templates.
+
+### Teaching Report
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/teaching_report.json`
+
+Generate a teaching activity report.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| training | string | Yes | Training ID |
+| from | string | Yes | Start date |
+| to | string | Yes | End date |

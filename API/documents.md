@@ -1,0 +1,153 @@
+# Documents
+
+## List Documents
+
+<mark style="color:blue;">`GET`</mark> `/documents.json`
+
+Retrieve documents and folders in the root folder.
+
+<mark style="color:blue;">`GET`</mark> `/documents/index/folder:{folderId}.json`
+
+Retrieve documents and subfolders within a specific folder.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| folderId | string | Folder ID to browse |
+
+#### Response
+
+```json
+{
+  "folders": [
+    {
+      "DocumentFolder": {
+        "id": "10",
+        "company_id": "42",
+        "document_folder_id": "0",
+        "name": "Operations Manual",
+        "description": "OM Parts A-D",
+        "created": "2024-01-15",
+        "modified": "2025-02-20"
+      }
+    }
+  ],
+  "documents": [
+    {
+      "Document": {
+        "id": "200",
+        "company_id": "42",
+        "document_folder_id": "0",
+        "user_id": "100",
+        "name": "Safety Policy",
+        "description": "Company safety policy v3.2",
+        "deleted": false,
+        "download": true,
+        "flying_only": false,
+        "expiration": "2026-01-15",
+        "created": "2024-06-01",
+        "modified": "2025-01-10"
+      },
+      "DocumentDownload": [
+        { "id": "300", "document_id": "200" }
+      ],
+      "Upload": [
+        {
+          "id": "400",
+          "company_id": "42",
+          "active": true,
+          "type": "document",
+          "user_id": "100",
+          "filename": "safety-policy-v3.2.pdf",
+          "model": "Document",
+          "foreign_key": "200",
+          "size": "2456789",
+          "mime": "application/pdf",
+          "expiration": null,
+          "caption": "",
+          "icon": "fa-file-pdf",
+          "folder": "documents/42",
+          "url": "https://...",
+          "User": {
+            "id": "100",
+            "UserDetail": { "name": "Admin", "surname": "User", "id": "100" }
+          }
+        }
+      ]
+    }
+  ],
+  "folder": {
+    "DocumentFolder": {
+      "id": "0",
+      "name": "Root",
+      "description": ""
+    }
+  }
+}
+```
+
+---
+
+## View Document
+
+<mark style="color:blue;">`GET`</mark> `/documents/view/{id}.json`
+
+Retrieve a single document with its file attachments.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Document ID |
+
+#### Response
+
+```json
+{
+  "document": {
+    "Document": { ... },
+    "DocumentDownload": [ ... ],
+    "Upload": [ ... ]
+  }
+}
+```
+
+---
+
+## Upload Document
+
+<mark style="color:green;">`POST`</mark> `/documents/add.json`
+
+Upload a new document. Uses `multipart/form-data`.
+
+---
+
+## Manage Folders
+
+### Create / Edit Folder
+
+<mark style="color:green;">`POST`</mark> `/documents/folder.json`
+
+Create or update a document folder.
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string | No | Folder ID (omit to create new) |
+| name | string | Yes | Folder name |
+| description | string | No | Folder description |
+| document_folder_id | string | No | Parent folder ID |
+
+### Delete Folder
+
+<mark style="color:blue;">`GET`</mark> `/documents/delete_folder/{id}/true.json`
+
+Delete a folder and its contents.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Folder ID |
