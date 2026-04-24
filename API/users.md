@@ -100,6 +100,46 @@ Returns the updated `UserProfileResponse` (same shape as GET `/users/view.json`)
 
 ---
 
+## Change Email
+
+<mark style="color:green;">`POST`</mark> `/users/email.json`
+
+Change the authenticated user's email address. After success, `email_status` is set to `unconfirmed` and a confirmation email is sent to the new address.
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| new_email | string | Yes | New email address |
+| new_email_repeat | string | Yes | Must match `new_email` |
+| password | string | Yes | Current account password |
+
+#### Frontend Validation
+
+- `new_email` is a valid email format
+- `new_email` ≠ current user email
+- `new_email` === `new_email_repeat`
+- `password` is not empty
+
+#### Response
+
+```json
+{
+  "result": true,
+  "message": "Changes saved, check your mailbox at user@example.com."
+}
+```
+
+#### Errors
+
+| Status | Condition |
+|--------|-----------|
+| 400 | Missing fields, same email as current, or emails don't match |
+| 404 | Wrong password |
+| 500 | Save failed |
+
+---
+
 ## Change Password
 
 <mark style="color:green;">`POST`</mark> `/users/password.json`
