@@ -19,5 +19,6 @@
 * [Safety Reports](safety-reports.md)
 * [Documents](documents.md)
 * [News](news.md)
+* [Aircraft Reports](aircraft-reports.md)
 * [Reports](reports.md)
 * [Manager Users](manager-users.md)
