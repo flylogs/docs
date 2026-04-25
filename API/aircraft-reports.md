@@ -4,7 +4,7 @@ Manage aircraft technical reports (defects, observations, maintenance actions, s
 
 ## List Reports
 
-<mark style="color:green;">`POST`</mark> `/maintenance/reports/index.json`
+<mark style="color:green;">`POST`</mark> `/maintenance/aircraft_reports/index.json`
 
 Retrieve a paginated list of aircraft reports for the company fleet.
 
@@ -13,6 +13,7 @@ Retrieve a paginated list of aircraft reports for the company fleet.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | aircraft | number | Filter by aircraft ID |
+| flight | string | Filter by flight UUID |
 | type | string | Filter by report type (`DEFECT`, `OBSERVATION`, `MAINTENANCE_ACTION`, `SERVICING`, `RESTRICTION`, `INFO`) |
 | status | string | Filter by status (`OPEN`, `DEFERRED`, `CLOSED`) |
 | severity | string | Filter by severity (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`) |
@@ -74,7 +75,7 @@ Retrieve a paginated list of aircraft reports for the company fleet.
 
 ## View Report
 
-<mark style="color:blue;">`GET`</mark> `/maintenance/reports/view/{id}.json`
+<mark style="color:blue;">`GET`</mark> `/maintenance/aircraft_reports/view/{id}.json`
 
 Retrieve full details for a single aircraft report.
 
@@ -142,7 +143,7 @@ Retrieve full details for a single aircraft report.
 
 ## Create Report
 
-<mark style="color:green;">`POST`</mark> `/maintenance/reports/create.json`
+<mark style="color:green;">`POST`</mark> `/maintenance/aircraft_reports/create.json`
 
 Create a new aircraft report. The authenticated user is automatically set as the reporter and the creation timestamp is set server-side.
 
@@ -160,6 +161,7 @@ Create a new aircraft report. The authenticated user is automatically set as the
 | AircraftReport[aircraft_status] | string | no | `FLYABLE` (default), `GROUNDED` |
 | AircraftReport[dispatch_condition] | string | no | `NONE` (default), `GROUNDED`, `MEL`, `CDL`, `MONITOR` |
 | AircraftReport[status] | string | no | `OPEN` (default), `DEFERRED`, `CLOSED` |
+| AircraftReport[flight_id] | string | no | Associated flight UUID |
 | AircraftReport[hours] | number | no | Aircraft hours at time of report |
 | AircraftReport[cycles] | number | no | Aircraft cycles/landings at time of report |
 | AircraftReport[deferred_until] | number | no | Unix timestamp — deferred expiry date |
@@ -213,7 +215,7 @@ On validation failure, `result` is `false` and `message` contains field errors:
 
 ## Edit Report
 
-<mark style="color:green;">`POST`</mark> `/maintenance/reports/edit/{id}.json`
+<mark style="color:green;">`POST`</mark> `/maintenance/aircraft_reports/edit/{id}.json`
 
 Update an existing aircraft report.
 
@@ -251,7 +253,7 @@ Same fields as **Create Report**. Only include the fields you want to update.
 
 ## Delete Report
 
-<mark style="color:blue;">`GET`</mark> `/maintenance/reports/delete/{id}.json`
+<mark style="color:blue;">`GET`</mark> `/maintenance/aircraft_reports/delete/{id}.json`
 
 Delete an aircraft report.
 
