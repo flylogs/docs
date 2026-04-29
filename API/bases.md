@@ -277,7 +277,7 @@ Assign a pilot to a base for a time period. Backdated entries (both start and en
 | pilot | number | yes | Pilot user ID |
 | start | number | yes | Start unix timestamp |
 | end | number | yes | End unix timestamp |
-| type | string | no | Schedule type (`DUTY` default, `AVAILABLE`, `UNAVAILABLE`, `MAYBE`, `ALWAYS`) |
+| type | string | no | Schedule type: `DUTY` (default), `OFF`, `STANDBY`, `REST` |
 
 #### Response
 
@@ -298,7 +298,7 @@ Update an existing schedule entry. Cannot edit past records.
 | id | string | yes | BaseSchedule UUID |
 | start | number | yes | New start unix timestamp |
 | end | number | yes | New end unix timestamp |
-| type | string | no | `AVAILABLE`, `UNAVAILABLE`, `MAYBE`, `ALWAYS` |
+| type | string | no | `DUTY`, `OFF`, `STANDBY`, `REST` |
 
 #### Response
 
