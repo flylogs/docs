@@ -537,6 +537,70 @@ Create or update a training location. Sent as `application/x-www-form-urlencoded
 
 ---
 
+## Flight Missions
+
+### Unsigned Missions
+
+<mark style="color:blue;">`GET`</mark> `/trainings/missions/unsigned.json`
+
+Returns all flight mission attendance records for the authenticated user that are missing a debriefing signature. Only includes missions from active trainings that have `require_debriefing_signature` enabled.
+
+#### Response
+
+```json
+{
+  "missions": [
+    {
+      "UserTrainingFlight": {
+        "id": "800",
+        "training_flight_id": "tf-uuid-1",
+        "flight_id": "flight-uuid-1",
+        "completed": "2025-04-15 14:30:00",
+        "time": "5400"
+      },
+      "TrainingFlight": {
+        "id": "tf-uuid-1",
+        "name": "Solo Navigation",
+        "order": "3",
+        "Training": {
+          "id": "10",
+          "name": "CPL Flight Training",
+          "active": true,
+          "start": "2025-01-01",
+          "end": "2025-12-31",
+          "require_debriefing_signature": true
+        }
+      }
+    }
+  ]
+}
+```
+
+---
+
+### Sign Mission Debriefing
+
+<mark style="color:green;">`POST`</mark> `/trainings/missions/sign.json`
+
+Digitally sign the debriefing for a completed flight mission. Requires the user's password for verification. Only the student who flew the mission can sign it. Signing is only possible while the training is active and within its start/end dates.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| user_training_flight_id | string | Yes | UserTrainingFlight record ID |
+| pass | string | Yes | User's account password |
+
+#### Response
+
+```json
+{
+  "update": true
+}
+```
+
+Returns `false` if the record was already signed.
+
+---
+
 ## Manager Training Operations
 
 ### List Trainings
