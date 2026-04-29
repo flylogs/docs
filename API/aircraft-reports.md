@@ -134,6 +134,14 @@ Retrieve full details for a single aircraft report.
         "name": null,
         "surname": null
       }
+    },
+    "Job": {
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "100h Inspection",
+      "status": null,
+      "crs": null,
+      "start": "1714003200",
+      "end": "1714089600"
     }
   }
 }
@@ -146,6 +154,8 @@ Retrieve full details for a single aircraft report.
 <mark style="color:green;">`POST`</mark> `/maintenance/aircraft_reports/create.json`
 
 Create a new aircraft report. The authenticated user is automatically set as the reporter and the creation timestamp is set server-side.
+
+After a successful save, an in-app notification is sent to all active company staff (admins, managers, pilots, and mechanics) except the reporter. The notification includes the report title, severity, and aircraft status (FLYABLE / GROUNDED).
 
 #### Request Body
 
@@ -329,3 +339,49 @@ Delete an aircraft report.
 | `OPEN` | Report is open and active |
 | `DEFERRED` | Report deferred with reference |
 | `CLOSED` | Report resolved and closed |
+
+---
+
+## ATA Chapters
+
+<mark style="color:blue;">`GET`</mark> `/maintenance/aircraft_reports/ata_chapters.json`
+
+Retrieve the full list of ATA chapter codes and their descriptions, for use when filing reports.
+
+#### Response
+
+```json
+{
+  "ata_chapters": {
+    "05": "Time Limits / Maintenance Checks",
+    "06": "Dimensions and Areas",
+    "07": "Lifting and Shoring",
+    "12": "Servicing",
+    "21": "Air Conditioning",
+    "22": "Auto Flight",
+    "23": "Communications",
+    "24": "Electrical Power",
+    "25": "Equipment / Furnishings",
+    "26": "Fire Protection",
+    "27": "Flight Controls",
+    "28": "Fuel",
+    "29": "Hydraulic Power",
+    "30": "Ice and Rain Protection",
+    "31": "Indicating / Recording Systems",
+    "32": "Landing Gear",
+    "33": "Lights",
+    "34": "Navigation",
+    "35": "Oxygen",
+    "49": "APU",
+    "51": "Standard Practices – Structures",
+    "52": "Doors",
+    "53": "Fuselage",
+    "71": "Powerplant",
+    "72": "Engine",
+    "73": "Engine Fuel / Control",
+    "74": "Ignition",
+    "79": "Oil",
+    "80": "Starting"
+  }
+}
+```

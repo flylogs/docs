@@ -147,6 +147,24 @@ Delete a work order. The parent maintenance job must belong to the authenticated
 
 ---
 
+## Print Work Order
+
+<mark style="color:blue;">`GET`</mark> `/maintenance/workorder/print/{id}`
+
+Generate a PDF document for a work order, including related inventory, assigned user, aircraft details, and file uploads.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Work order UUID |
+
+#### Response
+
+Returns a PDF document (`Content-Type: application/pdf`).
+
+---
+
 ## Enumerations Reference
 
 #### Status

@@ -138,6 +138,17 @@ Retrieve full details for a single maintenance job, including work orders and fi
           }
         }
       }
+    ],
+    "AircraftReport": [
+      {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "title": "Nose gear shimmy above 80kt",
+        "type": "DEFECT",
+        "severity": "MEDIUM",
+        "status": "CLOSED",
+        "aircraft_status": "FLYABLE",
+        "created": "1714003200"
+      }
     ]
   }
 }
@@ -167,6 +178,7 @@ Create a new maintenance job. The authenticated user must be a manager or the ai
 | Job[expiration_checkbox] | string | no | Set to non-zero to enable expiration date |
 | Job[expiration] | string | no | Expiration date (parseable date string, required if checkbox enabled) |
 | Job[description] | string | no | Job description |
+| Job[crs] | string | no | Certificate of Release to Service — set to any truthy value to mark the job complete and automatically close all linked open aircraft reports |
 | Job[attachment] | file | no | File upload (image, video, or document) |
 
 #### Response
