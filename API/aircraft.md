@@ -2,24 +2,65 @@
 
 ## List Aircraft
 
-<mark style="color:blue;">`GET`</mark> `/aircraft/index.json?limit=5000`
+<mark style="color:blue;">`GET`</mark> `/aircraft/index.json`
 
-Retrieve the full fleet list. Used for dropdowns and aircraft selection.
+Retrieve the fleet list. Pilots (`user_group_id > 170`) see only active aircraft. Managers see all non-deleted aircraft.
+
+#### Named Parameters
+
+| Parameter | Example | Description |
+|-----------|---------|-------------|
+| active | `active:true` | Filter by active status (`true` or `false`). Ignored for pilot-level users. |
+| search | `search:C172` | Filter by registration or model name (partial match) |
+| base_id | `base_id:{uuid}` | Filter aircraft assigned to a specific base |
 
 #### Response
 
 ```json
 [
   {
-    "id": "45",
-    "registration": "EC-ABC",
-    "model": "C172",
-    "multipilot": false,
-    "active": true,
-    "order": "1"
+    "Aircraft": {
+      "id": "45",
+      "registration": "EC-ABC",
+      "active": true,
+      "multiengine": false,
+      "multipilot": false,
+      "simulator": false,
+      "serial": "172-12345",
+      "registration_exp": "2026-09-30",
+      "insurance_exp": "2025-12-31",
+      "airworthiness_exp": "2026-06-15",
+      "radio_exp": "2026-03-01",
+      "weight_exp": null,
+      "billing": false,
+      "photo": "EC_ABC.1682241511.jpg",
+      "flight_count": "450",
+      "created": "2020-01-15 10:00:00",
+      "hours": "12.500",
+      "landings": "9",
+      "log_reference": "1736925801"
+    },
+    "AircraftModel": {
+      "name": "C172",
+      "icao": "C172",
+      "aircraft_manufacturer_id": "292",
+      "id": "2018",
+      "AircraftManufacturer": { "name": "CESSNA" }
+    },
+    "AircraftLogReference": {
+      "total_time": "0.000",
+      "landings": "0"
+    },
+    "Base": { "id": "b1", "name": "Madrid Base" },
+    "User": {
+      "id": "123",
+      "UserDetail": { "name": "John", "surname": "Doe", "id": "123" }
+    }
   }
 ]
 ```
+
+> `Aircraft.hours` and `Aircraft.landings` are the running totals from the aircraft logbook (decimal hours string and integer count). `Aircraft.log_reference` is a Unix timestamp of the last logbook entry. `AircraftLogReference.total_time` / `landings` are the baseline reference values (often `null` or `0.000` when no reference has been set). `User` is `null` when no default pilot is assigned.
 
 ---
 
