@@ -4,7 +4,32 @@
 
 <mark style="color:blue;">`GET`</mark> `/trainings.json`
 
-Retrieve the authenticated user's training enrollments, teaching assignments, and upcoming classes.
+Retrieve the authenticated user's training enrollments, teaching assignments, and upcoming classes. Paginated (30 per page).
+
+#### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| user_id | string | No | Optional user UUID to list enrollments for. Ignored unless the caller is an API user; non-API callers always see their own enrollments. Defaults to the authenticated user. |
+
+#### Per-row enrichment
+
+Per-row progress is computed in batch, grouped by `training_id`, so the endpoint runs O(distinct trainings) queries instead of O(rows). Each enrollment is enriched as follows:
+
+- `Training.subjects_count` (always): integer count of `TrainingSubject` rows for the training. The full `TrainingSubject` list is no longer included — fetch it from the training-view endpoint when needed.
+- `Training.Lessons` (only when `Training.theory == true`): ground-school progress.
+  - For `type = "DISTANCE"`, computed from passed exams + slide-attendance.
+  - For `type = "ONSITE"` / `"REMOTE"`, computed from class attendance on past `LessonClass` rows.
+  - Shape: `{ "total": <int>, "completed": <int>, "finished": <bool> }`.
+- `Training.FlightProgress` (only when `Training.flights == true`): `{ "completed": <int>, "total": <int> }` — distinct `TrainingFlight` templates marked completed for the enrollment.
+
+The legacy per-row `Training.Progress` field has been **replaced** by `Training.Lessons` (theory) and `Training.FlightProgress` (flights). Clients that read `Progress.total / Progress.completed` should switch to `Lessons.total / Lessons.completed`.
+
+**Removed in this revision** (drop them from clients):
+
+- `Training.TrainingSubject` (the embedded subject list) — replaced by `subjects_count`.
+- Top-level `LessonClass` per row (the flattened upcoming-class list) — query the calendar endpoint or the training-view endpoint instead.
+- `Training.Phase` and `Training.LastFlight` — removed for performance. Use the manager students-list endpoint when you need them.
 
 #### Response
 
@@ -13,31 +38,41 @@ Retrieve the authenticated user's training enrollments, teaching assignments, an
   "trainings": [
     {
       "Training": {
+        "id": "10",
         "active": true,
-        "type": "ground",
+        "type": "DISTANCE",
         "name": "PPL Ground School",
         "validity": null,
         "flights": false,
         "flights_count": "0",
         "theory": true,
         "time_online": true,
-        "id": "10",
         "training_id": "10",
         "enrollment_id": "500",
-        "enrollment": "500",
+        "enrollment": "1714003200",
         "supervisor_id": "101",
         "flight_phase": null,
         "finished": false,
-        "finish_date": null,
-        "TrainingSubject": [
-          { "id": "20", "name": "Meteorology", "training_id": "10", "LessonClass": [] }
-        ],
-        "Progress": {
+        "finish_date": 0,
+        "subjects_count": 8,
+        "Lessons": {
           "total": 12,
           "completed": 5,
-          "finished": false,
-          "lessons": { "1": true, "2": true, "3": null }
+          "finished": false
         }
+      }
+    },
+    {
+      "Training": {
+        "id": "11",
+        "type": "ONSITE",
+        "name": "CPL Flight Phase",
+        "flights": true,
+        "theory": false,
+        "training_id": "11",
+        "enrollment_id": "501",
+        "subjects_count": 0,
+        "FlightProgress": { "completed": 4, "total": 18 }
       }
     }
   ],
