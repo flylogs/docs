@@ -2,6 +2,18 @@
 
 Manage maintenance jobs for aircraft. Requires **premium** or **unlimited** subscription plan.
 
+## Recurring jobs
+
+Jobs carry a `repeat` field with one of: `NEVER`, `DAY`, `WEEK`, `MONTH`, `QUARTER`, `SEMESTER`, `YEAR`. When a job is marked complete (`completed = true`) and its `repeat` is not `NEVER`, the system automatically clones the job into the future:
+
+- `start` is shifted by the repeat interval (e.g. `SEMESTER` adds 6 months).
+- `finish` preserves the original duration.
+- `expiration` preserves the original offset from `start` if it was set.
+- `completed` is reset to `false`; `hours_now` and `landings_now` are reset to `0`.
+- All linked `WorkOrder` rows are duplicated with `status = pending`.
+
+Cloning is idempotent: a successor with the same `aircraft_id`, `name` and computed `start` will not be created twice. A console command `Console/cake maintenance recurring [companyId]` runs the same scan for jobs that completed before this feature was deployed and is safe to schedule via cron.
+
 ## List Jobs
 
 <mark style="color:green;">`POST`</mark> `/maintenance/jobs/index.json`
@@ -206,7 +218,21 @@ Create a new maintenance job. The authenticated user must be a manager or the ai
 }
 ```
 
-On validation failure, `result` is `false` and `message` contains field errors.
+On validation failure, `result` is `false`, `job` is `null` and `message` is a map of field → error messages, e.g.:
+
+```json
+{
+  "result": false,
+  "job": null,
+  "attachment": null,
+  "message": {
+    "aircraft_id": ["Aircraft cannot be empty"],
+    "name": ["Maintenance name cannot be empty"]
+  }
+}
+```
+
+If the save fails without producing field-level errors (e.g. a DB or `beforeSave` abort), `message` falls back to the string `"Unable to save the maintenance job"`.
 
 ---
 
