@@ -462,14 +462,50 @@ Retrieve full student enrollment details.
 
 <mark style="color:green;">`POST`</mark> `/manager/trainings/students/enroll.json`
 
-Enroll students in a training. Sent as `application/x-www-form-urlencoded`.
+Enroll one or more students (or whole pilot groups) in a training. Sent as `application/x-www-form-urlencoded` or JSON.
+
+#### Request Body
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| training_id | string | Yes | Training ID |
-| students | string | Yes | Comma-separated user IDs |
-| supervisor_id | string | No | Assigned supervisor/instructor |
-| finish_before | string | No | Deadline date |
+| training_id | string | Yes | Training UUID. Must belong to the authenticated user's company. |
+| students | array | Yes | Array of identifiers. Numeric entries are treated as **user IDs**. Non-numeric entries are treated as **pilot group IDs** and expanded server-side to all member users. |
+| supervisor_id | string | No | UUID of the supervisor/instructor assigned to each new enrollment. |
+| finish_before | integer | No | Deadline as a Unix timestamp. Cast to int; falsy values mean "no deadline". |
+
+#### Behavior
+
+- A student already enrolled in the training is **skipped**, unless their prior enrollment is marked `finished = true` — in which case a fresh enrollment is created (re-take).
+- Pilot group entries are expanded to their members; members already enrolled are skipped.
+- For each successful enrollment on an `active` training, an in-app notification is sent to the student linking to the enrollment.
+
+#### Response
+
+```json
+{
+  "results": {
+    "123": {
+      "TrainingsUser": {
+        "id": "e1f2a3b4-...",
+        "training_id": "t1u2v3w4-...",
+        "user_id": "123",
+        "supervisor_id": "987",
+        "finish_before": 1735689600
+      }
+    },
+    "456": false
+  }
+}
+```
+
+`results` is a map keyed by user ID. The value is the saved record on success or `false` if that individual save failed validation.
+
+#### Errors
+
+| Status | When |
+|--------|------|
+| `400 Bad Request` | Not a POST, empty body, missing `training_id`, or `students` is not an array. |
+| `404 Not Found` | `students` array is empty, or `training_id` does not match a training in the user's company. |
 
 ### Save Student Notes
 
