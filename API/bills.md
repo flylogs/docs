@@ -477,6 +477,65 @@ Paginated list of all company bills. `type` is `transactions` (default, non-flig
 
 ---
 
+## Manager: Bill Stats
+
+<mark style="color:blue;">`GET`</mark> `/bills/manager_stats/{type}.json`
+
+<mark style="color:green;">`POST`</mark> `/bills/manager_stats/{type}.json`
+
+Aggregated stats over the **full** filtered set (not paginated). Same `type` and filters as `manager_index` — `from`, `to`, `pilot`. Filters can be sent as POST body or query string. Designed to be fetched in parallel with the first page of `manager_index` and refetched on every filter change. Charts read from this response, not from the paginated bill list.
+
+`type`: `transactions` (default, `flight_id = ''`) or `flights` (`flight_id <> ''`).
+
+`totalSeconds` is `SUM(billed_time) * 3600` (billed_time stored as hours). `topClients` returns up to 10 entries ordered by `ABS(SUM(total))` desc.
+
+#### Filters (POST body or query string)
+
+| Parameter | Description |
+|-----------|-------------|
+| from | Start date (anything `strtotime` accepts) |
+| to | End date (anything `strtotime` accepts) |
+| pilot | Filter by pilot user ID |
+
+#### Response
+
+```json
+{
+  "stats": {
+    "type": "transactions",
+    "count": 1842,
+    "total": 125430.55,
+    "avg": 68.10,
+    "positive": 145200.00,
+    "negative": -19769.45,
+    "totalSeconds": 0,
+    "monthly": [
+      {
+        "month": "2026-01",
+        "count": 312,
+        "total": 21500.00,
+        "positive": 24000.00,
+        "negative": -2500.00,
+        "totalSeconds": 0
+      }
+    ],
+    "topClients": [
+      {
+        "user_id": "100",
+        "name": "John Doe",
+        "count": 87,
+        "total": 9420.00,
+        "totalSeconds": 0
+      }
+    ]
+  }
+}
+```
+
+For `type=flights`, `totalSeconds` reflects flight billed time across the filtered set.
+
+---
+
 ## Manager: List Billable Pilots
 
 <mark style="color:blue;">`GET`</mark> `/bills/manager_pilots.json`
