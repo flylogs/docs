@@ -84,6 +84,8 @@
 ## Documents
 
 * [Document Library](documents/document-library.md)
+* [View Document](documents/view-document.md)
+* [Manager tools](documents/manager-tools.md)
 
 ## SMS
 

@@ -1,8 +1,12 @@
+---
+description: Index page, folder organization and group-based access
+---
+
 # Document Library
 
 Discover all about the [Document Library here](https://flylogs.com/features/aeronautical-documentation)!
 
-Flylogs Company Document Library is an embedded system into your Flylogs Free account that enables you to store your company manuals and other document or files to share them with other company members.
+Flylogs Company Document Library is an embedded system in your Flylogs account that lets you store company manuals and other files and share them with the rest of your company.
 
 The main features of the system are:
 
@@ -12,40 +16,33 @@ The main features of the system are:
 * File comments
 * File folders
 
-### Group Level access privileges
+### How the index page works
 
-For each document you publish, you can choose which user groups can access the file.
+The index page is the entry point of the library. It lists the documents and subfolders inside the current folder, with the **Main Folder** shown by default. Click any folder card to open it, or use the search box to look up a document by name across the whole library.
 
-You can choose one or many user groups based on your needs.
-
-### File version control
-
-Each time you update any of your published documents, you can publish the new version. Flylogs will keep old versions hidden but still available for you in the future.<br>
-
-Every new version you publish, will renew the process by which each member needs to download the file again.&#x20;
-
-It will also empty the file comments if any and clear the download registry for new version.
-
-
-
-### Download registry
-
-You can see who has downloaded each version of each document along with IP info and date.
-
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/TitB2ImhZs.png)
-
-### File comments
-
-If enabled this allows authorized users to the current file to comment on it.
-
-Comments will rotate with new versions of the file.
-
-Comments can be disabled for Documents on the company settings page.
-
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/LbOc4Cwzkz.png)
+Each row shows the document name, description, latest version uploader and creation date. A quick download button is offered for the current version.
 
 ### File folders
 
-For a better organization, you can create as many folders as needed for your documents.
+For better organization, you can create as many folders as needed for your documents. Folders are flat per company — they are not nested visually, but each document belongs to exactly one folder.
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/Ee0r0ZX5Ha.png)
+
+Use folders to separate operational manuals, training material, forms, etc. The same access rules apply regardless of the folder a document lives in.
+
+### Group level access privileges
+
+For each document you publish you choose which **user groups** can access it. Permissions are evaluated when the index page is rendered, so users only see documents their group is authorized to read.
+
+* Users outside the recipient groups will not see the document at all in the index.
+* Documents marked as `flying_only` are hidden from non-pilots, even if their group is in the recipient list.
+* Document owners always see their own documents in the index, regardless of the recipient list.
+* Top-level company administrators (group level 105 or below) see every document in the company.
+
+This filtering is applied **before pagination**, so search results and folder counts always reflect what the current user is allowed to see.
+
+### File version control
+
+Each time you update a published document you can publish the new version. Flylogs keeps old versions hidden but still available to you in the future.
+
+Every new version renews the cycle: every authorized member needs to download the file again, comments are cleared and the download registry is reset for the new version.
