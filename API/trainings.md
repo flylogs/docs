@@ -120,6 +120,52 @@ The legacy per-row `Training.Progress` field has been **replaced** by `Training.
 
 ---
 
+## Manager Trainings List
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings.json`
+
+List all trainings for the company. Manager-only (`user_group_id <= 135`). Paginated (50 per page), ordered by name asc.
+
+#### Per-row fields
+
+`Training.id`, `name`, `type`, `active`, `theory`, `flights`, `flights_count`, `competencies`, `metrics`, `announcement`, `start`, `end`, `color`, `created`, plus:
+
+- `students_count` (int): total `trainings_users` rows for the training (includes finished enrollments; not deduplicated by user).
+- `subjects_count` (int): non-deleted `training_subjects` rows for the training.
+
+The previous `Student` and `TrainingSubject` association arrays are no longer returned — use the counts instead.
+
+#### Response
+
+```json
+{
+  "trainings": [
+    {
+      "Training": {
+        "id": "10",
+        "name": "PPL Ground School",
+        "type": "DISTANCE",
+        "active": true,
+        "theory": true,
+        "flights": false,
+        "flights_count": "0",
+        "competencies": false,
+        "metrics": false,
+        "announcement": null,
+        "start": null,
+        "end": null,
+        "color": "#1f77b4",
+        "created": "2025-01-15",
+        "students_count": "24",
+        "subjects_count": "8"
+      }
+    }
+  ]
+}
+```
+
+---
+
 ## Training View
 
 <mark style="color:blue;">`GET`</mark> `/trainings/trainings/view/{id}.json`
