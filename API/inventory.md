@@ -2,6 +2,35 @@
 
 Manage maintenance inventory parts, units, and providers. Requires **premium**, **unlimited**, or **club** subscription plan.
 
+## Available Items (dropdown selector)
+
+<mark style="color:blue;">`GET`</mark> `/maintenance/inventory/available.json`
+
+Returns a flat list of inventory items that have **at least one `InventoryUnit` not yet assigned to a work order** (i.e. `inventory_units.workorder_id IS NULL`). Intended for populating dropdown selectors when picking parts to add to a work order — items whose units are all already attached to some work order are omitted.
+
+Scoped to the authenticated user's company. No request body, no pagination.
+
+#### Response
+
+```json
+{
+  "items": [
+    { "id": "d4e5f6a7-b8c9-0123-defg-h12345678901", "name": "Oil filter", "category": "Engine" },
+    { "id": "e5f6a7b8-c9d0-1234-efgh-i12345678901", "name": "Spark plug",  "category": "Engine" }
+  ]
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | string | Inventory UUID |
+| name | string | Part name |
+| category | string | Part category (used as the "type" label in selectors) |
+
+Items are ordered by `name ASC`.
+
+---
+
 ## List Inventory
 
 <mark style="color:green;">`POST`</mark> `/maintenance/inventory/index.json`

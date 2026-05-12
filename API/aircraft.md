@@ -283,13 +283,19 @@ Download the aircraft logbook as an Excel file. Token passed as query parameter:
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/consumptions/{id}.json`
 
-Retrieve monthly average fuel and oil consumption rates.
+Retrieve monthly average fuel and oil consumption rates. Defaults to last 12 months.
 
 #### Path Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | id | string | Aircraft ID |
+
+#### Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| months | integer | Optional. Number of months to look back. Range: 1–120. Default: 12 |
 
 #### Response
 

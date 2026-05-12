@@ -205,12 +205,58 @@ Delete an inventory unit. Requires manager role.
 
 Attach an inventory unit to a work order. This installs the unit on the work order's aircraft.
 
+Server-stamped fields on the unit (no need to send these):
+
+- `workorder_id` → target work order
+- `aircraft_id` → copied from `WorkOrder.Job.aircraft_id`
+- `status` → `installed`
+- `installation_date` → today (`YYYY-MM-DD`)
+- `last_inspection_date` → now (`YYYY-MM-DD HH:MM:SS`)
+
 #### Request Body
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | id | string | yes | Unit UUID |
 | workorder | string | yes | Work order UUID |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "item": {
+    "InventoryUnit": {
+      "id": "e5f6a7b8-c9d0-1234-efgh-i12345678901",
+      "serial_number": "SN-001234"
+    }
+  },
+  "message": "Inventory item updated",
+  "url": ["view", "e5f6a7b8-c9d0-1234-efgh-i12345678901"]
+}
+```
+
+---
+
+## Detach Unit from Work Order
+
+<mark style="color:green;">`POST`</mark> `/maintenance/unit/detach.json`
+
+Unlink an inventory unit from its work order. Reverses `attach()`.
+
+Server-stamped fields on the unit:
+
+- `workorder_id` → `null`
+- `aircraft_id` → `null`
+- `status` → `available`
+- `installation_date` → `null`
+- `last_inspection_date` → **unchanged** (reflects last physical inspection, not the work-order link)
+
+#### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | yes | Unit UUID |
 
 #### Response
 

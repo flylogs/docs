@@ -14,6 +14,16 @@ Jobs carry a `repeat` field with one of: `NEVER`, `DAY`, `WEEK`, `MONTH`, `QUART
 
 Cloning is idempotent: a successor with the same `aircraft_id`, `name` and computed `start` will not be created twice. A console command `Console/cake maintenance recurring [companyId]` runs the same scan for jobs that completed before this feature was deployed and is safe to schedule via cron.
 
+## Completion signature
+
+When a job transitions from `completed = false` to `completed = true`, the server stamps a `signature` JSON column with the authenticated user and timestamp:
+
+```json
+{ "user_id": 123, "signed_at": 1778485469 }
+```
+
+The signature is captured **only on the false → true transition**; re-saving an already-completed job will not overwrite the original signature. The field is `NULL` for jobs that have never been completed.
+
 ## List Jobs
 
 <mark style="color:green;">`POST`</mark> `/maintenance/jobs/index.json`
@@ -141,14 +151,9 @@ Retrieve full details for a single maintenance job, including work orders and fi
     "WorkOrder": [
       {
         "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        "status": "pending",
         "name": "Oil change",
-        "User": {
-          "id": "123",
-          "UserDetail": {
-            "name": "John",
-            "surname": "Doe"
-          }
-        }
+        "created": "1714003200"
       }
     ],
     "AircraftReport": [

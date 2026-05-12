@@ -545,6 +545,7 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
     "set_rating": null,
     "type_rating": null,
     "night_rating": null,
+    "ir_rating": null,
     "medical_class_1": null,
     "medical_class_2": null,
     "medical_class_3": null,
@@ -753,12 +754,15 @@ Per-pilot daily breakdown of duty / FDP / work time for a single month. **Premiu
       "UserDetail": { "name": "John", "surname": "Doe" },
       "PilotDutyRecord": [
         { "date": "2026-05-01", "start": "08:00:00", "end": "16:00:00", "total": 28800 }
-      ]
+      ],
+      "Flight": { "block_time": 54000 }
     }
   ],
   "type": "Duty"
 }
 ```
+
+`Flight.block_time` is total block time in seconds for the selected month, computed via `Flight->__getPilotFlightTime()` (respects company `FlightType` PIC/SIC rules).
 
 `/manager/pilots/duties/{export}.json` with a truthy `export` segment renders the XLS view instead.
 
