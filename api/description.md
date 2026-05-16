@@ -10,6 +10,7 @@ Seamlessly integrate your corporate software with Flylogs Services, managing acc
 #### **Main functionallities:**
 
 * Authentication functions
+* User management functions
 * Aircraft management
 * Flight management and Audit tools
 * Schedules
