@@ -20,6 +20,17 @@ You have the flexibility to decide whether you want to restrict the reservations
 
 ![](<../.gitbook/assets/Screenshot 2024-09-10 at 03.08.59.png>)<br>
 
+### Restrict self-booking to pilots with valid certificates
+
+At the bottom of the self-scheduling section you will find the **Allow self-booking without valid documents** toggle. It controls whether a pilot whose personal certificates are missing or expired can still see and use the self-booking widget.
+
+* **Toggle OFF (default — stricter)**: the self-booking widget is hidden for any pilot who does not hold a valid **Licence**, a valid **Rating** and a valid **Medical**. **Students are always hidden** in this mode, regardless of certificate status — a student must wait until their school promotes them to a pilot role before they can self-book. The pilot has to update their documents on their profile page before the box reappears.
+* **Toggle ON (permissive)**: the self-booking widget is shown to every pilot, regardless of the state of their licence, rating or medical. Use this option only if your operation handles document checks outside Flylogs or you are still onboarding pilots that have yet to upload their paperwork.
+
+{% hint style="info" %}
+This setting only controls **visibility** of the self-booking widget. Other safeguards — such as the `Block PIC without documents` warning shown when scheduling, currency requirements or billing-credit checks — continue to apply independently.
+{% endhint %}
+
 ### Aircraft setup for Self Scheduling
 
 You need to activate self scheduling on each aircraft.

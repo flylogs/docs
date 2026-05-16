@@ -271,6 +271,113 @@ Retrieve full details for a specific training enrollment.
 
 ---
 
+## Training Schema Totals
+
+<mark style="color:blue;">`GET`</mark> `/trainings/trainings/schema/{id}.json`
+
+Aggregate counts and durations for a training's ground-school structure and flight missions. Scope: must belong to caller's company.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Training UUID |
+
+#### Response
+
+```json
+{
+  "schema": {
+    "subjects_total": 4,
+    "lessons_total": 38,
+    "lessons_per_subject": [
+      { "id": "20", "name": "Meteorology", "lessons": 12, "hours": 24.5 }
+    ],
+    "ground_hours_total": 76.0,
+    "missions_total": 22,
+    "flights_per_flight_type": [
+      { "id": "1", "name": "Dual", "missions": 14, "hours": 21.5 },
+      { "id": "2", "name": "Solo", "missions": 8,  "hours": 12.0 }
+    ],
+    "flight_hours_total": 33.5
+  }
+}
+```
+
+Notes:
+- `ground_hours_total` derived from `SUM(Lesson.minutes) / 60` across non-deleted lessons in non-deleted subjects.
+- `flight_hours_total` derived from `SUM(TrainingFlight.hours)` across non-deleted flight missions.
+- `flights_per_flight_type` entries grouped by `TrainingFlight.flight_type_id`; each row carries both `missions` (count) and `hours` (sum).
+
+#### Errors
+
+| Status | Reason |
+|--------|--------|
+| 400    | Missing training id |
+| 404    | Training not found in caller's company |
+
+---
+
+## Student Summary
+
+<mark style="color:blue;">`GET`</mark> `/trainings/students/summary/{enrollmentId}.json`
+
+Compact progress + attendance roll-up for an enrollment. Cheap to call (no nested rows) — designed for dashboards, modals, and mission-tab headers that don't need the full `TrainingsUser` view.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| enrollmentId | string | `TrainingsUser.id` (UUID) |
+
+#### Access
+
+- Manager-level callers (`user_group_id <= 170`): any enrollment in caller's company.
+- Student-level callers (`user_group_id > 170`): only their own enrollment — `403` otherwise.
+
+#### Response
+
+```json
+{
+  "result": {
+    "training_id":   "1a2b...",
+    "enrollment_id": "9f8e...",
+    "user_id":       "42",
+    "finished":      false,
+    "theory": {
+      "progress":   { "total": 38, "completed": 21, "percentage": 55 },
+      "attendance": { "given":  42, "taken":     31, "percentage": 73 }
+    },
+    "flight": {
+      "progress":   { "total": 22, "completed": 9,  "percentage": 41 },
+      "attendance": { "attempts": 14, "passed": 9,  "percentage": 64 },
+      "hours":      { "planned": 33.5, "flown":  18.2 }
+    }
+  }
+}
+```
+
+#### Field semantics
+
+- `theory.progress` — derived from `Training::getProgress` (mandatory `training_activities` in scope, all subjects). `completed` includes LESSON activities marked attended **and** EXAM activities passed (gate exams gate the corresponding lesson's completion). `percentage = floor(completed * 100 / total)`.
+- `theory.attendance` — derived from `Training::getAttendance`. `given` = `session_students.invited = 1` rows whose `sessions.training_activity` is subject-scoped and `sessions.datetime < now()`. `taken` = subset where `attended = 1`.
+- For `Training.type == "DISTANCE"` the `attendance` block mirrors `progress` (no live sessions exist for distance training).
+- `flight` is `null` when `Training.flights == false`.
+- `flight.progress` — `total` = count of `TrainingFlight` templates in the training. `completed` = distinct templates with at least one `UserTrainingFlight.completed = 1` row (non-draft, non-deleted flight). Same logic as `Training.FlightProgress` in `My Trainings`.
+- `flight.attendance` — per-mission attempt counts across all `user_training_flights` for the enrollment (each row = one attempt). `passed = sum(completed = 1)`. Useful for "X attempts / Y passes" badges.
+- `flight.hours.planned` = `SUM(TrainingFlight.hours)`. `flight.hours.flown` = `SUM(Flight.block_time) / 3600` over non-draft, non-deleted flights linked through `user_training_flights`. Rounded to one decimal.
+- `finished` mirrors `TrainingsUser.finished`.
+
+#### Errors
+
+| Status | Reason |
+|--------|--------|
+| 400    | Missing enrollment id |
+| 403    | Student requesting another user's enrollment |
+| 404    | Enrollment not found / Training not found in caller's company |
+
+---
+
 ## My Subjects
 
 <mark style="color:blue;">`GET`</mark> `/trainings/subjects/mine.json`
@@ -611,6 +718,15 @@ Retrieve attendance records for all lessons in a subject.
 
 Retrieve class session details including attendance.
 
+Response `class` payload contains:
+
+- `Session`, `Teacher`, `SessionStudent`, `Location`.
+- `TrainingActivity` — the bound activity (`id`, `kind`, `lesson_id`, `exam_id`, `training_subject_id`) with its nested children:
+  - `TrainingActivity.TrainingSubject` including `Training` and `Training.Metric[]` — competency metrics defined on the training (`id`, `name`, `training_id`), ordered by name. Used to render the metric grid alongside attendance without an extra request.
+  - `TrainingActivity.Lesson` (when `kind=LESSON`) with `LearningObjective[]` — objectives attached to the lesson (`id`, `name`, `description`, `training_subject_lesson_id`), ordered by name.
+  - `TrainingActivity.Exam` (when `kind=EXAM`).
+- `attendances` — `ActivityProgress` rows for the session (scoped to the requesting user unless teacher/manager).
+
 ### Schedule Class
 
 <mark style="color:green;">`POST`</mark> `/manager/trainings/onsite/class.json`
@@ -633,11 +749,86 @@ Create or update a class session. Sent as `application/x-www-form-urlencoded`.
 
 Delete a scheduled class session.
 
+### Session Report
+
+<mark style="color:blue;">`GET`</mark> `/trainings/onsite/session_report/{start}/{end}[/{training_id}].json`
+
+Report of class sessions in a date range with per-user attendance totals. Company-scoped via `Training.company_id`.
+
+#### Path Parameters
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| start | string\|int | Yes | Inclusive lower bound for `Session.datetime`. Accepts a unix timestamp or any `strtotime`-parseable string (e.g. `2026-01-01`). |
+| end | string\|int | Yes | Inclusive upper bound for `Session.datetime`. Same accepted formats as `start`. |
+| training_id | int | No | Optional `Training.id` filter — only sessions whose subject belongs to this training. |
+
+#### Response
+
+```json
+{
+  "sessions": [
+    {
+      "id": "s-1",
+      "datetime": 1767225600,
+      "minutes": 90,
+      "status": "closed",
+      "training_id": "t-1",
+      "training": "B737 Recurrent",
+      "subject_id": "sub-1",
+      "subject": "Performance",
+      "kind": "LESSON",
+      "activity": "Takeoff Performance",
+      "teacher_id": "u-9",
+      "teacher_name": "Jane Doe"
+    }
+  ],
+  "users": [
+    {
+      "user_id": "u-1",
+      "user_name": "John Smith",
+      "user_group": "Pilot",
+      "sessions_invited": 5,
+      "sessions_attended": 4,
+      "minutes_invited": 450,
+      "minutes_attended": 360
+    }
+  ],
+  "filters": { "start": 1767225600, "end": 1769904000, "training_id": "t-1" }
+}
+```
+
+#### Field semantics
+
+- `sessions[]` — every `TrainingSession` whose `datetime` falls in `[start, end]` (any status, future or past within the window). Sorted by `datetime ASC`.
+- `users[]` — aggregated from `activity_progress` rows attached to the matched sessions. Every distinct `user_id` with an `activity_progress` row is included (invited set).
+  - `sessions_invited` / `minutes_invited` — count and sum of `Session.minutes` across every `activity_progress` row for the user.
+  - `sessions_attended` / `minutes_attended` — subset where `activity_progress.value` is truthy.
+- Users sorted alphabetically by `user_name`.
+
+#### Errors
+
+| Status | Body | When |
+|--------|------|------|
+| 400 | `Missing start or end date` | Path param null |
+| 400 | `Invalid start or end date` | `strtotime` returned false / 0 |
+
 ### Store Attendance
 
 <mark style="color:green;">`POST`</mark> `/trainings/onsite/store_attendance.json`
 
 Record attendance for a class session.
+
+**Body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| data[session_id] | string | Yes | `TrainingSession.id` |
+| data[attendance][{activity_progress_id}][value] | int/bool | Yes | 1/0 attendance flag |
+| data[attendance][{activity_progress_id}][exam_value] | int/bool | No | Exam activities only — overrides `value` |
+| data[attendance][{activity_progress_id}][exam_rating] | number | No | Exam score |
+| data[attendance][{activity_progress_id}][notes] | string | No | Exam notes |
+| data[attendance][{activity_progress_id}][code] | string | No | Exam code |
 
 ### Sign Attendance
 
@@ -1068,6 +1259,8 @@ Retrieve training-related calendar events.
 <mark style="color:blue;">`GET`</mark> `/trainings/trainings/certificate/{enrollmentId}.json`
 
 Retrieve training completion certificate data. Gated strictly on `TrainingsUser.finished = 1`. If the auto-completion mechanism (below) hasn't fired, this endpoint returns `404 Training not finished yet` regardless of how complete the activities look.
+
+**Manager fallback**: `Training.manager_id` may be `NULL`. When it is, `Training.Manager` is filled with the first company user in `user_group_id` ∈ (100, 105, 135) that has a non-empty `UserDetail.signature` so the certificate always has a signatory. Returned shape matches the normal Manager: `{ id, UserGroup.name, UserDetail.{name, surname, signature} }`. If no such user exists `Training.Manager` stays empty.
 
 ---
 

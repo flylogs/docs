@@ -174,6 +174,8 @@ List safety reports for the company. Only top-level reports (no `parent_id`) are
 
 Full details for a single report including flight, aircraft, and reporter.
 
+> `created` and `modified` are unix timestamps (integers, seconds since epoch). `datetime` is a `YYYY-MM-DD HH:MM:SS` string.
+
 #### Path Parameters
 
 | Parameter | Type | Description |
@@ -215,8 +217,8 @@ Full details for a single report including flight, aircraft, and reporter.
       "risk_severity": "marginal",
       "mitigated_risk_severity": "negligible",
       "anonymous": false,
-      "created": "2025-03-10 12:00:00",
-      "modified": "2025-03-10 14:30:00"
+      "created": 1741608000,
+      "modified": 1741617000
     },
     "Reporter": {
       "id": "123",
