@@ -12,5 +12,4 @@ Get in [contact with our support team](https://www.flylogs.com/home/contact) to 
 * The token is destroyed on each login, logout or every 14 days, what ever happens first.
 * API usage is limited and throttled. Any user abusing the system or performing an abusive number of requests will be banned from the system automatically for 14 days.
 
-**Upon API service activation, you will receive the POSTMAN collection link.**
 **Upon API service activation, you will have access to the docs in the [help site](https://neo.flylogs.com/help/article/view/API/description.md) of the NEO.**
