@@ -6,8 +6,9 @@ Every time you create a new Flylogs user within your account, you need to carefu
 
 * **STAFF MEMBERS**, which can also have PILOT privileges.
 * **Pilots** with no company management privileges.
-* Audit users
-* Mechanics
+* **Cabin Crew** members.
+* **Mechanics**.
+* **Auditors** with external read-only access.
 
 ### Staff members
 
@@ -31,9 +32,9 @@ All staff members require at least the following fields:
 * **Compliance & Safety manager:** Access to reporting tools, docs, flights, trainings and SMS.
 * **Human resources manager:** Create and manage any other company user.
 * **Financial manager:** Access to manage company billing and user account balances. Also has the ability to manage the Flylogs Premium subscription and download the bills.
+* **Trainings manager:** Dedicated to managing the trainings module. Can create and edit training programs, schedule sessions, record attendance and manage exams and progress for students.
 * **Crew Scheduling:** Limited access with privilege to manage the flight schedule and pilot info and availability.
 * **Flight Dispatcher:** This profile can edit or cancel scheduled flights. Also can confirm and enter flight details after their landings.
-* **Mechanic:** Access to all aircraft details. Management of the maintenances and all aircraft flight and logbook view+download options.
 
 As mentioned before, any of these STAFF profiles, can also be activated as pilot. In that case, the user will appear both in the STAFF members and PILOTS lists.
 
@@ -56,6 +57,51 @@ Pilots can also be created with or without flying privileges. This way, you can 
 * **Captain:** Own flights and schedule view/edit only.&#x20;
 * **Pilot:** Own flights and schedule view/edit only.
 * **Student Pilot:** This is the most limited access with view only capabilities and limited access to other pilot profiles.
+
+### Cabin Crew
+
+Cabin Crew members can be added to flights as part of the crew, alongside pilots. They have a personal view of their own assigned flights, schedules and documents, but no company management privileges.
+
+Like pilots, cabin crew members can be created without an email address if login access is not required.
+
+### Mechanics
+
+Mechanics have access to all aircraft details. They can manage maintenance jobs and work orders, and view and download all aircraft flight and logbook information.
+
+### Auditors
+
+Auditors are external users granted read-only access to your company. They are typically used to provide regulators, inspectors or external compliance reviewers a temporary view of your documents, flights and reports without giving them permission to modify any data.
+
+
+
+### Permissions at a glance
+
+The table below summarises what each role can do across the main areas of Flylogs. ✅ = full access · View = read-only · — = no access.
+
+| Role | Manage users | Billing | Flights | Aircraft | Trainings | Safety | Schedule |
+|------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Company Administrator | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Operations Manager | ⚠️ no admins | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Compliance & Safety Manager | — | — | View | — | View | ✅ | View |
+| Human Resources Manager | ✅ | — | — | — | — | — | — |
+| Financial Manager | — | ✅ | View | — | — | — | — |
+| Trainings Manager | — | — | View | — | ✅ | — | View |
+| Crew Scheduling | — | — | View | — | — | — | ✅ |
+| Flight Dispatcher | — | — | ✅ | View | — | — | ✅ |
+| Chief Pilot | View pilots | — | View all | — | — | View | View all |
+| Flight Instructor | View students | — | Own + students | — | Teach | Own | Own |
+| Captain | — | — | Own | — | — | Own | Own |
+| Pilot | — | — | Own | — | — | Own | Own |
+| Student Pilot | — | — | Own (read) | — | Enrolled | Own | Own (read) |
+| Cabin Crew | — | — | Assigned | — | — | Own | Assigned |
+| Auditor | — | View | View | View | View | View | View |
+| Mechanic | — | — | View | ✅ | — | — | — |
+
+A few rules apply across every role:
+
+* The user that **created the flight**, or the assigned **Pilot in Command**, can always edit their own flight for 24 hours after it was confirmed, even without any other permission.
+* **Company Administrators and Operations Managers** can override almost every limit — they can edit, cancel, delete or confirm any flight regardless of who created it.
+* **Deleted** flights and **historical** entries cannot be modified by anyone, regardless of role.
 
 ### Deactivate or delete users
 
