@@ -7,6 +7,8 @@ This article explains how the feature works, what each screen shows, and how the
 
 ***
 
+> **Who can dispatch?** Dispatching a flight creates a draft, so it requires the **Create flights** permission for your user type plus an active pilot profile. Company Administrators and Operations Managers can always dispatch. See [Flight permissions](../company-management/company-settings.md#flight-permissions).
+
 ### **1. Opening the Dispatch Menu**
 
 From the **Schedule** view, locate the flight you want to dispatch.\
