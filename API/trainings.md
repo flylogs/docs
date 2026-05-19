@@ -496,62 +496,77 @@ Authorization: caller's company must own the training; non-admin users (`user_gr
 
 <mark style="color:blue;">`GET`</mark> `/trainings/subjects/view/{enrollmentId}/{subjectId}.json`
 
-Retrieve subject details with lessons, exams, and progress for the enrolled student.
+Retrieve subject details with the full unified activity list (lessons + exams) and the enrolled student's progress, attendance and exam attempts.
 
-**Reset filter:** if a lesson-gate exam has been reset (`ActivityProgress.reset_at` is set), the `ExamAttempt[]` list under that activity contains only attempts where `start > reset_at` (falling back to `created` when `start` is empty). Pre-reset attempts are hidden from the student here; they remain in the DB and are surfaced — flagged with `reset: true` — in `GET /manager/trainings/students/view/{enrollmentId}.json` for manager review.
+**Who can call this:** the enrolled student, the subject teacher, and managers (`user_group_id <= 150`). The endpoint resolves the student via `{enrollmentId}` (the `TrainingsUser.id` URL param), so attempts / progress / attendance always reflect that student regardless of which user is authenticated.
+
+**Activity list:** `subject.TrainingActivity[]` is the canonical ordered list, sorted by `TrainingActivity.order ASC`. Lessons and exams are interleaved as a single sequence — typically `lesson → its gate exam → next lesson → next gate exam → … → subject-scope exams at the end`. Missing `TrainingActivity` rows are backfilled on read (live lesson / subject-scope exam without a TA row gets one inserted; a deleted TA row whose source is live again gets undeleted) so every live lesson and exam in the subject is guaranteed to appear.
+
+**Per-activity payload:**
+- LESSON activities carry the `Lesson` payload and a `Sessions[]` list — one entry per `TrainingSession` under that activity where the student has a `SessionStudent` row, ordered by `Session.datetime ASC`. Each entry has `Session: {id, datetime, minutes}` and `SessionStudent: {id, invited, attended}`. `attended` is resolved from the matching `ActivityProgress.value` (joined by `session_id`) when an `ActivityProgress` row exists for that session — that is where `OnsiteController::attendance` writes attendance. Sessions without a matching `ActivityProgress` row fall back to the raw `session_students.attended` column.
+- EXAM activities carry the `Exam` payload with its `ExamAttempt[]` list for this enrollment (newest first). Onsite-exam `ActivityProgress` rows are sorted by `Session.datetime` ascending.
+
+**Reset filter:** if an exam activity has been reset (`ActivityProgress.reset_at` is set), the `ExamAttempt[]` list under that activity contains only attempts where `start > reset_at` (falling back to `created` when `start` is empty). Pre-reset attempts are hidden from the student here; they remain in the DB and are surfaced — flagged with `reset: true` — in `GET /manager/trainings/students/view/{enrollmentId}.json` for manager review.
 
 #### Response
 
 ```json
 {
+  "trainingsUserId": "500",
+  "displayDetails": false,
+  "enrollment": { "TrainingsUser": { "id": "500", "user_id": "900", "training_id": "10" } },
   "subject": {
     "TrainingSubject": {
       "id": "20",
+      "training_id": "10",
       "name": "Meteorology",
       "code": "MET",
-      "description": "Weather theory for pilots",
-      "hours": "40",
       "teacher_id": "101"
     },
     "Training": {
       "id": "10",
       "name": "PPL Ground School",
-      "type": "ground",
+      "type": "DISTANCE",
+      "time_online": true,
       "active": true,
-      "flights": false,
-      "time_online": true
+      "allow_auto_restart": true
     },
-    "Teacher": {
-      "UserDetail": { "name": "Maria", "surname": "Garcia" }
-    },
-    "Lesson": [
+    "TrainingActivity": [
       {
-        "id": "50",
-        "name": "Cloud Formation",
-        "minutes": "120",
-        "TrainingActivity": {
-          "id": "act-50",
-          "order": "1",
-          "ActivityProgress": [
-            { "value": 1, "time": 1800, "session_id": "s-1", "Session": { "datetime": "2025-03-01 09:00:00" } }
+        "TrainingActivity": { "id": "act-50", "kind": "LESSON", "lesson_id": "50", "exam_id": null, "order": 1, "mandatory": true },
+        "Lesson": { "id": "50", "name": "Cloud Formation", "minutes": 120 },
+        "ActivityProgress": [
+          { "id": "ap-1", "value": 1, "time": 1800, "session_id": "s-1", "created": "2025-03-01 09:00:00", "Session": { "id": "s-1", "datetime": "2025-03-01 09:00:00" } }
+        ],
+        "Sessions": [
+          { "Session": { "id": "s-1", "datetime": "2025-03-01 09:00:00", "minutes": 60 }, "SessionStudent": { "id": "ss-1", "invited": true, "attended": true } },
+          { "Session": { "id": "s-2", "datetime": "2025-03-08 09:00:00", "minutes": 60 }, "SessionStudent": { "id": "ss-2", "invited": true, "attended": false } }
+        ]
+      },
+      {
+        "TrainingActivity": { "id": "act-e50", "kind": "EXAM", "lesson_id": null, "exam_id": "e-50-gate", "order": 2, "mandatory": true },
+        "Exam": {
+          "id": "e-50-gate",
+          "name": "Cloud Formation — gate",
+          "type": "ONLINE",
+          "attempts": 2,
+          "score": 75,
+          "questions": 10,
+          "minutes": 15,
+          "training_subject_id": "20",
+          "training_subject_lesson_id": "50",
+          "ExamAttempt": [
+            { "id": "att-2", "start": 1741420000, "finish": 1741420900, "passed": true, "status": "FINISHED", "score": 80, "created": "2025-03-08 10:00:00" }
           ]
         },
-        "Exam": { "id": "e-pre", "ExamAttempt": [{ "passed": true }] }
-      }
-    ],
-    "Exam": [
+        "ActivityProgress": []
+      },
       {
-        "id": "e-9",
-        "name": "Final",
-        "type": "ONSITE",
-        "mandatory": true,
-        "TrainingActivity": {
-          "id": "act-e9",
-          "order": "2",
-          "ActivityProgress": [
-            { "value": 1, "score": "85", "code": "PASS", "notes": "", "session_id": "s-2", "created": "2025-03-15 10:00:00", "Session": { "datetime": "2025-03-15 10:00:00" } }
-          ]
-        }
+        "TrainingActivity": { "id": "act-e9", "kind": "EXAM", "lesson_id": null, "exam_id": "e-9", "order": 99, "mandatory": true },
+        "Exam": { "id": "e-9", "name": "Final", "type": "ONSITE", "training_subject_id": "20", "training_subject_lesson_id": null, "ExamAttempt": [] },
+        "ActivityProgress": [
+          { "id": "ap-2", "value": 1, "score": "85", "code": "PASS", "session_id": "s-3", "created": "2025-03-15 10:00:00", "Session": { "id": "s-3", "datetime": "2025-03-15 10:00:00" } }
+        ]
       }
     ],
     "Progress": { "total": 12, "completed": 5, "finished": false, "lessons": {} }
@@ -559,7 +574,7 @@ Retrieve subject details with lessons, exams, and progress for the enrolled stud
 }
 ```
 
-Onsite exam `ActivityProgress` is sorted by `Session.datetime` ascending.
+Legacy fields `subject.Lesson[]` and `subject.Exam[]` are no longer emitted by this endpoint — consume `subject.TrainingActivity[]` and branch on `TrainingActivity.kind`.
 
 ---
 
@@ -812,6 +827,65 @@ Report of class sessions in a date range with per-user attendance totals. Compan
 |--------|------|------|
 | 400 | `Missing start or end date` | Path param null |
 | 400 | `Invalid start or end date` | `strtotime` returned false / 0 |
+
+### List Scheduled Sessions
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/onsite/sessions.json`
+
+List scheduled class sessions in a date range. Company-scoped via `Training.company_id`.
+
+#### Query Parameters
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| start | string\|int | Yes | Inclusive lower bound for `Session.datetime`. Accepts a unix timestamp, or a date/datetime string parsed in `timeZone` (e.g. `2026-05-18`). |
+| end | string\|int | Yes | Inclusive upper bound. Date-only values (no `T` and no `:`) are extended to `23:59:59` of that day in `timeZone`. |
+| timeZone | string | No | IANA timezone name used to interpret `start`/`end` and to format response timestamps. Defaults to `UTC`. |
+| training | string | No | Optional `Training.id` filter — only sessions whose subject belongs to this training. |
+
+#### Response
+
+```json
+{
+  "sessions": [
+    {
+      "id": "s-1",
+      "start": "2026-05-19T09:00:00+00:00",
+      "end": "2026-05-19T10:30:00+00:00",
+      "duration_minutes": 90,
+      "kind": "LESSON",
+      "activity": "Takeoff Performance",
+      "training": "B737 Recurrent",
+      "teacher": { "id": "u-9", "name": "Jane", "surname": "Doe" },
+      "location": "Classroom A"
+    }
+  ],
+  "filters": {
+    "start": 1747526400,
+    "end": 1748217599,
+    "timeZone": "UTC",
+    "training": null
+  }
+}
+```
+
+#### Field semantics
+
+- `sessions[]` — every `TrainingSession` whose `datetime` falls in `[start, end]`. Sorted by `datetime ASC`.
+- `start` / `end` — ISO 8601 with offset, formatted in the supplied `timeZone`. `end = start + duration_minutes`.
+- `kind` — `LESSON` or `EXAM` from the bound `TrainingActivity`.
+- `activity` — the `Lesson.name` (kind=LESSON) or `Exam.name` (kind=EXAM).
+- `training` — `Training.name`.
+- `teacher` — `Teacher.UserDetail.name` / `surname`; `id` is the user id.
+- `location` — `Location.name`, empty string if the session has no location.
+
+#### Errors
+
+| Status | Body | When |
+|--------|------|------|
+| 400 | `Missing start or end` | Query param missing or empty |
+| 400 | `Invalid timeZone` | `DateTimeZone` rejected the name |
+| 400 | `Invalid start` / `Invalid end` | Date string could not be parsed |
 
 ### Store Attendance
 

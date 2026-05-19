@@ -460,11 +460,26 @@ Flight totals are in **hours** (formatted strings). Duty `totals` come from `Pil
 
 #### POST — bulk save duty records
 
-Body is an array of `PilotDutyRecord` objects. Saved with `saveMany(... atomic=false)`.
+Body is a numerically-indexed array of `PilotDutyRecord` objects (flat, no model alias). Each record needs `date`; `in_duty`/`out_duty`/`in_work`/`out_work`/`in_flight`/`out_flight` are optional time fields (`HH:MM` or `HH:MM:SS`). `user_id` and `company_id` are auto-filled from the session when omitted. Existing row for `(company, user, date)` is replaced.
+
+Saved with `saveMany(... atomic=false, validate=true)` — each record is validated and saved independently; an invalid record does not block the rest.
 
 ```json
-{ "save": true, "errors": [] }
+{
+  "save": [true, true, true, false, true],
+  "errors": {
+    "3": {
+      "in_work": ["Must be a valid time"],
+      "out_work": ["Must be a valid time"]
+    }
+  }
+}
 ```
+
+- `save[i]` — `true` if record `i` was persisted, `false` if it failed validation.
+- `errors[i]` — per-field validation errors for failed records.
+
+Valid time strings only. Literal `"null"` is rejected; send an empty string or omit the field to clear/leave unchanged. Empty string overwrites the existing column with `NULL`.
 
 ---
 
