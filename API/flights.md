@@ -117,6 +117,8 @@ Flight times (`block_time`, `flight_time`, `night_flight_time`, `ifr_flight_time
 
 Retrieve full details for a single flight, including crew, airports, audit trail, and permissions.
 
+Users with `user_group_id > 170` may only view flights they are involved in (creator, PIC, SIC, supervisor, or owner of the aircraft). Otherwise returns `403 Forbidden`.
+
 #### Path Parameters
 
 | Parameter | Type | Description |

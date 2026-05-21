@@ -82,6 +82,8 @@ Retrieve upcoming schedule records and status definitions.
 
 Retrieve full details for a single schedule record, including history.
 
+Users with `user_group_id > 170` may only view schedules they are involved in (creator, PIC, SIC, supervisor, or owner of the aircraft). Otherwise returns `403 Forbidden`.
+
 #### Path Parameters
 
 | Parameter | Type | Description |
@@ -269,3 +271,32 @@ Retrieve events for the dashboard view.
 |-----------|------|----------|-------------|
 | start | string | Yes | Start date |
 | end | string | Yes | End date |
+
+---
+
+## Event Reason Totals
+
+<mark style="color:blue;">`GET`</mark> `/schedules/reports_event_reasons/{action}/{year}/{month}.json`
+
+Aggregate counts of `ScheduleHistory.reason` for a given action within a month, scoped to the authenticated user's company.
+
+#### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| action | string | Yes | History action, e.g. `CANCELED`, `REJECTED`, `ACCEPTED` |
+| year | int | Yes | Year |
+| month | int | Yes | Month (1-12) |
+
+#### Response
+
+```json
+{
+  "totals": [
+    { "name": "weather", "color": "#1f77b4", "total": "12" },
+    { "name": "maintenance", "color": "#d62728", "total": "3" }
+  ]
+}
+```
+
+Rows with `null` reason are omitted. `totals` is always a zero-indexed JSON array.

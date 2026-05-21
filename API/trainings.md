@@ -492,6 +492,49 @@ Authorization: caller's company must own the training; non-admin users (`user_gr
 
 ---
 
+### Manager Activity Impact
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/subjects/activity_impact.json`
+
+Read-only preview of the student-progress impact of soft-deleting a lesson or an exam. The UI calls this immediately before showing the destructive confirm dialog so the manager can be warned with the count of enrollments whose progress would be reset.
+
+The endpoint resolves which `TrainingActivity` rows would be affected:
+- `lesson_id` → the `LESSON` activity for that lesson plus every `EXAM` activity bound to a gate exam (`exams.training_subject_lesson_id = lesson_id`).
+- `exam_id`   → the single `EXAM` activity for that exam.
+
+Pass exactly one of `lesson_id` or `exam_id`. The aggregates run over `ActivityProgress` (distinct `trainings_user_id`), `ExamAttempt` and `TrainingSession`; nothing is mutated.
+
+| Field      | Type   | Required          | Description |
+|------------|--------|-------------------|-------------|
+| lesson_id  | string | One of these two  | Lesson UUID |
+| exam_id    | string | One of these two  | Exam UUID |
+
+Authorization: caller's company must own the training the entity belongs to. The endpoint walks the same resolution paths used by the corresponding delete actions (lesson → subject → training, exam → training | training_subject → training | training_subject_lesson → subject → training) and returns `404` if the entity is missing or out of company scope. Soft-deleted (`deleted=1`) lessons / subjects / trainings are still resolvable so the caller can preview impact of an already-removed entity; the `404.message` field disambiguates the failure (`Lesson not found: …`, `Training subject not found for lesson …`, `Lesson not accessible for current company`).
+
+#### Response
+
+```json
+{
+  "result": true,
+  "impact": {
+    "activityIds": ["act-50", "act-e50"],
+    "studentsCompleted": 12,
+    "studentsTouched": 17,
+    "examAttempts": 34,
+    "sessions": 2
+  }
+}
+```
+
+- `studentsCompleted` — distinct enrollments with `ActivityProgress.value = 1` on any of the affected activities (the count that needs warning).
+- `studentsTouched`   — distinct enrollments with any `ActivityProgress` row on the affected activities (`>= studentsCompleted`).
+- `examAttempts`      — total `ExamAttempt` rows that reference the affected exams (audit context).
+- `sessions`          — total `TrainingSession` rows linked to the affected activities (audit context).
+
+When every count is `0` the UI may skip the impact block and show the regular destructive warning.
+
+---
+
 ### Student View
 
 <mark style="color:blue;">`GET`</mark> `/trainings/subjects/view/{enrollmentId}/{subjectId}.json`
@@ -1094,8 +1137,8 @@ List every exam matching a single scope filter. Returns **all** matching exams (
 Auth / scoping:
 
 - `Training.company_id` must match the caller's company.
-- `Training.active` must be true.
 - `Exam.deleted = false` (soft-deleted exams never returned).
+- `Training.active` is **not** enforced — exams on archived trainings are returned so managers can still maintain them. The per-row `available` flag reflects archived state.
 
 Each `Exam` row carries `available: true|false`. `available` is `false` when any of: exam expired, exam deleted, training not active, or the question bank holds fewer questions than `Exam.questions` (insufficient pool to compose an attempt).
 

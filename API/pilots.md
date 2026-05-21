@@ -2,22 +2,35 @@
 
 ## Pilots List (Dropdown)
 
-<mark style="color:blue;">`GET`</mark> `/pilots/list.json`
+<mark style="color:blue;">`GET`</mark> `/pilots/list[/active:{1|0|all}][/pilot:{1|0|all}].json`
 
-Retrieve a simplified list of all active, non-deleted pilots in the company. Useful for dropdowns and selection fields.
+Minimal, non-paginated list of users in the caller's company. Designed for dropdowns / selection fields. Soft-deleted users (`deleted=1`) are always excluded.
+
+#### Named Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| active | `1` \| `0` \| `all` | `1` | `1` only active; `0` only inactive; `all` both |
+| pilot  | `1` \| `0` \| `all` | `1` | `1` only flying users; `0` only non-flying; `all` both |
 
 #### Response
 
 ```json
 {
-  "pilots": {
-    "123": "John Doe",
-    "124": "Jane Smith"
-  }
+  "pilots": [
+    { "id": "123", "name": "John", "surname": "Doe", "user_group_id": "150", "active": true, "pilot": true },
+    { "id": "124", "name": "Jane", "surname": "Smith", "user_group_id": "190", "active": true, "pilot": true }
+  ]
 }
 ```
 
-Keyed by user ID → "name surname". Sorted by `UserDetail.name, UserDetail.surname`.
+Sorted by `User.user_group_id ASC, UserDetail.name ASC, UserDetail.surname ASC` — managers first, then instructors, then pilots, then students.
+
+Use this in preference to `/pilots/index` when you only need `{id, name, surname}` for dropdowns: it is a single non-paginated query and is much cheaper than walking the paginated index. Examples:
+
+- `/pilots/list.json` — active flying users (audit-grade dropdown, default)
+- `/pilots/list/active:all.json` — all flying users including inactive (logbook audit pilot filter)
+- `/pilots/list/pilot:all.json` — all active users including non-flying (e.g. crew pickers that must include instructors with `pilot=0`)
 
 ---
 
@@ -40,7 +53,7 @@ All filter parameters are optional — use empty string to skip.
 | base_id | string | Filter by base |
 | active | boolean | Filter active/inactive users (`active:false` to include only inactive) |
 | pilot | boolean | Filter pilot vs non-pilot accounts |
-| limit | number | Page size (default `50`, max `10000`) |
+| limit | number | Page size (default `50`, max `100000`) |
 | excel | boolean | Render the XLS export view (limit forced to `100000`) |
 
 #### Permissions & Field Visibility
@@ -462,7 +475,7 @@ Flight totals are in **hours** (formatted strings). Duty `totals` come from `Pil
 
 Body is a numerically-indexed array of `PilotDutyRecord` objects (flat, no model alias). Each record needs `date`; `in_duty`/`out_duty`/`in_work`/`out_work`/`in_flight`/`out_flight` are optional time fields (`HH:MM` or `HH:MM:SS`). `user_id` and `company_id` are auto-filled from the session when omitted. Existing row for `(company, user, date)` is replaced.
 
-Saved with `saveMany(... atomic=false, validate=true)` — each record is validated and saved independently; an invalid record does not block the rest.
+Each record is validated and saved independently in a loop; an invalid record does not block the rest.
 
 ```json
 {
@@ -647,6 +660,31 @@ Delete a certificate. Callers with `user_group_id > 150` can only delete their o
 ```
 
 Returns `404` if the certificate is not found in the caller's scope.
+
+### Attributions
+
+<mark style="color:blue;">`GET`</mark> `/pilots/attributions/{userId}.json`
+
+Returns the aircraft and flight types attributed to a pilot. `{userId}` is optional; when omitted, the authenticated user is used. Callers with `user_group_id > 170` can only query themselves.
+
+For each category, the response is an `id => label` map of the pilot's explicit attributions. If the pilot has no attribution set for a given category, the full active company list for that category is returned instead.
+
+```json
+{
+  "attributions": {
+    "aircraft": {
+      "12": "EC-ABC",
+      "15": "EC-XYZ"
+    },
+    "flight_types": {
+      "3": "Private",
+      "7": "Training"
+    }
+  }
+}
+```
+
+Returns `404` if the pilot is not in the caller's company and `403` when a non-manager queries another user.
 
 ---
 
