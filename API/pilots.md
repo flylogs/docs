@@ -302,6 +302,7 @@ Update pilot profile details. Restricted to `user_group_id` ∈ {1, 100, 105, 11
 - A `user_group_id` change to `< 150` requires the editor to have `user_group_id <= 120`.
 - Self-edits cannot demote yourself away from `user_group_id = 100` or below.
 - When `email` changes, `email_status` is recomputed and a `confirm` mail is sent if the user is active and `send_email` is true.
+- When `user_group_id` actually changes, all of the edited user's active sessions are deleted server-side, forcing them to re-authenticate on their next request. This avoids the cached `Auth.User('user_group_id')` from continuing to grant the previous role until the session naturally expires.
 
 #### Response
 

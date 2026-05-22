@@ -10,11 +10,11 @@ All responses are JSON. All endpoints require authentication unless noted.
 
 <mark style="color:blue;">`GET`</mark> `/reports/pilots_airports.json`
 
-Retrieve unique route pairs (departure → landing) flown by the authenticated user.
+Retrieve unique route pairs (departure → landing) flown by the authenticated user, including airport coordinates and per-route flight counts. Designed for plotting a pilot's route map.
 
 <mark style="color:blue;">`GET`</mark> `/reports/pilots_airports/{userId}.json`
 
-Retrieve unique route pairs for a specific user. Falls back to the authenticated user when `userId` is omitted or when the caller's `user_group_id` is greater than 170.
+Retrieve routes for a specific user. Falls back to the authenticated user when `userId` is omitted or when the caller's `user_group_id` is greater than 170.
 
 #### Path Parameters
 
@@ -26,20 +26,15 @@ Retrieve unique route pairs for a specific user. Falls back to the authenticated
 
 ```json
 {
-  "airports": [
+  "routes": [
     {
-      "Flight": {
-        "departure_airport": "LEMD",
-        "landing_airport": "LEBL"
-      },
-      "DepartureAirport": {
-        "lat": "40.4936",
-        "lon": "-3.5668"
-      },
-      "LandingAirport": {
-        "lat": "41.2971",
-        "lon": "2.0785"
-      }
+      "from": "LEMD",
+      "to": "LEBL",
+      "from_lat": 40.4936,
+      "from_lon": -3.5668,
+      "to_lat": 41.2971,
+      "to_lon": 2.0785,
+      "flights": 12
     }
   ]
 }
@@ -47,10 +42,13 @@ Retrieve unique route pairs for a specific user. Falls back to the authenticated
 
 | Field | Type | Description |
 |-------|------|-------------|
-| Flight.departure_airport | string | Departure ICAO code |
-| Flight.landing_airport | string | Landing ICAO code |
-| DepartureAirport.lat / lon | string | Departure airport coordinates |
-| LandingAirport.lat / lon | string | Landing airport coordinates |
+| from | string | Departure ICAO code |
+| to | string | Landing ICAO code |
+| from_lat / from_lon | number | Departure airport coordinates (decimal degrees) |
+| to_lat / to_lon | number | Landing airport coordinates (decimal degrees) |
+| flights | number | Number of flights along this exact route |
+
+Routes missing either airport's coordinates are dropped server-side. Results are ordered by `flights` descending. Only flights belonging to the authenticated user's company are counted.
 
 #### Errors
 
