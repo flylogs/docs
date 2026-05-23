@@ -48,6 +48,7 @@
 
 * [Flight records](flights/flight-records.md)
 * [Create a flight](flights/create-a-flight.md)
+* [Offline flight data](flights/offline-flight-data.md)
 * [Flight audit and reporting](flights/flight-audit-and-reporting.md)
 * [Audit trails](flights/audit-trails.md)
 
