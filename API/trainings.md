@@ -535,6 +535,33 @@ When every count is `0` the UI may skip the impact block and show the regular de
 
 ---
 
+### Add / Edit Exam
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/subjects/add_exam.json`
+
+Create or update an exam on a subject. Send `id` to edit, omit to create (a `TrainingActivity` of `kind=EXAM` is seeded for new exams).
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| training_subject_id | string | Yes | Subject UUID. |
+| id | string | No | Exam UUID — present = edit, absent = create. |
+| type | enum | No | `ONLINE` \| `ONSITE` (default `ONSITE`). |
+| name | string | Yes | Exam name. |
+| reference, description, minutes, mandatory, caa_exam | mixed | No | Common fields. |
+| questions, attempts, score, instructions, show_answers, expiration | mixed | No | **ONLINE only.** |
+| access_mode | enum | No | **ONLINE only.** `FREE` \| `SCHEDULED` (default `FREE`). `SCHEDULED` gates the exam behind a session. Ignored / forced `FREE` for `ONSITE`. |
+| access_window_days | int | No | **ONLINE + `SCHEDULED` only.** Days the window stays open after session start. Default `10` (used when omitted or `<= 0`). |
+
+Authorization: caller's company must own the training; non-admin users (`user_group_id > 135`) must be the subject's teacher.
+
+### List Schedulable Exams
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/exams/list/{subjectId}.json`
+
+Exams in a subject that can be **scheduled into a session**: all `ONSITE` exams, **plus** `ONLINE` exams with `access_mode='SCHEDULED'`. `FREE` online exams are never scheduled and are excluded. Each row carries `type` and `access_mode` (plus `access_window_days`) so the UI can badge them.
+
+---
+
 ### Student View
 
 <mark style="color:blue;">`GET`</mark> `/trainings/subjects/view/{enrollmentId}/{subjectId}.json`
@@ -782,7 +809,7 @@ Response `class` payload contains:
 - `TrainingActivity` — the bound activity (`id`, `kind`, `lesson_id`, `exam_id`, `training_subject_id`) with its nested children:
   - `TrainingActivity.TrainingSubject` including `Training` and `Training.Metric[]` — competency metrics defined on the training (`id`, `name`, `training_id`), ordered by name. Used to render the metric grid alongside attendance without an extra request.
   - `TrainingActivity.Lesson` (when `kind=LESSON`) with `LearningObjective[]` — objectives attached to the lesson (`id`, `name`, `description`, `training_subject_lesson_id`), ordered by name.
-  - `TrainingActivity.Exam` (when `kind=EXAM`).
+  - `TrainingActivity.Exam` (when `kind=EXAM`) — includes `type` and `access_mode`, so the session page knows to render the student exam-taking panel for a `SCHEDULED` online exam.
 - `attendances` — `ActivityProgress` rows for the session (scoped to the requesting user unless teacher/manager).
 
 ### Schedule Class
@@ -800,6 +827,8 @@ Create or update a class session. Sent as `application/x-www-form-urlencoded`.
 | remarks | string | No | Notes |
 | notify | boolean | No | Send notification to students |
 | students | string | Yes | Comma-separated student user IDs (creates `session_students` rows with `invited=1`). |
+
+A `training_activity_id` may be the activity of a `SCHEDULED` online exam (`kind=EXAM`, online). No special handling is needed beyond the standard access gate — the roster (`students`) defines who may take the exam during the window that opens at `start`.
 
 ### Delete Class
 
@@ -957,6 +986,8 @@ Digitally sign class attendance (teacher confirmation).
 |-------|------|----------|-------------|
 | classId | string | Yes | Class session ID |
 | password | string | Yes | Teacher's password for verification |
+
+**Side effect — scheduled-exam window.** Signing sets `Session.status='closed'` and `Session.signed_at` (unix). For a `SCHEDULED` online exam this closes the access window from that moment (earlier than the `access_window_days` cutoff). New attempts are then rejected (`403`); an already-open attempt may still be submitted.
 
 **Side effect — attendance notification.** On a successful first sign (status transitioning from `scheduled`/`open` to `closed`), every student with an `activity_progress` row for the session receives a non-urgent in-app message via `Messages.Message::fastSave`, sender = signing teacher. Per-recipient body includes:
 
@@ -1142,6 +1173,21 @@ Auth / scoping:
 
 Each `Exam` row carries `available: true|false`. `available` is `false` when any of: exam expired, exam deleted, training not active, or the question bank holds fewer questions than `Exam.questions` (insufficient pool to compose an attempt).
 
+#### Access mode (online exams)
+
+Online exams carry `access_mode`:
+
+- `FREE` (default) — current behaviour: takeable freely once the prerequisites above are met.
+- `SCHEDULED` — gated behind a scheduled session. `available` additionally requires an **active session** for this exam *and the requesting student*, where:
+  - the session's `TrainingActivity` points at this exam (`kind=EXAM`, `exam_id=this`), and
+  - the requesting student is on the session roster (`session_students`), and
+  - the session is **not signed**, and
+  - `Session.datetime <= now <= Session.datetime + access_window_days * 86400`.
+
+  All the FREE checks (expiration, deleted, active, question pool) still apply — `available` requires passing **all** of them. When several sessions exist (re-scheduled), the most recent in-window unsigned session wins. `access_window_days` defaults to `10`.
+
+`available_until` (online exams): the `YYYY-MM-DD HH:MM:SS` timestamp when the current student's window closes — `min(session.datetime + access_window_days, session signed-at)`. `null` for `FREE` exams or when there is no active session.
+
 `TrainingQuestion` is included with `TrainingSubject.name`, `TrainingSubject.code`, `Lesson.name` per question. For `user_group_id <= 135` each question also includes `TrainingQuestionOption` (the answer options). For `user_group_id > 150` the `TrainingQuestion` list is stripped.
 
 Errors:
@@ -1168,7 +1214,10 @@ Response shape:
         "training_subject_id": "...",
         "training_subject_lesson_id": null,
         "deleted": false,
-        "available": true
+        "access_mode": "FREE",
+        "access_window_days": 10,
+        "available": true,
+        "available_until": null
       },
       "TrainingQuestion": [
         { "id": "...", "name": "Question text",
@@ -1191,6 +1240,12 @@ Preview exam details and previous attempts before starting.
 <mark style="color:green;">`POST`</mark> `/trainings/exams/start/{enrollmentId}/{examId}.json`
 
 Begin an exam attempt.
+
+**Scheduled exams (server-side enforcement).** For an online exam with `access_mode=SCHEDULED`, starting a **new** attempt requires an active, in-window, unsigned session the student is rostered on (same condition as `available` above). Otherwise the request is rejected with:
+
+- `403 Forbidden` — *"This exam is only available from your scheduled class during its access window."*
+
+This is the real gate: it blocks a direct API hit even when the UI hides the button. An **already-open** attempt (started while the window was open) may still be resumed and submitted after the window closes — only new attempts are blocked. The `attempts` cap and `expiration` still apply within the window.
 
 #### Response
 
@@ -1223,7 +1278,9 @@ Submit an answer to an exam question.
 
 <mark style="color:blue;">`GET`</mark> `/trainings/exams/finish/{attemptId}.json`
 
-Submit the exam for grading.
+Submit the exam for grading. Grades the attempt, then syncs `ActivityProgress` for the exam activity (`value`=best passed, `score`=best score) via `recordExamAttempt`.
+
+**Scheduled exams — auto-record into attendance.** For an online exam with `access_mode=SCHEDULED`, finishing also links that `ActivityProgress` row to the gating session (`session_id`) and sets `session_students.attended=1`. The teacher's session grade view (`attendance()`) then shows the auto-graded result directly — `exam_status` = `value`, `exam_rating` = `score` — with no manual entry. (Re-scheduling the session clears its session-scoped progress as usual; the aggregate is rebuilt from `exam_attempts` on the next finish.)
 
 ### View Result
 
