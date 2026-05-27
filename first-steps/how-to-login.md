@@ -19,7 +19,7 @@ For each login, your IP address, location and time will be saved to your account
 
 ### Welcome Email
 
-Your company manager will create your pilot account for you with your email address. When this happens, you will  receive an email from atc@flylogs.com with instructions to login.
+Your company manager will create your pilot account for you with your email address. When this happens, you will receive an email from atc@flylogs.com with instructions to login.
 
 {% hint style="success" %}
 On your first login, you will be asked to create your account password.
@@ -31,37 +31,33 @@ If you did not receive the confirmation email, check your spam folder for emails
 
 ### Forgotten password recovery procedure
 
-If you forget your password, go to the login page and on the lower part of the white box, click the link: [Recover my password](https://www.flylogs.com/users/password_recover/)
+If you forget your password, go to the login page and on the lower part of the white box, click the link: [Recover my password](https://neo.flylogs.com/password_recover/)
 
 Enter your email address, and if it is in the database, you will receive a password recovery email.
 
 In case you do not receive the email, check that you entered the correct email address. Take a look at your SPAM folder and as a last option, contact your company manager or CTKI for help and guidance.
 
-
-
 ### Multiple company accounts
 
 If the same email address (user) exists in more than one Flylogs company, **the user will have the option to choose which company to operate on every login and logout.**
 
-Data from one company is not copied to the other, so the pilot will have to update personal details and create licences and certificates on all the company accounts separately.
+Data from one company is not copied to the other, so the pilot will have to update personal details and create licenses and certificates on all the company accounts separately.
 
 The feature is designed to avoid the need to have different email addresses for each company a pilot could be involved in.
 
 Once logged in to a company, **the user can switch beetwen companies** by clicking on the company name on the navigation bar.
 
-![Choose which company you want to login to](<../.gitbook/assets/Screenshot 2023-05-12 at 11.39.01.png>)![](<../.gitbook/assets/Screenshot 2023-05-12 at 11.53.33.png>)
-
-
-
-
+![Choose which company you want to login to](<../.gitbook/assets/Screenshot 2023-05-12 at 11.39.01.png>) ![](<../.gitbook/assets/Screenshot 2023-05-12 at 11.53.33.png>)
 
 ### Email validation
 
 Company management accounts need to have an email address. FI, pilot or mechanic accounts do not have this requirement.
 
-When a new email is entered for a new or an existing user, the system requires the email address to be confirmed.The confirmation is process is the same used in the sign up process. Just click on the received email with a confirmation link.
+When a new email is entered for a new or an existing user, the system requires the email address to be confirmed. The confirmation is process is the same used in the sign up process. Just click on the received email with a confirmation link.
 
-**Only confirmed email addresses will be able to login and receive email alerts from Flylogs.**<br>
+**Only confirmed email addresses will be able to login and receive email alerts from Flylogs.**
+
+
 
 ### Flylogs Authentication process
 
