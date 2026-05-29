@@ -25,6 +25,7 @@
 ## Crew management
 
 * [Pilot accounts](crew-management/pilot-accounts.md)
+* [Flight Instructor & Chief Pilot](crew-management/flight-instructor-and-chief-pilot.md)
 * [Create Pilots or Students](crew-management/create-pilots-or-students.md)
 * [Messaging System](crew-management/messaging-system.md)
 * [Base management](crew-management/base-management.md)
