@@ -12,6 +12,7 @@
 * [Account security](first-steps/account-security.md)
 * [Quick start guide](first-steps/quick-start-guide.md)
 * [Usage requirements and tips](first-steps/usage-tips.md)
+* [Contacting Support](first-steps/contacting-support.md)
 
 ## Company Management
 
