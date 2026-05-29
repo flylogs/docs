@@ -34,6 +34,16 @@ It applies when **both** conditions hold:
 
 #### `flights_block_days` (Company Settings → Logbook → Block logbook after)
 
+This setting has two effects:
+
+**1. Minimum date for new flights and draft edits**
+
+When `flights_block_days` is set, users cannot create a new flight (or edit an existing draft) with a date older than `today − N days`. The date picker enforces a minimum date and the server rejects out-of-window dates.
+
+Admin tier (`user_group_id <= 110`) is exempt and can log flights on any past date.
+
+**2. Self-edit bypass window for confirmed flights**
+
 | Value | Effect on self-edit bypass for confirmed flights |
 |-------|--------------------------------------------------|
 | `0` (Disabled) | Bypass **never** allowed for confirmed flights — only `Flight.edit` permission can edit. Drafts are still bypassable. |
