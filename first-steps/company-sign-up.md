@@ -12,22 +12,17 @@ You should only create a new Flylogs account if you own or work in an aviation c
 Otherwise, Flylogs may block your account temporarily until we manually verify you are a legitimate and authorized company representative.
 {% endhint %}
 
-**Navigate to the sign up page:** [**https://www.flylogs.com/users/signup**](https://www.flylogs.com/users/signup)
+**Navigate to the sign up page:** [**https://www.flylogs.com/signup**](https://www.flylogs.com/signup)
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/vdYH0n9_NL.png)
 
-**The sign up form is divided into 2 sections**
+**The sign up form is divided into 4 steps**
 
-On the left, information about your company. On the right, information about you and your personal account.<br>
+Every step is related to a different topic:
 
-Fill in the left-hand side of the form with company information, such as your company's name, company operations airport in ICAO 4 letter format, phone number and type of operation.
+1. Company information
+2. Your user information
+3. Subscription information
+4. Summary of the selected options before proceeding
 
-On the right-hand side, make sure to enter your email address correctly, since email validation is a required step to log into your account.
-
-<br>
-
-**Once everything is filled in, check the legal terms acceptance box after reading them and you are all set.**
-
-You will receive an email at the email address you provided. Click on the URL in the email and your account will be activated inmediately.
-
-At this point, your account has no restrictions and you can enjoy the Flylogs Premium features free of charge for 90 days!
+Fill in the steps with the relevant information and when finished you will be able to confirm your email address and start using Flylogs!
