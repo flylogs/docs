@@ -113,6 +113,7 @@ List safety reports for the company. Only top-level reports (no `parent_id`) are
 | status | `status:open` | Filter by status value |
 | report_category | `report_category:3` | Filter by category ID |
 | severity | `severity:incident` | Filter by severity value |
+| department | `department:2` | Filter by department ID |
 | from | `from:2025-01-01` | Reports on or after this date |
 | to | `to:2025-12-31` | Reports on or before this date |
 | excel | `excel:true` | Download as Excel (requires token query param) |
@@ -144,6 +145,10 @@ List safety reports for the company. Only top-level reports (no `parent_id`) are
         "id": "3",
         "short": "OPS",
         "name": "Operational"
+      },
+      "SafetyReportDepartment": {
+        "id": "2",
+        "name": "Flight Operations - ATO"
       },
       "ChildSafetyReport": []
     }
@@ -195,6 +200,7 @@ Full details for a single report including flight, aircraft, and reporter.
       "flight_id": "5678",
       "idn": "2025/00042",
       "safety_report_category_id": "3",
+      "safety_report_department_id": "2",
       "reported": true,
       "parent_id": null,
       "flight_type_id": "1",
@@ -226,6 +232,7 @@ Full details for a single report including flight, aircraft, and reporter.
       "UserGroup": { "name": "Pilot" }
     },
     "SafetyReportCategory": { "id": "3", "short": "OPS", "name": "Operational" },
+    "SafetyReportDepartment": { "id": "2", "name": "Flight Operations - ATO" },
     "ParentSafetyReport": { "idn": null, "ParentSafetyReport": [] },
     "FlightType": { "name": "Training" },
     "Aircraft": [
@@ -299,6 +306,7 @@ On creation, the system sends notifications to crew members listed in `crew` and
 | SafetyReport.events | string | Yes | Description of what happened |
 | SafetyReport.flight_phase | string | Yes | Flight phase code (see enumerations) |
 | SafetyReport.safety_report_category_id | number | Yes | Category ID |
+| SafetyReport.safety_report_department_id | number | No | Department ID (see [Departments](#list-departments)) |
 | SafetyReport.anonymous | boolean | No | If `true`, reporter identity is not stored |
 | SafetyReport.flight_id | UUID | No | Linked flight ID |
 | SafetyReport.flight_type_id | number | No | Flight type ID |
@@ -576,4 +584,54 @@ Report counts grouped by flight phase.
     { "name": "Landing",  "color": "#d4e5f6", "total": 4 }
   ]
 }
+```
+
+---
+
+## Reports by Department
+
+<mark style="color:blue;">`GET`</mark> `/safety_reports/reports_by_department.json`
+
+<mark style="color:blue;">`GET`</mark> `/safety_reports/reports_by_department/year:{year}.json`
+
+Report counts grouped by department. Reports with no department assigned are excluded.
+
+#### Named Parameters
+
+| Parameter | Example | Description |
+|-----------|---------|-------------|
+| year | `year:2025` | Filter by year |
+
+#### Response
+
+```json
+{
+  "totals": [
+    { "name": "Flight Operations - AOC", "total": 12 },
+    { "name": "Maintenance & Engineering - CAMO", "total": 5 },
+    { "name": "Cabin Crew", "total": 3 }
+  ]
+}
+```
+
+---
+
+## List Departments
+
+<mark style="color:blue;">`GET`</mark> `/safety_reports/departments.json`
+
+Returns all configured departments sorted by name. Used to populate department dropdown selectors.
+
+#### Response
+
+```json
+[
+  { "id": "7", "name": "Administration & Safety Office" },
+  { "id": "5", "name": "Cabin Crew" },
+  { "id": "1", "name": "Flight Operations - AOC" },
+  { "id": "2", "name": "Flight Operations - ATO" },
+  { "id": "3", "name": "Flight Operations - SPO" },
+  { "id": "6", "name": "Ground Handling / Facilities" },
+  { "id": "4", "name": "Maintenance & Engineering - CAMO" }
+]
 ```

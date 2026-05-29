@@ -64,7 +64,10 @@ Also, depending on the company settings, you may be required to enter your passw
 
 Flights can be completely deleted when they are a DRAFT. Once a flight has been confirmed, it can be deleted but the system will NOT actually delete the flight. The flight will be marked as deleted, the flight times will be removed from the logbooks and any associated bills will be erased, but the flight it self, remains in your Flylogs records as a deleted record.
 
-Only the user profiles that you setup in your company settings are allowed to delete flights. The **Edit & delete flights** permission controls both the edit and the delete buttons. Even without this permission, the user who created the flight or the assigned PIC can still edit it for **24 hours** after it was last modified.
+Only the user profiles that you setup in your company settings are allowed to delete flights. The **Edit & delete flights** permission controls both the edit and the delete buttons. Even without this permission:
+
+* If the flight is still a **Draft**, the assigned PIC or the user who created the flight can always edit it.
+* If the flight has been **Confirmed**, the assigned PIC or the user who created the flight can still edit it for **24 hours** after it was last modified.
 
 _To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings.md#flight-permissions)_._<br>
 

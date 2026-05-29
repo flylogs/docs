@@ -28,7 +28,7 @@ Once a class or exam is scheduled, the assigned teacher and students get access 
 
 The class teacher or any company manager can select student attendance and enter additional details.&#x20;
 
-* Teachers, are limited to 4 hours before the class and 2 days after the time of the lesson was scheduled.&#x20;
+* Teachers, are limited to 4 hours before the class and 3 days after the time of the lesson was scheduled.&#x20;
 * Company managers (training manager, operations manager...) can modify attendance or exam results at any time.
 
 #### Student evaluation pop up window:

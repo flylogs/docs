@@ -49,3 +49,30 @@ A report has 5 possible status in which can be.
 Published SMS reports are public to all members of your organization. This enables that every body learns from the findings of a report, which is the final goal of the Safety System.
 
 All members can see all published reports, and a summary of them are also available on the aircraft page. Each aicraft, has a summary of SMS reports in which it has been involved.
+
+***
+
+### Departments
+
+Reports can be assigned to a **department** within your organisation (e.g. Flight Operations, Maintenance, Cabin Crew). This allows safety managers to filter and group events by area of responsibility.
+
+Departments are configured at company level. Once configured, a department selector appears at the top of the report creation and editing forms, and the selected department is shown in the report list, the report detail view, and the printed PDF.
+
+The **Analytics** page includes a dedicated **Reports by Department** chart and a department filter so you can focus the statistics on a specific area.
+
+### Filtering reports
+
+The report list supports filters to help you find specific events quickly. Available filters depend on your role.
+
+**All users**
+
+* **Date range** — from / to
+
+**Managers and Safety Officers** (`user_group_id < 150`) **only**
+
+* **Status** — Open, Reviewed, Closed, Published
+* **Category** — event classification category
+* **Severity** — Information, Incident, Accident, Hazard
+* **Department** — filter by organisational department
+
+Filters can be combined freely. The date range is the only filter available to standard crew members, who already see only their own reports plus any published ones.

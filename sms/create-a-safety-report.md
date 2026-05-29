@@ -1,5 +1,7 @@
 # Create a Safety Report
 
+
+
 Flylogs SMS, is an integrated Safety Management System based on the [ICAO recommendations](https://www.unitingaviation.com/publications/safetymanagementimplementation/content/#/) fully compliant with the [ICAO Doc 9859](https://www.icao.int/safety/safetymanagement/pages/guidancematerial.aspx).
 
 **You may create:**
@@ -29,6 +31,12 @@ You can only create a report from a flight if the flight is confirmed. You do no
 When saved, your report will automatically be associated to the flight, showing all flight information, aircraft maintenance and airworthiness status at the time of the event. Flylogs helps you gather all the information on any event by requesting to the flight's crew members to create a report for the same event.
 
 Every time a new safety report is created or modified, a notification will be delivered to all company Safety and Operations Managers.
+
+### Department
+
+If your organisation has configured departments, a **Department** selector appears at the very top of the report form. Select the department most relevant to the event being reported (e.g. Flight Operations, Maintenance, Cabin Crew).
+
+Assigning a department is optional but recommended — it allows safety managers to filter the report list and analytics by organisational area.
 
 ### Anonymous reports
 
