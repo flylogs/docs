@@ -82,7 +82,7 @@ The table below summarises what each role can do across the main areas of Flylog
 |------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Company Administrator | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Operations Manager | ⚠️ no admins | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Compliance & Safety Manager | — | — | View | — | View | ✅ | View |
+| Compliance & Safety Manager | — | — | ✅ | — | View | ✅ | View |
 | Human Resources Manager | ✅ | — | — | — | — | — | — |
 | Financial Manager | — | ✅ | View | — | — | — | — |
 | Trainings Manager | — | — | View | — | ✅ | — | View |
@@ -100,7 +100,7 @@ The table below summarises what each role can do across the main areas of Flylog
 A few rules apply across every role:
 
 * The user that **created the flight**, or the assigned **Pilot in Command**, can always edit their own flight for 24 hours after it was confirmed, even without any other permission.
-* **Company Administrators and Operations Managers** can override almost every limit — they can edit, cancel, delete or confirm any flight regardless of who created it.
+* **Company Administrators, Operations Managers, and Compliance & Safety Managers** can override almost every limit — they can edit, cancel, delete or confirm any flight regardless of who created it.
 * **Deleted** flights and **historical** entries cannot be modified by anyone, regardless of role.
 
 ### Deactivate or delete users

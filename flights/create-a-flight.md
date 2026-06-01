@@ -2,7 +2,7 @@
 
 Our flight create form has been designed to be clear, easy to use, avoid mistakes and at the same time, be 100% usable on mobile devices.
 
-> **Don't see the "Log flight" button?** Creating flights requires the **Create flights** permission to be enabled for your user type, plus an active pilot profile. Company Administrators and Operations Managers can always create flights. See [Flight permissions](../company-management/company-settings.md#flight-permissions) for details.
+> **Don't see the "Log flight" button?** Creating flights requires the **Create flights** permission to be enabled for your user type, plus an active pilot profile. Company Administrators, Operations Managers, and Compliance & Safety Managers can always create flights. See [Flight permissions](../company-management/company-settings.md#flight-permissions) for details.
 
 
 

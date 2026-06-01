@@ -45,7 +45,7 @@ Each permission is granted per user type (Pilot, Captain, Flight Instructor, Chi
 
 #### Rules that always apply
 
-* **Company Administrators and Operations Managers** can create, confirm, edit, delete and cancel any flight regardless of how the permissions are configured. These two roles are never restricted.
+* **Company Administrators, Operations Managers, and Compliance & Safety Managers** can create, confirm, edit, delete and cancel any flight regardless of how the permissions are configured. These roles are never restricted by flight permission settings.
 * **Creator and PIC self-edit window** — the user who created the flight, or the pilot listed as PIC, can always edit a confirmed flight for **24 hours** after it was last modified, even if their user type is not in the edit list.
 * **Active pilots only** — to create a flight you must be marked as a pilot in your profile and your account must be active. A staff-only user (no pilot flag) above the Crew Scheduling level cannot create flights even if their user type is allowed.
 * **Historical and deleted flights** are locked for everybody — no edits, no deletes, no confirmations.

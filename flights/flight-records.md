@@ -43,7 +43,7 @@ If we have the permission to do so, after filling in the date, and flight time i
 The **Confirm** button only appears when:
 
 * The draft has the four block/takeoff/landing times filled in and the landing time is in the past.
-* Your user type has the **Confirm flights** permission enabled (Company Administrators and Operations Managers always see it).
+* Your user type has the **Confirm flights** permission enabled (Company Administrators, Operations Managers, and Compliance & Safety Managers always see it).
 * The flight has a block time greater than zero, an aircraft, and a PIC.
 
 _To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings.md#flight-permissions)_._<br>
@@ -64,7 +64,7 @@ Also, depending on the company settings, you may be required to enter your passw
 
 Flights can be completely deleted when they are a DRAFT. Once a flight has been confirmed, it can be deleted but the system will NOT actually delete the flight. The flight will be marked as deleted, the flight times will be removed from the logbooks and any associated bills will be erased, but the flight it self, remains in your Flylogs records as a deleted record.
 
-Only the user profiles that you setup in your company settings are allowed to delete flights. The **Edit & delete flights** permission controls both the edit and the delete buttons. Even without this permission:
+Only the user profiles that you set up in your company settings are allowed to delete flights. Company Administrators, Operations Managers, and Compliance & Safety Managers can always edit and delete any flight regardless of these settings. For all other roles, the **Edit & delete flights** permission controls both the edit and the delete buttons. Even without this permission:
 
 * If the flight is still a **Draft**, the assigned PIC or the user who created the flight can always edit it.
 * If the flight has been **Confirmed**, the assigned PIC or the user who created the flight can still edit it for **24 hours** after it was last modified.

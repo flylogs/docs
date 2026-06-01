@@ -26,10 +26,28 @@ Once a class or exam is scheduled, the assigned teacher and students get access 
 
 <figure><img src="../.gitbook/assets/Screenshot 2025-12-16 at 17.36.18.png" alt=""><figcaption></figcaption></figure>
 
-The class teacher or any company manager can select student attendance and enter additional details.&#x20;
+The class teacher or any company manager can record attendance and enter evaluation details. Whether editing is allowed depends on who you are and whether the class has been signed off.
 
-* Teachers, are limited to 4 hours before the class and 3 days after the time of the lesson was scheduled.&#x20;
-* Company managers (training manager, operations manager...) can modify attendance or exam results at any time.
+**Teachers** can edit attendance and exam results when:
+
+* The class has **not been signed** yet, and
+* The class was scheduled **no more than 3 days ago**
+
+Teachers can also **sign** the class to lock the record once the session has taken place (the sign option becomes available up to 4 hours before the scheduled start time).
+
+**Managers** (training manager, operations manager, and above) can edit attendance and exam results when:
+
+* The class has **not been signed** yet — no time restrictions apply
+
+**Once a class is signed, the record is locked** for everyone. Managers can unlock a signed class using the **manager override** option, which allows editing attendance and grades without having to unsign the class.
+
+{% hint style="info" %}
+A teacher who is also enrolled as a student in the same class will be treated as a student — their teacher editing rights are suppressed for that class.
+{% endhint %}
+
+{% hint style="info" %}
+Online exams are graded automatically and cannot be edited manually from the class page.
+{% endhint %}
 
 #### Student evaluation pop up window:
 
