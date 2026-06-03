@@ -7,7 +7,25 @@ This article explains how the feature works, what each screen shows, and how the
 
 ***
 
-> **Who can dispatch?** Dispatching a flight creates a draft, so it requires the **Create flights** permission for your user type plus an active pilot profile. Company Administrators and Operations Managers can always dispatch. See [Flight permissions](../company-management/company-settings.md#flight-permissions).
+### Who can dispatch a flight?
+
+The Dispatch button is visible in the Schedule Review page when **all three** conditions are met:
+
+1. **Schedule status** — the record must be in **Scheduled** or **Confirmed** status and not yet have a linked flight.
+2. **Full schedule access** — the user must have write access to schedules:
+   - **Company Administrators and Operations Managers** (user group ≤ 140) always have full access.
+   - **Flight Instructors / Supervisors** (user groups 141–170) have full access only when the company setting **Allow FI schedule management** is enabled.
+   - Pilots and Dispatchers (user groups above 170) can view the schedule but cannot dispatch.
+3. **Flight creation permission** — the user's account must be active and allowed to create flights. Users in groups above 150 additionally require an active pilot profile.
+
+| User type | Can dispatch? |
+|---|---|
+| Company Administrator / Operations Manager | Yes |
+| Flight Instructor / Supervisor (FI management enabled) | Yes |
+| Flight Instructor / Supervisor (FI management disabled) | No |
+| Dispatcher / Pilot | No |
+
+> If the Dispatch button is not visible for a user who should have access, check that **Allow FI schedule management** is enabled under Company Settings and that the user's account is active.
 
 ### **1. Opening the Dispatch Menu**
 

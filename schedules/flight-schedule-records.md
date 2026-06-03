@@ -34,6 +34,26 @@ Each schedule record contains the following information and represents a schedul
 * Flight Type
 * Flight Mission (See [Trainings - Flight training missions](../training-courses/flight-training.md))
 
+### Crew Acceptance Status
+
+Each crew slot (PIC and SIC) on a schedule record carries its own acceptance status, independent of the overall record status.
+
+| Status | Meaning |
+|--------|---------|
+| **Pending** | The crew member has been assigned but has not yet accepted the flight. |
+| **Accepted** | The crew member has accepted (or was automatically accepted at creation). |
+| **None** | The slot is empty — no crew member assigned. |
+
+**How the status is set when a record is created:**
+
+* **Self-scheduled flights** (pilot or student booking their own flight): the current user is automatically set as PIC with status **Accepted**. No SIC is assigned (**None**).
+* **Flights created by an instructor or Flight Instructor (FI)**: the FI is set as PIC (**Accepted**) and the selected pilot becomes SIC (**None** — SIC acceptance is not required in this case).
+* **Flights created by management on behalf of crew**: both PIC and SIC (if assigned) are set to **Pending**. They must accept the flight through the notification they receive.
+
+{% hint style="info" %}
+Crew members can accept all their pending flights at once from the **Upcoming Flights** panel on their home page, or individually from the schedule record.
+{% endhint %}
+
 ### The Schedule record edit form
 
 We have created a fast editing form (see screenshot below) that includes the management of all information related to each schedule record.
