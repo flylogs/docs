@@ -66,5 +66,5 @@ Additionally, you can require SIC pilots or students to sign the flight mission 
 
 &#x20;
 
-<figure><img src="../.gitbook/assets/Screenshot 2025-04-03 at 09.47.07.png" alt="" width="375"><figcaption><p>Additional options for flight mission evaluation.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/trainingsEvaluationSettings.png" alt="" width="375"><figcaption><p>Additional options for flight mission evaluation.</p></figcaption></figure>
 
