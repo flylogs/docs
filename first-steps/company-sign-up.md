@@ -14,7 +14,7 @@ Otherwise, Flylogs may block your account temporarily until we manually verify y
 
 **Navigate to the sign up page:** [**https://www.flylogs.com/signup**](https://www.flylogs.com/signup)
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/vdYH0n9_NL.png)
+![](.gitbook/assets/signup.png)
 
 **The sign up form is divided into 4 steps**
 

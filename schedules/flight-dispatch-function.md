@@ -73,7 +73,7 @@ The pilot view includes:
 * Route
 * A dedicated **Remarks** section containing any operational notes added during dispatch
 
-<figure><img src="../.gitbook/assets/Screenshot 2025-11-14 at 12.59.25.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/flightDetailsView.png" alt=""><figcaption></figcaption></figure>
 
 This ensures pilots can review all important details immediately, without needing additional communication from operations.
 
