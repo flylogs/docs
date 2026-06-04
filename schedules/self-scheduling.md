@@ -18,7 +18,7 @@ Remember that self scheduling has to be enabled on each aircraft!
 
 You have the flexibility to decide whether you want to restrict the reservations times or prevent pilots with insufficient billing credit. Furthermore, you can set the maximum number of reservations per day, the default length of the slot and define minimum and maximum slot durations as well.
 
-![](<../.gitbook/assets/Screenshot 2024-09-10 at 03.08.59.png>)<br>
+![](<../.gitbook/assets/scheduleSettingsPage.png>)<br>
 
 ### Restrict self-booking to pilots with valid certificates
 
@@ -51,7 +51,7 @@ As a pilot, on my dashboard, I can find a **Schedule a flight** box, see below:
 
 When accessing the scheduling tool, the pilot can see a form called "BOOK A FLIGHT." By selecting the desired date, aircraft, and PIC, the system will display the available slots within the permitted times that the aircraft and PIC are available.
 
-<figure><img src="../.gitbook/assets/Screenshot 2024-09-10 at 03.13.04.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/scheduleSelfSchedule.png" alt=""><figcaption></figcaption></figure>
 
 Once the pilot clicks on a time slot, the system will automatically pop up the booking confirmation window that you can see in the following screenshot:
 

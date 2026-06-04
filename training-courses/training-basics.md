@@ -93,4 +93,4 @@ These are the reports you will have for each one of your trainings:
 * **Analytics**\
   This last page in the trainings tab, shows the amount of students that are still enrolled in the training and the phase of flight they are in. It also ranks the most repeated and failed flight missions in beautiful charts. This gives you an insight to understand and improve the training on those missions that your students find the hardest.
 
-<figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption><p>Trainings Analytics</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/trainingAnalytics.png" alt=""><figcaption><p>Trainings Analytics</p></figcaption></figure>

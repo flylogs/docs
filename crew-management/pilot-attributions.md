@@ -12,7 +12,7 @@ By setting attributions for each pilot, Flylogs ensures that no Pilot in Command
 
 Administrators can assign aircraft and flight type permissions directly in each pilot’s profile using the Attributions tab. To view a pilot's attributions, simply navigate to their profile and select this tab. If no attributions are set (the default behavior), Flylogs will not impose any restrictions on the pilot’s flight assignments.
 
-<figure><img src="../.gitbook/assets/Screenshot 2025-04-03 at 09.10.28 (1).png" alt=""><figcaption><p>To view a pilot's attributions, simply navigate to their profile and click on the Attributions tab. </p></figcaption></figure>
+<figure><img src="../.gitbook/assets/pilotAttributionsSettings.png" alt=""><figcaption><p>To view a pilot's attributions, simply navigate to their profile and click on the Attributions tab. </p></figcaption></figure>
 
 ### By leveraging Pilot Attributions, companies can maintain a high level of operational control, reduce scheduling errors, and ensure compliance with training and certification requirements.
 

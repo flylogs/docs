@@ -16,7 +16,7 @@ If you create a complete schedule without publishing each record at the moment o
 
 To publish multiple scheduled records just click on the **"Publish schedule to pilots"** button on the top right corner of the schedules review page.
 
-<figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.42.45.png" alt=""><figcaption><p>Schedule records review page</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flightSchedulesReviewPage.png" alt=""><figcaption><p>Schedule records review page</p></figcaption></figure>
 
 Once clicked on the button the following window will pop:
 

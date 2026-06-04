@@ -14,13 +14,13 @@ First, you'll need to add your students to one of your courses. To do this, clic
 
 Select the training in which you want to enroll the user(s). Additionally, you have the option to choose a tutor for the newly enrolled users or set a finish-by date if desired.
 
-<figure><img src="../.gitbook/assets/Screenshot 2024-05-01 at 12.02.18.png" alt=""><figcaption><p>Enroll new students pop up window.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/trainingsEnrollUsers.png" alt=""><figcaption><p>Enroll new students pop up window.</p></figcaption></figure>
 
 #### Students report page
 
 Once you've enrolled at least one student, the current page will show a report detailing the progress of students enrolled in the selected training. This report, similar to the one in the screenshot below, provides essential information for tracking student progress. It includes details such as progress in theory learning lessons, flight training mission progress, attendance records, and the date of the last flight, if applicable.
 
-<figure><img src="../.gitbook/assets/Screenshot 2024-05-01 at 11.57.51 (1).png" alt=""><figcaption><p>Students report page</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/trainingsUsersEnrolled.png" alt=""><figcaption><p>Students report page</p></figcaption></figure>
 
 #### Student training progress page
 
@@ -30,6 +30,6 @@ Clicking on any of your students will open the complete progress report for that
 
 These training reports for the student can also be accessed from the pilot profile page in the Trainings box.
 
-<figure><img src="../.gitbook/assets/Screenshot 2024-05-01 at 12.14.02.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/trainingsUserDetail.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/Screenshot 2024-05-01 at 12.14.27.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/trainingsUserFlightsDetail.png" alt=""><figcaption></figcaption></figure>
