@@ -159,6 +159,41 @@ A read receipt is **requested** once per document for each active user in one of
 
 ---
 
+## User Document Breakdown
+
+<mark style="color:blue;">`GET`</mark> `/documents/user_stats/{userId}.json`
+
+Per-user drilldown: every document required of that user (their group is a recipient, respecting `flying_only`) and whether they have read the latest active version.
+
+> **Access:** staff only — users with **`user_group_id` ≤ 145**. Returns `403 Forbidden` above 145, and `404` if the user is not in the caller's company.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| userId | string | Target user ID (must belong to the caller's company) |
+
+#### Response
+
+| Field | Type | Description |
+|-------|------|-------------|
+| user | object | `id`, `name`, `surname`, `user_group_id`, `group_name` |
+| totals | object | `{ requested, read, pending }` for this user |
+| documents | array | Per document: `id`, `name`, `created`, `expiration`, `flying_only`, `read` (bool), `read_at` (timestamp or `null`) |
+
+```json
+{
+  "user": { "id": "9f3…", "name": "Ada", "surname": "Lovelace", "user_group_id": "120", "group_name": "Pilots" },
+  "totals": { "requested": 14, "read": 12, "pending": 2 },
+  "documents": [
+    { "id": "a1b…", "name": "Operations Manual", "created": "1717000000", "expiration": null, "flying_only": true, "read": true, "read_at": "1717500000" },
+    { "id": "c4d…", "name": "Safety Bulletin 2026-03", "created": "1718000000", "expiration": null, "flying_only": false, "read": false, "read_at": null }
+  ]
+}
+```
+
+---
+
 ## Manage Folders
 
 ### Create / Edit Folder

@@ -36,16 +36,4 @@ This guarantees that "downloaded" always refers to the current publication, neve
 
 Because manager tools are tied to the company scope, managers see download data only for documents owned by their own company. There is no cross-company visibility, even for users that belong to multiple companies.
 
-## Stats page
-
-The **Stats** page (in the left menu, under Documents) gives a company-wide view of compliance, document status and staff read acknowledgements — rather than the per-document figures above.
-
-> The Stats page is only visible and accessible to users in **group level 145 or lower**. It is hidden from the menu for everyone else, and opening its link directly shows an access-denied screen.
-
-At the top it shows overall compliance: total read receipts **requested** versus how many have been **read**, with the remaining **pending**. The numbers can then be broken down three ways:
-
-* **By group** — requested vs read per user group, expandable to list each user inside the group.
-* **By user** — a searchable list, with a group filter, showing each person's requested vs read counts.
-* **By document** — requested vs read for each document, with its publication and expiration dates.
-
-A receipt is requested once per document for every active user in the document's authorized groups (`flying crew only` documents count pilots only), and counts as read when the user has opened the **current** version. Publishing a new version resets those receipts, exactly like the per-document registry. Deactivated and deleted accounts are excluded.
+> Looking for the company-wide compliance dashboard across all documents? See [Document Stats](document-stats.md).
