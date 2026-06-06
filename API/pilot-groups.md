@@ -69,6 +69,42 @@ Full details for a single group including all member pilots. Each user also show
 
 ---
 
+## List Group Pilots (flat)
+
+<mark style="color:blue;">`GET`</mark> `/pilot_groups/manager_pilots/{id}.json`
+
+Returns the members of a pilot group as a flat array — one object per pilot, with no nested `User`/`UserDetail` wrappers. Useful when you only need the member list (e.g. to populate a picker) without the full group payload. Company-scoped and excludes deleted users.
+
+> **Note:** `email` and `email_status` live on the users table (per-company row), not on `UserCredential`.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | UUID | Pilot group ID |
+
+#### Response
+
+```json
+{
+  "pilots": [
+    {
+      "id": "100",
+      "email": "pilot@example.com",
+      "email_status": "confirmed",
+      "name": "John",
+      "surname": "Doe",
+      "user_group_id": "170",
+      "active": true
+    }
+  ]
+}
+```
+
+Returns `404` if the group does not exist for the company.
+
+---
+
 ## Create Pilot Group
 
 <mark style="color:green;">`POST`</mark> `/pilot_groups/manager_add.json`

@@ -251,7 +251,7 @@ Users with `user_group_id > 170` may only view flights they are involved in (cre
 
 <mark style="color:green;">`POST`</mark> `/flights/cancel.json`
 
-Cancel (soft-delete) a flight record.
+Cancel (soft-delete) a flight record. The flight is marked as deleted and a `cancel` entry is added to its change history. There is **no date restriction** — a flight can be cancelled at any time, including flights dated in the past.
 
 #### Request Body
 
@@ -259,6 +259,18 @@ Cancel (soft-delete) a flight record.
 |-------|------|----------|-------------|
 | id | string | Yes | Flight ID to cancel |
 | reason | string | Yes | Reason for cancellation |
+| text | string | No | Free-text note stored with the cancellation |
+| notify | string | No | `"true"` to notify the other crew (in-app message + WhatsApp where available) |
+
+#### Authorization
+
+The caller must satisfy **at least one** of the following, otherwise the request returns `400 Not authorized`:
+
+* Has the **Flight.create**, **Flight.edit**, or **Flight.confirm** company permission, or
+* Is a crew member of the flight — the **PIC** (`pic_id`), **SIC** (`sic_id`), or **Supervisor** (`supervisor_id`), or
+* Is the user who created the flight (`user_id`).
+
+Company Administrators, Operations Managers, and Compliance & Safety Managers hold these permissions by default. Note that the front-end only surfaces the Cancel action for **draft** flights; the endpoint itself does not restrict by draft/confirmed state.
 
 ---
 

@@ -123,6 +123,42 @@ Upload a new document. Uses `multipart/form-data`.
 
 ---
 
+## Document Statistics
+
+<mark style="color:blue;">`GET`</mark> `/documents/stats.json`
+
+Company-wide read-receipt compliance across all documents.
+
+> **Access:** staff only — users with **`user_group_id` ≤ 145**. Requests from any higher group return `403 Forbidden`.
+
+A read receipt is **requested** once per document for each active user in one of the document's recipient groups (`flying_only` documents only count pilots). It is counted as **read** when that user has opened the document's **latest active upload**. Publishing a new version therefore resets everyone to unread. Deactivated and deleted users are excluded from the requested pool.
+
+#### Response
+
+| Field | Type | Description |
+|-------|------|-------------|
+| totals | object | `{ requested, read }` across the whole company |
+| groups | array | Per user group: `user_group_id`, `name`, `requested`, `read` |
+| users | array | Per user: `id`, `name`, `surname`, `user_group_id`, `group_name`, `requested`, `read` |
+| documents | array | Per document: `id`, `name`, `created`, `expiration`, `flying_only`, `requested`, `read` |
+
+```json
+{
+  "totals": { "requested": 320, "read": 268 },
+  "groups": [
+    { "user_group_id": "120", "name": "Pilots", "requested": 210, "read": 180 }
+  ],
+  "users": [
+    { "id": "9f3…", "name": "Ada", "surname": "Lovelace", "user_group_id": "120", "group_name": "Pilots", "requested": 14, "read": 12 }
+  ],
+  "documents": [
+    { "id": "a1b…", "name": "Operations Manual", "created": "1717000000", "expiration": null, "flying_only": true, "requested": 42, "read": 39 }
+  ]
+}
+```
+
+---
+
 ## Manage Folders
 
 ### Create / Edit Folder

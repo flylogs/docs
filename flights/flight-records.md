@@ -18,7 +18,7 @@ A flight can be in any of the following status:
 * Confirmed
 * Deleted
 
-> A flight can be cancelled if the DRAFT was created by a crew member from a schedule record.
+> A **draft** flight can be cancelled by its crew at any time, regardless of the flight date. See [Cancelling a flight](#cancelling-a-flight) below.
 
 <figure><img src="../.gitbook/assets/Flights - visual selection.png" alt=""><figcaption></figcaption></figure>
 
@@ -72,3 +72,24 @@ Only the user profiles that you set up in your company settings are allowed to d
 _To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings.md#flight-permissions)_._<br>
 
 Flight modification history will be preserved but flight attachments like PDF documents will be erased after 24 hours.
+
+***
+
+### Cancelling a flight
+
+Cancelling applies to **draft** flights (a flight that has not been confirmed yet, typically a planned or dispatched flight that is not going to happen). The **Cancel Flight** button appears on the flight view page for any draft, and a cancellation reason is required.
+
+**Date is not a restriction.** A draft can be cancelled at any time, including drafts dated in the past — for example a flight instructor cancelling yesterday's flight. There is no minimum-anticipation or "future only" rule on flight cancellation.
+
+**Who can cancel.** Any of the following can cancel a draft:
+
+* A crew member of the flight — the **PIC**, the **SIC**, or the **Supervisor** (also shown as Examiner or Specialist depending on company type).
+* The user who **created** the flight.
+* Any user whose role has the **Create flights**, **Edit & delete flights**, or **Confirm flights** permission.
+* Company Administrators, Operations Managers, and Compliance & Safety Managers always can (they bypass the permission gates).
+
+If you open a draft you are **not** allowed to cancel, the **Cancel Flight** button is still shown, but disabled. Hovering it explains why — only the flight crew (PIC, SIC or supervisor), the flight's creator, or staff with flight permissions can cancel the flight.
+
+When a flight is cancelled, the crew (other than the user cancelling) are notified, and the cancellation is recorded in the flight change history with the reason. Cancelling requires a live connection; while offline the cancellation is queued and applied when you reconnect.
+
+_To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings.md#flight-permissions)_._<br>

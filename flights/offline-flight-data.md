@@ -76,4 +76,4 @@ The sync runs in the background while the Flylogs tab is open. If you close the 
 No. The first login must happen online so your profile, company settings, aircraft list and pilot list are cached locally. Once you have logged in at least once on a device, that device can create flights offline.
 
 **Does offline saving affect confirmed flights?**
-No. Confirmation and other server-side actions (delete, cancel, confirm with password) require a live connection. While offline you can keep working on drafts and they will sync as drafts when you reconnect — confirmation happens after sync, online, as usual.
+No. Confirmation, delete, and confirm-with-password require a live connection. Cancelling a draft is the exception: if you cancel while offline the cancellation is queued and applied automatically when you reconnect. While offline you can keep working on drafts and they will sync as drafts when you reconnect — confirmation happens after sync, online, as usual.

@@ -65,6 +65,8 @@
 ## Schedules
 
 * [Flight Schedule Records](schedules/flight-schedule-records.md)
+* [Schedule Edit page (Schedule Manager)](schedules/schedule-edit-page.md)
+* [Schedule Review page](schedules/schedule-review-page.md)
 * [Publishing multiple schedule records](schedules/publishing-multiple-schedule-records.md)
 * [Schedule Views](schedules/schedule-views.md)
 * [Pilot availability records](schedules/pilot-availability-records.md)
