@@ -2,6 +2,13 @@
 
 Manage maintenance jobs for aircraft. Requires **premium** or **unlimited** subscription plan.
 
+## Access control
+
+| Action | Allowed |
+|--------|---------|
+| List / view (`index`, `view`, `history`, `forecast`) | Any authenticated company user on a premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` and `>= 250` |
+| Create / edit / sign CRS / duplicate / delete | `user_group_id` in **1, 100, 105, 110, 300** (administrators, managers and mechanics), or the aircraft owner |
+
 ## Recurring jobs
 
 Jobs carry a `repeat` field with one of: `NEVER`, `DAY`, `WEEK`, `MONTH`, `QUARTER`, `SEMESTER`, `YEAR`. When a job is marked complete (`completed = true`) and its `repeat` is not `NEVER`, the system automatically clones the job into the future:

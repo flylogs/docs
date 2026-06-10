@@ -21,6 +21,7 @@
 * [Inventory](inventory.md)
 * [Inventory Units](inventory-units.md)
 * [Maintenance Jobs](maintenance-jobs.md)
+* [Maintenance Plans](maintenance-plans.md)
 * [Manager Users](manager-users.md)
 * [Messages](messages.md)
 * [News](news.md)

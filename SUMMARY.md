@@ -43,6 +43,7 @@
 * [ADSB surveillance](aircraft/adsb-surveillance.md)
 * [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
   * [Workorders](aircraft/aircraft-maintenance/workorders.md)
+  * [Maintenance plans](aircraft/aircraft-maintenance/maintenance-plans.md)
   * [Inventory](aircraft/aircraft-maintenance/inventory.md)
 * [Scheduled maintenance windows](aircraft/aircraft-maintenance/schedule-maintenance-windows.md)
 
