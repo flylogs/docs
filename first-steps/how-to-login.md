@@ -11,6 +11,10 @@ coverY: 0
 
 Login to Flylogs occurs like in any other website. In order to do so, you need an account that only company Managers can create. If you already have a Flylogs account, go to [https://www.flylogs.com/login](https://www.flylogs.com/login) and user your account details to login.
 
+<figure><img src="../.gitbook/assets/login-page-passkey-signin.png" alt="Sign In page with email/password fields and a Sign in with Passkey button" width="375"><figcaption><p>The login page offers email/password or "Sign in with Passkey"</p></figcaption></figure>
+
+If you have registered a passkey, you can skip your password entirely by clicking **Sign in with Passkey** and confirming with your device's fingerprint or Face ID. See [Account security](account-security.md) for details on 2FA and passkeys.
+
 {% hint style="warning" %}
 You can not create your own **pilot** account. Your company needs to create it for you. When this happens, you will receive an invitation in your email inbox.
 {% endhint %}

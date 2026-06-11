@@ -1377,24 +1377,19 @@ Enroll one or more students (or whole pilot groups) in a training. Sent as `appl
 
 #### Response
 
+A map keyed by **user ID**, with the new **enrollment ID** (`TrainingsUser.id`) as the value — one entry per newly-created enrollment.
+
 ```json
 {
-  "results": {
-    "123": {
-      "TrainingsUser": {
-        "id": "e1f2a3b4-...",
-        "training_id": "t1u2v3w4-...",
-        "user_id": "123",
-        "supervisor_id": "987",
-        "finish_before": 1735689600
-      }
-    },
-    "456": false
-  }
+  "123": "e1f2a3b4-c5d6-7890-abcd-ef1234567890",
+  "456": "9a8b7c6d-5e4f-3210-9876-543210fedcba"
 }
 ```
 
-`results` is a map keyed by user ID. The value is the saved record on success or `false` if that individual save failed validation.
+- The object has no wrapper key; the user-ID map is the response root.
+- Only **newly-enrolled** students appear. Students that were already enrolled (and not re-taking) are **omitted entirely** — they are not returned as `false` or any other marker. An empty object `{}` means nothing new was enrolled.
+- Pilot group IDs in the request are expanded server-side, so the keys are always individual user IDs.
+- Count the entries to report how many students were enrolled.
 
 #### Errors
 

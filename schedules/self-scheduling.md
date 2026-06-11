@@ -31,6 +31,8 @@ At the bottom of the self-scheduling section you will find the **Allow self-book
 This setting only controls **visibility** of the self-booking widget. Other safeguards — such as the `Block PIC without documents` warning shown when scheduling, currency requirements or billing-credit checks — continue to apply independently.
 {% endhint %}
 
+<figure><img src="../.gitbook/assets/insufficientBalanceWarning.png" alt=""><figcaption><p>Pilots with insufficient balance see this warning and cannot book a flight.</p></figcaption></figure>
+
 ### Aircraft setup for Self Scheduling
 
 You need to activate self scheduling on each aircraft.
