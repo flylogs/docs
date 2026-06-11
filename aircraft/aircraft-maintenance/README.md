@@ -30,7 +30,7 @@ Open the maintenance, or create a new one, and enter the data of the job.
 
 #### **For already performed maintenance jobs:**
 
-Do not forget to check the **CRS** **signed** checkbox.  Checking this box activates the remaining flight time counter and the associated warnings to pilots.
+Once the work is done, sign the **CRS** (Certificate of Release to Service). Signing the CRS activates the remaining flight time counter and the associated warnings to pilots. See [Signing the CRS](#signing-the-crs) below for the full process.
 
 #### **Future maintenance windows:**
 
@@ -42,16 +42,55 @@ Read more about [scheduled maintenance windows](schedule-maintenance-windows.md)
 
 <figure><img src="../../.gitbook/assets/Screenshot 2023-04-23 at 11.53.10.png" alt=""><figcaption><p>Future maintenance windows block the aircraft schedule.</p></figcaption></figure>
 
+### Signing the CRS
+
+The **CRS** (Certificate of Release to Service) records that the maintenance work has been completed and that the aircraft is released back to service. Signing the CRS is now a deliberate, password-protected action that captures **who** signed and **when**, replacing the old "CRS signed" checkbox.
+
+{% hint style="info" %}
+**Who can sign:** only users with the maintenance management role (typically your TMA / maintenance staff) can sign the CRS, edit it, or sign an inspection. Pilots and other staff can view the CRS status but cannot sign.
+{% endhint %}
+
+To sign the CRS:
+
+1. Open the maintenance job and choose **Sign CRS** from the actions menu. The job must have a **start date set, and that start date must be in the past** — you cannot release a job to service before its work has started.
+2. Record the **airframe hours** and **landings** at the time the job was completed.
+3. Set the **validity period** for the next maintenance window. You can combine any of:
+   * **Flight hours** — hours of flight after which the next check is due.
+   * **Landings** — number of landings after which the next check is due.
+   * **Fixed date** — a calendar date/time on which the CRS expires. After this date the aircraft cannot be scheduled until a new CRS is signed.
+4. Attach any supporting **documents** (the CRS file itself, work reports, etc.).
+5. Confirm with your **password** and tick the certification statement:\
+   _"I confirm the information above is accurate and certify that the work described has been completed in accordance with the applicable regulations."_
+
+Once signed, the job displays the **CRS Signed By** name and date, the remaining flight-time counter becomes active, and the maintenance record is stored permanently in the aircraft logs.
+
+To correct a signed CRS, use **Edit CRS** from the same menu and re-confirm with your password. Note that re-signing the CRS invalidates any previous inspection signature (see below).
+
+### Signing an inspection
+
+After the CRS is signed, a separate **Sign Inspection** signature can be recorded as an independent verification that the maintenance job has been inspected. This is optional and distinct from the CRS signature.
+
+To sign an inspection:
+
+1. Open a job whose **CRS is already signed** and choose **Sign Inspection** from the actions menu.
+2. Confirm with your **password** and tick the certification statement.
+
+The job then displays **Inspected by** with the inspector's name and date. Both the CRS signer and the inspector appear on the printable job card.
+
+{% hint style="warning" %}
+Re-signing or editing the CRS clears any existing inspection signature, because the inspection refers to the state of the job at the moment it was signed. Sign the inspection again after editing the CRS if it is still required.
+{% endhint %}
+
 ### Maintenance validity tracker
 
-Once a maintenance is performed and you or your mechanic check the **CRS signed** checkbox, Flylogs will keep track of the aircraft flight time available for the next maintenance window.
+Once a maintenance is performed and you or your mechanic [signs the **CRS**](#signing-the-crs), Flylogs will keep track of the aircraft flight time available for the next maintenance window.
 
 
 
 As example taken from the first screenshot on this page, the aircraft airframe was at **84:39** and the validity of the maintenance is **50 hours**.\
 **Flylogs will SUM the airframe hours of the last CRS with the entered validity flight hours.**
 
-So the aircraft will have potential to fly until **134:39 hours**. **Remember to check the CRS signed checkbox and save the maintenance.**<br>
+So the aircraft will have potential to fly until **134:39 hours**. **Remember to sign the CRS so the validity period takes effect.**<br>
 
 Flylogs displays this information in your aircraft page and also in your manager home page:
 

@@ -6,7 +6,7 @@ With Flylogs, you can can keep record of past maintenance jobs, and schedule upc
 
 All your pilots, company staff and mechanics can see this information and plan accordingly.
 
-Your TMAs, can even add details to each maintenance windows, upload documents or sign the CRS.
+Your TMAs can even add details to each maintenance window, upload documents, [sign the CRS and sign an inspection](README.md#signing-the-crs).
 
 ### Create a future maintenance
 
