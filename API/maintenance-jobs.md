@@ -31,6 +31,37 @@ When a job transitions from `completed = false` to `completed = true`, the serve
 
 The signature is captured **only on the false → true transition**; re-saving an already-completed job will not overwrite the original signature. The field is `NULL` for jobs that have never been completed.
 
+## Inspection signature
+
+After the CRS has been signed, a job can additionally be **inspected**. The inspection is stored as a `JobChange` event with `action = INSPECT` (user + timestamp) and printed in the **Inspected By** signature box of the job card PDF. In the Flylogs NEO interface the inspector confirms with their account password and the same certification disclaimer as the CRS signature; re-signing the CRS invalidates the previous inspection (a new INSPECT event after the latest SIGN is required).
+
+<mark style="color:green;">`POST`</mark> `/maintenance/jobs/inspect.json`
+
+#### Request Body
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| data[Job][id] | string | **Required.** Job UUID. The job must belong to the company and have `completed = true`, otherwise a 400/404 is returned |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "inspection": { "user_id": 3, "created": 1781141714 }
+}
+```
+
+## Job card PDF signature boxes
+
+The job card PDF prints three signature boxes, filled from the job's change history:
+
+| Box | Source |
+|-----|--------|
+| Performed By | The user that **created** the maintenance job (oldest `ADD` event) |
+| Inspected By | The latest `INSPECT` event recorded after the current CRS signature |
+| Approved By | The user that **signed the CRS** (latest `SIGN` event) |
+
 ## List Jobs
 
 <mark style="color:green;">`POST`</mark> `/maintenance/jobs/index.json`
