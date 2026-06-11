@@ -44,19 +44,36 @@ The edit form has the flight data on the left and dynamic, supplemental informat
 
 Only five fields are mandatory: **Aircraft**, **Callsign**, **Flight Type**, **Offblocks** (start) and **Onblocks** (end). The callsign defaults to the aircraft registration if left empty.
 
+<figure><img src="../.gitbook/assets/schedule-edit-crew-availability.png" alt="New Flight form showing crew availability status, Docs OK indicator and a blocked save for an unavailable SIC"><figcaption><p>Crew availability in the schedule record edit form</p></figcaption></figure>
+
+### Linked Offblocks / Onblocks times
+
+The two time fields are linked: when you change **Offblocks**, **Onblocks** moves with it so the flight duration is preserved (e.g. a 10:00–12:00 flight moved to start at 23:00 becomes 23:00–01:00). Editing **Onblocks** on its own redefines the duration.
+
+Flights may cross midnight — Offblocks 23:00 with Onblocks 03:00 is a valid 4‑hour flight ending the next day. A flight can never reach 24 hours, and Offblocks and Onblocks cannot be the same time.
+
 ### Crew panels (PIC / SIC)
 
-Each crew slot has a searchable pilot selector grouped by user group. As you pick a pilot, a side panel shows live context:
+Each crew slot has a searchable pilot selector grouped by user group. The selector shows an **availability dot** next to each pilot for the selected time window:
 
+* 🟢 **Green** — the pilot has declared themselves available.
+* 🟠 **Orange** — the pilot answered *maybe*.
+* 🔴 **Red** — the pilot is **unavailable**; the entry is greyed out and cannot be selected.
+* A muted red dot marks pilots already **busy** (booked on another flight, on an OFF/REST base‑schedule day, or teaching a scheduled class).
+
+Use **CLEAR**, next to the field label, to deselect the pilot.
+
+Once a pilot is selected, the side panel shows live context:
+
+* The pilot's **availability status** for the current time window — AVAILABLE, MAYBE, UNAVAILABLE or BUSY — which updates automatically when you change the date or times.
 * Pilot group, phone and **last flight** date.
-* **Certificates / documents** with expiry dates — expired items show in red, and a clear "Missing/expired required docs" warning appears if the pilot is not document‑valid for the flight.
-* **Availability dots** — pilots already busy in the selected time window are flagged, helping you avoid double‑booking.
+* **Documents** — a green **Docs OK** indicator when the pilot is document‑valid for the flight. If not, only the problem documents are listed (expired items in red) together with a "Missing/expired required docs" warning. Validity is role‑aware: rank 200 members only need a valid medical, rank 300 members only a valid licence; pilots need licence, ratings, medical and training certificates.
 
-If the selected aircraft is **multi‑pilot**, an SIC is required. The same pilot cannot be assigned as both PIC and SIC.
+If the selected aircraft is **multi‑pilot**, an SIC is required. The same pilot cannot be assigned as both PIC and SIC. The **Supervisor** selector shows the same availability dots.
 
 ### Training missions
 
-If a selected PIC or SIC is enrolled in a flight training with pending missions, a **Training Mission** selector appears and the next uncompleted mission is auto‑selected (skipping missions already scheduled elsewhere). If the mission's flight type differs from the schedule's flight type, you are prompted on save to either switch to the mission's flight type or keep the current one.
+If a selected PIC or SIC is enrolled in a flight training with pending missions, a **Training Mission** selector appears and the next uncompleted mission is auto‑selected (skipping missions already scheduled elsewhere). When a mission is auto‑selected, the schedule's **Flight Type** is updated to the mission's flight type automatically. If you pick a different mission by hand and its flight type differs from the schedule's, you are prompted on save to either switch to the mission's flight type or keep the current one.
 
 ### Status, supervisor and notes
 
@@ -76,6 +93,11 @@ Before saving, the form runs duty and safety checks and shows warnings for:
 * Daily duty time exceeded and minimum rest (between days and between flights) not met.
 
 If your company has **block overtime scheduling** enabled, these violations **block saving** until resolved; otherwise they are advisory. A separate, always‑blocking check stops you assigning a pilot to an **aircraft or flight type they are not entitled to** fly.
+
+Crew availability is re‑checked whenever you change the date, the times or the crew:
+
+* If an assigned PIC or SIC is **unavailable** for the new time window, a red message names the pilot and **saving is blocked** until you pick another pilot or time.
+* If they are merely **busy** (another booking, base‑schedule OFF/REST, or a scheduled class), an amber warning is shown but you may still save.
 
 ## Actions menu
 
