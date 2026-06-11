@@ -94,7 +94,7 @@ So the aircraft will have potential to fly until **134:39 hours**. **Remember to
 
 Flylogs displays this information in your aircraft page and also in your manager home page:
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/ZvqEAD18Km.png)
+![](../../.gitbook/assets/aircraftMaintenacneDetail.png)
 
 ### Flight time maintenance due warning
 
