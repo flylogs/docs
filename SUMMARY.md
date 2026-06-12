@@ -70,6 +70,7 @@
 * [Schedule Review page](schedules/schedule-review-page.md)
 * [Publishing multiple schedule records](schedules/publishing-multiple-schedule-records.md)
 * [Schedule Views](schedules/schedule-views.md)
+* [Schedules for Pilots & Flight Instructors](schedules/schedules-for-pilots-and-flight-instructors.md)
 * [Pilot availability records](schedules/pilot-availability-records.md)
 * [Schedule notifications](schedules/schedule-notifications.md)
 * [Schedule cancellations](schedules/schedule-cancellations.md)

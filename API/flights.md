@@ -19,6 +19,7 @@ All filter parameters are optional — use empty string to skip a filter.
 | pilot | string | Pilot user ID filter |
 | base | string | Base ID filter |
 | flight_type | string | Flight type ID filter |
+| limit | number | Records per page (optional, default 20, max 20000) |
 
 #### Example
 
@@ -45,7 +46,15 @@ GET /flights/load/page:1/from:2025-01-01/to:2025-03-31/aircraft:/pilot:/base:/fl
         "onblocks_time": "09:25:00",
         "block_time": "5100",
         "flight_time": "3600",
-        "rules": "VFR"
+        "rules": "VFR",
+        "landings": "1",
+        "engine_starts": "1",
+        "pax": "2",
+        "oil": "0.5",
+        "fuel": "45",
+        "cargo": "0",
+        "night_flight_time": "0",
+        "ifr_flight_time": "0"
       },
       "Base": {
         "id": "5",
@@ -66,7 +75,10 @@ GET /flights/load/page:1/from:2025-01-01/to:2025-03-31/aircraft:/pilot:/base:/fl
       "FlightType": {
         "id": "1",
         "name": "Training",
-        "color": "#3498db"
+        "color": "#3498db",
+        "pic_flight_time": "pic",
+        "sic_flight_time": "none",
+        "supervisor_flight_time": "none"
       },
       "Pic": {
         "id": "123",
@@ -276,13 +288,7 @@ Company Administrators, Operations Managers, and Compliance & Safety Managers ho
 
 ## Export Flights (XLS)
 
-<mark style="color:blue;">`GET`</mark> `/flights/load/page:1/from:{from}/to:{to}/aircraft:{aircraft}/pilot:{pilot}/base:{base}/flight_type:{type}/xls:1/`
-
-Download filtered flights as an Excel file. Same filter parameters as the list endpoint, with `xls:1` appended.
-
-The token must be passed as a query parameter: `?token=<token>`
-
-This returns a binary XLS file for direct download.
+The server-side `xls:1` export has been removed. The logbook Excel file is now generated client-side by the NEO web app: it pulls the flights from the **List Flights** endpoint above (using the `limit` parameter to fetch all matching rows) and builds the XLSX in the browser.
 
 ---
 

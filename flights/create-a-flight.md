@@ -60,3 +60,13 @@ Once the flight times have been entered correctly the following fields will be a
 * Base
 * Supervisor
 * Remarks
+
+<br>
+
+### Flight type and logbook time
+
+The selected flight type determines what kind of time is written to each crew member's logbook. Every flight type defines a time classification (Pilot in Command, Copilot, Flight Instructor, Dual, or None) for each of the three crew roles: **PIC**, **SIC**, and **Supervisor** (also shown as Examiner or Specialist depending on company type).
+
+For example, a training flight type can log Flight Instructor time for the PIC, Dual time for the SIC, and no time for the supervisor.
+
+Company managers can configure these classifications in the flight types management page. The supervisor classification is set to **None** by default, so supervisors receive no logbook time from a flight unless the company configures otherwise.

@@ -14,6 +14,8 @@ Company-specific flight type definitions. Used to classify flights by purpose an
 | `dual` | Dual |
 | `none` | None |
 
+These values apply to `pic_flight_time`, `sic_flight_time`, and `supervisor_flight_time`, which determine how logbook time is allocated to the flight's PIC (`pic_id`), SIC (`sic_id`), and Supervisor (`supervisor_id`) respectively.
+
 ---
 
 ## List Flight Types
@@ -105,6 +107,7 @@ Create a new flight type. Also returns the `flightClassification` reference data
 | FlightType.booking | boolean | No | Available for booking scheduling |
 | FlightType.pic_flight_time | string | No | PIC time classification key |
 | FlightType.sic_flight_time | string | No | SIC time classification key |
+| FlightType.supervisor_flight_time | string | No | Supervisor time classification key. Defaults to `none` |
 
 #### Response
 
