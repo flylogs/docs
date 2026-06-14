@@ -67,7 +67,7 @@ As a pilot, on my dashboard, I can find a **Schedule a flight** box, see below:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-03-31 at 17.55.06.png" alt=""><figcaption><p>Pilots automatically see the Schedule a flight option if they are entitled to do so.</p></figcaption></figure>
 
-When accessing the scheduling tool, the pilot can see a form called "BOOK A FLIGHT." Only two fields are needed: the desired **date** and the **aircraft**. The system displays the available slots within the permitted times for that aircraft — pilot availability is no longer checked at this stage.
+When accessing the scheduling tool, the pilot can see a form called "BOOK A FLIGHT." Only two fields are needed: the desired **date** and the **aircraft**. The aircraft list only shows planes the pilot is entitled to self-schedule — based on the aircraft's **Who can self-schedule** setting and the pilot's **Aircraft Attributions** (see the aircraft setup section above). The system then displays the available slots within the permitted times for that aircraft — pilot availability is no longer checked at this stage.
 
 Slots are colour-coded: **green** slots are fully free and can be booked directly, while **yellow** slots are currently held by a **pending booking** (a student booking still waiting for a Flight Instructor). Yellow slots cannot be booked, but a pending booking may be canceled later — clicking a yellow slot lets the pilot add it to their **watchlist** with a single click, so they are notified the moment it frees up.
 
@@ -75,13 +75,21 @@ Slots are colour-coded: **green** slots are fully free and can be booked directl
 
 Once the pilot clicks on a time slot, the system will automatically pop up the booking confirmation window. Only flight types enabled for booking can be selected in this window.
 
-<figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.26.48.png" alt=""><figcaption><p>Self-booking modal window</p></figcaption></figure>
-
 The self-booking modal behaves differently based on the user group of the person making the appointment:
 
 * **Pilots (user group 171–190)**: the process is unchanged — the pilot making the reservation is the PIC.
 * **Flight Instructors and staff (user group 170 or less, with the pilot flag)**: they fly as PIC and can optionally pick a **SIC** from the list of all active pilots of the company. The booking is saved directly as **SCHEDULED**.
 * **Students (user group 200)**: students can never be PIC, so they do not choose one. The system automatically selects an available **Flight Instructor** and assigns them as PIC (the student is stored as SIC). The chosen FI must: have published availability (AVAILABLE or ALWAYS — never MAYBE or UNAVAILABLE) covering the whole slot, have no conflicting schedule or class, be entitled to fly the selected aircraft (aircraft attributions — an empty list means all aircraft), and have the selected flight type attributed (empty list means all flight types). If the student has an **assigned instructor** (training supervisor), that instructor has priority over other available FIs.
+
+When a **student** opens the modal, Flylogs checks for an instructor in real time. If one is available it is shown in the **Flight instructor** box; if none is available, the modal warns that the booking will be saved as **pending** and confirmed automatically as soon as an instructor becomes available — and that it will be canceled automatically if no instructor is assigned before the company's cancellation deadline (flight start time minus the "minimum cancellation time" setting).
+
+<figure><img src="../.gitbook/assets/selfBookingPendingNoFi.png" alt=""><figcaption><p>Student booking modal when no instructor is available — the flight will be saved as pending.</p></figcaption></figure>
+
+#### Crew certificate check
+
+Before a booking can be confirmed, Flylogs validates the certificates of every crew member that will fly (the pilot booking, plus a SIC if an instructor selected one). If any required certificate is invalid, or **expires before the flight ends**, the modal shows a warning and the booking is blocked until the documents are in order. The same warning appears on the flight detail card afterwards.
+
+<figure><img src="../.gitbook/assets/scheduleFlightDetailModal.png" alt=""><figcaption><p>Flight detail card showing the PIC/SIC, the Dual flight type, and a certificate-expiry warning for the SIC.</p></figcaption></figure>
 
 ### Pending bookings
 
@@ -98,6 +106,17 @@ When the **ALLOW FI SCHEDULE MANAGEMENT** company setting is enabled, Flight Ins
 
 ### Slot watchlist
 
-Pilots can watch an aircraft and time frame they would like to fly. If a booking overlapping a watched slot is **canceled or deleted**, every watcher is notified immediately (push notification and message) so they can grab the freed slot, and the watch entry turns **green** in the Slot watchlist widget with a "Slot free!" badge. If the requested time frame is already free when adding the watch, the system tells the pilot right away instead of creating the watch. Past watchlist entries are cleaned up automatically every night.
+Pilots can watch an aircraft and time frame they would like to fly. There are two ways to add a watch:
+
+* **From a yellow (pending) slot**: clicking a yellow slot opens a confirmation modal explaining that the slot is being held by a pending booking that may be canceled, and lets the pilot add it to their watchlist with one click.
+* **Manually**: from the **Slot watchlist** widget, the pilot uses **+ Watch a slot** to enter an aircraft and a time frame directly.
+
+<figure><img src="../.gitbook/assets/slotWatchlistPendingModal.png" alt=""><figcaption><p>Watching a pending (yellow) slot from the schedule.</p></figcaption></figure>
+
+If a booking overlapping a watched slot is **canceled or deleted**, every watcher is notified immediately (push notification and message) so they can grab the freed slot, and the watch entry turns **green** in the Slot watchlist widget with a "Slot free!" badge. If the requested time frame is already free at the moment the watch is added, the system tells the pilot right away (the slot is shown as free) instead of creating the watch. Past watchlist entries are cleaned up automatically every night.
+
+The **Slot watchlist** widget on the dashboard lists the pilot's active watches and lets them remove any entry with the trash icon.
+
+<figure><img src="../.gitbook/assets/slotWatchlistWidget.png" alt=""><figcaption><p>The Slot watchlist widget on the pilot dashboard.</p></figcaption></figure>
 
 [^1]: \- Remember that to give your pilots the option to self schedule a flight, you also have to enable this on each one of your aircraft. -&#x20;
