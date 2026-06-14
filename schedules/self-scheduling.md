@@ -24,8 +24,12 @@ You have the flexibility to decide whether you want to restrict the reservations
 
 At the bottom of the self-scheduling section you will find the **Allow self-booking without valid documents** toggle. It controls whether a pilot whose personal certificates are missing or expired can still see and use the self-booking widget.
 
-* **Toggle OFF (default — stricter)**: the self-booking widget is hidden for any pilot who does not hold a valid **Licence**, a valid **Rating** and a valid **Medical**. **Students are always hidden** in this mode, regardless of certificate status — a student must wait until their school promotes them to a pilot role before they can self-book. The pilot has to update their documents on their profile page before the box reappears.
+* **Toggle OFF (default — stricter)**: the self-booking widget is hidden for any pilot who does not hold a valid **Licence**, a valid **Rating** and a valid **Medical**. The pilot has to update their documents on their profile page before the box reappears.
 * **Toggle ON (permissive)**: the self-booking widget is shown to every pilot, regardless of the state of their licence, rating or medical. Use this option only if your operation handles document checks outside Flylogs or you are still onboarding pilots that have yet to upload their paperwork.
+
+{% hint style="info" %}
+**Students (user group 200) are exempt from this certificate gate.** A student never acts as PIC — the system automatically assigns a Flight Instructor as PIC — so the student's own licence, rating and medical are not required to book.
+{% endhint %}
 
 {% hint style="info" %}
 This setting only controls **visibility** of the self-booking widget. Other safeguards — such as the `Block PIC without documents` warning shown when scheduling, currency requirements or billing-credit checks — continue to apply independently.
@@ -37,11 +41,23 @@ This setting only controls **visibility** of the self-booking widget. Other safe
 
 You need to activate self scheduling on each aircraft.
 
-On the aircraft settings page, you will find the Enable Self-Scheduling option along with the option to limit which pilots can fly this particular plane.
+On the aircraft edit page, open the **Scheduling** box and tick **Allow pilots to self-schedule flights on this aircraft**.
 
-<figure><img src="../.gitbook/assets/Screenshot 2023-03-31 at 17.52.34.png" alt=""><figcaption><p>Enable self-scheduling on the aircraft edit page.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/aircraftSelfScheduleAccess.png" alt=""><figcaption><p>Enable self-scheduling and choose who can self-schedule on the aircraft edit page.</p></figcaption></figure>
 
-On the same aircraft edit page you can find the **Qualified pilots** list, where you can select which pilots are able to self-schedule on the aircraft. If no pilots are entered, the system understands that any pilot can fly the aircraft as PIC.
+Once self-scheduling is enabled, the **Who can self-schedule** dropdown appears. It controls which user groups may self-schedule this particular aircraft:
+
+* **All pilots and students** (default): every pilot and student (`user_group_id` ≤ 200).
+* **Certified pilots**: pilots only, students excluded (`user_group_id` < 200).
+* **Only instructors**: Flight Instructors and above (`user_group_id` ≤ 170).
+
+Restricting **who** is qualified to fly the aircraft is no longer done with a per-aircraft pilots list. Instead, use the **Aircraft Attributions** on each pilot's profile: a pilot with this aircraft attributed (or with no aircraft attributed at all, which means every aircraft) can self-schedule it, subject to the dropdown above.
+
+Below the dropdown, Flylogs shows a live counter — **"Currently X pilots will have access to self-schedule flights on this aircraft"** — recalculated for the selected access mode. It counts active pilots (`pilot = 1`, `active = 1`) that are attributed to this aircraft or have no attributions at all, within the selected group cap. When **Only instructors** is selected, students (group 200) and regular pilots are excluded from the count.
+
+{% hint style="info" %}
+**Students (user group 200)** never see aircraft set to **Certified pilots** or **Only instructors** in their Book a Flight aircraft list. Likewise, aircraft set to **Only instructors** are hidden from anyone above `user_group_id` 170.
+{% endhint %}
 
 
 
@@ -51,16 +67,37 @@ As a pilot, on my dashboard, I can find a **Schedule a flight** box, see below:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-03-31 at 17.55.06.png" alt=""><figcaption><p>Pilots automatically see the Schedule a flight option if they are entitled to do so.</p></figcaption></figure>
 
-When accessing the scheduling tool, the pilot can see a form called "BOOK A FLIGHT." By selecting the desired date, aircraft, and PIC, the system will display the available slots within the permitted times that the aircraft and PIC are available.
+When accessing the scheduling tool, the pilot can see a form called "BOOK A FLIGHT." Only two fields are needed: the desired **date** and the **aircraft**. The system displays the available slots within the permitted times for that aircraft — pilot availability is no longer checked at this stage.
+
+Slots are colour-coded: **green** slots are fully free and can be booked directly, while **yellow** slots are currently held by a **pending booking** (a student booking still waiting for a Flight Instructor). Yellow slots cannot be booked, but a pending booking may be canceled later — clicking a yellow slot lets the pilot add it to their **watchlist** with a single click, so they are notified the moment it frees up.
 
 <figure><img src="../.gitbook/assets/scheduleSelfSchedule.png" alt=""><figcaption></figcaption></figure>
 
-Once the pilot clicks on a time slot, the system will automatically pop up the booking confirmation window that you can see in the following screenshot:
+Once the pilot clicks on a time slot, the system will automatically pop up the booking confirmation window. Only flight types enabled for booking can be selected in this window.
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-10-27 at 11.26.48.png" alt=""><figcaption><p>Self-booking modal window</p></figcaption></figure>
 
-The self-booking modal shown above behaves differently based on the pilot profile making the appointment. Students are required to select a PIC, while pilots, flight instructors, and those with higher ranks have the option to choose themselves as PIC or leave the field empty.&#x20;
+The self-booking modal behaves differently based on the user group of the person making the appointment:
 
-After the pilot clicks the "**Book this Slot**" button, the system locks the slot and sends a notification to the selected PIC, requesting confirmation. Once the PIC confirms the flight, the SIC will no longer be able to modify the booking.
+* **Pilots (user group 171–190)**: the process is unchanged — the pilot making the reservation is the PIC.
+* **Flight Instructors and staff (user group 170 or less, with the pilot flag)**: they fly as PIC and can optionally pick a **SIC** from the list of all active pilots of the company. The booking is saved directly as **SCHEDULED**.
+* **Students (user group 200)**: students can never be PIC, so they do not choose one. The system automatically selects an available **Flight Instructor** and assigns them as PIC (the student is stored as SIC). The chosen FI must: have published availability (AVAILABLE or ALWAYS — never MAYBE or UNAVAILABLE) covering the whole slot, have no conflicting schedule or class, be entitled to fly the selected aircraft (aircraft attributions — an empty list means all aircraft), and have the selected flight type attributed (empty list means all flight types). If the student has an **assigned instructor** (training supervisor), that instructor has priority over other available FIs.
+
+### Pending bookings
+
+If no Flight Instructor is available for the selected slot, the student's booking is stored with the new **PENDING** status: the slot is locked for the student, displayed like any scheduled flight, but it is not confirmed yet because it lacks an FI as PIC.
+
+* Whenever an FI publishes availability (AVAILABLE or ALWAYS) that matches a pending booking — same checks as above: time frame, attributions, conflicts — the booking is automatically updated to **SCHEDULED**, the FI is assigned as PIC with a pending confirmation request, and the usual schedule notifications are sent.
+* If no FI has been assigned when the confirmation deadline arrives (**flight start time minus the company "minimum cancellation time" setting, in hours**), the booking is automatically canceled by the system and the slot frees up for other users.
+
+After the pilot clicks the "**Book this Slot**" button, the system locks the slot and sends a notification to the assigned PIC, requesting confirmation. Once the PIC confirms the flight, the SIC will no longer be able to modify the booking.
+
+### Instructor availability calendar
+
+When the **ALLOW FI SCHEDULE MANAGEMENT** company setting is enabled, Flight Instructors (user group 170 or less with the pilot flag) get access to a weekly **Instructor availability** calendar from the Schedules page, shown in the company timezone. Managers (user group 150 or less) always have access. This lets an FI plan around pending student bookings: if another instructor is available at the time of a pending slot, that instructor will likely take it.
+
+### Slot watchlist
+
+Pilots can watch an aircraft and time frame they would like to fly. If a booking overlapping a watched slot is **canceled or deleted**, every watcher is notified immediately (push notification and message) so they can grab the freed slot, and the watch entry turns **green** in the Slot watchlist widget with a "Slot free!" badge. If the requested time frame is already free when adding the watch, the system tells the pilot right away instead of creating the watch. Past watchlist entries are cleaned up automatically every night.
 
 [^1]: \- Remember that to give your pilots the option to self schedule a flight, you also have to enable this on each one of your aircraft. -&#x20;

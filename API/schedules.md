@@ -300,3 +300,166 @@ Aggregate counts of `ScheduleHistory.reason` for a given action within a month, 
 ```
 
 Rows with `null` reason are omitted. `totals` is always a zero-indexed JSON array.
+
+---
+
+## Find Slots
+
+<mark style="color:green;">`POST`</mark> `/schedules/find_slot.json`
+
+Finds bookable slots for a date and aircraft. The `pic` parameter is optional — when omitted (student self-bookings) pilot availability is not checked and only the aircraft, maintenance, CRS expiry and the requesting user's own schedule are considered.
+
+Each result carries an `available` marker:
+
+* `available: true` — the slot is fully free and can be booked directly.
+* `available: false` — the slot is blocked **only** by a `PENDING` booking (a student booking still waiting for a Flight Instructor). The PENDING record may be auto-canceled later, so the slot is still returned: the frontend shows it in yellow and offers to add it to the watchlist. Slots blocked by a confirmed booking, maintenance, an expired CRS or the user's own schedule are not returned at all.
+
+#### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| date | string | Yes | Day to search (`YYYY-MM-DD`) |
+| aircraft | int | Yes | Aircraft id |
+| pic | int | No | Pilot id — when omitted, availability is not checked |
+
+#### Response
+
+```json
+{
+  "results": [
+    { "start": 1750000000, "end": 1750003600, "available": true },
+    { "start": 1750003600, "end": 1750007200, "available": false }
+  ],
+  "futureAvailabilities": null
+}
+```
+
+---
+
+## Available Flight Instructor (student self-booking)
+
+<mark style="color:green;">`POST`</mark> `/schedules/available_fi.json`
+
+Returns the Flight Instructor the system would auto-assign as PIC for a student self-booking, or `null` when none is available (the booking would then be stored with the `PENDING` status).
+
+Selection rules: the FI must have `user_group_id <= 170`, `pilot = true`, `active = true`; an availability record of type `AVAILABLE` or `ALWAYS` (never `MAYBE`/`UNAVAILABLE`) covering the full time frame; no conflicting schedule or onsite class; the aircraft within their aircraft attributions (empty list = all aircraft); and the flight type within their flight type attributions (empty list = all flight types). The student's assigned FI (training supervisor) has priority over other available FIs.
+
+#### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| start | int | Yes | Slot start (unix timestamp) |
+| end | int | Yes | Slot end (unix timestamp) |
+| aircraft | int | Yes | Aircraft id |
+| flight_type | string | No | Flight type id |
+
+#### Response
+
+```json
+{ "fi": { "id": "456", "name": "Jane Smith" } }
+```
+
+`fi` is `null` when no instructor is available.
+
+---
+
+## Flight Instructor Availabilities
+
+<mark style="color:blue;">`GET`</mark> `/schedules/fi_availabilities.json?start={unix}&end={unix}`
+
+Weekly availability of all Flight Instructors (`user_group_id <= 170` and `pilot = true`) of the company.
+
+**Access control:** managers (`user_group_id <= 150`) always; FIs (`user_group_id` 151–170 with `pilot = true`) only when the **ALLOW FI SCHEDULE MANAGEMENT** company setting (`schedule_allow_fi_management`) is enabled. All other users receive `403 Forbidden`.
+
+#### Response
+
+```json
+{
+  "instructors": [
+    {
+      "User": { "id": "456", "user_group_id": "170" },
+      "UserDetail": { "name": "Jane", "surname": "Smith", "photo": null },
+      "ScheduleAvailability": [
+        { "id": "a1", "type": "AVAILABLE", "start": 1750000000, "end": 1750028800 }
+      ]
+    }
+  ],
+  "start": 1749945600,
+  "end": 1750550400
+}
+```
+
+---
+
+## My Slot Watchlist
+
+<mark style="color:blue;">`GET`</mark> `/schedules/watchlist.json`
+
+Lists the authenticated user's future slot watchlist entries. When a booking overlapping a watched slot is canceled or deleted, the watcher is notified (push notification + message) so they can grab the freed slot. Past entries are removed by the night cron.
+
+#### Response
+
+```json
+{
+  "watchlists": [
+    {
+      "ScheduleWatchlist": { "id": "w1", "aircraft_id": "45", "start": 1750000000, "end": 1750014400, "available": false, "created": 1749900000 },
+      "Aircraft": { "id": "45", "registration": "EC-ABC" }
+    }
+  ]
+}
+```
+
+`available` is set to `true` when an overlapping booking was canceled or deleted after the watch was created — the slot is now free and the entry is highlighted in green in the Schedules page widget.
+
+---
+
+## Watch a Slot
+
+<mark style="color:green;">`POST`</mark> `/schedules/watchlist_add.json`
+
+Adds an aircraft + time frame to the authenticated user's watchlist. Only active pilots (`pilot = true`, `active = true`) can watch slots; other users receive `403 Forbidden`. Overlapping entries for the same aircraft are merged.
+
+If no active booking overlaps the requested time frame, the slot is already free: **no record is created** and the response carries `slotAvailable: true` so the client can tell the user to book right away.
+
+#### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| aircraft_id | int | Yes | Aircraft id (must be active and belong to the company) |
+| start | int | Yes | Watch start (unix timestamp) |
+| end | int | Yes | Watch end (unix timestamp, must be in the future) |
+
+#### Response
+
+```json
+{ "result": true, "slotAvailable": false }
+```
+
+---
+
+## Remove a Watchlist Entry
+
+<mark style="color:green;">`POST`</mark> `/schedules/watchlist_delete/{id}.json`
+
+Removes one of the authenticated user's watchlist entries. Users can only delete their own entries.
+
+#### Response
+
+```json
+{ "result": true }
+```
+
+---
+
+## Self-booking role behaviour (`/schedules/edit.json`)
+
+The schedule create/edit endpoint applies these role rules to self-bookings (`self_schedule = 1`):
+
+| User group | Behaviour |
+|-----------|-----------|
+| Students (`user_group_id > 190`) | Can never be PIC. Stored as SIC (`sic_status ACCEPTED`). The system auto-assigns an available FI as PIC (`pic_status PENDING`, status `SCHEDULED`). When no FI is available, the booking is saved with status **`PENDING`** and an empty PIC. Students are exempt from the `require_pic_docs` / `block_pic_without_docs` certificate gate. |
+| Pilots (`user_group_id` 171–190) | Unchanged: the user making the reservation is the PIC. |
+| FIs / staff (`user_group_id <= 170`, `pilot = true`) | Fly as PIC. May pass another pilot in `pic_id`: it is stored as SIC with the instructor as PIC, saved directly as `SCHEDULED`. |
+
+`PENDING` bookings are auto-assigned when a matching FI publishes `AVAILABLE`/`ALWAYS` availability (`/schedules/add_availability.json`, `/schedules/edit_availability.json` — response field `assignedPending`), and auto-canceled by the cron when `start - schedule_flight_cancellation_min_time` (hours) is reached.

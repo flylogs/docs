@@ -65,11 +65,17 @@ You can schedule future maintenance windows just by specifying a future date.
 
 ### Aircraft permissions, rental and billing
 
-You can set a list of authorized pilots to fly each aircraft. By default this field is empty and all your pilots will be allowed to log time on any aircraft.
+You can control who is allowed to fly each aircraft through the **Aircraft Attributions** on each pilot's profile. By default a pilot has no attributions, which means they are allowed on every aircraft. Attributing specific aircraft to a pilot restricts them to those aircraft.
 
-Additionally, you can allow pilots to reserve schedule time on the aircraft. If the Qualified pilots list is populated, only these pilots will have this option.
+Additionally, in the **Scheduling** box you can allow pilots to self-schedule flights on the aircraft. When you enable it, a **Who can self-schedule** dropdown lets you choose the access level:
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/EzxeAYJNWQ.png)
+* **All pilots and students** (default) — `user_group_id` ≤ 200.
+* **Certified pilots** — pilots only, students excluded (`user_group_id` < 200).
+* **Only instructors** — Flight Instructors and above (`user_group_id` ≤ 170).
+
+A live counter under the dropdown shows how many pilots would have self-schedule access for the selected mode.
+
+<figure><img src="../.gitbook/assets/aircraftSelfScheduleAccess.png" alt=""><figcaption><p>Scheduling settings on the aircraft edit page.</p></figcaption></figure>
 
 Your aircraft can also be configured for rental individually. You can specify different rental rates for different services. This rates at the same time, can also be customized for each pilot later on.
 
