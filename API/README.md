@@ -10,18 +10,13 @@ https://fmc.flylogs.com/v1
 
 ## Authentication
 
-All endpoints (except login and public endpoints) require a Bearer token in the `Authorization` header:
+All endpoints (except public ones) require an **API key** as a Bearer token in the `Authorization` header:
 
 ```
-Authorization: Bearer <token>
+Authorization: Bearer flk_3pQ8XnX...Zr
 ```
 
-There are two ways to obtain a Bearer credential:
-
-- A **session token** from the [Authentication](authentication.md) endpoint — expires after 14 days or on logout. Best for interactive clients.
-- An **API key** (`flk_...`) from [API Keys](api-keys.md) — long-lived and revocable. Best for server-to-server integrations.
-
-Both are sent on the same `Authorization: Bearer` header.
+API keys are long-lived, revocable secrets created by a Company Administrator under **Company Settings → API**. A key authenticates as the user it is bound to and inherits that user's permissions. There is no login step. See [API Keys](api-keys.md) to create one, and [Authentication](authentication.md) for how to send it.
 
 ## Request Format
 
@@ -60,8 +55,8 @@ API usage is throttled. Excessive requests will result in an automatic 14-day ba
 | Section | Description |
 |---------|-------------|
 | [Quick Start](quick-start.md) | Get up and running in minutes |
-| [Authentication](authentication.md) | Login, logout, password recovery |
-| [API Keys](api-keys.md) | Long-lived keys for server-to-server integrations |
+| [Authentication](authentication.md) | Authenticating requests with an API key |
+| [API Keys](api-keys.md) | Creating, listing and revoking API keys |
 | [Users](users.md) | User profiles, sessions, account settings |
 | [Company](company.md) | Company settings, permissions, organizations |
 | [Flights](flights.md) | Flight records, filtering, audit trail |

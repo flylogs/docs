@@ -29,6 +29,8 @@ Keys do not expire on inactivity and are not affected by logout. A key stops wor
 
 API keys are created and revoked by a **company administrator** in the Flylogs app, under **Company Settings → API → API keys**. They are not managed with an API key itself — management requires an interactive admin session.
 
+<figure><img src="../.gitbook/assets/api-keys-settings.png" alt="Company Settings → API tab showing the IP whitelist and the API keys section"><figcaption>Company Settings → API: IP whitelist and API key management</figcaption></figure>
+
 The management endpoints below sit under the `manager` routing prefix and are used by the app; they are documented here for completeness.
 
 ### List keys
@@ -105,7 +107,7 @@ curl -X POST https://fmc.flylogs.com/v1/manager/api_keys/add.json \
 
 ### Revoke a key
 
-<mark style="color:green;">`POST`</mark> `/api_keys/revoke/{id}.json`
+<mark style="color:green;">`POST`</mark> `/manager/api_keys/revoke/{id}.json`
 
 Permanently disables a key. Revocation is immediate and irreversible; the key is retained for audit but is rejected on every subsequent request.
 

@@ -7,9 +7,9 @@ Get in [contact with our support team](https://www.flylogs.com/home/contact) to 
 
 * API access is limited to Premium and Unlimited Flylogs Account users.
 * Access to the API has to be requested to the Flylogs Support team in order to be activated for your company.
-* The API requires an existing active Flylogs user, the access level to features and functions will depend on the user type and its privileges.
-* Every API requests requires an AUTHORIZATION BEARER token. The token is received from the Flylogs server on the login response.
-* The token is destroyed on each login, logout or every 14 days, what ever happens first.
+* Integrations authenticate with an **API key**, created by a Company Administrator under **Company Settings → API**. A key is bound to a Flylogs user and the access level to features and functions depends on that user's type and privileges.
+* Every API request requires an `Authorization: Bearer <api-key>` header. API keys begin with `flk_` and are long-lived — there is no login step.
+* A key remains valid until it is **revoked** by an administrator, or until its optional **expiry** date passes. The full key is shown only once, at creation.
 * API usage is limited and throttled. Any user abusing the system or performing an abusive number of requests will be banned from the system automatically for 14 days.
 
 **Upon API service activation, you will have access to the docs in the [help site](https://neo.flylogs.com/help/article/view/API/description.md) of the NEO.**
