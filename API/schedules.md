@@ -131,6 +131,45 @@ Create a flight record from a schedule (dispatch function). Converts the schedul
 |-----------|------|-------------|
 | scheduleId | string | Schedule ID to dispatch |
 
+#### Flight Risk Assessment (FRAT)
+
+When the company setting `schedule_dispatch_frat` is enabled **and** the authenticated user is a crew member of the schedule (PIC, SIC or Supervisor), a completed FRAT is **mandatory**. In that case call this endpoint with <mark style="color:green;">`POST`</mark> and include the FRAT fields below; the dispatch is rejected (`result: false`) if they are missing. When the setting is off, or the dispatcher is not crew, the `GET` form is sufficient.
+
+The FRAT result is stored per flight and per user (one row per crew member).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| frat_score | integer | Total weighted risk score |
+| frat_band | string | Risk band: `LOW`, `MEDIUM` or `HIGH` |
+| frat_data | string | JSON map of question id → chosen answer value |
+
+> A `HIGH` band may only be dispatched by a Supervisor. Plans: Club, Premium, Unlimited.
+
+---
+
+## FRAT Prefill
+
+<mark style="color:blue;">`GET`</mark> `/schedules/frat_prefill/{scheduleId}.json`
+
+Returns objective signals computed from the **authenticated user's** own flight history, used to pre-answer the data-backed FRAT questions. Scoped to the caller and their company.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| scheduleId | string | Schedule ID the assessment is for |
+
+#### Response
+
+| Field | Type | Description |
+|-------|------|-------------|
+| hours_90 | number | Block hours flown (as PIC or SIC) in the last 90 days |
+| model_hours | number | Block hours on this schedule's aircraft model in the last 12 months |
+| model_known | boolean | Whether the schedule's aircraft has a known model |
+| night_hours | number | Night flight hours in the last 12 months |
+| departure_flown | boolean \| null | Whether the user has flown to/from the departure airport before (`null` if unknown) |
+| landing_flown | boolean \| null | Whether the user has flown to/from the destination airport before (`null` if unknown) |
+
 ---
 
 ## Availability

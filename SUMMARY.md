@@ -76,6 +76,7 @@
 * [Schedule cancellations](schedules/schedule-cancellations.md)
 * [Self scheduling](schedules/self-scheduling.md)
 * [Flight Dispatch Function](schedules/flight-dispatch-function.md)
+* [Flight Risk Assessment (FRAT)](schedules/flight-risk-assessment-frat.md)
 
 ## Training courses
 

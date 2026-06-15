@@ -52,6 +52,13 @@ Each permission is granted per user type (Pilot, Captain, Flight Instructor, Chi
 
 Permission changes take effect immediately for every user, on their next page load. There is no need to log out and back in.
 
+#### Pre-dispatch gates
+
+Under **Company Settings → Flights → Pre-dispatch gates** you can require crew to complete one or both safety steps before dispatching a flight. Both are off by default and require a Club, Premium or Unlimited plan.
+
+* **Require pre-dispatch checklist** (`schedule_dispatch_checklist`) — shows an acknowledgement checklist (weather, NOTAMs, aircraft status, crew documents, SOPs) that must be fully ticked before the Dispatch button is enabled. The checklist is not stored.
+* **Require Flight Risk Assessment (FRAT)** (`schedule_dispatch_frat`) — a crew member dispatching their own flight must complete a FAA-style PAVE FRAT questionnaire. The answers produce a risk score and band (Low / Medium / High); **High-risk flights can only be dispatched by a Supervisor**. The result is stored per flight and per crew member. Several questions are pre-answered from the dispatcher's flight history (recent hours, type familiarity, airports flown, night experience) and the live route weather. The requirement applies only when the person dispatching is assigned to the flight.
+
 
 
 ### Pilot flight duty time limitations
