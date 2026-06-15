@@ -16,7 +16,12 @@ All endpoints (except login and public endpoints) require a Bearer token in the 
 Authorization: Bearer <token>
 ```
 
-Obtain a token via the [Authentication](authentication.md) endpoint. Tokens expire after 14 days or on logout — whichever comes first.
+There are two ways to obtain a Bearer credential:
+
+- A **session token** from the [Authentication](authentication.md) endpoint — expires after 14 days or on logout. Best for interactive clients.
+- An **API key** (`flk_...`) from [API Keys](api-keys.md) — long-lived and revocable. Best for server-to-server integrations.
+
+Both are sent on the same `Authorization: Bearer` header.
 
 ## Request Format
 
@@ -56,6 +61,7 @@ API usage is throttled. Excessive requests will result in an automatic 14-day ba
 |---------|-------------|
 | [Quick Start](quick-start.md) | Get up and running in minutes |
 | [Authentication](authentication.md) | Login, logout, password recovery |
+| [API Keys](api-keys.md) | Long-lived keys for server-to-server integrations |
 | [Users](users.md) | User profiles, sessions, account settings |
 | [Company](company.md) | Company settings, permissions, organizations |
 | [Flights](flights.md) | Flight records, filtering, audit trail |

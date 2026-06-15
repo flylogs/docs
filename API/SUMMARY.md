@@ -10,6 +10,7 @@
 * [Aircraft](aircraft.md)
 * [Aircraft Reports](aircraft-reports.md)
 * [Airports](airports.md)
+* [API Keys](api-keys.md)
 * [Authentication](authentication.md)
 * [Bases](bases.md)
 * [Bills](bills.md)
