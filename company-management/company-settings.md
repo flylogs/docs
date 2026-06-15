@@ -62,4 +62,4 @@ Flylogs scheduling tool will alert your roster manager when creating the flight 
 
 On top of that, our servers run daily background checks on all the flight time stored in our database and triggers alarms if any of your setup limits are reached.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/enhEbo64_N.png)
+![](../.gitbook/assets/dutyTimeconfigbox.png)

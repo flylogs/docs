@@ -4,7 +4,7 @@ description: All your company data in just a click
 
 # Your Flylogs dashboard
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/Z7gevkMgy9.png)
+![](../.gitbook/assets/dashboardOverview.png)
 
 The Flylogs dashboard is a dynamic environment that will change over time to show you the most important data right at the first screen you see when you log in.
 
@@ -27,4 +27,4 @@ As you enter more data in Flylogs, the dashboard continues to change and show yo
 * Pilot duty and flight overtimes,
 * Pilot medical and License expirations<br>
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/immxiDJuzO.png)
+![](../.gitbook/assets/dashboardEvolution.png)

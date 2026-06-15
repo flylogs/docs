@@ -9,7 +9,8 @@ Most operators work with an **approved maintenance plan** for one or several of 
 A maintenance plan is an **ordered list of plan actions**. Each action is a job template with:
 
 * A **title** and **description**
-* Which **aircraft** of your fleet it applies to (one action can cover several aircraft)
+* The named **programme** it belongs to (required)
+* Which **aircraft** of your fleet it applies to — optional, one action can cover several aircraft (or none yet)
 * A **recurrence**: every N flight hours, every N landings, and/or a time period (week, month, quarter, semester, year)
 * Its own list of **work orders**, created automatically with every job generated from the action
 
@@ -25,9 +26,15 @@ Maintenance plans follow the same access rules as maintenance jobs:
 
 ### Creating plan actions
 
-Open **Aircraft → Maintenance Plan** and press **New plan action**. Select the aircraft covered by the action, set the title, description and recurrence, and add the custom work orders for this action.
+Open **Aircraft → Maintenance Plan** and press **New plan action**. Choose the **programme** the action belongs to (required — pick an existing one or create a new one), set the title, description and recurrence, and add the custom work orders for this action. Assigning the **aircraft** covered by the action is optional: you can leave it unassigned and link aircraft later.
 
 The list of plan actions is **reorderable by drag and drop**. The order matters: it is the sequence of your maintenance cycle, and it is what Flylogs uses to know which action comes next.
+
+### Grouping actions under a named programme
+
+You can optionally group plan actions under a named **maintenance programme** — for example one programme per aircraft type ("C172 Programme", "PA28 Programme"). In the plan-action form, use the **Programme** selector to pick an existing programme or choose **+ New programme…** and type a name; the programme is created the first time you use it.
+
+Grouping is optional and purely organizational: an action with no programme works exactly as before. On the plan-actions list each action shows its programme as a tag, and the **aircraft view page** groups the aircraft's assigned actions under their programme names so you can see at a glance which programme covers the aircraft.
 
 ### Creating jobs from the plan
 

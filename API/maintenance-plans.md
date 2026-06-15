@@ -2,14 +2,18 @@
 
 Manage the approved maintenance programme of the fleet. Requires **premium** or **unlimited** subscription plan.
 
-A maintenance plan is an ordered list of **plan actions**. Each action is a job template: a title, a description, a recurrence (flight hours, landings and/or a time period) and its own template work orders. Each action is linked to one or more aircraft (many-to-many).
+A maintenance plan is an ordered list of **plan actions**. Each action is a job template: a title, a description, a recurrence (flight hours, landings and/or a time period) and its own template work orders. Each action can be linked to zero or more aircraft (many-to-many) — assigning aircraft is optional and can be done later.
+
+Every plan action belongs to a named **maintenance programme** (the parent entity), e.g. a per-type programme such as "C172 Programme". A programme is **required**: it is company-scoped and groups several plan actions; an action belongs to exactly one programme (`maintenance_programme_id`).
 
 ## Access control
 
 | Action | Allowed |
 |--------|---------|
-| List / view / suggestions (`index`, `view`, `for_aircraft`) | Any authenticated company user on a premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` and `>= 250` |
+| List / view / suggestions / programmes (`index`, `view`, `for_aircraft`, `assigned`, `programmes`) | Any authenticated company user on a premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` and `>= 250` |
 | Manage (`edit`, `delete`, `reorder`) | `user_group_id` in **1, 100, 105, 110, 300** (administrators, managers and mechanics) |
+
+All endpoints are company-scoped: plans, programmes and aircraft are matched against the authenticated user's `company_id`.
 
 ## Automatic scheduling
 
@@ -50,6 +54,7 @@ Returns all plan actions of the company, ordered by `sort_order`.
         "hours_interval": "50.00",
         "landings_interval": null,
         "repeat": "NEVER",
+        "maintenance_programme_id": "e9f8a7b6-c5d4-3210-fedc-ba9876543210",
         "sort_order": "1",
         "created": "1778485469",
         "modified": "1778485469"
@@ -57,6 +62,11 @@ Returns all plan actions of the company, ordered by `sort_order`.
       "Aircraft": [
         { "id": "45", "registration": "EC-ABC" }
       ],
+      "MaintenanceProgramme": {
+        "id": "e9f8a7b6-c5d4-3210-fedc-ba9876543210",
+        "name": "C172 Programme",
+        "sort_order": "1"
+      },
       "PlanWorkOrder": [
         {
           "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
@@ -72,6 +82,8 @@ Returns all plan actions of the company, ordered by `sort_order`.
   ]
 }
 ```
+
+`MaintenanceProgramme` is `null` when the plan action is not grouped under any programme.
 
 ---
 
@@ -99,7 +111,9 @@ Creates a plan action, or edits it when `data[MaintenancePlan][id]` is sent. Res
 | data[MaintenancePlan][hours_interval] | number | Recurrence: every N flight hours |
 | data[MaintenancePlan][landings_interval] | number | Recurrence: every N landings |
 | data[MaintenancePlan][repeat] | string | Recurrence period: `NEVER`, `DAY`, `WEEK`, `MONTH`, `QUARTER`, `SEMESTER`, `YEAR` |
-| data[Aircraft][Aircraft][] | array | Aircraft IDs the action applies to. Only company aircraft are accepted; the submitted set replaces the previous links |
+| data[MaintenancePlan][maintenance_programme_id] | string | **Required** (unless `programme_name` is given). Existing company programme UUID. An invalid or other-company id is treated as empty |
+| data[MaintenancePlan][programme_name] | string | Used when `maintenance_programme_id` is empty: creates a new programme with this name (or reuses a same-named company programme) and links the action to it. One of `maintenance_programme_id` / `programme_name` must resolve to a programme, otherwise the save fails with a `maintenance_programme_id` validation error |
+| data[Aircraft][Aircraft][] | array | **Optional.** Aircraft IDs the action applies to. Only company aircraft are accepted; the submitted set replaces the previous links. May be empty/omitted to leave the action unassigned |
 | data[PlanWorkOrder][n][id] | string | Existing template work order UUID (keep/update) |
 | data[PlanWorkOrder][n][name] | string | Template work order name (rows without a name are skipped) |
 | data[PlanWorkOrder][n][description] | string | Template work order description |
@@ -169,6 +183,63 @@ Returns the ordered plan actions linked to one aircraft, plus the suggested next
 | plans | Plan actions linked to the aircraft, in plan order |
 | next_plan_id | Suggested next action: the one after the last completed plan-linked job of this aircraft (wraps around); the first action when no plan job was ever completed |
 | open_plan_ids | Plan actions that already have an open (not completed) job for this aircraft |
+
+---
+
+## Assigned Plan Actions (lightweight)
+
+<mark style="color:blue;">`GET`</mark> `/maintenance/plans/assigned/{aircraftId}.json`
+
+Returns a light summary of the plan actions assigned to one aircraft — no jobs or scheduling. Used by the aircraft view page to show whether the aircraft is covered by the maintenance programme and to group its actions by programme name.
+
+#### Response
+
+```json
+{
+  "count": 2,
+  "plans": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "50h Inspection",
+      "hours_interval": "50.00",
+      "landings_interval": null,
+      "repeat": "NEVER",
+      "maintenance_programme_id": "e9f8a7b6-c5d4-3210-fedc-ba9876543210",
+      "programme_name": "C172 Programme"
+    }
+  ]
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| count | Number of plan actions assigned to the aircraft |
+| plans[].maintenance_programme_id | Parent programme UUID, or `null` when the action is not grouped |
+| plans[].programme_name | Parent programme name, or `null` |
+
+---
+
+## List Maintenance Programmes
+
+<mark style="color:blue;">`GET`</mark> `/maintenance/plans/programmes.json`
+
+Returns the company's named maintenance programmes (parent groups), ordered by `sort_order` then name. Used to populate the programme selector in the plan-action form.
+
+#### Response
+
+```json
+{
+  "programmes": [
+    { "id": "e9f8a7b6-c5d4-3210-fedc-ba9876543210", "name": "C172 Programme", "plan_count": 4 }
+  ]
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| programmes[].plan_count | Number of plan actions currently grouped under the programme |
+
+Programmes are created implicitly through the plan-action `edit` endpoint (`programme_name`); there is no standalone create endpoint. A programme with no plan actions is still returned until soft-deleted.
 
 ---
 

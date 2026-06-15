@@ -24,7 +24,7 @@ In order to start you will first need the following details about the aircraft y
 * Authorized pilots
 * Aircraft documents
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/5HbX6XM9tk.png)
+![](../.gitbook/assets/aircraftCreateButton.png)
 
 ### Create a Aircraft page
 
@@ -35,7 +35,7 @@ The main form is divided in 4 sections:
 * Aircraft logbook and maintenance.
 * Aircraft permissions, rentals and billing settings.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/jGOpVt_GmE.png)
+![](../.gitbook/assets/aircraftCreateForm.png)
 
 **Note that** Flylogs allows you to create not only aircraft, but also simulators.
 
@@ -57,7 +57,7 @@ Aircraft logbooks are fully automatic and thus, the aircraft maintenance trackin
 
 You will only need to enter the flight time of the aircraft at the time of creating, and the maintenances as the CRS (Certificate release to service) are signed.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/de7vLokV6D.png)
+![](../.gitbook/assets/aircraftMaintenacneDetail.png)
 
 You can schedule future maintenance windows just by specifying a future date.
 
