@@ -344,10 +344,18 @@ Cumulative flight hour totals (in seconds) for a pilot, broken down by function 
   "flight_time": 504000,
   "flight_types": { "Training": 180000, "Charter": 90000 },
   "functions": {
-    "FI":      { "icon": "fa fa-user-tie",      "time": 72000 },
-    "PIC":     { "icon": "fa fa-user-astronaut","time": 360000 },
-    "DUAL":    { "icon": "fa fa-user-friends",  "time": 90000 },
-    "COPILOT": { "icon": "fa fa-people-carry",  "time": 36000 }
+    "FI":         { "icon": "fa fa-user-tie",             "time": 72000 },
+    "PIC":        { "icon": "fa fa-user-astronaut",       "time": 360000 },
+    "SIC":        { "icon": "fa fa-people-carry",         "time": 36000 },
+    "DUAL":       { "icon": "fa fa-user-friends",         "time": 90000 },
+    "PICUS":      { "icon": "fa fa-user-shield",          "time": 0 },
+    "CRI":        { "icon": "fa fa-chalkboard-teacher",   "time": 0 },
+    "IRI":        { "icon": "fa fa-compass",              "time": 0 },
+    "FIFI":       { "icon": "fa fa-user-graduate",        "time": 0 },
+    "SFI":        { "icon": "fa fa-keyboard",             "time": 0 },
+    "TRI":        { "icon": "fa fa-plane-circle-check",   "time": 0 },
+    "TRE":        { "icon": "fa fa-user-check",           "time": 0 },
+    "SUPERVISOR": { "icon": "fa fa-user-cog",             "time": 0 }
   },
   "rules": {
     "VFR":          { "icon": "fa fa-sun",        "time": 432000 },
@@ -360,7 +368,11 @@ Cumulative flight hour totals (in seconds) for a pilot, broken down by function 
 }
 ```
 
-`other_companies` aggregates time from other companies that share the same email. `previous_time` is `UserDetail.flight_hours * 3600`. All times are in **seconds**. `flight_time = total_time − rules.SIM.time`. PIC includes FI time.
+`other_companies` aggregates time from other companies that share the same email. `previous_time` is `UserDetail.flight_hours * 3600`. All times are in **seconds**. `flight_time = total_time − rules.SIM.time`.
+
+**`PIC` total includes** `FI` time plus all instructor/examiner/PICUS classifications: `PICUS`, `CRI`, `IRI`, `FIFI`, `SFI`, `TRI`, `TRE`. **`FI` total includes** the instructor/examiner classes (`CRI`, `IRI`, `FIFI`, `SFI`, `TRI`, `TRE`) — but *not* `PICUS`, which is PIC time only. Each class is *also* returned as its own line so the time worked in each function can be seen separately — these lines break down what is already inside `PIC`/`FI`, they are not additional totals.
+
+`SIC` time is only credited on multipilot aircraft (legacy copic semantics; `copic` was migrated to `sic`). `SUPERVISOR` (`sup`) is reported separately only and is **not** rolled into `PIC`. The former `COPILOT` line is removed.
 
 ---
 

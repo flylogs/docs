@@ -65,8 +65,23 @@ Once the flight times have been entered correctly the following fields will be a
 
 ### Flight type and logbook time
 
-The selected flight type determines what kind of time is written to each crew member's logbook. Every flight type defines a time classification (Pilot in Command, Copilot, Flight Instructor, Dual, or None) for each of the three crew roles: **PIC**, **SIC**, and **Supervisor** (also shown as Examiner or Specialist depending on company type).
+The selected flight type determines what kind of time is written to each crew member's logbook. Every flight type defines a time classification for each of the three crew roles: **PIC**, **SIC**, and **Supervisor** (also shown as Examiner or Specialist depending on company type).
+
+The available classifications are:
+
+| Classification | Logbook effect |
+|----------------|----------------|
+| **Pilot in Command** | Logs PIC time. |
+| **Pilot in Command Under Supervision** | Logs PIC time (shown separately as PICUS). |
+| **Second in Command** | Logs SIC time. **Only counts on multi-pilot aircraft** — on single-pilot aircraft no SIC time is logged. |
+| **Flight Instructor** | Logs both PIC and FI time. |
+| **Dual Received** | Logs Dual time. |
+| **Class Rating Instructor**, **Instrument Rating Instructor**, **Type Rating Instructor**, **Flight Instructor of Flight Instructors**, **Synthetic Flight Instructor**, **Examiner** | Log both PIC and FI time, and are also reported separately so each instructor/examiner role can be tracked on its own. |
+| **Supervisor** | Reported separately only — not added to PIC or FI totals. |
+| **None** | No time logged for that role. |
 
 For example, a training flight type can log Flight Instructor time for the PIC, Dual time for the SIC, and no time for the supervisor.
 
 Company managers can configure these classifications in the flight types management page. The supervisor classification is set to **None** by default, so supervisors receive no logbook time from a flight unless the company configures otherwise.
+
+> **Note:** The old **Copilot** classification has been replaced by **Second in Command (SIC)**. Existing flight types that used Copilot were automatically migrated to SIC, which keeps the same behaviour of only logging time on multi-pilot aircraft.

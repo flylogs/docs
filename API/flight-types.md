@@ -6,15 +6,27 @@ Company-specific flight type definitions. Used to classify flights by purpose an
 
 ## Flight Classification Values
 
-| Value | Description |
-|-------|-------------|
-| `pic` | Pilot in Command |
-| `copic` | Copilot |
-| `fi` | Flight Instructor |
-| `dual` | Dual |
-| `none` | None |
+| Value | Description | Logbook rollup |
+|-------|-------------|----------------|
+| `pic` | Pilot in Command | PIC total |
+| `picus` | Pilot in Command Under Supervision | Counts toward **PIC** total; also reported separately |
+| `sic` | Second in Command | SIC total — **only counts on multipilot aircraft** |
+| `fi` | Flight Instructor | Counts toward **PIC and FI** totals; also reported separately |
+| `dual` | Dual Received | DUAL total |
+| `cri` | Class Rating Instructor | Counts toward **PIC and FI** totals; also reported separately |
+| `iri` | Instrument Rating Instructor | Counts toward **PIC and FI** totals; also reported separately |
+| `fifi` | Flight Instructor of Flight Instructors | Counts toward **PIC and FI** totals; also reported separately |
+| `sfi` | Synthetic Flight Instructor | Counts toward **PIC and FI** totals; also reported separately |
+| `tri` | Type Rating Instructor | Counts toward **PIC and FI** totals; also reported separately |
+| `tre` | Examiner | Counts toward **PIC and FI** totals; also reported separately |
+| `sup` | Supervisor | Reported separately only — **not** rolled into PIC or FI |
+| `none` | None | Not logged |
 
 These values apply to `pic_flight_time`, `sic_flight_time`, and `supervisor_flight_time`, which determine how logbook time is allocated to the flight's PIC (`pic_id`), SIC (`sic_id`), and Supervisor (`supervisor_id`) respectively.
+
+> **Migration note:** `copic` (Copilot) is **deprecated and removed**. All existing `copic` configurations were migrated to `sic`. To preserve the original semantics, `sic` time is only credited on **multipilot** aircraft (`Aircraft.multipilot = true`); on single-pilot aircraft `sic` time is not logged. Do not send `copic` — it is no longer accepted as a classification key.
+
+> **PIC / FI rollup:** `picus`, `cri`, `iri`, `fifi`, `sfi`, `tri`, `tre` all count toward a pilot's **PIC total time**. The instructor/examiner classes (`cri`, `iri`, `fifi`, `sfi`, `tri`, `tre`) additionally count toward the **FI total time** — `picus` does not (it is PIC time only). Each is also exposed as its own line in pilot statistics so the time worked in each function can be seen separately. `sup` is the exception: it is reported separately only and never rolled into PIC or FI.
 
 ---
 
@@ -116,9 +128,17 @@ Create a new flight type. Also returns the `flightClassification` reference data
   "result": true,
   "flightClassification": {
     "pic": "Pilot in Command",
-    "copic": "Copilot",
+    "picus": "Pilot in Command Under Supervision",
+    "sic": "Second in Command",
     "fi": "Flight Instructor",
-    "dual": "Dual",
+    "dual": "Dual Received",
+    "cri": "Class Rating Instructor",
+    "iri": "Instrument Rating Instructor",
+    "fifi": "Flight Instructor of Flight Instructors",
+    "sfi": "Synthetic Flight Instructor",
+    "tri": "Type Rating Instructor",
+    "tre": "Examiner",
+    "sup": "Supervisor",
     "none": "None"
   }
 }
