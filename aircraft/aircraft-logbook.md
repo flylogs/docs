@@ -45,6 +45,19 @@ When you [create a new aircraft](create-your-aircraft.md), you enter its current
 
 If the aircraft's totals ever need correcting later (for example after a data entry mistake), staff/admin users can use the **Reset aircraft hours** button on the aircraft edit page. This creates a new log entry with the corrected totals; it does not alter or remove previous entries.
 
+### Entering an old (backdated) flight
+
+Flight log entries are placed in the logbook by the flight's date, not by the order in which you save them. If you save a flight dated earlier than flights you've already logged for that aircraft, Flylogs automatically recalculates the cumulative totals for that flight and every later entry, so the **Total time** and **Total landings** columns stay correct and in chronological order.
+
+What this means in practice:
+
+* **Final totals stay accurate.** Even if you log flights out of order, the logbook ends up consistent — nothing is silently left wrong.
+* **It can be slow.** On an aircraft with a long flight history, saving one backdated flight forces a recalculation of every log entry after it. The save may take noticeably longer than logging a normal, current-dated flight.
+* **No warning is shown.** Flylogs does not currently warn you that a flight is out of chronological order, or tell you how many later entries will be recalculated — it just happens silently on save.
+* **The logbook block window can be bypassed by admins.** Companies can set how many days back a flight can be dated (`flights_block_days`). Regular pilots are blocked from entering flights older than this window, but admin/staff users (`user_group_id` ≤ 110) are exempt and can enter flights from any date in the past.
+
+**Recommendation:** only enter backdated flights when necessary (e.g. importing historical data or correcting a missed entry), and avoid doing so on aircraft with very large flight histories during busy operational periods, since the recalculation runs synchronously when you save.
+
 ### Aircraft log vs. maintenance jobs
 
 The aircraft logbook is not the same as the **Maintenance** tab:
