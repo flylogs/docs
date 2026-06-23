@@ -63,6 +63,21 @@ Once the flight times have been entered correctly the following fields will be a
 
 <br>
 
+### Hobbs and Tach readings
+
+If the selected aircraft tracks **Hobbs** and/or **Tach** meters, the form shows those fields and helps you fill them in:
+
+* **Hobbs/Tach start** is pre-filled from the end reading of that aircraft's last logged flight, so consecutive flights stay continuous.
+* **Hobbs/Tach end** is auto-calculated as the start reading plus the block time. The link icon next to the field shows whether the value is auto-calculated or has been overridden — you can edit it manually, and click the pencil icon to revert to the auto-calculated value.
+
+**When editing an existing flight, your stored readings are respected:**
+
+* If the flight already has Hobbs/Tach values, they are **left untouched** — the form will not overwrite them.
+* If a value is empty, it is auto-filled as described above.
+* If you **change the aircraft**, all Hobbs/Tach readings are re-prefilled from the newly selected aircraft's last flight.
+
+<br>
+
 ### Flight type and logbook time
 
 The selected flight type determines what kind of time is written to each crew member's logbook. Every flight type defines a time classification for each of the three crew roles: **PIC**, **SIC**, and **Supervisor** (also shown as Examiner or Specialist depending on company type).
