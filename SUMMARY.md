@@ -18,6 +18,8 @@
 
 * [Your Flylogs dashboard](company-management/your-flylogs-dashboard.md)
 * [Company Settings](company-management/company-settings.md)
+* [Airbly Integration](company-management/airbly-integration.md)
+* [Fleet Manager Integration](company-management/spidertracks-integration.md)
 * [Billing System](company-management/billing-system.md)
 * [Base management](company-management/base-management.md)
 * [Account limitations](company-management/account-limitations.md)
@@ -41,6 +43,7 @@
 * [Aircraft management](aircraft/aircraft-basics.md)
 * [Create your aircraft](aircraft/create-your-aircraft.md)
 * [ADSB surveillance](aircraft/adsb-surveillance.md)
+* [Aircraft logbook](aircraft/aircraft-logbook.md)
 * [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
   * [Workorders](aircraft/aircraft-maintenance/workorders.md)
   * [Maintenance plans](aircraft/aircraft-maintenance/maintenance-plans.md)
