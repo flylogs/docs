@@ -209,7 +209,25 @@ Create or update a document folder.
 | id | string | No | Folder ID (omit to create new) |
 | name | string | Yes | Folder name |
 | description | string | No | Folder description |
-| document_folder_id | string | No | Parent folder ID |
+| document_folder_id | string | No | Parent folder ID. Empty / `0` / omitted = root folder |
+
+#### Plan limit
+
+Creating a **root folder** is subject to the company plan's folder limit:
+
+| Plan | Root folders |
+|------|--------------|
+| Free | 3 |
+| Club Essentials | Unlimited |
+| Premium | Unlimited |
+| Unlimited | Unlimited |
+
+The limit applies only when creating a new root folder (no `id`, and `document_folder_id` empty/`0`/omitted). Editing an existing folder is never blocked. When the limit is reached the endpoint responds:
+
+```
+HTTP 400 Bad Request
+You have reached the limit of folders for your subscription plan. Please upgrade your plan to add more folders.
+```
 
 ### Delete Folder
 

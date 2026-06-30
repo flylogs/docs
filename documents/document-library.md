@@ -24,11 +24,24 @@ Each row shows the document name, description, latest version uploader and creat
 
 ### File folders
 
-For better organization, you can create as many folders as needed for your documents. Folders are flat per company — they are not nested visually, but each document belongs to exactly one folder.
+For better organization, you can create folders for your documents. Folders are flat per company — they are not nested. Subfolders are not supported, so every new folder is created at the root level and each document belongs to exactly one folder.
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/Ee0r0ZX5Ha.png)
 
 Use folders to separate operational manuals, training material, forms, etc. The same access rules apply regardless of the folder a document lives in.
+
+#### Folder limit by plan
+
+The number of folders you can create depends on your company's subscription plan:
+
+| Plan | Folders |
+|------|---------|
+| Free | 3 |
+| Club Essentials | Unlimited |
+| Premium | Unlimited |
+| Unlimited | Unlimited |
+
+On the Free plan, once you reach 3 folders the **New Folder** button is disabled. Delete an existing folder or upgrade your plan to add more. All paid plans have no folder limit.
 
 ### Group level access privileges
 
