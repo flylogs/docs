@@ -18,13 +18,26 @@ _Noted with an \* are required fields._
 * \* Aircraft
 * \* Flight Callsign<br>
 * \* Flight rules
-* \* PIC (Pilot in command)
-* SIC (Second in command or student)
+* \* PIC (Pilot in command) — shown as **CM1** in the form
+* SIC (Second in command or student) — shown as **CM2** in the form
 * \* Departure Aerodrome
 * \* Landing Aerodrome
 * Cross country&#x20;
 
 <br>
+
+#### Who appears in the CM1 / CM2 (and Supervisor) selectors
+
+The list of crew you can pick depends on **your own user group** (role tier — lower numbers are more senior, e.g. instructors and staff; higher numbers are students and restricted roles):
+
+* **User group 170 or lower** (staff, instructors): the selector lists **all pilots** in the company.
+* **User group above 170** (students and other restricted roles): the selector is limited to:
+  * **yourself**, plus
+  * any **pilot-flagged** user whose user group is **the same as yours or lower** (i.e. your tier and everyone more senior).
+
+  Users in a **higher** user group than yours are hidden. For example, a **user group 190** pilot sees other pilots in **group 190 and lower**, and does **not** see anyone in **group 200 or above**.
+
+The person already chosen in another crew field (CM1, CM2 or Supervisor) is removed from the other two selectors so the same person can't be picked twice.
 
 ### Time fields:
 
