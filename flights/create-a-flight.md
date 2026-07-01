@@ -6,7 +6,7 @@ Our flight create form has been designed to be clear, easy to use, avoid mistake
 
 
 
-![The form in a computer screen](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/RoMrRsRTmm.png)
+![The form in a computer screen](../.gitbook/assets/newFlightForm.png)
 
 
 
@@ -35,7 +35,7 @@ The list of crew you can pick depends on **your own user group** (role tier — 
   * **yourself**, plus
   * any **pilot-flagged** user whose user group is **the same as yours or lower** (i.e. your tier and everyone more senior).
 
-  Users in a **higher** user group than yours are hidden. For example, a **user group 190** pilot sees other pilots in **group 190 and lower**, and does **not** see anyone in **group 200 or above**.
+  Users in a **higher** user group than yours are hidden. For example, a **user group 190** pilot sees other pilots in **group 190 and lower**, and does **not** see anyone in **group 200 or above (students)**.
 
 The person already chosen in another crew field (CM1, CM2 or Supervisor) is removed from the other two selectors so the same person can't be picked twice.
 
