@@ -26,8 +26,6 @@
   * [Billing](company-management/company-settings/billing.md)
   * [Integrations](company-management/company-settings/integrations.md)
   * [API](company-management/company-settings/api.md)
-* [Airbly Integration](company-management/airbly-integration.md)
-* [Fleet Manager Integration](company-management/spidertracks-integration.md)
 * [Billing System](company-management/billing-system.md)
 * [Base management](company-management/base-management.md)
 * [Account limitations](company-management/account-limitations.md)
