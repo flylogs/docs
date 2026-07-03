@@ -17,7 +17,15 @@
 ## Company Management
 
 * [Your Flylogs dashboard](company-management/your-flylogs-dashboard.md)
-* [Company Settings](company-management/company-settings.md)
+* [Company Settings](company-management/company-settings/README.md)
+  * [General](company-management/company-settings/general.md)
+  * [Flights](company-management/company-settings/flights.md)
+  * [Schedule](company-management/company-settings/schedule.md)
+  * [Pilots](company-management/company-settings/pilots.md)
+  * [Duty Limits](company-management/company-settings/duty-limits.md)
+  * [Billing](company-management/company-settings/billing.md)
+  * [Integrations](company-management/company-settings/integrations.md)
+  * [API](company-management/company-settings/api.md)
 * [Airbly Integration](company-management/airbly-integration.md)
 * [Fleet Manager Integration](company-management/spidertracks-integration.md)
 * [Billing System](company-management/billing-system.md)

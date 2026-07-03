@@ -46,7 +46,7 @@ The **Confirm** button only appears when:
 * Your user type has the **Confirm flights** permission enabled (Company Administrators, Operations Managers, and Compliance & Safety Managers always see it).
 * The flight has a block time greater than zero, an aircraft, and a PIC.
 
-_To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings.md#flight-permissions)_._<br>
+_To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings/flights.md#flight-permissions)_._<br>
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/o-8DINhaSx.png)
 
@@ -69,7 +69,7 @@ Only the user profiles that you set up in your company settings are allowed to d
 * If the flight is still a **Draft**, the assigned PIC or the user who created the flight can always edit it.
 * If the flight has been **Confirmed**, the assigned PIC or the user who created the flight can still edit it for **24 hours** after it was last modified.
 
-_To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings.md#flight-permissions)_._<br>
+_To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings/flights.md#flight-permissions)_._<br>
 
 Flight modification history will be preserved but flight attachments like PDF documents will be erased after 24 hours.
 
@@ -92,4 +92,4 @@ If you open a draft you are **not** allowed to cancel, the **Cancel Flight** but
 
 When a flight is cancelled, the crew (other than the user cancelling) are notified, and the cancellation is recorded in the flight change history with the reason. Cancelling requires a live connection; while offline the cancellation is queued and applied when you reconnect.
 
-_To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings.md#flight-permissions)_._<br>
+_To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings/flights.md#flight-permissions)_._<br>
