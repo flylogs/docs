@@ -21,12 +21,12 @@ Both integrations follow the same rules:
 * Once connected and enabled, Flylogs checks the service **every 15 minutes** and imports any new completed flights.
 * Each flight is imported **once** — re-running never creates duplicates, even if the service updates a flight later.
 * Imported flights are saved as **drafts**. They do **not** count toward your logbooks, pilot currency, or aircraft maintenance until a user reviews and confirms them. This gives you a chance to check the data and fill in anything the service does not provide.
-* Aircraft are matched by **tail number / registration**. If no aircraft with that registration exists in your company, Flylogs **creates one automatically** from the make and model reported by the service.
+* Aircraft are matched by **tail number / registration**. The aircraft must already exist in your Flylogs company and be **active** — if no active aircraft with that registration is found, the import skips all flights for that asset.
 
 The **Synchronization** panel shows the time of the last sync (in your company time zone and format) and a short summary of the last run.
 
-{% hint style="warning" %}
-Auto-created aircraft start with no maintenance program and no Hobbs/Tach configuration. After the first import from a new aircraft, open it in **Aircraft** and set up its maintenance counters before confirming its flights.
+{% hint style="info" %}
+If flights from a particular aircraft are not appearing, check that the aircraft is registered in Flylogs with the same tail number as in the tracking service, and that its **Active** flag is on.
 {% endhint %}
 
 ### Reviewing imported flights
@@ -59,7 +59,7 @@ The **Connection** indicator shows whether a key is currently stored.
 | Landings | Airbly usage |
 | Pilot in command | Matched to a Flylogs user (see below) |
 
-Hobbs and Tach readings are not provided by Airbly, so those fields stay empty on imported flights. Auto-created aircraft also take their serial number from Airbly.
+Hobbs and Tach readings are not provided by Airbly, so those fields stay empty on imported flights.
 
 #### Pilot matching
 

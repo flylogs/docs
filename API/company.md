@@ -120,37 +120,90 @@ Missing keys should be treated as `false`.
 
 <mark style="color:blue;">`GET`</mark> `/companies/alerts.json`
 
-Retrieve active alerts and notifications for the company dashboard (expiring certificates, overdue maintenance, etc.).
+Retrieve active alerts and notifications for the company dashboard. Returns items expiring within 3 months, sorted by date ascending.
+
+Results vary by role: managers receive all alerts; instructors receive only their own aircraft documents and their students' certificates.
 
 #### Response
+
+Array of alert objects, sorted by `date` ascending.
 
 ```json
 [
   {
-    "type": "certificate",
-    "icon": "fa-id-card",
+    "type": "UserCertificate",
+    "icon": "fa fa-certificate",
     "class": "text-danger",
-    "link": "/pilots/view/123",
-    "name": "Medical Certificate - John Doe",
-    "date": "2025-03-15",
-    "details": "Expires in 5 days"
+    "link": "/pilots/view/42",
+    "name": "Medical Certificate",
+    "date": 1751328000,
+    "details": "Jane Smith"
   },
   {
-    "type": "maintenance",
-    "icon": "fa-wrench",
+    "type": "Aircraft",
+    "icon": "fa fa-plane",
     "class": "text-warning",
-    "link": "/aircraft/view/45",
-    "name": "100h Check - EC-ABC",
-    "date": 1710460800,
-    "details": "Due in 12 flight hours"
+    "link": "/aircraft/view/7/EC-ABC",
+    "name": "EC-ABC Insurance",
+    "date": 1753920000,
+    "details": "Airbus H125"
+  },
+  {
+    "type": "Aircraft",
+    "icon": "fa fa-wrench",
+    "class": "text-muted",
+    "link": "/aircraft/view/7/EC-ABC",
+    "name": "EC-ABC maintenance",
+    "date": 1756598400,
+    "details": "100h Check"
+  },
+  {
+    "type": "AircraftUpload",
+    "icon": "fa fa-file-pdf",
+    "class": "text-muted",
+    "link": "/aircraft/view/7/EC-ABC",
+    "name": "EC-ABC Weight & Balance",
+    "date": 1759276800,
+    "details": "Airbus H125"
+  },
+  {
+    "type": "Document",
+    "icon": "fa fa-file-pdf",
+    "class": "text-muted",
+    "link": "/documents/view/d1e2f3...",
+    "name": "Operations Manual",
+    "date": 1759276800,
+    "details": "Compliance"
   }
 ]
 ```
+
+#### Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `type` | string | Alert source — see table below |
+| `icon` | string | FontAwesome CSS class |
+| `class` | string | Urgency CSS class — see table below |
+| `link` | string | Relative URL to the affected resource |
+| `name` | string | Short label for the alert |
+| `date` | integer | Unix timestamp of the expiration or due date |
+| `details` | string | Secondary context (pilot name, aircraft model, folder, job name) |
+
+#### Alert Types
+
+| `type` | Source | `details` content |
+|--------|--------|-------------------|
+| `UserCertificate` | Pilot certificate expiration | Pilot first + last name |
+| `Aircraft` + plane icon | Aircraft document expiration (insurance, airworthiness, registration, W&B, radio, avionics) | Manufacturer + model |
+| `Aircraft` + wrench icon | Scheduled maintenance job due | Job name |
+| `AircraftUpload` | Uploaded aircraft document expiration | Manufacturer + model |
+| `Document` | Company document expiration | Folder name |
 
 #### Alert Classes
 
 | Class | Meaning |
 |-------|---------|
-| `text-danger` | Critical — requires immediate attention |
-| `text-warning` | Warning — approaching deadline |
-| `text-muted` | Informational |
+| `text-danger` | Expired |
+| `text-warning` | Expires within 1 month |
+| `text-muted` | Expires within 3 months |
