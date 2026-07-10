@@ -42,6 +42,22 @@ Click **Save**. You can have multiple profiles with different effective dates to
 
 The system always picks the most recently effective active profile when calculating limits.
 
+<figure><img src="../.gitbook/assets/ftl-compliance-settings.png" alt="FTL Compliance section in Settings showing two active profiles"><figcaption>The FTL Compliance section. Profile names are clickable to view the full FDP limit table for that profile.</figcaption></figure>
+
+### Viewing the FDP limit table
+
+Click any profile name in the FTL Compliance section (or click the **profile badge / ? button** on the FTL Forecast, Roster, or Schedule Manager pages) to open the profile detail panel.
+
+<figure><img src="../.gitbook/assets/ftl-profile-modal.png" alt="FTL profile detail modal showing the ORO.FTL FDP limit matrix and rest requirements"><figcaption>The FDP limit matrix for an ORO.FTL profile. Columns show maximum FDP for 1–2 up to 10 sectors; rows are the report-time bands from the regulation. Rest requirements and cumulative limits are shown below.</figcaption></figure>
+
+The panel shows:
+
+* **FDP Limit Matrix** — the full table of maximum FDP hours by report time and number of sectors, taken directly from the applicable regulation (ORO.FTL.205 Table 1, or 14 CFR §117 Table B). Values greyed out at 9:00 have hit the regulatory floor.
+* **Rest Requirements** — minimum rest at home base and away, weekly rest, standby fraction, and maximum consecutive duty days.
+* **Cumulative Limits** — maximum FDP and block time over rolling 7-day, 14-day, 28-day, and annual windows.
+
+If the profile has custom rule overrides, a yellow callout lists which fields have been changed from the scheme default.
+
 ---
 
 ## How FDP is calculated

@@ -49,4 +49,6 @@ The **FTL Compliance** section (right column) enables automatic Flight Duty Peri
 
 **FTL Profiles** define which regulatory scheme applies and from when. Click **Add** to create a profile, choose the scheme (`ORO.FTL`, `14 CFR Part 117`, or `Custom`), and set an effective date. The profile active as of the duty record date is the one used for limit lookups. Multiple profiles can coexist to handle regulatory transitions.
 
+<figure><img src="../../.gitbook/assets/ftl-compliance-settings.png" alt="FTL Compliance section showing toggles and profile list"><figcaption>The FTL Compliance section in Settings → Duty Limits. Click a profile name to view its full FDP limit matrix.</figcaption></figure>
+
 For a full description of how FDP is calculated, what violations look like across the system, and how to use the **FTL Forecast** planning page, see [FTL Compliance & Forecast](../../schedules/ftl-compliance-forecast.md).
