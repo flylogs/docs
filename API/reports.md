@@ -295,11 +295,16 @@ If no METAR is available, the array contains a single `"NIL"` entry:
 
 Retrieve the current TAF for an airport.
 
+<mark style="color:blue;">`GET`</mark> `/reports/taf/{airport}/{date}.json`
+
+Retrieve the historical TAF closest to `date` (within ±6 hours). Only available for the last 30 days.
+
 #### Path Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | airport | string | 4-letter ICAO code (validated against `^[A-Z]{2}[A-Z0-9]{2}$`) |
+| date | number | Unix timestamp; ignored if greater than current time |
 
 #### Response
 
@@ -319,7 +324,11 @@ If no TAF is available:
 
 - `404 Not Found` — `airport` empty or fails ICAO format check.
 
-Fetched from `aviationweather.gov`. Response cache header: 5 minutes (private).
+#### Behavior
+
+- Results are cached server-side via the `Tafor` model. A cache hit short-circuits the upstream fetch.
+- Both current and historical TAFs are fetched from `aviationweather.gov` (historical uses its `date` param, available up to 30 days back).
+- Response cache header: 5 minutes (private).
 
 ---
 
