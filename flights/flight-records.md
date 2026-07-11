@@ -56,6 +56,8 @@ Also, depending on the company settings, you may be required to enter your passw
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/x6ZL5XJ0Mo.png)
 
+**Forgot to dispatch?** If the confirmed flight was created directly instead of dispatched from a schedule, Flylogs automatically looks for the schedule it belongs to (same PIC, aircraft, and an overlapping time window) and links it for you. See [Automatic schedule matching on confirm](audit-trails.md#automatic-schedule-matching-on-confirm) for details. Available on the Club, Premium, and Unlimited plans.
+
 ***
 
 ###
@@ -93,3 +95,15 @@ If you open a draft you are **not** allowed to cancel, the **Cancel Flight** but
 When a flight is cancelled, the crew (other than the user cancelling) are notified, and the cancellation is recorded in the flight change history with the reason. Cancelling requires a live connection; while offline the cancellation is queued and applied when you reconnect.
 
 _To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings/flights.md#flight-permissions)_._<br>
+
+***
+
+## GenDec export
+
+Flights can also be exported as a **GenDec** (General Declaration, ICAO Annex 9 — Appendix 1) — a standardized customs/immigration document. It's generated client-side, in the same style as the flight PDF, and pre-fills what the system already tracks: operator, aircraft registration, flight number, date, route, crew (name, duty, passport number, and date of birth — fetched from each crew member's profile), passenger count, and cargo notes. A crew member's passport and date-of-birth rows always appear even when their profile has no value on file (shown blank). Fields the system doesn't track (embarking/transit passenger split, Declaration of Health, signature) are printed as blank boxes for manual completion. The GenDec's content is always in English, regardless of the user's NEO language, since it's an internationally standardized document.
+
+Available from:
+- The flight view page, in the **Export** dropdown (alongside the flight PDF).
+- The schedule detail modal, next to **View Flight**, once a schedule has produced a flight (`flight_id` set).
+
+**Access control:** only shown for company types other than `school` (`Company.type !== "school"`) — a GenDec is an operational document that doesn't apply to training-school flights.

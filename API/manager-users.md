@@ -2,6 +2,10 @@
 
 Administrative endpoints for managing user accounts. Requires manager or administrator role.
 
+{% hint style="info" %}
+**Requests made by an External Auditor (`user_group_id` 250)** have `email`, `phone`, `phone2`, `address`, `city`, `pc` and `passport` stripped (returned as `null`) from every `User`/`UserDetail` object in the response, except the auditor's own record. This applies to every endpoint on this page — list, view, everything — automatically, based on the **caller's** role, not the target user's.
+{% endhint %}
+
 ## List Users
 
 <mark style="color:blue;">`GET`</mark> `/manager/users.json`
@@ -169,13 +173,30 @@ Fields should match the user and user detail structure (email, name, surname, us
 }
 ```
 
+#### External Auditor accounts (`user_group_id: 250`)
+
+Auditor accounts are always temporary, external, read-only. These rules are enforced server-side on both create and edit — they cannot be bypassed by the client:
+
+* `pilot` is forced to `false`. Auditors never have flying privileges.
+* `expiration` is **required** and must be no more than 90 days from the time of the request. Validation errors: `"Auditor accounts must have an expiration date"`, `"Expiration date must be in the future"`, `"Auditor accounts cannot be granted for more than 90 days from today"`.
+* Two-factor authentication is forced to `EMAIL` — an auditor's credential can never be switched to `TOTP` or `OFF`, regardless of which endpoint attempts it.
+
+```json
+{
+  "success": false,
+  "errors": {
+    "expiration": ["Auditor accounts cannot be granted for more than 90 days from today"]
+  }
+}
+```
+
 ---
 
 ## Edit User
 
 <mark style="color:green;">`POST`</mark> `/manager/users/edit.json`
 
-Update an existing user account.
+Update an existing user account. The same External Auditor account validation described under **Create User** above applies here too.
 
 ---
 

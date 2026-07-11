@@ -92,6 +92,7 @@ Two optional safety gates can be required before a flight is dispatched. Both ar
 
 1. If a schedule record is **published** and **dispatched** and the PIC is changed, the record will automatically be switched back to SCHEDULED and the associated flight will be unlinked.
 2. If a PIC or SIC tries to dispatch the flight, the system will check for required pilot certificates, and if the user lacks any of the required certificates (medical, license, rating), Flylogs will reject the flight dispatch function.
+3. If a PIC skips the Dispatch button entirely and logs the flight directly, Flylogs doesn't leave the schedule stranded: when that flight is **confirmed**, the system looks for the schedule it belongs to (same PIC, aircraft, and a time window overlapping the flight by up to 30 minutes) and links it automatically. See [Automatic schedule matching on confirm](../flights/audit-trails.md#automatic-schedule-matching-on-confirm) for the full details.
 
 ***
 

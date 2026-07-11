@@ -22,6 +22,8 @@ From your **Security Settings** page, you can choose between three 2FA methods:
 
 {% hint style="info" %}
 **2FA is mandatory for all company managers**, who must select either "Email" or "Authenticator App". The "Off" option is only available to non-manager users (pilots, FIs, mechanics, students), for whom 2FA remains optional but strongly recommended as an extra layer of security.
+
+**External Auditor** accounts are a special case: 2FA is always **Email** and can't be changed to "Authenticator App" or "Off".
 {% endhint %}
 
 ### Auto-lock Screen

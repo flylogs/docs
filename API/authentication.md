@@ -13,6 +13,8 @@ curl https://fmc.flylogs.com/v1/users/view.json \
 
 A key authenticates **as the user it is bound to** and inherits that user's permissions. It remains valid until it is revoked, or until its optional expiry date passes — it is not affected by inactivity or logout.
 
+It also stops working if the **bound user's account** has expired, been deactivated or deleted — even if the key itself has no expiry date set. Note that External Auditor accounts never have an API key in the first place — only company managers can have one, always bound to their own account.
+
 {% hint style="info" %}
 Don't have a key yet? See **[API Keys](api-keys.md)** for how a Company Administrator creates, lists and revokes them under **Company Settings → API**.
 {% endhint %}

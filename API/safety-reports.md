@@ -635,3 +635,44 @@ Returns all configured departments sorted by name. Used to populate department d
   { "id": "4", "name": "Maintenance & Engineering - CAMO" }
 ]
 ```
+
+---
+
+## List Categories
+
+<mark style="color:blue;">`GET`</mark> `/safety_reports/categories/{departmentId}.json`
+
+Returns categories configured for a department, as an `id => name` map. Used to populate category dropdown selectors once a department is selected. `departmentId` is required; a missing value returns a 404.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|--------------|
+| departmentId | number | Department ID (see [Departments](#list-departments)) |
+
+#### Response
+
+```json
+{
+  "131": "Hazard Report",
+  "132": "Safety Concern",
+  "133": "Near Miss",
+  "134": "Observation",
+  "135": "Unsafe Act",
+  "136": "Unsafe Condition",
+  "137": "Human Factors",
+  "138": "Fatigue",
+  "139": "Communication Breakdown",
+  "140": "Procedure Not Followed",
+  "141": "Training Deficiency",
+  "142": "Equipment Failure",
+  "143": "Security Event",
+  "144": "Environmental Event",
+  "145": "Regulatory Non-Compliance",
+  "146": "Audit Finding",
+  "147": "Safety Suggestion",
+  "148": "Emergency Response Issue",
+  "149": "Lessons Learned",
+  "150": "Other"
+}
+```

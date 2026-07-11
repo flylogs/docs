@@ -70,7 +70,17 @@ Mechanics have access to all aircraft details. They can manage maintenance jobs 
 
 ### Auditors
 
-Auditors are external users granted read-only access to your company. They are typically used to provide regulators, inspectors or external compliance reviewers a temporary view of your documents, flights and reports without giving them permission to modify any data.
+Auditors are external users granted read-only access to your company. They are typically used to provide regulators, inspectors or external compliance reviewers a temporary view of your operations without giving them permission to modify any data.
+
+Auditor accounts have a few rules that always apply and cannot be turned off when creating or editing one:
+
+* **Always temporary.** Every auditor account must have an expiration date, no more than 90 days in the future. Once it passes, the account can no longer log in — you can extend it at any time by editing the account and setting a new expiration date (also capped at 90 days out).
+* **Never a pilot.** Auditor accounts can never be granted flying privileges.
+* **Email-based two-factor only.** Auditors always verify login with a code sent to their email — this can't be changed to an authenticator app or turned off.
+* **No personal contact details of other people.** An auditor never sees another user's email address, phone number or address — anywhere in the app. They see operational data (aircraft, maintenance, flights, trainings, student progress, safety reports, schedules, FTL, rosters) at a company-wide level, not individual pilot profiles.
+* **Read-only, including their own account.** The only thing an auditor can change about their own account is their password — everything else (email, name, 2FA method, etc.) is fixed by whoever created the account.
+* **No API access.** Auditor accounts never have an API key — only company managers can have one, always bound to their own account. See [API Keys](../API/api-keys.md).
+* **The expiration date is always emailed.** The welcome email sent when the account is created shows when it expires. This is true for any account you create with an expiration date set, not just auditors.
 
 
 
