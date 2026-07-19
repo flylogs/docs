@@ -121,6 +121,10 @@ GET /flights/load/page:1/from:2025-01-01/to:2025-03-31/aircraft:/pilot:/base:/fl
 
 Flight times (`block_time`, `flight_time`, `night_flight_time`, `ifr_flight_time`) are returned in **seconds**.
 
+#### Timezone
+
+The clock fields `offblocks_time`, `takeoff_time`, `landing_time`, `onblocks_time` and the flight `date` are expressed in the company's **flight timezone**. This is `CompanySetting.flight_timezone_id` when set, otherwise the company timezone (`CompanyDetail.timezone_id`) — see [Company Settings](company.md). This applies both to the times returned here and to the wall-clock times you submit when creating or editing a flight. Schedules and trainings use the company timezone regardless.
+
 ---
 
 ## View Flight

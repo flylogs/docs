@@ -46,6 +46,7 @@ Retrieve the full company profile, theme, operational settings, and billing conf
   "CompanySetting": {
     "id": "42",
     "company_id": "42",
+    "flight_timezone_id": "90",
     "date_format": "DD-MM-YYYY",
     "time_format": "24",
     "duration_format": "time",
@@ -53,7 +54,15 @@ Retrieve the full company profile, theme, operational settings, and billing conf
     "extracrew": false,
     "cabincrew": false,
     "max_duty_hours": "14",
-    "max_flight_hours_year": "900"
+    "max_flight_hours_year": "900",
+    "FlightTimezone": {
+      "id": "90",
+      "name": "Atlantic/Canary",
+      "description": "Western European Time",
+      "offset_hours": "0",
+      "offset": "+00:00",
+      "country_iso": "ES"
+    }
   },
   "CompanyBillingSetting": {
     "id": "42",
@@ -74,9 +83,14 @@ Retrieve the full company profile, theme, operational settings, and billing conf
 | date_format | `YYYY-MM-DD`, `DD-MM-YYYY`, `MM-DD-YYYY` | Display format for dates |
 | time_format | `12`, `24` | 12-hour or 24-hour time |
 | duration_format | `decimal`, `time` | Flight time as `1.5` or `1:30` |
+| flight_timezone_id | timezone id or `null` | Timezone used **only** for flight times (list, view, form). `null` = use the company timezone (`CompanyDetail.timezone_id`). |
 | aoc | boolean | Air Operator Certificate holder |
 | extracrew | boolean | Extra crew member tracking enabled |
 | cabincrew | boolean | Cabin crew tracking enabled |
+
+{% hint style="info" %}
+**Flight timezone.** When `flight_timezone_id` is set, the resolved `CompanySetting.FlightTimezone` object is returned (same shape as `CompanyDetail.Timezone`). Flight wall-clock times (`offblocks_time`, `takeoff_time`, `landing_time`, `onblocks_time`) and the flight `date` in the [Flights API](flights.md) are interpreted and formatted in this zone; when it is `null`/absent, the company timezone is used. Schedules and trainings always use the company timezone.
+{% endhint %}
 
 ---
 

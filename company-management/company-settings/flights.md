@@ -6,6 +6,21 @@ description: Logbook protection, flight form options, pre-dispatch gates and fli
 
 The Flights tab controls how flight records are created, confirmed, edited and protected across your company logbooks.
 
+### Flight timezone
+
+By default every date and time in Flylogs — including flights — is shown in your **company timezone** (set in [Company Information](../../company-management/company-settings/general.md)). Some operators fly in a region that differs from where the company is registered and prefer their flight times logged in the local operating timezone. The **Flight timezone** setting lets you do exactly that, **without** affecting anything else.
+
+<figure><img src="../../.gitbook/assets/flight_timezone_select.png" alt="Selecting the flight timezone in Company Settings → Flights"><figcaption>Company Settings → Flights → Flight timezone</figcaption></figure>
+
+* Pick any timezone from the searchable list, or leave it on **Company default** to keep using the company timezone.
+* The flight timezone applies **only** to the **flights list, flight view and flight log form** — off-blocks, take-off, landing and on-blocks times, and the flight date, are entered and displayed in this zone.
+* **Schedules and trainings are not affected** — they always stay in the company timezone.
+* When you first create a company the flight timezone is set to the same value as your company timezone, so nothing changes until you deliberately pick a different one.
+
+{% hint style="info" %}
+Changing the flight timezone does not move existing flights in time — the stored moment of each flight is unchanged. Only the wall-clock hours you see and type on the flight pages are re-interpreted in the new zone. Users already signed in pick up the change on their next full page reload.
+{% endhint %}
+
 ### Logbook settings
 
 * **Block logbook after** — locks the logbook against changes in the past. Once set, Flylogs **rejects any flight dated earlier than today minus the selected number of days** — both new entries and edits of existing flights. Choose from 1 day up to 1 year, or *Disabled* to allow changes at any date.

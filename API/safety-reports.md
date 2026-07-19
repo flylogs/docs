@@ -8,12 +8,14 @@ Requires a **premium** or **unlimited** company plan.
 
 ### Severity
 
-| Value | Name | Color |
-|-------|------|-------|
-| `information` | Information | `#1f6ac4` |
-| `incident` | Incident | `#fcd319` |
-| `accident` | Accident | `#ff260a` |
-| `hazard` | Hazard | `#fc19c3` |
+Severity is **scoped to the report's `type`** (see below): an Occurrence is always `incident` or `accident`; Safety Information is always `information` or `hazard`.
+
+| Value | Name | Color | Belongs to type |
+|-------|------|-------|-----------------|
+| `incident` | Incident | `#fcd319` | `OCCURRENCE` |
+| `accident` | Accident | `#ff260a` | `OCCURRENCE` |
+| `information` | Information | `#1f6ac4` | `INFORMATION` |
+| `hazard` | Hazard | `#fc19c3` | `INFORMATION` |
 
 ### Status
 
@@ -23,6 +25,17 @@ Requires a **premium** or **unlimited** company plan.
 | `reviewed` | Reviewed | `#ffcc00` |
 | `closed` | Closed | `#999999` |
 | `published` | Published | `#34eb77` |
+
+### Type (ICAO Annex 19 classification)
+
+Chosen by the reporter when the report is created. Orthogonal to `severity` — it records *what kind of report* this is, per ICAO Annex 19, which distinguishes safety occurrences (events) from safety information (broader data/knowledge).
+
+| Value | Name | Description |
+|-------|------|-------------|
+| `OCCURRENCE` | Safety Occurrence | A specific event or condition that happened (or could happen) and affects aviation safety — accidents, serious incidents, incidents, hazards that materialised. |
+| `INFORMATION` | Safety Information | Broader safety data/knowledge used to improve safety (FDM/FOQA, audits, surveys, SPIs, bulletins, ADs...). May or may not describe an occurrence. |
+
+Defaults to `OCCURRENCE`. Existing reports created before this field was introduced are `OCCURRENCE`.
 
 ### Flight Phase
 
@@ -46,11 +59,13 @@ Requires a **premium** or **unlimited** company plan.
 
 | Value | Label |
 |-------|-------|
-| `likely` | 1 Frequent |
-| `probable` | 2 Occasional |
+| `likely` | 5 Frequent |
+| `probable` | 4 Occasional |
 | `possible` | 3 Remote |
-| `improbable` | 4 Improbable |
-| `remote` | 5 Extremely Improbable |
+| `improbable` | 2 Improbable |
+| `remote` | 1 Extremely Improbable |
+
+Numbering follows the ICAO Doc 9859 probability scale: 5 is the most likely (`Frequent`), 1 the least (`Extremely Improbable`).
 
 ### Risk Severity
 
@@ -98,7 +113,7 @@ Requires a **premium** or **unlimited** company plan.
 
 <mark style="color:blue;">`GET`</mark> `/safety_reports/index/{flightId}.json`
 
-List safety reports for the company. Only top-level reports (no `parent_id`) are returned. Users with `user_group_id > 150` see only reports where they are the reporter, PIC, SIC, supervisor, or the report is `published`. Results are paginated (default 25).
+List safety reports for the company. Only top-level reports (no `parent_id`) are returned. Users with `user_group_id > 150` see only reports where they are the reporter, PIC, SIC, supervisor, or the report is `published`. Results are paginated: default page size 25, maximum 100. Use the `limit` and `page` named parameters to navigate; the response includes a `paginate` object with the total count and page information.
 
 #### Path Parameters
 
@@ -110,6 +125,8 @@ List safety reports for the company. Only top-level reports (no `parent_id`) are
 
 | Parameter | Example | Description |
 |-----------|---------|-------------|
+| limit | `limit:50` | Page size (default 25, max 100) |
+| page | `page:2` | Page number (default 1) |
 | status | `status:open` | Filter by status value |
 | report_category | `report_category:3` | Filter by category ID |
 | severity | `severity:incident` | Filter by severity value |
@@ -129,6 +146,7 @@ List safety reports for the company. Only top-level reports (no `parent_id`) are
         "idn": "2025/00042",
         "name": "Bird strike on approach",
         "severity": "incident",
+        "type": "OCCURRENCE",
         "status": "open",
         "datetime": "2025-03-10 09:15:00",
         "location": "LEMD",
@@ -153,6 +171,15 @@ List safety reports for the company. Only top-level reports (no `parent_id`) are
       "ChildSafetyReport": []
     }
   ],
+  "paginate": {
+    "page": 1,
+    "current": 25,
+    "count": 132,
+    "prevPage": false,
+    "nextPage": true,
+    "pageCount": 6,
+    "limit": 25
+  },
   "status": {
     "open":      { "name": "Open",      "icon": "fa fa-envelope-open",      "color": "#ff9900" },
     "reviewed":  { "name": "Reviewed",  "icon": "fa fa-envelope-open-text", "color": "#ffcc00" },
@@ -166,6 +193,10 @@ List safety reports for the company. Only top-level reports (no `parent_id`) are
     "hazard":      { "name": "Hazard",      "icon": "fa fa-bolt",               "color": "#fc19c3" }
   },
   "reportTypes": { "3": "Operational", "4": "Maintenance" },
+  "reportKinds": {
+    "OCCURRENCE":  { "name": "Safety Occurrence",  "icon": "fa fa-flag",        "color": "#0d9488" },
+    "INFORMATION": { "name": "Safety Information",  "icon": "fa fa-circle-info", "color": "#1f6ac4" }
+  },
   "severities":  { "information": "Information", "incident": "Incident", "accident": "Accident", "hazard": "Hazard" },
   "statuses":    { "open": "Open", "reviewed": "Reviewed", "closed": "Closed", "published": "Published" }
 }
@@ -206,6 +237,7 @@ Full details for a single report including flight, aircraft, and reporter.
       "flight_type_id": "1",
       "status": "open",
       "severity": "incident",
+      "type": "OCCURRENCE",
       "name": "Bird strike on approach",
       "datetime": "2025-03-10 09:15:00",
       "location": "LEMD",
@@ -301,6 +333,8 @@ On creation, the system sends notifications to crew members listed in `crew` and
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | SafetyReport.name | string | Yes | Short event name |
+| SafetyReport.type | string | No | ICAO Annex 19 classification: `OCCURRENCE` (default) or `INFORMATION` |
+| SafetyReport.severity | string | No | Only for `type` = `INFORMATION`: `information` (default) or `hazard`. Ignored for Occurrences (derived from damages). |
 | SafetyReport.datetime | string | Yes | Event date/time (ISO 8601) |
 | SafetyReport.location | string | Yes | Event location (ICAO or free text) |
 | SafetyReport.events | string | Yes | Description of what happened |
@@ -325,15 +359,19 @@ On creation, the system sends notifications to crew members listed in `crew` and
 | SafetyReport.Aircraft | array | No | Array of `{"id": "..."}` objects for linked aircraft (HABTM) |
 | SafetyReport.crew | array | No | Array of user IDs to notify and request related reports from |
 
-#### Severity Auto-derivation
+#### Severity derivation
+
+Severity is determined by `type`:
+
+**When `type` = `OCCURRENCE`** — derived server-side from damages; the posted `severity` is ignored.
 
 | Condition | Derived Severity |
 |-----------|-----------------|
-| `damages` = `minimal` | `incident` |
 | `damages` in `important`, `catastrophic` | `accident` |
-| `personal_damages` = `injuries` (and not already `accident`) | `incident` |
 | `personal_damages` in `serious`, `casualties` | `accident` |
-| None of the above | `information` |
+| Otherwise (incl. `minimal` damage or `injuries`) | `incident` |
+
+**When `type` = `INFORMATION`** — taken from the posted `severity`: `hazard` if the reporter marks it as a hazard, otherwise `information`. Damages do not affect it.
 
 #### Response
 
