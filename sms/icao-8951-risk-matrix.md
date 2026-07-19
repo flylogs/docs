@@ -26,8 +26,8 @@ Once saved, a visual risk matrix will be automatically generated and attached to
    Open any report from the Safety menu that is ready to be closed or published.
 2. **Select risk values**\
    Under the "Risk Assessment" section, choose:
-   * **Risk Severity**: Negligible, Marginal, Critical, Hazardous, Catastrophic
-   * **Risk Probability**: Remote, Improbable, Possible, Probable, Likely
+   * **Risk Severity**: A Catastrophic, B Hazardous, C Major, D Minor, E Negligible
+   * **Risk Probability**: 5 Frequent, 4 Occasional, 3 Remote, 2 Improbable, 1 Extremely Improbable (per ICAO Doc 9859: 5 = most likely, 1 = least likely)
 3. **Enter corrective actions**\
    Clearly describe any actions taken to mitigate the risk.
 4. **(Optional) Define mitigated risk**\

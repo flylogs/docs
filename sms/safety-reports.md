@@ -34,6 +34,22 @@ Additionally, the person writing the report or any manager can comment on the re
 
 
 
+### Report classification (Occurrence vs Information)
+
+When creating a report, the reporter first chooses its **classification**, following the ICAO Annex 19 distinction between safety occurrences and safety information:
+
+* **Safety Occurrence** — *"Something happened."* A specific event or condition that has happened (or could happen) and affects aviation safety. These are the events reported, investigated and analysed under an SMS/SSP — accidents, serious incidents, incidents, and hazards that materialised. Examples: aircraft damage, runway incursion, bird strike, fuel contamination, incorrect maintenance, fatigue-related error, ATC communication error, near mid-air collision.
+* **Safety Information** — *"Everything that helps us understand safety."* Data or knowledge used to improve aviation safety, broader than a single event. It may or may not describe a specific occurrence. Examples: Flight Data Monitoring (FDM/FOQA), LOSA observations, safety audits and inspections, safety surveys, risk assessments, safety performance indicators, manufacturer bulletins, airworthiness directives, regulatory findings.
+
+The selector shows this guidance inline so the reporter chooses the right classification. It defaults to **Safety Occurrence**, and the chosen classification is shown as a badge on the report.
+
+The classification determines the report's **severity**:
+
+* **Safety Occurrence** → the severity is **Incident** or **Accident**, derived automatically from the damages and injuries recorded (an occurrence is at least an incident; important/catastrophic damage or serious injuries make it an accident).
+* **Safety Information** → the reporter chooses between **General Information** and **Hazard**. Pick *Hazard* for a condition with the potential to cause harm that has not yet resulted in an event.
+
+This is why the old "Information" and "Hazard" severities now live under **Safety Information**, while "Incident" and "Accident" live under **Safety Occurrence** — the severity list a manager sees when editing a report is filtered to match its classification.
+
 ### Report status
 
 A report has 5 possible status in which can be.
@@ -76,3 +92,9 @@ The report list supports filters to help you find specific events quickly. Avail
 * **Department** — filter by organisational department
 
 Filters can be combined freely. The date range is the only filter available to standard crew members, who already see only their own reports plus any published ones.
+
+### Pagination
+
+The report list shows **25 reports per page** by default. You can change the page size to **50 or 100** with the selector in the filter bar, and move between pages with the pagination controls below the list. The header shows the total number of reports matching the active filters.
+
+The Excel export always includes **all** reports matching the current filters, not just the visible page.
