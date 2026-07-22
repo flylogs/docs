@@ -134,9 +134,24 @@ Missing keys should be treated as `false`.
 
 <mark style="color:blue;">`GET`</mark> `/companies/alerts.json`
 
-Retrieve active alerts and notifications for the company dashboard. Returns items expiring within 3 months, sorted by date ascending.
+Retrieve active alerts and notifications for the company dashboard. By default returns items expiring within ~3 months (some sources also look back ~30 days), sorted by date ascending.
 
-Results vary by role: managers receive all alerts; instructors receive only their own aircraft documents and their students' certificates.
+Results vary by role: managers (`user_group_id < 150`) receive all alerts; instructors receive only their own aircraft documents and their students' certificates.
+
+#### Query parameters
+
+All parameters are optional. Called with none (the dashboard widget's usage) the endpoint behaves exactly as before.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `from` | integer \| string | Lower bound — unix seconds or `YYYY-MM-DD`. When supplied it **overrides** each source's baked window, so the range can reach past 3 months or into history. |
+| `to` | integer \| string | Upper bound — unix seconds or `YYYY-MM-DD`. |
+| `types` | string | Comma-separated subset of the type values (`Aircraft,Maintenance,AircraftUpload,Document,UserCertificate`). Only the requested sources are queried. Omitted/empty → all types. |
+| `user_id` | integer | Narrow to one person's alerts: their pilot certificates plus documents for aircraft they own. Aircraft certificates/maintenance and company documents are excluded. |
+
+**Date-window behaviour (hybrid):** with no `from`/`to`, each source keeps its default window (backward-compatible). Supplying an explicit range lifts the per-source caps and the range fully drives which items return.
+
+**`user_id` access control:** the requested id is clamped to the caller's role-allowed set. Managers may query any company user; non-managers are restricted to themselves and their supervised students — passing another user's id returns no foreign certificates rather than leaking them.
 
 #### Response
 
@@ -163,7 +178,7 @@ Array of alert objects, sorted by `date` ascending.
     "details": "Airbus H125"
   },
   {
-    "type": "Aircraft",
+    "type": "Maintenance",
     "icon": "fa fa-wrench",
     "class": "text-muted",
     "link": "/aircraft/view/7/EC-ABC",
@@ -209,10 +224,12 @@ Array of alert objects, sorted by `date` ascending.
 | `type` | Source | `details` content |
 |--------|--------|-------------------|
 | `UserCertificate` | Pilot certificate expiration | Pilot first + last name |
-| `Aircraft` + plane icon | Aircraft document expiration (insurance, airworthiness, registration, W&B, radio, avionics) | Manufacturer + model |
-| `Aircraft` + wrench icon | Scheduled maintenance job due | Job name |
+| `Aircraft` | Aircraft certificate expiration (insurance, airworthiness, registration, W&B, radio, avionics) | Manufacturer + model |
+| `Maintenance` | Scheduled maintenance job due | Job name |
 | `AircraftUpload` | Uploaded aircraft document expiration | Manufacturer + model |
 | `Document` | Company document expiration | Folder name |
+
+> **Note:** Maintenance alerts were previously emitted as `type: "Aircraft"` with a wrench icon. They now use their own `type: "Maintenance"` so they can be filtered independently.
 
 #### Alert Classes
 

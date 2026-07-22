@@ -113,3 +113,9 @@ For example, a training flight type can log Flight Instructor time for the PIC, 
 Company managers can configure these classifications in the flight types management page. The supervisor classification is set to **None** by default, so supervisors receive no logbook time from a flight unless the company configures otherwise.
 
 > **Note:** The old **Copilot** classification has been replaced by **Second in Command (SIC)**. Existing flight types that used Copilot were automatically migrated to SIC, which keeps the same behaviour of only logging time on multi-pilot aircraft.
+
+### Default flight condition
+
+A flight type can also carry an optional **default flight condition** — **VFR** or **IFR** — set by a company manager on the flight types management page. When you select the flight type, the flight's **Flight rules** are pre-filled with that value. It is a convenience default, not a lock: you can still change the rules for that individual flight.
+
+Leaving the default flight condition empty keeps the previous behaviour: nothing is pre-filled. The default is only applied when you pick the flight type yourself — editing an existing flight never overwrites its saved rules.
