@@ -121,6 +121,35 @@ Create a new flight type. Also returns the `flightClassification` reference data
 | FlightType.sic_flight_time | string | No | SIC time classification key |
 | FlightType.supervisor_flight_time | string | No | Supervisor time classification key. Defaults to `none` |
 
+#### Required certificates (optional)
+
+A flight type can require certificates **per seat** (`pic` / `sic` / `supervisor`) — for example a training type where the PIC must hold a licence, a class-1 medical and a single-engine rating, while the student SIC only needs a medical. Each seat is independent; an empty list means no requirement for that seat.
+
+A required entry references a **certificate type key** from `UserCertificate.$types` (e.g. `licence`, `sep_land_rating`, `medical_class_1`) — the same catalog returned by `GET /pilots/certificate_types.json`.
+
+To set them, send the following alongside the `FlightType` fields (applies to both `manager_add` and `manager_edit`):
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| syncRequiredCertificates | boolean | No | Opt-in flag. When present (`1`) the request **owns** the requirements: the posted `RequiredCertificate` list fully replaces the existing one (an empty list clears them). When absent, existing requirements are left untouched. |
+| RequiredCertificate[N].role | string | — | Seat the requirement gates: `pic`, `sic` or `supervisor`. |
+| RequiredCertificate[N].certificate_type | string | — | A certificate type key (e.g. `medical_class_1`). |
+
+Invalid roles/types and duplicate `(role, certificate_type)` pairs are ignored server-side.
+
+Example (form-encoded):
+
+```
+data[FlightType][name]=Dual
+data[syncRequiredCertificates]=1
+data[RequiredCertificate][0][role]=pic
+data[RequiredCertificate][0][certificate_type]=licence
+data[RequiredCertificate][1][role]=pic
+data[RequiredCertificate][1][certificate_type]=medical_class_1
+data[RequiredCertificate][2][role]=sic
+data[RequiredCertificate][2][certificate_type]=medical_class_2
+```
+
 #### Response
 
 ```json
@@ -175,10 +204,17 @@ Same fields as create, wrapped under `FlightType`.
 
 #### Response (GET)
 
+`requiredCertificates` is the flat list of the flight type's per-seat requirements (see [Required certificates](#required-certificates-optional) above).
+
 ```json
 {
   "flights": 42,
-  "flightClassification": { ... }
+  "flightClassification": { ... },
+  "requiredCertificates": [
+    { "role": "pic", "certificate_type": "licence" },
+    { "role": "pic", "certificate_type": "medical_class_1" },
+    { "role": "sic", "certificate_type": "medical_class_2" }
+  ]
 }
 ```
 
@@ -227,3 +263,74 @@ Set the display order of flight types. Restricted to managers (`user_group_id �
   "result": true
 }
 ```
+
+---
+
+## Certificate Compliance
+
+<mark style="color:blue;">`GET`</mark> `/flight_types/compliance/{id}.json`
+
+Report whether a user holds the required certificates to occupy each seat (`pic` / `sic` / `supervisor`) of a flight type. Uses the flight type's [required certificates](#required-certificates-optional); a seat with no requirements is always compliant.
+
+A required type is satisfied when the user holds **at least one** certificate of that exact type that is valid at the evaluated time — issue date empty or in the past, expiration empty or in the future (same rule as the licence-validity check used across the app).
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | number | Flight type ID |
+
+#### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| user_id | number | No | Target pilot. Defaults to the authenticated user. Allowed for **staff** (`user_group_id ≤ 170` — managers, instructors, dispatchers); a regular pilot/student (group > 170) passing another user's id gets `403 Forbidden`. The target must belong to the caller's company. |
+| at | number | No | Unix seconds at which to evaluate certificate validity. Defaults to now. Pass a future time (e.g. a planned flight start) so forward scheduling reflects validity **at that moment**. |
+
+#### Response
+
+Per-seat breakdown. For each seat: `compliant` is `false` when any required type is `missing` (not held) or `expired` (held but none currently valid); `ok` lists the satisfied types. `required` is the full list configured for that seat. `limit` is the earliest unix time the seat stops being compliant — the soonest expiration among the satisfied required certs — or `null` when the seat has no requirements or a required certificate never expires. Combined with a future `at`, this lets callers warn when a certificate expires before a planned flight.
+
+```json
+{
+  "result": {
+    "flight_type_id": "5",
+    "flight_type": "Dual",
+    "user_id": "123",
+    "at": 1785000000,
+    "compliance": {
+      "pic": {
+        "compliant": false,
+        "required": ["licence", "medical_class_1", "sep_land_rating"],
+        "ok": ["licence", "sep_land_rating"],
+        "missing": [],
+        "expired": ["medical_class_1"],
+        "limit": 1788220800
+      },
+      "sic": {
+        "compliant": true,
+        "required": ["medical_class_2"],
+        "ok": ["medical_class_2"],
+        "missing": [],
+        "expired": [],
+        "limit": 1790000000
+      },
+      "supervisor": {
+        "compliant": true,
+        "required": [],
+        "ok": [],
+        "missing": [],
+        "expired": [],
+        "limit": null
+      }
+    }
+  }
+}
+```
+
+#### Errors
+
+| Status | When |
+|--------|------|
+| 404 | Flight type not found in the caller's company, or `user_id` is not a member of the company |
+| 403 | A user with `user_group_id > 170` passed a `user_id` other than their own |

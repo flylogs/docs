@@ -35,3 +35,22 @@ This includes all certificates, ordered by expiration date.
 **If any certificates are expired, a visual alert will pop up, and depending on your company settings, it will block the pilot from being scheduled.**
 
 ![Pilot expired certificate warning for the Manager Scheduling a flight.](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/-GrEMu89zC.png)
+
+### Per–flight type certificate requirements
+
+Beyond the company-wide PDCS, you can define — **for each flight type** — exactly which certificates a crew member must hold to occupy each seat: **PIC**, **SIC** and **Supervisor**. The three seats are independent, and a seat with no requirements imposes none.
+
+For example, on a school's **Dual** flight type you might require the instructor acting as **PIC** to hold a valid **licence**, **Class 1 medical** and **single-engine rating**, while the student sitting as **SIC** only needs a valid **medical**.
+
+To configure this, open **Company Settings → Flight Types**, edit a flight type, and pick the required certificates under each seat in the *Required certificates* section. The flight types list shows a summary of each type's requirements underneath its row.
+
+Once configured, Flylogs checks each crew member against **their seat's required certificates for the chosen flight type**, evaluating validity at the relevant moment — a check for a future flight reflects whether the certificates will still be valid then, and warns if one expires before the flight ends. These checks surface throughout the crew workflow:
+
+* **Schedule editor** — when a manager assigns a PIC or SIC, the crew card shows *Docs OK* or lists exactly which required certificates that person is **missing or expired** (expired ones are tagged), and blocks the save when your documentation settings require it.
+* **Dispatch briefing** — the crew readiness checklist shows, per seat, each required certificate as ok / missing / expired, plus the soonest expiry.
+* **Booking a slot** — self-booking is blocked when the person flying (or the chosen SIC) doesn't meet the flight type's requirements.
+* **Flight form** — under each selected PIC/SIC, a badge names any missing required certificate.
+
+A pilot always sees their own status; instructors, dispatchers and managers can see it for the crew they schedule.
+
+> **What counts:** for a flight type, only the certificates you configured as *required* for that seat are checked — so keep those lists up to date. A seat with no configured requirements is always considered ready. The lists are validated against the same certificate catalog used on the pilot's documents page, so requirements always match the document types you actually track.

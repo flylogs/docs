@@ -30,7 +30,22 @@ You can only create a report from a flight if the flight is confirmed. You do no
 
 When saved, your report will automatically be associated to the flight, showing all flight information, aircraft maintenance and airworthiness status at the time of the event. Flylogs helps you gather all the information on any event by requesting to the flight's crew members to create a report for the same event.
 
-Every time a new safety report is created or modified, a notification will be delivered to all company Safety and Operations Managers.
+Every time a new safety report is **submitted** or modified, a notification will be delivered to all company Safety and Operations Managers. Reports kept as a **draft** are the exception — they stay private and silent until you submit them (see below).
+
+### Save as draft or submit
+
+At the bottom of the report form you now have two options:
+
+* **Submit report** — files the report into the SMS. Your Safety and Operations Managers are notified and the report enters the normal review workflow. This is the same behaviour as before.
+* **Save as draft** — saves the report **privately on your account**. A draft is visible only to you: it does not appear to managers, is not counted in analytics, and nobody is notified. Use it to start a report and finish it later, or to prepare a report before you are ready to file it.
+
+Hover over either button for a reminder of the difference.
+
+A draft has no report number yet — it shows a grey **Draft** badge in your report list. When you are ready, open the draft and press **Submit report**: at that moment it receives its report number, becomes visible to your safety team, and the usual notifications are sent. Until then it remains entirely yours.
+
+### Creating a report offline
+
+You can create safety reports even with no internet connection. See [Offline safety reports](offline-safety-reports.md) for the full workflow — in short, the report is stored on your device and syncs automatically when you reconnect, and attachments are the only part that needs a connection.
 
 ### Department
 

@@ -290,6 +290,47 @@ Company Administrators, Operations Managers, and Compliance & Safety Managers ho
 
 ---
 
+## Confirm Flight
+
+<mark style="color:green;">`POST`</mark> `/flights/confirm/{id}.json`
+
+Confirm a draft flight (marks it `LANDED`, updates aircraft books, billing, and duty records). The flight must already have a block time, aircraft, and PIC. Requires the **Flight.confirm** company permission; when `require_flight_password` is enabled on the company, a `pass` field with the caller's password is also required.
+
+#### Overlap check
+
+Confirmation is blocked when the flight's block times overlap another **confirmed** (non-draft, non-deleted) flight on the **same aircraft**. The response is `400` with the usual `message`, plus a **`conflicts`** array naming the blocking flight(s) so a client can link to them:
+
+```json
+{
+  "code": 400,
+  "message": "The selected date and time are already occupied by another flight for this aircraft.",
+  "url": "/flights/confirm/9a1b....json",
+  "conflicts": [
+    {
+      "id": "9c2d3e4f-....",
+      "callsign": "IBE123",
+      "date": "2026-07-22",
+      "offblocks_time": 1753180200,
+      "onblocks_time": 1753185600,
+      "link": "/flights/view/9c2d3e4f-...."
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Blocking flight ID |
+| `callsign` | string \| null | Blocking flight callsign, when set |
+| `date` | string | Flight date (`YYYY-MM-DD`) |
+| `offblocks_time` | integer | Off-blocks time, unix seconds |
+| `onblocks_time` | integer | On-blocks time, unix seconds |
+| `link` | string \| null | Relative URL to the flight — populated only for flights in the caller's own company; `null` otherwise |
+
+> The `conflicts` field is additive: clients that don't read it see the same `message`/`code` as before. Up to 20 blocking flights are returned, ordered by off-blocks time.
+
+---
+
 ## Export Flights (XLS)
 
 The server-side `xls:1` export has been removed. The logbook Excel file is now generated client-side by the NEO web app: it pulls the flights from the **List Flights** endpoint above (using the `limit` parameter to fetch all matching rows) and builds the XLSX in the browser.

@@ -21,10 +21,13 @@ Severity is **scoped to the report's `type`** (see below): an Occurrence is alwa
 
 | Value | Name | Color |
 |-------|------|-------|
+| `draft` | Draft | `#64748b` |
 | `open` | Open | `#ff9900` |
 | `reviewed` | Reviewed | `#ffcc00` |
 | `closed` | Closed | `#999999` |
 | `published` | Published | `#34eb77` |
+
+> **`draft` is private to its author.** A draft report is returned **only** to the user who created it (matched on `SafetyReport.user_id`) — it is hidden from every other user, **including managers**, in the list and view endpoints, and it is excluded from every analytics/stats/register aggregate. A draft carries **no `idn`** (the sequence number is assigned when it is submitted) and sends **no notifications**. See [Drafts](#drafts) below.
 
 ### Type (ICAO Annex 19 classification)
 
@@ -104,6 +107,8 @@ Numbering follows the ICAO Doc 9859 probability scale: 5 is the most likely (`Fr
 | ≤ 110 | Full access: view all reports, edit any, delete |
 | 111–150 | View all reports, edit own / crew reports |
 | > 150 | View only own reports and `published` reports |
+
+> Regardless of `user_group_id`, a `draft` report is visible **only to its author**. Drafts never appear in another user's list or view, nor in any analytics/stats endpoint.
 
 ---
 
@@ -324,15 +329,16 @@ Download filtered safety reports as Excel. Same named params as the list endpoin
 
 <mark style="color:green;">`POST`</mark> `/safety_reports/create/{flightId}.json`
 
-Create a new safety report. Status is always set to `open`. Severity is derived automatically from `damages` and `personal_damages`. An `idn` is auto-generated (`YYYY/NNNNN`); child reports get `parentIdn-N`.
+Create a new safety report. By default the report is filed as `open`. Pass `status=draft` to save it privately as a **draft** instead (see [Drafts](#drafts)). Severity is derived automatically from `damages` and `personal_damages`. For a filed (`open`) report an `idn` is auto-generated (`YYYY/NNNNN`, child reports get `parentIdn-N`); a draft receives **no `idn`** until it is submitted.
 
-On creation, the system sends notifications to crew members listed in `crew` and to all company managers/safety officers.
+On creation of an `open` report, the system sends notifications to crew members listed in `crew` and to all company managers/safety officers. **A draft sends no notifications.**
 
 #### Request Body
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | SafetyReport.name | string | Yes | Short event name |
+| SafetyReport.status | string | No | `open` (default — files the report) or `draft` (saves it privately, no `idn`, no notifications) |
 | SafetyReport.type | string | No | ICAO Annex 19 classification: `OCCURRENCE` (default) or `INFORMATION` |
 | SafetyReport.severity | string | No | Only for `type` = `INFORMATION`: `information` (default) or `hazard`. Ignored for Occurrences (derived from damages). |
 | SafetyReport.datetime | string | Yes | Event date/time (ISO 8601) |
@@ -340,7 +346,7 @@ On creation, the system sends notifications to crew members listed in `crew` and
 | SafetyReport.events | string | Yes | Description of what happened |
 | SafetyReport.flight_phase | string | Yes | Flight phase code (see enumerations) |
 | SafetyReport.safety_report_category_id | number | Yes | Category ID |
-| SafetyReport.safety_report_department_id | number | No | Department ID (see [Departments](#list-departments)) |
+| SafetyReport.safety_report_department_id | number | No | Department ID (see [Form Options](#form-options-bulk)) |
 | SafetyReport.anonymous | boolean | No | If `true`, reporter identity is not stored |
 | SafetyReport.flight_id | UUID | No | Linked flight ID |
 | SafetyReport.flight_type_id | number | No | Flight type ID |
@@ -401,7 +407,9 @@ Update an existing safety report. The `id` can also be supplied in the request b
 
 Edit permission follows the same rules as `allowEdit` in the view endpoint. If the editing user is not the original report creator, the `events` and `actions` fields are protected and cannot be changed.
 
-On save, managers and the report owner are notified. If the status changed, the notification includes the old and new status.
+On save of a non-draft report, managers and the report owner are notified. If the status changed, the notification includes the old and new status.
+
+**Submitting a draft (`draft → open`).** The draft's author may promote their own draft to `open` by posting `status=open`. On this transition the report is assigned its `idn` and the same "new safety report" notifications a direct creation sends are fired **once**. Editing a draft that stays a draft, or any change to a draft, remains silent. A non-manager can only make the `draft → open` transition on their **own** draft; managers are unrestricted.
 
 #### Request Body
 
@@ -415,6 +423,19 @@ Same fields as create (all optional on edit), wrapped under `SafetyReport`.
   "message": "The safety report has been saved."
 }
 ```
+
+---
+
+## Drafts
+
+A report saved with `status=draft` is a private working copy of its author:
+
+- **Visibility:** returned only to the author (`SafetyReport.user_id`) in the [list](#list-safety-reports) and [view](#view-safety-report) endpoints, and excluded from every analytics/stats endpoint. Hidden from all other users, **including managers** — a non-author requesting a draft's `view` receives `404`.
+- **No `idn`:** the yearly sequence number is assigned only when the draft is submitted, so abandoned drafts never consume a number.
+- **Silent:** creating or editing a draft sends no notifications.
+- **Submitting:** the author posts `status=open` to [Edit](#edit-safety-report); the report becomes `open`, receives its `idn`, and notifies crew/managers/involved individuals once.
+
+Drafts are also what the neo client stores when a report is created offline: the queued report is replayed to `create.json` with its chosen `status` (`draft` or `open`) once connectivity returns.
 
 ---
 
@@ -654,63 +675,32 @@ Report counts grouped by department. Reports with no department assigned are exc
 
 ---
 
-## List Departments
+## Form Options (bulk)
 
-<mark style="color:blue;">`GET`</mark> `/safety_reports/departments.json`
+<mark style="color:blue;">`GET`</mark> `/safety_reports/form_options.json`
 
-Returns all configured departments sorted by name. Used to populate department dropdown selectors.
-
-#### Response
-
-```json
-[
-  { "id": "7", "name": "Administration & Safety Office" },
-  { "id": "5", "name": "Cabin Crew" },
-  { "id": "1", "name": "Flight Operations - AOC" },
-  { "id": "2", "name": "Flight Operations - ATO" },
-  { "id": "3", "name": "Flight Operations - SPO" },
-  { "id": "6", "name": "Ground Handling / Facilities" },
-  { "id": "4", "name": "Maintenance & Engineering - CAMO" }
-]
-```
-
----
-
-## List Categories
-
-<mark style="color:blue;">`GET`</mark> `/safety_reports/categories/{departmentId}.json`
-
-Returns categories configured for a department, as an `id => name` map. Used to populate category dropdown selectors once a department is selected. `departmentId` is required; a missing value returns a 404.
-
-#### Path Parameters
-
-| Parameter | Type | Description |
-|-----------|------|--------------|
-| departmentId | number | Department ID (see [Departments](#list-departments)) |
+Returns **every** department with its categories nested, in a single payload. This is the single source for the safety-report create form's dropdowns: a client caches the whole department/category tree in one request — used by the neo app at login so the form works **offline**.
 
 #### Response
 
 ```json
 {
-  "131": "Hazard Report",
-  "132": "Safety Concern",
-  "133": "Near Miss",
-  "134": "Observation",
-  "135": "Unsafe Act",
-  "136": "Unsafe Condition",
-  "137": "Human Factors",
-  "138": "Fatigue",
-  "139": "Communication Breakdown",
-  "140": "Procedure Not Followed",
-  "141": "Training Deficiency",
-  "142": "Equipment Failure",
-  "143": "Security Event",
-  "144": "Environmental Event",
-  "145": "Regulatory Non-Compliance",
-  "146": "Audit Finding",
-  "147": "Safety Suggestion",
-  "148": "Emergency Response Issue",
-  "149": "Lessons Learned",
-  "150": "Other"
+  "departments": [
+    {
+      "id": "12",
+      "name": "Flight Operations",
+      "categories": [
+        { "id": "131", "name": "Hazard Report" },
+        { "id": "133", "name": "Near Miss" }
+      ]
+    },
+    {
+      "id": "13",
+      "name": "Maintenance",
+      "categories": [
+        { "id": "142", "name": "Equipment Failure" }
+      ]
+    }
+  ]
 }
 ```
