@@ -465,8 +465,13 @@ Flight totals are in **hours** (formatted strings). Duty `totals` come from `Pil
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| days | number | Number of trailing days to return (default `3`) |
-| user | string | Target user ID. Forced to self when caller `user_group_id > 170` or null. |
+| days | number | Number of trailing days to return, counting back from today (default `3`). No maximum — e.g. pass `31` for a full month. |
+| user | string | Present in the route but **ignored on GET** — see note below. |
+
+> **Access control / behaviour notes (GET):**
+> - The record lookup is hardcoded to the authenticated user (`Auth->User('id')`). The `{user}` path parameter is **ignored** on GET, so the endpoint always returns the **caller's own** duty records regardless of the value passed — cross-user reads are not supported here. For another pilot's totals use [Pilot Time Limits](#pilot-time-limits) (`get_time_limits`) or the manager duty endpoints.
+> - Records are built one day at a time, with **one database query per day** (N+1). Large `days` ranges are proportionally slower; prefer `get_time_limits` when you only need monthly/yearly totals.
+> - Days with no saved record are returned with empty-string time fields.
 
 ```json
 {
