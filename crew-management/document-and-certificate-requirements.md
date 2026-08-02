@@ -48,7 +48,7 @@ Once configured, Flylogs checks each crew member against **their seat's required
 
 * **Schedule editor** — when a manager assigns a PIC or SIC, the crew card shows *Docs OK* or lists exactly which required certificates that person is **missing or expired** (expired ones are tagged), and blocks the save when your documentation settings require it.
 * **Dispatch briefing** — the crew readiness checklist shows, per seat, each required certificate as ok / missing / expired, plus the soonest expiry.
-* **Booking a slot** — self-booking is blocked when the person flying (or the chosen SIC) doesn't meet the flight type's requirements.
+* **Booking a slot** — the booking modal warns when the person flying (or the chosen SIC) doesn't meet the flight type's requirements. It stops the booking only when *Require pilot documentation* is on and *Allow self-booking without valid documents* is off; otherwise the warning is informational and the pilot can book.
 * **Flight form** — under each selected PIC/SIC, a badge names any missing required certificate.
 
 A pilot always sees their own status; instructors, dispatchers and managers can see it for the crew they schedule.

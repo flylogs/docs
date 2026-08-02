@@ -73,7 +73,7 @@ Define, **per seat** (PIC / SIC / Supervisor), which certificates a crew member 
 ### Schedules, dispatch & booking
 
 * **Booking picker.** Only types with **Visible on scheduling** enabled can be chosen when booking a slot.
-* **Crew compliance.** When a manager assigns crew in the schedule editor, each crew card shows *Docs OK* or lists exactly which required certificates are missing/expired for that seat, and can block the save. The pre-flight **dispatch briefing** shows the same per-seat checklist, and **self-booking** is blocked when the flyer doesn't meet the type's requirements. Validity is evaluated for the scheduled time, so a certificate that expires before the flight ends is flagged.
+* **Crew compliance.** When a manager assigns crew in the schedule editor, each crew card shows *Docs OK* or lists exactly which required certificates are missing/expired for that seat, and can block the save. The pre-flight **dispatch briefing** shows the same per-seat checklist. In **self-booking**, a flyer who doesn't meet the type's requirements is always warned, and is stopped from booking only when *Require pilot documentation* is on and *Allow self-booking without valid documents* is off. Validity is evaluated for the scheduled time, so a certificate that expires before the flight ends is flagged.
 
 ### Trainings
 

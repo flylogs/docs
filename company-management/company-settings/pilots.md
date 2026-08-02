@@ -31,5 +31,5 @@ These switches control how pilot certificates (licence, ratings, medical) affect
 * **Block pilots without certificates** — the strictest option: pilots without a valid licence, rating and medical cannot be scheduled as PIC nor log flights. Combined with *Require pilot documentation*, scheduling a non-compliant pilot as PIC is rejected outright for non-staff users.
 
 {% hint style="info" %}
-The self-booking widget has its own related switch — **Allow self-booking without valid documents** — on the [Schedule tab](schedule.md#self-scheduling). The two act independently: this tab controls scheduling and logging in general, the Schedule tab switch controls only the visibility of self-booking.
+The self-booking widget has its own related switch — **Allow self-booking without valid documents** — on the [Schedule tab](schedule.md#self-scheduling). *Block pilots without certificates* covers manager scheduling and flight dispatch; the Schedule tab switch covers self-booking, and decides only whether a pilot with invalid documents can go through with a booking (the warning is shown either way). It has an effect only while *Require pilot documentation* here is on.
 {% endhint %}
