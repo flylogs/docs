@@ -22,17 +22,27 @@ You have the flexibility to decide whether you want to restrict the reservations
 
 ### Restrict self-booking to pilots with valid certificates
 
-At the bottom of the self-scheduling section you will find the **Allow self-booking without valid documents** toggle. It controls whether a pilot whose personal certificates are missing or expired can still see and use the self-booking widget.
+At the bottom of the self-scheduling section you will find the **Allow self-booking without valid documents** toggle. It controls whether a pilot whose personal certificates are missing or expired can still **complete** a booking.
 
-* **Toggle OFF (default — stricter)**: the self-booking widget is hidden for any pilot who does not hold a valid **Licence**, a valid **Rating** and a valid **Medical**. The pilot has to update their documents on their profile page before the box reappears.
-* **Toggle ON (permissive)**: the self-booking widget is shown to every pilot, regardless of the state of their licence, rating or medical. Use this option only if your operation handles document checks outside Flylogs or you are still onboarding pilots that have yet to upload their paperwork.
+The self-booking widget itself is **always visible**, and a pilot with missing or expired documents is **always warned** in the booking modal. What the toggle changes is whether that warning stops the booking:
+
+* **Toggle OFF (default — stricter)**: the warning is shown in red and the **Book this Slot** button is disabled. The pilot has to update their documents on their profile page before they can book.
+* **Toggle ON (permissive)**: the same warning is shown in amber, for information only, and the pilot can go ahead and book. Use this option if your operation handles document checks outside Flylogs or you are still onboarding pilots that have yet to upload their paperwork.
+
+The toggle only has an effect when **Require pilot documents** is enabled in the company settings. If your company does not require pilot documents at all, self-booking is never blocked by certificates.
+
+| Require pilot documents | Allow self-booking without valid documents | Pilot with invalid documents |
+| ----------------------- | ------------------------------------------ | ---------------------------- |
+| Off                     | (any)                                       | Warned, **can book**         |
+| On                      | On                                          | Warned, **can book**         |
+| On                      | Off                                         | Warned, **cannot book**      |
 
 {% hint style="info" %}
 **Students (user group 200) are exempt from this certificate gate.** A student never acts as PIC — the system automatically assigns a Flight Instructor as PIC — so the student's own licence, rating and medical are not required to book.
 {% endhint %}
 
 {% hint style="info" %}
-This setting only controls **visibility** of the self-booking widget. Other safeguards — such as the `Block PIC without documents` warning shown when scheduling, currency requirements or billing-credit checks — continue to apply independently.
+This setting governs **self-booking only**. The separate `Block PIC without documents` setting applies to manager schedule edits and flight dispatch, not to the self-booking widget. Currency requirements and billing-credit checks continue to apply independently.
 {% endhint %}
 
 <figure><img src="../.gitbook/assets/insufficientBalanceWarning.png" alt=""><figcaption><p>Pilots with insufficient balance see this warning and cannot book a flight.</p></figcaption></figure>
@@ -87,7 +97,9 @@ When a **student** opens the modal, Flylogs checks for an instructor in real tim
 
 #### Crew certificate check
 
-Before a booking can be confirmed, Flylogs validates the certificates of every crew member that will fly (the pilot booking, plus a SIC if an instructor selected one). If any required certificate is invalid, or **expires before the flight ends**, the modal shows a warning and the booking is blocked until the documents are in order. The same warning appears on the flight detail card afterwards.
+Before a booking is saved, Flylogs validates the certificates of every crew member that will fly (the pilot booking, plus a SIC if an instructor selected one) against the **required certificates of the selected flight type**. If a required certificate is missing or expired, or **expires before the flight ends**, the modal shows a warning. The same warning appears on the flight detail card afterwards.
+
+This check follows the same rule as the toggle above: the warning blocks the booking only when **Require pilot documents** is on and **Allow self-booking without valid documents** is off. Otherwise it is shown in amber as information and the pilot can book. A flight type with no required certificates never produces a warning.
 
 <figure><img src="../.gitbook/assets/scheduleFlightDetailModal.png" alt=""><figcaption><p>Flight detail card showing the PIC/SIC, the Dual flight type, and a certificate-expiry warning for the SIC.</p></figcaption></figure>
 

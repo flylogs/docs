@@ -334,3 +334,12 @@ Per-seat breakdown. For each seat: `compliant` is `false` when any required type
 |--------|------|
 | 404 | Flight type not found in the caller's company, or `user_id` is not a member of the company |
 | 403 | A user with `user_group_id > 170` passed a `user_id` other than their own |
+
+#### This endpoint is advisory
+
+The result reports compliance; it does not decide whether an action is allowed. Nothing on this endpoint blocks a booking or a flight on its own — enforcement lives with the company settings of whichever feature is calling it:
+
+* **Self-bookings** (`self_schedule = 1`): a non-compliant seat stops the booking only when `require_pic_docs = 1` **and** `schedule_self_allow_nodocs = 0`. See [Certificate gate on self-bookings](schedules.md#certificate-gate-on-self-bookings).
+* **Manager schedule edits and flight dispatch**: governed by `require_pic_docs` together with `block_pic_without_docs`.
+
+Treat a non-compliant seat as a warning unless the relevant setting pair is active — blocking regardless would refuse bookings the API itself accepts.

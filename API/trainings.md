@@ -1229,6 +1229,49 @@ Response shape:
 }
 ```
 
+### Manage Exam Questions
+
+Exam questions are a **shared bank**: a single `TrainingQuestion` can be linked to many exams through the join table `exams_questions`. Editing a question changes it in **every** exam that uses it, and deletion is **scoped** so cleaning up one exam never destroys another's questions. Both endpoints are manager-scoped (`/manager/…`).
+
+#### Create / Update Question
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/questions/create.json`
+
+Create a new question (and link it to an exam) or update an existing one. `Content-Type: application/x-www-form-urlencoded`, Cake nested-array field names.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `data[Exam][id]` | string | On create | Exam to attach a **new** question to. On **edit** (see below) it is used only to resolve the question's subject — the question is **never** re-linked, so a shared question keeps all its other exam links. |
+| `data[TrainingQuestion][id]` | string | No | Present = **edit** an existing question; absent = **create**. |
+| `data[TrainingQuestion][name]` | string | Yes | Question text. |
+| `data[TrainingQuestion][required]` | `0`\|`1` | No | Whether the question must be answered. |
+| `data[TrainingQuestion][TrainingQuestionOption][i][id]` | int | No | Option id (present = keep/update, absent = new). |
+| `data[TrainingQuestion][TrainingQuestionOption][i][name]` | string | Yes | Option text. |
+| `data[TrainingQuestion][TrainingQuestionOption][i][value]` | `0`\|`1` | No | `1` marks the correct option. At least one option must be correct. |
+
+Lesson-slide question variant: send `data[LessonSlide][training_subject_lesson_id]` (and `data[TrainingQuestion][training_subject_lesson_id]`) **instead of** `data[Exam][id]` to create/update a question that lives on a lesson slide.
+
+Response: `{ "result": true, "question": { "TrainingQuestion": { "id": "…" } }, "slide": … }`.
+
+#### Delete Question
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/questions/delete.json`
+
+Scoped, **non-destructive** removal. Nothing is hard-deleted — options, historical attempt answers and the row itself are always preserved.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | `TrainingQuestion` UUID. |
+| `exam_id` | string | No | When present, unlink the question from **this exam only** (removes the `exams_questions` row). Omit it in a lesson context to remove the question's slide instead. |
+
+Behavior:
+
+- **With `exam_id`** — the exam↔question link is removed. If the question is still linked to any other exam (or a lesson slide), the question row is left fully intact and stays live in those exams.
+- **Without `exam_id`** — the lesson slide surfacing the question is removed.
+- The underlying `TrainingQuestion` is **soft-deleted** (`deleted=1`, hidden everywhere via `beforeFind`, recoverable) **only once nothing references it** — no remaining exam links and no lesson slides. A shared question is never destroyed by deleting it from one exam.
+
+Response: `{ "result": true }`.
+
 ### Preview Exam
 
 <mark style="color:blue;">`GET`</mark> `/trainings/exams/start/{enrollmentId}/{examId}.json`

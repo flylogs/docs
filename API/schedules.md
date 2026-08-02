@@ -117,6 +117,8 @@ Same structure as a single item in the `future` array, plus:
 }
 ```
 
+Each `ScheduleHistory` row carries a `reason`. Alongside the manual reasons (weather, maintenance, pilot, etc.), `NOT_FLOWN` marks a booking that the system auto-cancelled because it was scheduled but never dispatched or logged past the company's not-flown grace window. Its `user_id` is the PIC (attribution), so it counts against the PIC in the cancellation analytics.
+
 ---
 
 ## Dispatch Schedule
@@ -338,7 +340,7 @@ Aggregate counts of `ScheduleHistory.reason` for a given action within a month, 
 }
 ```
 
-Rows with `null` reason are omitted. `totals` is always a zero-indexed JSON array.
+Rows with `null` reason are omitted. `totals` is always a zero-indexed JSON array. For `action = CANCELED`, the `NOT_FLOWN` ("Not flown") reason appears for bookings the system auto-cancelled as no-shows, attributed to the PIC.
 
 ---
 
@@ -352,6 +354,8 @@ Each result carries an `available` marker:
 
 * `available: true` — the slot is fully free and can be booked directly.
 * `available: false` — the slot is blocked **only** by a `PENDING` booking (a student booking still waiting for a Flight Instructor). The PENDING record may be auto-canceled later, so the slot is still returned: the frontend shows it in yellow and offers to add it to the watchlist. Slots blocked by a confirmed booking, maintenance, an expired CRS or the user's own schedule are not returned at all.
+
+Cancelled records (`status = CANCELED`, whether cancelled manually or auto-cancelled as `NOT_FLOWN`) are excluded from the search, so their time frame is offered again for new bookings.
 
 #### Body Parameters
 
@@ -497,8 +501,33 @@ The schedule create/edit endpoint applies these role rules to self-bookings (`se
 
 | User group | Behaviour |
 |-----------|-----------|
-| Students (`user_group_id > 190`) | Can never be PIC. Stored as SIC (`sic_status ACCEPTED`). The system auto-assigns an available FI as PIC (`pic_status PENDING`, status `SCHEDULED`). When no FI is available, the booking is saved with status **`PENDING`** and an empty PIC. Students are exempt from the `require_pic_docs` / `block_pic_without_docs` certificate gate. |
+| Students (`user_group_id > 190`) | Can never be PIC. Stored as SIC (`sic_status ACCEPTED`). The system auto-assigns an available FI as PIC (`pic_status PENDING`, status `SCHEDULED`). When no FI is available, the booking is saved with status **`PENDING`** and an empty PIC. Students are exempt from the certificate gate below. |
 | Pilots (`user_group_id` 171–190) | Unchanged: the user making the reservation is the PIC. |
 | FIs / staff (`user_group_id <= 170`, `pilot = true`) | Fly as PIC. May pass another pilot in `pic_id`: it is stored as SIC with the instructor as PIC, saved directly as `SCHEDULED`. |
 
 `PENDING` bookings are auto-assigned when a matching FI publishes `AVAILABLE`/`ALWAYS` availability (`/schedules/add_availability.json`, `/schedules/edit_availability.json` — response field `assignedPending`), and auto-canceled by the cron when `start - schedule_flight_cancellation_min_time` (hours) is reached.
+
+### Certificate gate on self-bookings
+
+A self-booking (`self_schedule = 1`) is rejected on the pilot's own certificates only when **both** company settings line up:
+
+```
+require_pic_docs = 1  AND  schedule_self_allow_nodocs = 0
+```
+
+`schedule_self_allow_nodocs` is the self-booking override: when it is `1`, a pilot whose licence, rating or medical is missing or expired can still create the booking. Both settings are returned by `GET /companies/settings.json` under `CompanySetting`.
+
+The gate applies to pilots with `pilot = true` and `149 < user_group_id <= 190`. Managers (`user_group_id <= 149`), students (`> 190`) and non-pilots are never gated. Validity is evaluated with the same rule as `checkValidLicence` (a certificate is valid when `issue` is empty or past and `expiration` is empty or future).
+
+When the gate rejects the booking:
+
+```
+HTTP 400 Bad Request
+{ "message": "Self scheduled is blocked because you lack the required pilot certificates. Please contact your administrator." }
+```
+
+{% hint style="info" %}
+`block_pic_without_docs` does **not** apply here — it gates manager schedule edits and flight dispatch, not self-bookings.
+{% endhint %}
+
+Clients should mirror this rule rather than blocking on certificate state alone: warn the pilot whenever documents are invalid, but keep the booking action available unless `require_pic_docs = 1` and `schedule_self_allow_nodocs = 0`. The same applies to the per-seat flight-type requirements returned by `GET /flight_types/compliance/{id}.json` — a non-compliant seat is a warning, and only that setting combination makes it a hard stop.

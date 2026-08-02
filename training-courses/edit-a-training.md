@@ -44,3 +44,13 @@ This additional box, allows you to select the exercise grading scale, require st
 Example of pilot valid and expired training endorsements:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-04-20 at 12.43.36.png" alt=""><figcaption><p>Pilot trainings displaying the finished trainings.</p></figcaption></figure>
+
+### Managing online exam questions
+
+Online exams draw from a **shared question bank**. The same question can be reused across several exams — for example a subject-level test and the lesson exams that feed it. Because the question is shared, editing its text or answers updates it **everywhere it appears**.
+
+**Deleting a question** removes it from the exam you are working on **only**. If the same question is still used by another exam or lesson, it stays there untouched. A question is fully retired from the course bank only once nothing else uses it — and even then it is hidden rather than erased, so it can be recovered if needed. Past student results keep showing the questions and answers exactly as they were taken.
+
+{% hint style="info" %}
+An online exam is available to students only when its bank holds at least as many questions as the exam's **required question count**. If you delete questions below that number the exam shows as *unavailable* until you add more questions or lower the required count.
+{% endhint %}
