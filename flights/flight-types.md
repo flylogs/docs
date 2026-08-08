@@ -37,7 +37,7 @@ The most important setting. For each of the three seats — **PIC**, **SIC** and
 | **SIC** | Second in Command time — **only credited on multi-pilot aircraft** |
 | **FI** | Counts toward **PIC and FI** totals; also reported separately |
 | **Dual** | Dual instruction received |
-| **CRI / IRI / TRI / FIFI / SFI / TRE** | Instructor & examiner roles — count toward **PIC and FI** totals; each also reported separately |
+| **CRI / IRI / TRI / FIFI / SFI / EXA** | Instructor & examiner roles — count toward **PIC and FI** totals; each also reported separately |
 | **Supervisor** | Reported separately only — **not** rolled into PIC or FI |
 | **None** | Time is not logged for that seat |
 

@@ -184,6 +184,7 @@ Retrieve full pilot details including certificates, pilot groups, attributed air
 - Viewer `user_group_id > 150` viewing another pilot: `User.email`, `User.user_group_id`, `User.user_login_count`, `User.email_status`, `User.expiration`, `UserDetail.phone`, and the entire `UserCertificate` array are stripped.
 - Viewer `user_group_id > 150`: `UserDetail.notes` and `UserDetail.billing_balance` are always stripped.
 - Viewer `user_group_id < 151`: gets `UserDetail.notes`, `address`, `pc`, `city`, `emergency_contact`, latest `UserLogin`, and (when billing is enabled) `billing_balance` / `package_balance`.
+- Viewer `user_group_id < 151`: also gets the notification preferences `User.alerts`, `User.message_alerts`, `User.newsletter` and `User.whatsapp`, read from the shared `user_credentials` row. They are absent for any other viewer.
 
 #### Response
 
@@ -303,6 +304,8 @@ Update pilot profile details. Restricted to `user_group_id` ∈ {1, 100, 105, 11
 - Self-edits cannot demote yourself away from `user_group_id = 100` or below.
 - When `email` changes, `email_status` is recomputed and a `confirm` mail is sent if the user is active and `send_email` is true.
 - When `user_group_id` actually changes, all of the edited user's active sessions are deleted server-side, forcing them to re-authenticate on their next request. This avoids the cached `Auth.User('user_group_id')` from continuing to grant the previous role until the session naturally expires.
+- `User.alerts`, `User.message_alerts` and `User.newsletter` are notification preferences. They are not columns of `users`: they are saved on the `user_credentials` row shared by every company account of that email address, so setting them here changes them for all of that person's accounts. Omit a key to leave it untouched.
+- `User.whatsapp` is only honoured when `false`, which switches WhatsApp notifications off. It can never be enabled from here: turning it on requires the verification code sent to the pilot's phone, entered by the pilot from `POST /users/whatsapp.json`.
 
 #### Response
 
@@ -354,7 +357,7 @@ Cumulative flight hour totals (in seconds) for a pilot, broken down by function 
     "FIFI":       { "icon": "fa fa-user-graduate",        "time": 0 },
     "SFI":        { "icon": "fa fa-keyboard",             "time": 0 },
     "TRI":        { "icon": "fa fa-plane-circle-check",   "time": 0 },
-    "TRE":        { "icon": "fa fa-user-check",           "time": 0 },
+    "EXA":        { "icon": "fa fa-user-check",           "time": 0 },
     "SUPERVISOR": { "icon": "fa fa-user-cog",             "time": 0 }
   },
   "rules": {
@@ -370,7 +373,7 @@ Cumulative flight hour totals (in seconds) for a pilot, broken down by function 
 
 `other_companies` aggregates time from other companies that share the same email. `previous_time` is `UserDetail.flight_hours * 3600`. All times are in **seconds**. `flight_time = total_time − rules.SIM.time`.
 
-**`PIC` total includes** `FI` time plus all instructor/examiner/PICUS classifications: `PICUS`, `CRI`, `IRI`, `FIFI`, `SFI`, `TRI`, `TRE`. **`FI` total includes** the instructor/examiner classes (`CRI`, `IRI`, `FIFI`, `SFI`, `TRI`, `TRE`) — but *not* `PICUS`, which is PIC time only. Each class is *also* returned as its own line so the time worked in each function can be seen separately — these lines break down what is already inside `PIC`/`FI`, they are not additional totals.
+**`PIC` total includes** `FI` time plus all instructor/examiner/PICUS classifications: `PICUS`, `CRI`, `IRI`, `FIFI`, `SFI`, `TRI`, `EXA`. **`FI` total includes** the instructor/examiner classes (`CRI`, `IRI`, `FIFI`, `SFI`, `TRI`, `EXA`) — but *not* `PICUS`, which is PIC time only. Each class is *also* returned as its own line so the time worked in each function can be seen separately — these lines break down what is already inside `PIC`/`FI`, they are not additional totals.
 
 `SIC` time is only credited on multipilot aircraft (legacy copic semantics; `copic` was migrated to `sic`). `SUPERVISOR` (`sup`) is reported separately only and is **not** rolled into `PIC`. The former `COPILOT` line is removed.
 

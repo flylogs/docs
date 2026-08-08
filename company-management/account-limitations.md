@@ -27,3 +27,11 @@ These quota limitations for aircraft and storage and not hardly enforce. The sys
 
 Our support team will contact you to correct the situation or increase your limits based on a commercial offer.
 
+### Free trial
+
+New companies get a **30 day free trial** that runs with **Premium features**, no matter which plan was selected during signup. Schedules, trainings, safety reporting, maintenance, billing and all company settings tabs are open during the trial, so you can evaluate the whole product before paying. Companies that sign up on the Unlimited plan keep Unlimited features during the trial. Accounts created directly on the Free plan get no trial period.
+
+Monthly quotas (aircraft, storage, emails and instant notifications) stay on the plan you selected during signup — the trial unlocks features, not quotas.
+
+When the trial ends without a payment, the account is downgraded to the Free plan and the premium sections become read-only. Upgrade at any time from **Company > Subscription**.
+

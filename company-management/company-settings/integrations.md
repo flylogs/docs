@@ -14,6 +14,8 @@ Integrations are available only on the **Premium** and **Unlimited** plans. On t
 
 Only a company **manager** can connect or disconnect an integration — the Company Settings page is restricted to manager-level user types.
 
+To export your Flylogs data to Dropbox or Google Drive, see [Cloud storage](cloud-storage.md) — that lives on its own settings tab.
+
 ## How the imports work
 
 Both integrations follow the same rules:

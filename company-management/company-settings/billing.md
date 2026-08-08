@@ -13,6 +13,7 @@ Billing is available on **Club, Premium and Unlimited** plans. On the Free plan 
 ### Billing system
 
 * **Enable billing** — the master switch. When on, Flylogs generates a bill for every confirmed flight, tracks pilot and client account balances, and unlocks the rest of this tab plus the billing pages across the app. When off, no bills are created and all billing screens are hidden.
+* **Block pilots without credit** — pilots whose account credit is zero or negative cannot self-book flights. They see an "insufficient balance" warning instead of the booking form. Only shown while billing is enabled.
 
 ### Billing defaults
 

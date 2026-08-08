@@ -33,7 +33,6 @@ These limits apply to the [pilot self-scheduling feature](../../schedules/self-s
 * **Max slots per day** — the maximum number of self-service reservations a pilot may hold on a single day. The server rejects any booking above the limit.
 * **Min / Max slot duration** — the shortest and longest slot a pilot can self-book.
 * **Default duration** — the slot length pre-filled when a pilot opens the booking form.
-* **Block pilots without credit** — when your [billing system](billing.md) is active, pilots whose account credit is zero or negative cannot self-book flights. They see an "insufficient balance" warning instead of the booking form.
 * **Allow self-booking without valid documents** — controls whether pilots with missing or expired documents can **complete** a self-booking. The widget is always visible and the pilot is always warned in the booking modal; the switch decides whether that warning is a hard stop:
   * **Off (default, stricter)** — the warning is red and the **Book this Slot** button is disabled until the pilot holds a valid **licence**, **rating** and **medical**.
   * **On (permissive)** — the same warning is amber and informational; the pilot can book anyway. Use this only if you check documents outside Flylogs or are still onboarding pilots.

@@ -18,7 +18,7 @@ Company-specific flight type definitions. Used to classify flights by purpose an
 | `fifi` | Flight Instructor of Flight Instructors | Counts toward **PIC and FI** totals; also reported separately |
 | `sfi` | Synthetic Flight Instructor | Counts toward **PIC and FI** totals; also reported separately |
 | `tri` | Type Rating Instructor | Counts toward **PIC and FI** totals; also reported separately |
-| `tre` | Examiner | Counts toward **PIC and FI** totals; also reported separately |
+| `exa` | Examiner | Counts toward **PIC and FI** totals; also reported separately |
 | `sup` | Supervisor | Reported separately only — **not** rolled into PIC or FI |
 | `none` | None | Not logged |
 
@@ -26,7 +26,9 @@ These values apply to `pic_flight_time`, `sic_flight_time`, and `supervisor_flig
 
 > **Migration note:** `copic` (Copilot) is **deprecated and removed**. All existing `copic` configurations were migrated to `sic`. To preserve the original semantics, `sic` time is only credited on **multipilot** aircraft (`Aircraft.multipilot = true`); on single-pilot aircraft `sic` time is not logged. Do not send `copic` — it is no longer accepted as a classification key.
 
-> **PIC / FI rollup:** `picus`, `cri`, `iri`, `fifi`, `sfi`, `tri`, `tre` all count toward a pilot's **PIC total time**. The instructor/examiner classes (`cri`, `iri`, `fifi`, `sfi`, `tri`, `tre`) additionally count toward the **FI total time** — `picus` does not (it is PIC time only). Each is also exposed as its own line in pilot statistics so the time worked in each function can be seen separately. `sup` is the exception: it is reported separately only and never rolled into PIC or FI.
+> **Migration note:** `tre` (Type Rating Examiner) was renamed to `exa` (Examiner) — same meaning, same rollup, generic key not tied to type ratings. Existing `tre` configurations were migrated to `exa`. Do not send `tre`; it is no longer returned by the API and no longer counts toward any total.
+
+> **PIC / FI rollup:** `picus`, `cri`, `iri`, `fifi`, `sfi`, `tri`, `exa` all count toward a pilot's **PIC total time**. The instructor/examiner classes (`cri`, `iri`, `fifi`, `sfi`, `tri`, `exa`) additionally count toward the **FI total time** — `picus` does not (it is PIC time only). Each is also exposed as its own line in pilot statistics so the time worked in each function can be seen separately. `sup` is the exception: it is reported separately only and never rolled into PIC or FI.
 
 ---
 
@@ -166,7 +168,7 @@ data[RequiredCertificate][2][certificate_type]=medical_class_2
     "fifi": "Flight Instructor of Flight Instructors",
     "sfi": "Synthetic Flight Instructor",
     "tri": "Type Rating Instructor",
-    "tre": "Examiner",
+    "exa": "Examiner",
     "sup": "Supervisor",
     "none": "None"
   }

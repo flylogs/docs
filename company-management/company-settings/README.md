@@ -25,6 +25,7 @@ The page is organized in eight tabs. Each one is described in detail on its own 
 | [Duty Limits](duty-limits.md) | Duty time and flight time limitations, rest requirements and duty record policies |
 | [Billing](billing.md) | The internal billing system: defaults, VAT, billing rates and Stripe online payments |
 | [Integrations](integrations.md) | Airbly and Fleet Manager (formerly Spidertracks) automatic flight imports |
+| [Cloud storage](cloud-storage.md) | Scheduled CSV exports of your data to Dropbox or Google Drive |
 | [API](api.md) | Flylogs API activation, API keys and the IP address whitelist |
 
 ### Plan availability
@@ -38,6 +39,7 @@ Some tabs are only available on certain subscription plans. When a tab is not in
 | Duty Limits | — | — | ✓ | ✓ |
 | Billing | — | ✓ | ✓ | ✓ |
 | Integrations | — | — | ✓ | ✓ |
+| Cloud storage | ✓ | ✓ | ✓ | ✓ |
 | API | — | paid activation | paid activation | included |
 
 See [Account types](../account-types.md) for a full plan comparison.

@@ -25,6 +25,7 @@
   * [Duty Limits](company-management/company-settings/duty-limits.md)
   * [Billing](company-management/company-settings/billing.md)
   * [Integrations](company-management/company-settings/integrations.md)
+  * [Cloud storage](company-management/company-settings/cloud-storage.md)
   * [API](company-management/company-settings/api.md)
 * [Billing System](company-management/billing-system.md)
 * [Base management](company-management/base-management.md)

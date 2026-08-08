@@ -41,6 +41,28 @@ Enter your email address, and if it is in the database, you will receive a passw
 
 In case you do not receive the email, check that you entered the correct email address. Take a look at your SPAM folder and as a last option, contact your company manager or CTKI for help and guidance.
 
+***
+
+### Login attempt limit
+
+To protect your account from password-guessing, Flylogs limits how many times a wrong password can be tried.
+
+After **10 failed login attempts**, further attempts are temporarily blocked for **15 minutes**. While blocked, the login page shows a message such as _"Too many failed login attempts. Try again in 15 minutes"_ — and the block applies **even if you then type the correct password**. Just wait for the period to pass and try again.
+
+The limit is applied two ways at once:
+
+* **Per account** — repeated wrong passwords for your email address lock that address, no matter where the attempts come from.
+* **Per network** — many failed attempts from the same device or internet connection are also blocked, even across different accounts.
+
+A **successful login immediately clears the limit** for your account. If you are locked out and cannot wait, you have two options that are **not** affected by the limit:
+
+* Reset your password with the [Forgotten password recovery procedure](#forgotten-password-recovery-procedure) above.
+* Sign in with a [passkey](account-security.md#passkeys), if you have one registered.
+
+{% hint style="info" %}
+This limit only applies to the **password** login. **Passkey** sign-in, entering your **2FA** code, and **switching between companies** once you are already signed in are never counted against it.
+{% endhint %}
+
 ### Multiple company accounts
 
 If the same email address (user) exists in more than one Flylogs company, **the user will have the option to choose which company to operate on every login and logout.**
