@@ -44,7 +44,7 @@ These limits apply to the [pilot self-scheduling feature](../../schedules/self-s
 
 ### Schedule cancellations
 
-* **Dispatch cancel limit** — how close to the scheduled start time a crew member may still cancel or edit their own booking. Inside the window, pilots and SICs get an error telling them to contact the PIC or a supervisor directly. Options range from *Any time* to 48 hours; *Disabled* prevents crew self-cancellation entirely.
+* **Dispatch cancel limit** — how close to the scheduled start time a crew member (PIC, SIC or supervisor) may still cancel or edit their own booking. Inside the window the self-cancel/edit option simply disappears from their view — no on-screen message explains why, so crew must be told separately to reach out to the PIC or a scheduling manager instead. This limit only affects self-service: staff with scheduling rights are never blocked by it and can always cancel any booking from [Schedule Review](../../schedules/schedule-review-page.md). Options range from *Any time* to 48 hours; *Disabled* prevents crew self-cancellation entirely.
 * **Not-flown grace** — how long after a flight's scheduled end time Flylogs waits before automatically cancelling a booking that was never dispatched or logged. The auto-cancellation is attributed to the PIC with the reason "Not flown" and shows in the [cancellation analytics](../../schedules/schedule-cancellations.md); it is silent (no notification). Default 72 hours; set to *Disabled* (0) to turn the behavior off.
 
 This same window also drives two automatic behaviors:

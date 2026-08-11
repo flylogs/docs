@@ -59,3 +59,9 @@ This filtering is applied **before pagination**, so search results and folder co
 Each time you update a published document you can publish the new version. Flylogs keeps old versions hidden but still available to you in the future.
 
 Every new version renews the cycle: every authorized member needs to download the file again, comments are cleared and the download registry is reset for the new version.
+
+### File size limit
+
+Files up to **2 GB** can be attached anywhere in Flylogs — documents, flights, safety reports, maintenance jobs and the rest.
+
+Large files upload directly to secure cloud storage, so they are not limited by the app server. A progress percentage is shown while a file is transferring. Very large files need a stable connection for the whole upload: if it is interrupted, it restarts rather than resuming.
