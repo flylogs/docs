@@ -565,6 +565,10 @@ Returns the canonical certificate type catalogue used across the app.
 
 Retrieve all certificates for a pilot plus the validity summary. JSON-only.
 
+{% hint style="info" %}
+**Callers with `user_group_id` 250 (External Auditor)** get the full certificate list, but each `Uploads` entry has `url` (and `thumb_url` for photos) omitted — the file itself cannot be fetched, only its metadata (filename, mime, size). This applies to this endpoint and to `GET /uploads/index/UserCertificate/{certId}.json`.
+{% endhint %}
+
 #### Response
 
 ```json
@@ -578,7 +582,7 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
       "issue": "2024-06-01",
       "expiration": "2025-06-01",
       "Uploads": [
-        { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678" }
+        { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678", "url": "https://cdn.../signed..." }
       ]
     }
   ],
