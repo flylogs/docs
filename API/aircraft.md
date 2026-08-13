@@ -422,6 +422,57 @@ Update aircraft details. Admin access required.
 
 ---
 
+## Upload Aircraft Photo
+
+<mark style="color:green;">`POST`</mark> `/aircraft/photo/{id}.json`
+
+Upload or replace the aircraft's photo. Requires being the aircraft's assigned manager, or an Admin / Operations Manager role.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Aircraft ID |
+
+#### Request Body
+
+Multipart form data, field `logo`: image file (JPG, PNG or GIF, max 8MB).
+
+#### Response
+
+```json
+{
+  "result": true,
+  "file": "9XRSP.1731000000.jpg",
+  "error": null
+}
+```
+
+---
+
+## Remove Aircraft Photo
+
+<mark style="color:green;">`POST`</mark> `/aircraft/removePhoto/{id}.json`
+
+Clear the aircraft's photo. Requires being the aircraft's assigned manager, or an Admin / Operations Manager role.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Aircraft ID |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "error": null
+}
+```
+
+---
+
 ## Delete Aircraft
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/delete/{id}.json`
