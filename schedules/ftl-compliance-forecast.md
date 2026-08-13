@@ -158,5 +158,8 @@ No active profile exists with an effective date on or before today. Go to **Sett
 **Can I use FTL tracking without the ORO.FTL or FAA schemes?**
 Yes. Choose the **Custom** scheme and Flylogs will still calculate FDP and flag violations using the limits you define in the profile rules.
 
+**Does my company's regulatory authority (EASA, OACI, FAA, CAA) affect FTL?**
+Only as a suggestion. The authority set in company details pre-selects the scheme when you create a profile — EASA/OACI suggest ORO.FTL, FAA suggests Part 117, any other authority suggests Custom. FDP calculation, forecast and violation flags run for every authority; what applies is the scheme of the active profile.
+
 **Does the FTL Forecast block scheduling?**
 No. The forecast is read-only. To block schedule creation that would cause violations, use the **Block overtime scheduling** setting in the Duty Limits tab.
