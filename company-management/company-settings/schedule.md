@@ -48,7 +48,9 @@ Your opening times. They decide which slots self-service booking offers, which f
 * An override can either close the date or give it a different set of windows.
 * A company-level override closes or changes the date for **every** base, unless that base lists the same date itself. A base override always wins over the company one, which is how one base stays open on a day the rest of the company is shut.
 
-**Outside these hours.** The hours are a guide for managers, not a lock: creating a schedule outside them in the schedule editor shows a confirmation naming the day's real windows, and saves normally if you confirm. Ferry flights, night training and one-off operations stay possible. Self-booking, by contrast, only ever offers slots inside the windows.
+**Outside these hours.** The hours are a guide for managers, not a lock. In the schedule editor, both saving a flight outside them **and dragging or resizing one into** them show a confirmation naming that day's real windows; confirm and it saves normally, cancel and a dragged flight snaps back. Ferry flights, night training and one-off operations stay possible. Self-booking, by contrast, only ever offers slots inside the windows.
+
+Flights that cross midnight are not checked against the windows, since they cannot fit inside a single day.
 
 ### Self scheduling
 
