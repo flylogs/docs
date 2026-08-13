@@ -357,6 +357,8 @@ Each result carries an `available` marker:
 
 Cancelled records (`status = CANCELED`, whether cancelled manually or auto-cancelled as `NOT_FLOWN`) are excluded from the search, so their time frame is offered again for new bookings.
 
+Slots are generated inside the operating-hours windows configured for the **aircraft's base** on that date (see [company operating hours](company.md#operating-hours)). A day may hold several windows, and slots are generated per window, so no slot ever spans the closed stretch between two of them. When the base keeps no hours on the requested date the response carries `closed: true` with an empty `results` array — that is "the field is shut that day", which is a different answer from an open day whose slots are all taken.
+
 #### Body Parameters
 
 | Parameter | Type | Required | Description |
@@ -373,9 +375,12 @@ Cancelled records (`status = CANCELED`, whether cancelled manually or auto-cance
     { "start": 1750000000, "end": 1750003600, "available": true },
     { "start": 1750003600, "end": 1750007200, "available": false }
   ],
-  "futureAvailabilities": null
+  "futureAvailabilities": null,
+  "closed": false
 }
 ```
+
+`closed` is `true` when the aircraft's base has no operating hours on the requested date; `results` is then always empty.
 
 ---
 

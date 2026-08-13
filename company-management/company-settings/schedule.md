@@ -24,7 +24,31 @@ This tab requires a **Premium** or **Unlimited** plan. On Free and Club plans th
 
 ### Operating hours
 
-* **Start hour / End hour** — the daily window in which self-service bookings can be placed. When a pilot searches for available slots on a date, Flylogs only offers slots between these hours. Set them to match your field's opening hours or daylight operations.
+Your opening times. They decide which slots self-service booking offers, which flights AutoPilot may place, and how wide the schedule calendars are drawn.
+
+<figure><img src="../../.gitbook/assets/operating-hours-weekly-grid.png" alt="The Operating Hours editor: a base selector, one row per weekday with its time windows, and the date overrides section below"><figcaption>Company Settings → Schedule → Operating Hours. Tuesday to Thursday run a split day (08:00–14:00 and 15:00–18:00), Friday closes early, and the weekend is closed.</figcaption></figure>
+
+**The weekly grid.** Each weekday gets its own times, so a field that shuts early on Saturdays no longer has to pretend it keeps weekday hours.
+
+* **Several windows a day** — press **+** on a day to add another window. A day set to `08:00–12:00` and `14:00–19:00` offers slots in the morning and the afternoon, and never one that runs through the midday closure. Use this for lunch breaks, shift changes, or a gap reserved for maintenance.
+* **Closed days** — press **Close** on a day the field does not operate. Self-booking then answers "Closed on this date" for that day instead of "no slots available", and AutoPilot skips it.
+* **Copy to all days** — the copy icon applies one day's windows to the whole week, which is the fastest way to start from a uniform week and then adjust the exceptions.
+* Times are set in 15-minute steps, in your company timezone.
+
+**Per base.** The **Applies to** selector at the top chooses whose hours you are editing: the **company default**, or one base.
+
+* A base with no hours of its own follows the company default, and says so.
+* Pressing **Customise** gives the base its own week, seeded from the company hours so you start from what it already uses.
+* Once a base has its own week, that week is the whole story for that base — a weekday the base leaves empty counts as **closed** there, it does not fall back to the company hours. This is deliberate: a base that opens only at weekends should be shut on weekdays, not silently inherit them.
+* **Follow company default** clears the base's hours and puts it back to inheriting.
+* Which hours apply to a booking is decided by the **aircraft's** base, so an aircraft stationed at a base with its own hours is offered that base's slots wherever the pilot happens to be.
+
+**Date overrides.** Below the grid you can list single dates that replace that day's usual hours — public holidays, an airshow, a day the field closes for works.
+
+* An override can either close the date or give it a different set of windows.
+* A company-level override closes or changes the date for **every** base, unless that base lists the same date itself. A base override always wins over the company one, which is how one base stays open on a day the rest of the company is shut.
+
+**Outside these hours.** The hours are a guide for managers, not a lock: creating a schedule outside them in the schedule editor shows a confirmation naming the day's real windows, and saves normally if you confirm. Ferry flights, night training and one-off operations stay possible. Self-booking, by contrast, only ever offers slots inside the windows.
 
 ### Self scheduling
 

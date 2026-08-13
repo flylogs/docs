@@ -106,6 +106,90 @@ Same structure as `/companies/settings.json` with additional administrative fiel
 
 ---
 
+## Operating Hours
+
+<mark style="color:blue;">`GET`</mark> `/manager/companies/operating_hours.json`
+
+The company's opening windows: the recurring weekly rows for every scope (the company default and each base) plus the date overrides between 7 days ago and 365 days ahead. Manager access required — the same ACL permission as `/manager/companies/settings.json`.
+
+Kept out of `/companies/settings.json` on purpose: overrides accumulate indefinitely and that payload is cached client-side on every login.
+
+#### Response
+
+```json
+{
+  "rows": [
+    { "id": "…", "base_id": null, "weekday": "0", "override_date": null, "closed": false, "start_minute": "480", "end_minute": "720" },
+    { "id": "…", "base_id": null, "weekday": "0", "override_date": null, "closed": false, "start_minute": "840", "end_minute": "1140" },
+    { "id": "…", "base_id": null, "weekday": "6", "override_date": null, "closed": true,  "start_minute": "0",   "end_minute": "0" },
+    { "id": "…", "base_id": "17", "weekday": null, "override_date": "2026-12-25", "closed": true, "start_minute": "0", "end_minute": "0" }
+  ],
+  "bases": [{ "id": "17", "name": "Valencia Airport", "default": "1" }],
+  "range": { "from": "2026-08-06", "to": "2027-08-13" }
+}
+```
+
+#### Row fields
+
+| Field | Description |
+|-------|-------------|
+| base_id | `null` = company default scope; otherwise the base these hours belong to |
+| weekday | `0` = Monday … `6` = Sunday on a recurring row; `null` on a date override |
+| override_date | `YYYY-MM-DD` on a date override; `null` on a recurring row |
+| closed | `true` = shut that day; the minute fields carry no meaning |
+| start_minute / end_minute | Minutes from midnight in company-timezone wall clock, `0`–`1440`, always multiples of 15. `1440` is midnight at end of day |
+
+A window never crosses midnight: an overnight operation is two rows (`1320–1440` on one day, `0–120` on the next).
+
+#### How rows resolve
+
+For a given base and date:
+
+1. A **date override** for that base wins.
+2. Otherwise a **company date override** for that date wins — so a company holiday closes every base unless the base overrides the date itself.
+3. Otherwise the **weekly** rows apply. Base scope is all-or-nothing: a base with any weekly row of its own owns its whole week, and a weekday it does not define is **closed** there rather than inherited. A base with no rows at all follows the company week entirely.
+
+A day with no resulting windows is closed. A company with no rows at all is treated as open around the clock.
+
+---
+
+## Save Operating Hours
+
+<mark style="color:green;">`POST`</mark> `/manager/companies/save_operating_hours.json`
+
+Replaces the **entire** row set of one scope. The posted rows become the complete truth for that scope, so a window is removed by leaving it out, and posting no rows at all for a base clears its customisation and drops it back to inheriting the company week. Manager access required.
+
+The whole set is validated before anything is deleted, and the replacement runs in a transaction: a rejected save leaves the stored hours untouched.
+
+#### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| data[base_id] | string | No | Empty or absent = company default scope. A base id must belong to the calling company, or the request 404s |
+| data[rows][n][weekday] | int | Either this or `override_date` | `0` = Monday … `6` = Sunday |
+| data[rows][n][override_date] | string | Either this or `weekday` | `YYYY-MM-DD` |
+| data[rows][n][closed] | int | Yes | `1` shuts the day, `0` opens it |
+| data[rows][n][start_minute] | int | Yes when not closed | `0`–`1440`, multiple of 15 |
+| data[rows][n][end_minute] | int | Yes when not closed | `0`–`1440`, multiple of 15, greater than `start_minute` |
+
+#### Response
+
+```json
+{ "result": true }
+```
+
+On rejection:
+
+```json
+{ "result": false, "errors": { "start_minute": ["Times must fall on a 15-minute step"] } }
+```
+
+Rejections cover a row that sets both `weekday` and `override_date` (or neither), a closing time at or before its opening time, times off the 15-minute grid, and two windows overlapping on the same day (`{"rows": ["Overlapping windows on 0"]}`).
+
+> **Replaced settings.** These endpoints supersede the old `schedule_self_block_start` / `schedule_self_block_end` fields on company settings, which have been removed. A single start/end pair could not express several windows a day, different hours per weekday, per-base hours or holidays.
+
+---
+
 ## Company Permissions
 
 <mark style="color:blue;">`GET`</mark> `/companies/permissions.json`
