@@ -16,6 +16,8 @@ The **PDCS** allows you to have a better control of pilot documentation and expi
 
 Student pilots will only be required to upload a valid medical certificate in order to publish their schedule and confirm it.
 
+**What the general check requires:** one valid licence, one valid rating and one valid medical. Pilots normally hold several ratings (type rating, IR, SEP, MEP, FI…), and only one of them needs to be valid for this general check to pass — a lapsed rating you no longer use, or one that only becomes effective in a few weeks, no longer blocks the pilot. Whether a *specific* rating is required for a given flight is decided by the flight type's [required certificates](#per-flight-type-certificate-requirements) for each seat, which are checked individually.
+
 The configuration page in the company settings area is fairly simple, just click both checkboxes to fully enable the PDCS and instantly the system will watch your back.
 
 ![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/HlWlsXHOyV.png)

@@ -427,18 +427,23 @@ Hours are in seconds. `requirements` mirrors `CompanySetting.currency{1,2,3}_{fl
 
 <mark style="color:green;">`POST`</mark> `/pilots/get_time_limits.json`
 
-Monthly breakdown plus month/year totals of block flight time and duty time for a given user, anchored to a Unix timestamp.
+Daily breakdown plus period/year totals of block flight time and duty time for a given user, anchored to a Unix timestamp.
+
+Two modes: by default the endpoint reports the **calendar month** the timestamp falls in. Pass `days` to get a **rolling window** of the last N days instead — the window ends on the timestamp's own day and can span more than one month (e.g. `days: 28` for the EASA FTL cumulative window).
 
 #### Request Body
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| timestamp | number | Yes | Unix timestamp anchoring the month/year |
+| timestamp | number | Yes | Unix timestamp anchoring the period. In month mode it selects the month; in window mode it is the **last day** of the window |
 | user_id | number | Yes | Target user ID |
+| days | number | No | Rolling window length in days, `1`–`366`. Omit for calendar-month mode |
 
-Both fields must be numeric and non-empty.
+`timestamp` and `user_id` must be numeric and non-empty; `days`, when present, must be numeric and within range, or the request is rejected with `400 Invalid values`.
 
-#### Response
+> Dates are resolved server-side in **GMT** (`date_default_timezone_set('GMT')`), not the company timezone. A client that wants the window to end on the pilot's own local date should send a timestamp at **midday UTC** of that date, so no company offset can push it onto the neighbouring day.
+
+#### Response — month mode (no `days`)
 
 ```json
 {
@@ -454,7 +459,32 @@ Both fields must be numeric and non-empty.
 }
 ```
 
-Flight totals are in **hours** (formatted strings). Duty `totals` come from `PilotDutyRecord::__total`. Daily values are summed by date.
+#### Response — window mode (`days` sent)
+
+The daily dictionary and its total move from the `month` key to a `period` key, so the two modes can never be mistaken for one another. `from`/`to` give the exact window the server used.
+
+```json
+{
+  "timestamp": 1787009400,
+  "days": 28,
+  "from": "2026-07-21",
+  "to": "2026-08-17",
+  "flight": {
+    "period": { "2026-07-30": 4.5, "2026-08-02": 3.0 },
+    "totals": { "period": "42.50", "year": "210.75" }
+  },
+  "duty": {
+    "period": { "2026-07-30": 6.0 },
+    "totals": { "period": "78.00", "year": "412.50" }
+  }
+}
+```
+
+Flight totals are in **hours** (formatted strings). Duty `totals` come from `PilotDutyRecord::__total`. Daily values are summed by date. `year` is always the calendar year of `timestamp` in both modes.
+
+> The daily dictionary is **sparse** — days with no flight/duty time are absent entirely, not present as `0`. Clients drawing a per-day chart must fill the gaps themselves by walking `from`..`to` (or the month) rather than iterating the dictionary's keys. An empty dictionary is serialised by PHP as `[]`, not `{}`.
+
+> The daily dictionary and the totals come from **different queries**: the daily values are raw `block_time` summed for flights where the user is PIC or SIC, while `totals` runs through `Flight::__getPilotFlightTime`, which applies each flight type's per-seat flight-time rules. The daily values will therefore not always add up to the total — show the total, don't compute it client-side.
 
 ---
 
@@ -645,7 +675,7 @@ Retrieve a single certificate with up to 5 attached uploads.
 
 <mark style="color:green;">`POST`</mark> `/pilots/add_certificate.json`
 
-Create a new certificate. Uses `multipart/form-data` for the optional file attachment.
+Create a new certificate, or update an existing one by sending its `id`. Uses `multipart/form-data` for the optional file attachment.
 
 #### Request Body
 
@@ -658,9 +688,10 @@ UserCertificate[expiration]=2025-06-01
 UserCertificate[photo]=@/path/to/scan.pdf
 ```
 
-- For callers with `user_group_id > 150`, `user_id` is forced to the authenticated user.
-- For managers, the target user must belong to the same company.
-- `issue` and `expiration` must parse as `Y-m-d` or they are silently dropped.
+- **Ownership.** On an update (`id` sent) the owner is always the one stored on the certificate: the posted `user_id` is ignored, so a certificate can never be moved between users. On a create, callers with `user_group_id > 170` (Captain, Pilot, Student Pilot, Cabin Crew, Auditor, Mechanic) always file on their own profile — the posted `user_id` is replaced with the authenticated user.
+- Managers, Chief Pilots and Flight Instructors (`user_group_id <= 170`) can file and edit certificates for any user in their own company. Everyone else gets `403` when editing a certificate that is not theirs, and `404` when the certificate belongs to another company.
+- `issue` and `expiration` must parse as `Y-m-d` or they are silently dropped. `issue` may be left empty for document types that do not require one.
+- `name` (the free-text description) is optional — `type` already identifies the document. When omitted it stores as an empty string, and the apps show the certificate type instead.
 - If `photo` is present and uploads cleanly, an `Upload` record is created (`type` is `photo`/`video`/`document` based on MIME) and the file is sent to S3.
 
 #### Response
