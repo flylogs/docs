@@ -128,6 +128,7 @@ The free plan is capped at 100 pilots — additional pilots return `400`.
     "user_group_id": "190",
     "email": "newpilot@example.com",
     "active": true,
+    "created": "1600000000",
     "send_email": true
   },
   "UserDetail": {
@@ -305,6 +306,7 @@ Update pilot profile details. Restricted to `user_group_id` ∈ {1, 100, 105, 11
 - When `email` changes, `email_status` is recomputed and a `confirm` mail is sent if the user is active and `send_email` is true.
 - When `user_group_id` actually changes, all of the edited user's active sessions are deleted server-side, forcing them to re-authenticate on their next request. This avoids the cached `Auth.User('user_group_id')` from continuing to grant the previous role until the session naturally expires.
 - `User.alerts`, `User.message_alerts` and `User.newsletter` are notification preferences. They are not columns of `users`: they are saved on the `user_credentials` row shared by every company account of that email address, so setting them here changes them for all of that person's accounts. Omit a key to leave it untouched.
+- `User.created` is the account creation date, as a unix timestamp in seconds. It is only writable by editors with `user_group_id <= 150`; for anybody else, and for any non-numeric, non-positive or more-than-48h-in-the-future value, the key is silently dropped and the stored date is left untouched. The change is recorded in the account history (`GET /pilots/changes/{userId}.json`) under the `created` field.
 - `User.whatsapp` is only honoured when `false`, which switches WhatsApp notifications off. It can never be enabled from here: turning it on requires the verification code sent to the pilot's phone, entered by the pilot from `POST /users/whatsapp.json`.
 
 #### Response

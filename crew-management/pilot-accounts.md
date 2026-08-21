@@ -58,6 +58,14 @@ Management accounts (Chief Pilot and above) can review and change a pilot's noti
 
 WhatsApp notifications can only be **switched off** from here. Enabling them requires a verification code sent to the pilot's phone, so only the pilot can turn them on, from their own account page.
 
+#### Account creation date
+
+Next to the calendar colour, in the **Account** tab of the pilot edit page, management accounts of **Chief Pilot level or above** can correct the date the account was created. Flight instructors, pilots and students never see this field.
+
+Use it when accounts were imported or re-created and the creation date no longer matches when the person actually joined your organization.
+
+> Only the day changes: the time of day originally recorded is kept, and the date is read and saved in your company timezone. Every correction is written to the pilot's account history, showing who changed it, when, and the previous date.
+
 #### Deactivate pilot accounts
 
 If a pilot has finished the relationship with your organization you can deactivate them.
