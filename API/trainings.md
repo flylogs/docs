@@ -63,7 +63,8 @@ The legacy per-row `Training.Progress` field has been **replaced** by `Training.
         "enrollment": "1714003200",
         "supervisor_id": "101",
         "flight_phase": null,
-        "finished": false,
+        "status": "ACTIVE",
+        "status_reason": null,
         "finish_date": 0,
         "subjects_count": 8,
         "Lessons": {
@@ -146,7 +147,7 @@ List all trainings for the company. Manager-only (`user_group_id <= 135`). Pagin
 
 `Training.id`, `name`, `type`, `active`, `theory`, `flights`, `flights_count`, `competencies`, `metrics`, `announcement`, `start`, `end`, `color`, `created`, plus:
 
-- `students_count` (int): total `trainings_users` rows for the training (includes finished enrollments; not deduplicated by user).
+- `students_count` (int): total `trainings_users` rows for the training (every status, not deduplicated by user).
 - `subjects_count` (int): non-deleted `training_subjects` rows for the training.
 
 The previous `Student` and `TrainingSubject` association arrays are no longer returned — use the counts instead.
@@ -205,7 +206,9 @@ Retrieve full details for a specific training enrollment.
       "user_id": "123",
       "supervisor_id": "101",
       "finish_before": "2025-12-31",
-      "finished": false,
+      "status": "ACTIVE",
+      "status_reason": null,
+      "status_changed": null,
       "validity": null,
       "flight_phase": null,
       "notes": null,
@@ -263,11 +266,36 @@ Retrieve full details for a specific training enrollment.
       { "week_name": "Week 10", "year": "2025", "week": "10", "week_time": "480" }
     ],
     "Progress": { "total": 12, "completed": 5, "finished": false },
-    "TrainingFlightTypes": {}
+    "TrainingFlightTypes": {},
+    "ExamAttempt": [
+      {
+        "id": "0b06c152-…",
+        "exam_id": "6305fe63-…",
+        "training_subject_id": "60288e6f-…",
+        "start": "1599429600",
+        "finish": "1599429600",
+        "status": "FINISHED",
+        "score": "30",
+        "passed": false,
+        "Exam": {
+          "id": "6305fe63-…",
+          "name": "PPL",
+          "type": "ONSITE",
+          "training_subject_id": "60288e6f-…",
+          "training_subject_lesson_id": null
+        }
+      }
+    ]
   },
   "performedFlightTrainings": []
 }
 ```
+
+#### Notes
+
+- `ExamAttempt` lists **every** attempt of this enrollment, online and onsite, oldest first. The per-subject `Exam` list in `Training.TrainingSubject[]` only contains ONSITE exams, so online attempts cannot be derived from it. Rows are flattened — the attempt fields sit at the top level with the exam nested under `Exam`, not wrapped in `ExamAttempt.ExamAttempt`.
+- Onsite exams appear twice by design: once here as an attempt, once as the `activity_progress` row on their `TrainingActivity`. Clients that render a single history (the activity timeline does) should keep the activity-progress copy and skip attempts whose `Exam.type == "ONSITE"`.
+- `TrainingSubject[].Lesson[]` carries `id`, `name` and `minutes`.
 
 ---
 
@@ -343,7 +371,8 @@ Compact progress + attendance roll-up for an enrollment. Cheap to call (no neste
     "training_id":   "1a2b...",
     "enrollment_id": "9f8e...",
     "user_id":       "42",
-    "finished":      false,
+    "status":        "ACTIVE",
+    "status_reason": null,
     "theory": {
       "progress":   { "total": 38, "completed": 21, "percentage": 55 },
       "attendance": { "given":  42, "taken":     31, "percentage": 73 }
@@ -366,7 +395,7 @@ Compact progress + attendance roll-up for an enrollment. Cheap to call (no neste
 - `flight.progress` — `total` = count of `TrainingFlight` templates in the training. `completed` = distinct templates with at least one `UserTrainingFlight.completed = 1` row (non-draft, non-deleted flight). Same logic as `Training.FlightProgress` in `My Trainings`.
 - `flight.attendance` — per-mission attempt counts across all `user_training_flights` for the enrollment (each row = one attempt). `passed = sum(completed = 1)`. Useful for "X attempts / Y passes" badges.
 - `flight.hours.planned` = `SUM(TrainingFlight.hours)`. `flight.hours.flown` = `SUM(Flight.block_time) / 3600` over non-draft, non-deleted flights linked through `user_training_flights`. Rounded to one decimal.
-- `finished` mirrors `TrainingsUser.finished`.
+- `status` mirrors `TrainingsUser.status` — one of `ACTIVE`, `COMPLETED`, `STOPPED`, `FAILED`, `EXPELLED`. `status_reason` is the free text a manager gave when closing the enrollment, `null` otherwise. See [Enrollment status](#enrollment-status).
 
 #### Errors
 
@@ -773,7 +802,7 @@ Reset is **non-destructive**. `ExamAttempts` are retained for audit; `ActivityPr
 - `ExamAttempts` rows are **not** deleted. The manager student-view surfaces them with a `reset: true` flag so reviewers can see the pre-reset cycle.
 - Downstream attempt counting (the "max attempts" gate on `POST /trainings/exams/start/...`) and the pass/score aggregation (`ActivityProgress::recordExamAttempt`) only consider attempts where `ExamAttempt.created > ActivityProgress.reset_at` — so the student starts fresh.
 
-The training row is **not** touched. If the training was `finished=true` before the reset (unlikely on a DISTANCE in the failed branch), it stays finished — flip it manually if needed.
+The enrollment row is **not** touched. If the enrollment was `status='COMPLETED'` before the reset (unlikely on a DISTANCE in the failed branch), it stays completed — change it manually if needed.
 
 #### Response
 
@@ -1337,9 +1366,13 @@ Retrieve exam results and (when enabled) correct answers.
 
 ### List Students
 
-<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/list/training:{trainingId}/finished:{finished}/group:{groupId}/pilot_group:{pilotGroupId}/username:{search}.json`
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/list/training:{trainingId}/status:{status}/group:{groupId}/pilot_group:{pilotGroupId}/username:{search}.json`
 
 Retrieve students with filtering. All filter parameters optional (use empty string to skip).
+
+`status` accepts one of `ACTIVE` (default when omitted), `COMPLETED`, `STOPPED`, `FAILED`, `EXPELLED`, or `ALL` to return every enrollment regardless of status. Anything else returns `400 Unknown status`. Each row carries `TrainingsUser.status`, `TrainingsUser.status_reason` and `TrainingsUser.status_changed`.
+
+> **Breaking change.** This filter replaces the old `finished:{true|false}` segment, and `TrainingsUser.finished` no longer appears in any response — the `finished` column was dropped in favour of `status`. See [Enrollment status](#enrollment-status).
 
 ### View Student
 
@@ -1414,7 +1447,7 @@ Enroll one or more students (or whole pilot groups) in a training. Sent as `appl
 
 #### Behavior
 
-- A student already enrolled in the training is **skipped**, unless their prior enrollment is marked `finished = true` — in which case a fresh enrollment is created (re-take).
+- A student already enrolled in the training is **skipped**, unless their prior enrollment is closed — any `status` other than `ACTIVE`, i.e. `COMPLETED`, `STOPPED`, `FAILED` or `EXPELLED` — in which case a fresh enrollment is created (re-take).
 - Pilot group entries are expanded to their members; members already enrolled are skipped.
 - For each successful enrollment on an `active` training, an in-app notification is sent to the student linking to the enrollment.
 
@@ -1449,6 +1482,108 @@ Update notes for a student enrollment.
 
 ---
 
+## Enrollment status
+
+`trainings_users.status` is the single source of truth for where an enrollment stands. It replaced the old boolean `trainings_users.finished` column, which has been **dropped** — `finished` no longer appears in any response payload, and the students-list URL filter is now `status:` instead of `finished:`.
+
+| Status | Meaning |
+|--------|---------|
+| `ACTIVE` | The student is training. The only status that counts as an enrollment in progress. |
+| `COMPLETED` | Training passed. Stamps `TrainingsUser.validity` and unlocks the certificate endpoint. |
+| `STOPPED` | Closed without completing — the student quit or abandoned the course. |
+| `FAILED` | Closed — the student did not pass. |
+| `EXPELLED` | Closed — the school removed the student from the training. |
+
+`STOPPED`, `FAILED` and `EXPELLED` are the non-destructive alternative to unrolling a student: every lesson, exam attempt and flight mission stays on record. Unrolling (`POST /manager/trainings/students/unroll/{id}.json`) still deletes all of it.
+
+#### What `ACTIVE` gates
+
+Only `ACTIVE` enrollments:
+
+- appear in the default students list, in the student's own "in progress" trainings, and in the pilot profile's ongoing trainings;
+- can be written to by the student — `POST /trainings/lessons/complete.json` and `POST /trainings/exams/start/...` return `403 This enrollment is closed` otherwise;
+- auto-complete. A closed enrollment is skipped by `TrainingsUser::checkTrainingFinished` and never gets `validity` stamped;
+- are matched by supervisor auto-assignment when scheduling a training flight;
+- block a re-enrollment. Enrolling a student whose only enrollment is closed creates a fresh one (re-take).
+
+#### Status history
+
+Every transition is appended to `trainings_user_status_changes` and returned as `StatusChange` (oldest first) by both `GET /manager/trainings/students/view/{enrollmentId}.json` (response root) and `GET /trainings/trainings/view/{enrollmentId}.json` (under `training`):
+
+```json
+"StatusChange": [
+  {
+    "id": "b171362d-…",
+    "status": "STOPPED",
+    "reason": "Left the school",
+    "changed_by": "3",
+    "created": "1787673311",
+    "changed_by_name": "Flylogs Support"
+  }
+]
+```
+
+`trainings_users` keeps only the current status — this is the full log, so a student stopped and later reopened shows both events. `created` is unix seconds, `changed_by_name` is resolved from `user_details`. Rows are never updated. Enrollments closed before the table existed were seeded with a single row carrying their current status.
+
+Every path that opens, closes or reopens an enrollment writes a row:
+
+| Path | Status | Reason | `changed_by` |
+|------|--------|--------|--------------|
+| `POST /manager/trainings/students/enroll.json` | `ACTIVE` | `Enrolled` | the manager |
+| `POST /trainings/students/restart/{id}.json` | `ACTIVE` | `Training restarted by the student` | the student |
+| `POST /manager/trainings/students/status/{id}.json` | as requested | the manager's free text | the manager |
+| `POST /manager/trainings/students/finish/{id}.json` (and `/undo`) | `COMPLETED` / `ACTIVE` | — | the manager |
+| `POST /manager/trainings/students/reset/{id}.json` | `ACTIVE`, only when the enrollment was closed | `Progress reset` | the manager |
+| Auto-completion (`TrainingsUser::checkTrainingFinished`) | `COMPLETED` | `Automatic completion` | `null` — no acting user, it fires from the progress hooks |
+
+`changed_by` and `changed_by_name` are `null` for system-made changes. The first row of an enrollment is always its creation: a reopen can only follow a closing row, so an `ACTIVE` row with nothing before it means the enrollment was opened, and clients render it as the signup event.
+
+`POST /manager/trainings/students/unroll/{id}.json` deletes the enrollment together with its history — unrolling is the destructive path, stopping is the one that keeps a record.
+
+### Set Enrollment Status
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/students/status/{enrollmentId}.json`
+
+Close or reopen an enrollment without deleting any progress. Sent as `application/x-www-form-urlencoded`.
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| status | string | Yes | `ACTIVE`, `COMPLETED`, `STOPPED`, `FAILED` or `EXPELLED`. May also be passed as a second URL segment (`.../status/{enrollmentId}/STOPPED.json`). |
+| reason | string | No | Free text, max 255 chars. Stored in `TrainingsUser.status_reason` and included in the student's notification. |
+
+#### Access
+
+- `manager` prefix: `user_group_id > 190` (and below 250) is rejected by the plugin, same as every other manager trainings action. External auditors (250) have no ACL grant on this action and cannot call it.
+- The enrollment's training **and** the student must both belong to the caller's company.
+- ACL grants mirror `manager_finish` exactly: allowed for company managers (`user_group_id` 100/135/150), denied for instructors (140/145) and for every student/pilot group (170/190/200/300).
+
+#### Side effects
+
+- Writes `status`, `status_reason`, `status_changed` (unix) and `status_changed_by` (user id), appends the change to `TrainingsUser.notes`, and inserts a `trainings_user_status_changes` row (see [Status history](#status-history)).
+- Sends the student an in-app notification linking to the enrollment, worded per status — completion keeps the original congratulations message, the closing statuses say what happened and quote `reason` when given, and `ACTIVE` announces the enrollment was reopened.
+- No progress row is created, modified or deleted.
+
+#### Response
+
+```json
+{
+  "result": true,
+  "message": "Status updated.",
+  "status": "STOPPED"
+}
+```
+
+#### Errors
+
+| Status | When |
+|--------|------|
+| `400 Bad Request` | Not a POST, missing enrollment id, or a `status` outside the five allowed values. |
+| `404 Not Found` | Enrollment not found, or training/student outside the caller's company. |
+
+---
+
 ## Training Calendar
 
 <mark style="color:blue;">`GET`</mark> `/trainings/trainings/calendar.json`
@@ -1470,7 +1605,7 @@ Retrieve training-related calendar events.
 
 <mark style="color:blue;">`GET`</mark> `/trainings/trainings/certificate/{enrollmentId}.json`
 
-Retrieve training completion certificate data. Gated strictly on `TrainingsUser.finished = 1`. If the auto-completion mechanism (below) hasn't fired, this endpoint returns `404 Training not finished yet` regardless of how complete the activities look.
+Retrieve training completion certificate data. Gated strictly on `TrainingsUser.status = 'COMPLETED'`. If the auto-completion mechanism (below) hasn't fired, this endpoint returns `404 Training not finished yet` regardless of how complete the activities look.
 
 **Manager fallback**: `Training.manager_id` may be `NULL`. When it is, `Training.Manager` is filled with the first company user in `user_group_id` ∈ (100, 105, 135) that has a non-empty `UserDetail.signature` so the certificate always has a signatory. Returned shape matches the normal Manager: `{ id, UserGroup.name, UserDetail.{name, surname, signature} }`. If no such user exists `Training.Manager` stays empty.
 
@@ -1482,12 +1617,12 @@ There are two boolean training-level flags that govern automatic completion beha
 
 | Field | Description |
 |-------|-------------|
-| `Training.auto_finish` | When `1`, every write to `ActivityProgress` or `UserTrainingFlight` triggers a re-evaluation of the enrollment. If all activities AND all flight missions are complete, `TrainingsUser.finished` is set to `1` and `TrainingsUser.validity` is stamped with `now + Training.validity * DAY` (i.e. `Training.validity` is the certificate lifetime in **days**). |
+| `Training.auto_finish` | When `1`, every write to `ActivityProgress` or `UserTrainingFlight` triggers a re-evaluation of the enrollment. If all activities AND all flight missions are complete, `TrainingsUser.status` is set to `COMPLETED` and `TrainingsUser.validity` is stamped with `now + Training.validity * DAY` (i.e. `Training.validity` is the certificate lifetime in **days**). |
 | `Training.allow_auto_restart` | When `1`, on a **DISTANCE** training, students can self-serve a lesson reset via `POST /trainings/lessons/reset.json` (see above) once they've exhausted lesson-gate exam attempts without passing. |
 
 ### Completion rule (used by `TrainingsUser::checkTrainingFinished`)
 
-An enrollment is considered `finished` when **all** of the following hold:
+An enrollment auto-completes (`status` `ACTIVE` → `COMPLETED`) when **all** of the following hold:
 
 1. The training's date window allows it: `Training.start <= today <= Training.end` (NULL bounds are treated as open-ended).
 2. `Training::getProgress(training_id, enrollment_id).finished == true` — every mandatory activity has `ActivityProgress.value = 1`, and every mandatory lesson-gate exam has been passed.
@@ -1497,8 +1632,9 @@ If `Training.auto_finish = 0`, the check still works when called manually (e.g. 
 
 Frontend implications:
 
-- After a successful `POST /trainings/lessons/complete.json`, `POST /trainings/exams/finish.json` or any UserTrainingFlight write, re-fetch `/trainings/trainings/view/{enrollmentId}.json` to see whether `TrainingsUser.finished` flipped. Don't rely on a separate "did it finish?" call.
-- The certificate endpoint only succeeds once `finished = 1` is persisted — there is no "force compute" query string.
+- After a successful `POST /trainings/lessons/complete.json`, `POST /trainings/exams/finish.json` or any UserTrainingFlight write, re-fetch `/trainings/trainings/view/{enrollmentId}.json` to see whether `TrainingsUser.status` flipped to `COMPLETED`. Don't rely on a separate "did it finish?" call.
+- The certificate endpoint only succeeds once `status = 'COMPLETED'` is persisted — there is no "force compute" query string.
+- Only an `ACTIVE` enrollment can auto-complete. A `STOPPED` / `FAILED` / `EXPELLED` one is skipped and never gets its `validity` stamped.
 - Surface both flags (`Training.auto_finish`, `Training.allow_auto_restart`) in the training detail view so the UI can decide whether to show a "Reset lesson" button and whether to expect automatic finishing.
 
 ---

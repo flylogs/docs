@@ -42,6 +42,7 @@ All responses return JSON. Successful responses typically contain the requested 
 | 200 | Success |
 | 400 | Bad request — invalid parameters |
 | 401 | Unauthorized — missing or invalid token |
+| 402 | Payment required — API access is not enabled for the company |
 | 403 | Forbidden — insufficient permissions |
 | 404 | Resource not found |
 | 429 | Rate limited — too many requests |

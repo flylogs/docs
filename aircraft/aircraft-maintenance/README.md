@@ -10,6 +10,8 @@ Future maintenance windows will automatically block the scheduling agenda of the
 
 Each maintenance job, can have as many work orders as neccesary. You can link files, comments and Inventory items to each of the work orders. The list below, shows all maintenance jobs along with location information, CRS status, pending Work Orders, timeframes and job expiration dates.
 
+A job can also gather **several [aircraft reports](aircraft-reports.md)** — so the defects reported over a run of flights are all cleared in one visit. Signing the CRS closes every report attached to the job.
+
 <figure><img src="../../.gitbook/assets/maintenanceJobs.png" alt=""><figcaption><p>List of all company maintenance jobs.</p></figcaption></figure>
 
 ### Maintenance edit form

@@ -39,6 +39,7 @@ https://fmc.flylogs.com/v1/safety_reports/view/150/pdf:true?token=<api-key>
 | Status | Meaning |
 |--------|---------|
 | 401 | API key missing, invalid, expired or revoked |
+| 402 | The company has no API access: it is on the Free plan, or the API add-on was never purchased |
 | 403 | The bound user lacks permission for this endpoint |
 | 429 | Rate limited — reduce request frequency |
 
@@ -47,3 +48,19 @@ https://fmc.flylogs.com/v1/safety_reports/view/150/pdf:true?token=<api-key>
   "message": "Invalid, expired or revoked API key"
 }
 ```
+
+A **402** is not a problem with your key or your code — the request is correct and the same call starts working as soon as the company's API access is active again:
+
+```json
+{
+  "code": 402,
+  "error": "API_ACCESS_DENIED",
+  "message": "API access is not enabled for this company"
+}
+```
+
+API access is a paid add-on and requires a paid plan. A Company Administrator can enable it under **Company Settings → API**; if the company was downgraded to Free, the entitlement is suspended until it renews. Treat a 402 as "retry later", not as a reason to rotate the key.
+
+{% hint style="info" %}
+Branch on the `error` field, never on `message` — wording may change, the code will not. A company that is **switched off** returns `403` with `"error": "ACCOUNT_UNUSABLE"` instead, and paying does not fix that one.
+{% endhint %}

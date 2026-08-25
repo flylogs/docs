@@ -15,9 +15,12 @@ Retrieve a paginated list of aircraft reports for the company fleet.
 | aircraft | number | Filter by aircraft ID |
 | flight | string | Filter by flight UUID |
 | type | string | Filter by report type (`DEFECT`, `OBSERVATION`, `MAINTENANCE_ACTION`, `SERVICING`, `RESTRICTION`, `INFO`) |
-| status | string | Filter by status (`OPEN`, `DEFERRED`, `CLOSED`) |
+| status | string | Filter by status (`OPEN`, `DEFERRED`, `CLOSED`). Accepts a comma separated list, e.g. `OPEN,DEFERRED` |
 | severity | string | Filter by severity (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`) |
 | wc | string | Search in title and description |
+| job | string | Only reports attached to this maintenance job UUID |
+| linked | string | `no` returns reports not attached to any maintenance job, `yes` only those that are |
+| limit | number | Page size, default 50, capped at 500 |
 
 #### Response
 
@@ -44,7 +47,14 @@ Retrieve a paginated list of aircraft reports for the company fleet.
         "deferred_reference": null,
         "closed_by": null,
         "closed": null,
-        "created": "1714003200"
+        "created": "1714003200",
+        "maintenance_job_id": null
+      },
+      "Job": {
+        "id": null,
+        "name": null,
+        "n_id": null,
+        "completed": null
       },
       "Aircraft": {
         "id": "45",
@@ -237,7 +247,19 @@ Update an existing aircraft report.
 
 #### Request Body
 
-Same fields as **Create Report**. Only include the fields you want to update.
+Same fields as **Create Report**. Only include the fields you want to update — the
+request is a partial update and omitted fields keep their stored value.
+
+The following fields are **read-only after creation** and are ignored if posted:
+`aircraft_id`, `flight_id`, `user_id`, `created`, `closed`, `closed_by`.
+
+Closure is derived from `status`, never taken from the request:
+
+| Posted `status` | Server behaviour |
+|-----------------|------------------|
+| `CLOSED`, report currently open | stamps `closed` with the current timestamp and `closed_by` with the authenticated user |
+| `CLOSED`, report already closed | leaves the existing stamp untouched |
+| `OPEN` or `DEFERRED` | clears `closed` and `closed_by` |
 
 #### Response
 
@@ -289,6 +311,38 @@ Delete an aircraft report.
     }
   }
 }
+```
+
+---
+
+## Grouping reports into a maintenance job
+
+A maintenance job can clear **several** aircraft reports at once. This matches how
+defects are worked in practice: a blown navigation light or an inoperative ADF does
+not ground a VFR flight, so reports accumulate while the aircraft keeps flying and
+are all resolved at the next scheduled visit.
+
+The link lives on `aircraft_reports.maintenance_job_id`, so a report belongs to at
+most one job while a job can hold any number of reports. Signing the job's CRS
+closes every report attached to it.
+
+Three ways to create the link:
+
+| Situation | Call |
+|-----------|------|
+| Create a job from a batch of reports | `POST /maintenance/jobs/create.json` with `Job[aircraft_report_ids][]` |
+| Attach reports to a job that already exists | `POST /maintenance/jobs/link_reports.json` |
+| Detach a report from its job | `POST /maintenance/jobs/unlink_report.json` |
+
+Both linking endpoints are documented in [maintenance-jobs.md](maintenance-jobs.md).
+Reports are only accepted when they belong to the **same aircraft** as the job, and
+neither endpoint works once the job's CRS has been signed.
+
+To list the reports still waiting to be grouped for one aircraft:
+
+```
+POST /maintenance/aircraft_reports/index.json
+{ "aircraft": 45, "status": "OPEN,DEFERRED", "linked": "no" }
 ```
 
 ---

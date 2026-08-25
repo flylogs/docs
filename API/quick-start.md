@@ -103,5 +103,6 @@ All errors return a JSON response with a `message` field:
 | Status | Action |
 |--------|--------|
 | 401 | API key missing, invalid, expired or revoked |
+| 402 | API access is not enabled for the company — see [Authentication](authentication.md#error-responses) |
 | 403 | Insufficient permissions for this endpoint |
 | 429 | Rate limited — reduce request frequency |

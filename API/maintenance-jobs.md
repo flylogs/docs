@@ -8,6 +8,7 @@ Manage maintenance jobs for aircraft. Requires **premium** or **unlimited** subs
 |--------|---------|
 | List / view (`index`, `view`, `history`, `forecast`) | Any authenticated company user on a premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` and `>= 250` |
 | Create / edit / sign CRS / duplicate / delete | `user_group_id` in **1, 100, 105, 110, 300** (administrators, managers and mechanics), or the aircraft owner |
+| Attach / detach aircraft reports (`link_reports`, `unlink_report`) | Same as create: `user_group_id` in **1, 100, 105, 110, 300**, or the aircraft owner. Groups 120–200 are denied at ACL level |
 
 ## Recurring jobs
 
@@ -202,12 +203,31 @@ Retrieve full details for a single maintenance job, including work orders and fi
         "severity": "MEDIUM",
         "status": "CLOSED",
         "aircraft_status": "FLYABLE",
+        "ata_chapter": "32",
+        "system": "Landing Gear",
+        "dispatch_condition": "MONITOR",
         "created": "1714003200"
+      },
+      {
+        "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+        "title": "Left navigation light u/s",
+        "type": "DEFECT",
+        "severity": "LOW",
+        "status": "CLOSED",
+        "aircraft_status": "FLYABLE",
+        "ata_chapter": "33",
+        "system": "Lights",
+        "dispatch_condition": "MEL",
+        "created": "1714089600"
       }
     ]
   }
 }
 ```
+
+`AircraftReport` holds **every** report this job clears, oldest first. Use
+[link_reports](#attach-aircraft-reports) to add more and
+[unlink_report](#detach-an-aircraft-report) to remove one.
 
 ---
 
@@ -234,6 +254,8 @@ Create a new maintenance job. The authenticated user must be a manager or the ai
 | Job[expiration] | string | no | Expiration date (parseable date string, required if checkbox enabled) |
 | Job[description] | string | no | Job description |
 | Job[crs] | string | no | Certificate of Release to Service — set to any truthy value to mark the job complete and automatically close all linked open aircraft reports |
+| Job[aircraft_report_id] | string | no | Aircraft report UUID to attach to the new job (single, legacy form) |
+| Job[aircraft_report_ids][] | string[] | no | Several aircraft report UUIDs to attach to the new job. Reports of another aircraft are silently skipped |
 | Job[attachment] | file | no | File upload (image, video, or document) |
 
 #### Response
@@ -276,6 +298,81 @@ On validation failure, `result` is `false`, `job` is `null` and `message` is a m
 ```
 
 If the save fails without producing field-level errors (e.g. a DB or `beforeSave` abort), `message` falls back to the string `"Unable to save the maintenance job"`.
+
+---
+
+## Attach aircraft reports
+
+<mark style="color:green;">`POST`</mark> `/maintenance/jobs/link_reports.json`
+
+Attach one or more **existing** aircraft reports to an **existing** job, so a batch
+of defects reported over several flights is cleared in a single intervention.
+
+A report belongs to at most one job; attaching it to a second job moves it. Signing
+the job's CRS closes every report attached to it, which is why the endpoint refuses
+to touch a job that is already signed.
+
+#### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| Job[id] | string | yes | Maintenance job UUID |
+| Job[aircraft_report_ids][] | string[] | yes | Aircraft report UUIDs. `Job[aircraft_report_id]` (singular) and a comma separated string are also accepted |
+
+Reports are accepted only when they belong to the **same aircraft** as the job.
+Ones that do not are skipped rather than failing the whole call; the `linked` array
+in the response says which were actually attached.
+
+#### Response
+
+```json
+{
+  "result": true,
+  "linked": [
+    "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "b2c3d4e5-f6a7-8901-bcde-f23456789012"
+  ],
+  "message": null
+}
+```
+
+When no supplied report matches the job's aircraft, `result` is `false`, `linked` is
+empty and `message` reads `"No matching aircraft report found for this aircraft"`.
+
+#### Errors
+
+| Status | Cause |
+|--------|-------|
+| 400 | `Job[id]` missing, no report ids supplied, or the job's CRS is already signed |
+| 404 | Job not found in the company, or the user may not work on this aircraft |
+
+---
+
+## Detach an aircraft report
+
+<mark style="color:green;">`POST`</mark> `/maintenance/jobs/unlink_report.json`
+
+Detach a report from its maintenance job. The report keeps its own status and stays
+open, so it can be grouped into a different job.
+
+#### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| Job[aircraft_report_id] | string | yes | Aircraft report UUID |
+
+#### Response
+
+```json
+{ "result": true }
+```
+
+#### Errors
+
+| Status | Cause |
+|--------|-------|
+| 400 | Parameter missing, the report is not attached to any job, or the job's CRS is already signed |
+| 404 | Report not found in the company, or the user may not work on this aircraft |
 
 ---
 
