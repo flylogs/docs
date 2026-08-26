@@ -1562,7 +1562,7 @@ Close or reopen an enrollment without deleting any progress. Sent as `applicatio
 #### Side effects
 
 - Writes `status`, `status_reason`, `status_changed` (unix) and `status_changed_by` (user id), appends the change to `TrainingsUser.notes`, and inserts a `trainings_user_status_changes` row (see [Status history](#status-history)).
-- Sends the student an in-app notification linking to the enrollment, worded per status — completion keeps the original congratulations message, the closing statuses say what happened and quote `reason` when given, and `ACTIVE` announces the enrollment was reopened.
+- Notifies the student, worded per status — completion keeps the original congratulations message, the closing statuses say what happened and quote `reason` when given, and `ACTIVE` announces the enrollment was reopened. The message is flagged **urgent**, so on top of the in-app message and push notification the student is emailed, provided their address is confirmed and `user_credentials.alerts = 1`. Emails count against the company's send quota.
 - No progress row is created, modified or deleted.
 
 #### Response

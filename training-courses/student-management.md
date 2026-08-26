@@ -48,7 +48,7 @@ Open the student's training progress page, click "**Manage enrollment**" and cho
 
 <figure><img src="../.gitbook/assets/trainingsStopStudent.png" alt=""><figcaption><p>Choosing why an enrollment is being closed, with an optional reason for the student.</p></figcaption></figure>
 
-The student is notified in the app, and the reason you typed is included in that message.
+The student is notified in the app **and by email**, with the reason you typed included in the message. The same applies when you mark a training as completed or reopen an enrollment. Students who have turned alerts off, or whose email address is not confirmed, only get the in-app message.
 
 Once an enrollment is closed:
 
