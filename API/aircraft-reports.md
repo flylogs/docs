@@ -218,7 +218,7 @@ report with no detail row.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| MelItem[category] | string | required for `MEL`, ignored for `CDL` | `A`, `B`, `C`, `D` |
+| MelItem[category] | string | required for `MEL`, optional for `CDL` | `A`, `B`, `C`, `D` — if supplied on a `CDL` item it is fully honored and drives the same interval/expiry computation as it would for a `MEL` item |
 | MelItem[interval_type] | string | no | `NEXT_FLIGHT`, `CALENDAR_DAYS`, `FLIGHTS`, `FLIGHT_DAYS`, `CYCLES`. Defaults from `category` when omitted — `A` → `NEXT_FLIGHT`; `B`/`C`/`D` → `CALENDAR_DAYS` with `interval_value` 3/10/120 |
 | MelItem[interval_value] | number | no | Only meaningful with a non-`NEXT_FLIGHT` interval type — e.g. a Remarks-column override for Category A expressed in flights/flight days/cycles |
 | MelItem[mel_reference] | string | no | MEL/CDL item reference, e.g. `28-22-01` (max 60 chars) |
@@ -227,9 +227,10 @@ report with no detail row.
 | MelItemLimitation[][value] | string | no | Free value for the code, e.g. an altitude or a passenger count (max 60 chars) |
 | MelItemLimitation[][note] | string | no | Free-text note (max 255 chars) |
 
-The rectification window (`starts`/`expires`) and, for flight/cycle-counted intervals, the
-`baseline_flights`/`baseline_cycles` snapshot are all computed server-side at creation and
-cannot be posted directly.
+The rectification window (`starts`/`expires`) and, for flight-counted intervals, the
+`baseline_flights` snapshot are computed server-side at creation and cannot be posted
+directly. `baseline_cycles` is a known gap: `CYCLES` is a selectable `interval_type`, but
+nothing server-side currently populates a cycles baseline for it.
 
 #### Response
 
@@ -399,7 +400,7 @@ nested inside it). The fields below are the shape of that contained `MelItem`:
 | starts | number \| null | Unix timestamp — midnight, company timezone, the day after the item was raised |
 | expires | number \| null | Unix timestamp — end of the rectification window; `null` for a counter-based interval (`FLIGHTS`/`NEXT_FLIGHT`/`CYCLES`/`FLIGHT_DAYS`) or a category-less CDL |
 | baseline_flights | number \| null | Aircraft's `flight_count` at the moment the item was raised (only set for `FLIGHTS`/`NEXT_FLIGHT`) |
-| baseline_cycles | number \| null | Aircraft's cycle count at the moment the item was raised (only set for `CYCLES`) |
+| baseline_cycles | number \| null | Intended to hold the aircraft's cycle count at the moment a `CYCLES`-interval item was raised, but no server-side code currently assigns it — always `null` today, even though `CYCLES` is selectable as an `interval_type` |
 | placard_fitted | boolean | Whether a placard has been fitted |
 | procedures | string \| null | `M`, `O`, or both |
 | released_by | number | User ID of the releaser |
@@ -504,8 +505,7 @@ dispatched.
   "items": [
     {
       "AircraftReport": { "id": "a1b2...", "type": "MEL", "ata_chapter": "32", "title": "Nose gear shimmy" },
-      "MelItem": { "category": "C", "expires": 1717200000, "status": "EXPIRED" },
-      "Aircraft": { "id": "45", "registration": "EC-ABC" }
+      "MelItem": { "category": "C", "expires": 1717200000, "status": "EXPIRED" }
     }
   ],
   "upcomingMaintenance": [
