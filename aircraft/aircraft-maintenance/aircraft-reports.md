@@ -5,10 +5,16 @@ description: Record aircraft defects and observations, and group them into maint
 # Aircraft reports
 
 An **aircraft report** records something about the state of an aircraft: a defect, an
-observation, a servicing action, an operating restriction. Pilots file them at the end
-of a flight, or at any time from **Aircraft → Reports**, and every report carries the
-severity, the ATA chapter, the dispatch condition and whether the aircraft is left
-**flyable** or **grounded**.
+informational note, a maintenance action, a servicing entry, or a **MEL** / **CDL** item.
+Pilots file them at the end of a flight, or at any time from **Aircraft → Reports**, and
+every report carries the severity, the ATA chapter, the dispatch condition and whether
+the aircraft is left **flyable** or **grounded**.
+
+{% hint style="info" %}
+The two report types formerly called **Observation** and **Restriction** no longer exist.
+Existing Observation reports became **Information** reports, and existing Restriction
+reports became **Defect** reports, automatically and once only.
+{% endhint %}
 
 Filing a report notifies the company's managers and maintenance staff by message.
 
@@ -67,6 +73,14 @@ Reports that are still outstanding can also be parked as **Deferred**, with a
 reference (MEL / CDL number) and a deferral date, while the aircraft keeps operating
 under that condition.
 
+## MEL and CDL items
+
+A report of type **MEL** or **CDL** is a special case: it carries its own category,
+computed rectification deadline, releaser and operational limitations, and an **expired**
+one is a hard block on flight dispatch. See [MEL / CDL items](mel-cdl-items.md) for the
+full picture, including the exact rectification intervals and who may raise, release,
+extend or close one.
+
 ## Who can do what
 
 | Action | Who |
@@ -74,6 +88,9 @@ under that condition.
 | File a report, view reports | Any user of a company on a **premium** or **unlimited** plan |
 | Close / reopen a report, edit management fields | `user_group_id` below 120, or 300 — administrators, managers and maintenance staff |
 | Attach / detach reports to a maintenance job | `user_group_id` 1, 100, 105, 110 or 300, or the user the aircraft is assigned to |
+| Raise a MEL/CDL item | `user_group_id` 1, 100, 105, 110 or 300, or the aircraft's assigned pilot |
+| Edit, extend or close a MEL/CDL item | `user_group_id` 1, 100, 105, 110 or 300 only — the assigned-pilot exception does not apply |
+| Be the releaser on a MEL/CDL item | `user_group_id` 1, 100, 105, 110 or 300, or the requesting user themselves — never a Student Pilot (200) |
 
 Aircraft reports are part of the maintenance module and require a **premium** or
 **unlimited** subscription plan.

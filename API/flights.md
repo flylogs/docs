@@ -331,6 +331,75 @@ Confirmation is blocked when the flight's block times overlap another **confirme
 
 ---
 
+## Dispatch Flight
+
+<mark style="color:green;">`POST`</mark> `/flights/dispatch/{id}.json`
+
+Dispatches an existing `DRAFT` or `SCHEDULED` flight directly — the direct-dispatch
+counterpart to [Dispatch Schedule](schedules.md#dispatch-schedule), used when the flight
+record already exists rather than being created from a schedule. On success the flight
+moves to status `DISPATCHED`, a `FlightChange` history row is recorded, and a linked
+schedule (if any) has its departure/destination synced to match.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Flight UUID to dispatch |
+
+#### Authorization
+
+The caller must satisfy **at least one** of: the **Flight.create** or **Flight.edit**
+company permission, or be a crew member of the flight (`user_id`, `pic_id`, `sic_id`, or
+`supervisor_id`) — otherwise `400 Not authorized`. The flight must currently be `DRAFT` or
+`SCHEDULED`, otherwise the call returns `result: false` with `"Only draft or scheduled
+flights can be dispatched."`.
+
+#### MEL/CDL hard block
+
+Exactly the same gate as [Dispatch Schedule](schedules.md#dispatch-schedule): an
+**expired** MEL or CDL item on the flight's aircraft rejects the dispatch outright.
+
+```json
+{
+  "result": false,
+  "message": "ATA 32 blocks dispatch — MEL Category C expired."
+}
+```
+
+#### Other preconditions
+
+Checked in order, each returning `result: false` with its own message when it fails:
+
+| Condition | Message |
+|-----------|---------|
+| FRAT required (`schedule_dispatch_frat` on, dispatcher is crew) and not completed | "A completed Flight Risk Assessment (FRAT) is required to dispatch this flight." |
+| Non-school company and no `pax` posted | "Number of passengers (PAX) is required to dispatch this flight." |
+| Departure or destination missing (neither already on the flight nor posted) | "Departure and destination airports are required to dispatch this flight." |
+
+#### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| departure_airport | string | conditional | Required if the flight has no departure airport yet |
+| landing_airport | string | conditional | Required if the flight has no destination airport yet |
+| pax | number | conditional | Required for non-school companies |
+| pob | number | no | Persons on board |
+| endurance | string | no | Fuel endurance |
+| alternate_airport | string | no | Alternate airport |
+| frat_score, frat_band, frat_data | — | conditional | Same FRAT fields as [Dispatch Schedule](schedules.md#dispatch-schedule) |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "flight": { "Flight": { "id": "...", "status": "DISPATCHED" } }
+}
+```
+
+---
+
 ## Export Flights (XLS)
 
 The server-side `xls:1` export has been removed. The logbook Excel file is now generated client-side by the NEO web app: it pulls the flights from the **List Flights** endpoint above (using the `limit` parameter to fetch all matching rows) and builds the XLSX in the browser.

@@ -53,6 +53,7 @@
 * [Aircraft logbook](aircraft/aircraft-logbook.md)
 * [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
   * [Aircraft reports](aircraft/aircraft-maintenance/aircraft-reports.md)
+  * [MEL / CDL items](aircraft/aircraft-maintenance/mel-cdl-items.md)
   * [Workorders](aircraft/aircraft-maintenance/workorders.md)
   * [Maintenance plans](aircraft/aircraft-maintenance/maintenance-plans.md)
   * [Inventory](aircraft/aircraft-maintenance/inventory.md)

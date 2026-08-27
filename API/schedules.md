@@ -147,6 +147,26 @@ The FRAT result is stored per flight and per user (one row per crew member).
 
 > A `HIGH` band may only be dispatched by a Supervisor. Plans: Club, Premium, Unlimited.
 
+#### MEL/CDL hard block
+
+An **expired** MEL or CDL item on the schedule's aircraft is a hard block on dispatch —
+unlike editing/creating a schedule (see [MEL and CDL warnings on save](#mel-and-cdl-warnings-on-save)
+below), which only warns. The dispatch call returns `result: false` with a message naming
+the ATA chapter and category:
+
+```json
+{
+  "result": false,
+  "message": "ATA 32 blocks dispatch — MEL Category C expired."
+}
+```
+
+This is evaluated fresh on every dispatch attempt (open MEL/CDL items + current flight
+count vs. the item's baseline), so a schedule that carried a warning yesterday can still
+dispatch cleanly today if the item was rectified or extended in the meantime — and
+conversely, a schedule that was fine at booking time can be blocked at dispatch time if an
+item expired in between.
+
 ---
 
 ## FRAT Prefill
@@ -376,11 +396,17 @@ Slots are generated inside the operating-hours windows configured for the **airc
     { "start": 1750003600, "end": 1750007200, "available": false }
   ],
   "futureAvailabilities": null,
-  "closed": false
+  "closed": false,
+  "melBlocked": false
 }
 ```
 
 `closed` is `true` when the aircraft's base has no operating hours on the requested date; `results` is then always empty.
+
+`melBlocked` is `true` when the aircraft has an **expired** MEL/CDL item. It never removes
+or filters `results` — an expired item does not block *scheduling*, only *dispatch* (see
+[Dispatch Schedule](#dispatch-schedule)) — it is only a flag the frontend can use to warn the
+person booking the slot ahead of time.
 
 ---
 
@@ -536,3 +562,33 @@ HTTP 400 Bad Request
 {% endhint %}
 
 Clients should mirror this rule rather than blocking on certificate state alone: warn the pilot whenever documents are invalid, but keep the booking action available unless `require_pic_docs = 1` and `schedule_self_allow_nodocs = 0`. The same applies to the per-seat flight-type requirements returned by `GET /flight_types/compliance/{id}.json` — a non-compliant seat is a warning, and only that setting combination makes it a hard stop.
+
+### MEL and CDL warnings on save
+
+Saving a schedule (create or edit, via `/schedules/edit.json`) never fails because of a MEL
+or CDL item — an expired item on the schedule's aircraft only adds an entry to a
+`melWarnings` array in the response. The save itself still succeeds (`result: true`).
+
+```json
+{
+  "result": true,
+  "edit": { "Schedule": { "id": "789", "..." : "..." } },
+  "melWarnings": [
+    {
+      "aircraft_registration": "EC-ABC",
+      "report_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "ata_chapter": "32",
+      "category": "C",
+      "expires": 1717200000,
+      "expired": true
+    }
+  ]
+}
+```
+
+`melWarnings` is only ever populated with items that are currently **EXPIRED** — an item
+that is merely expiring soon does not appear here. `melWarnings` is empty (`[]`) whenever
+the schedule's aircraft has no expired MEL/CDL item, including when the request has no
+`aircraft_id` at all. Note that this is purely advisory: the same expired item is a **hard
+block** the moment someone actually tries to dispatch this schedule into a flight — see the
+MEL/CDL hard block note under [Dispatch Schedule](#dispatch-schedule) above.
