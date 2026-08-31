@@ -5,9 +5,32 @@
 > `activity_progress` is the single source of truth per (enrollment, activity),
 > and `exams` covers both ONLINE and ONSITE (column `type`). Sessions
 > (renamed from `lesson_classes`) bind to a single `training_activity_id`.
-> Attendance % comes from `session_students.invited` vs `attended`; progress %
-> from `activity_progress.value`. The two are independent (a student can have
-> attended a paper exam but not passed it).
+> Attendance is recorded per-session on `session_students.attendance_status`
+> (`attended`, `attended_post_class`, `absent`, `absent_justified`, or `NULL`
+> when not yet decided); progress % comes from `activity_progress.value`. The
+> two are independent (a student can have attended a paper exam but not
+> passed it). `activity_progress` is per-ACTIVITY — unique on
+> (`trainings_user_id`, `training_activity_id`) — so it cannot represent
+> attendance for one session out of several under the same activity;
+> `session_students.attendance_status` is the per-session record.
+
+> **Schema additions — missed-class follow-up (task #514).** `session_students`
+> also gained `missed_email_sent_at` and `attendance_notified_at` (both unix,
+> `NULL` until sent) — independent claim-before-send guards for the
+> missed-class email and the attendance-signed notification respectively (see
+> **Sign Attendance**), so a re-sign never double-sends either one. `sessions`
+> gained `allow_classwork_upload`, `classwork_deadline`,
+> `classwork_description`, `classwork_notified_at` (see **Request
+> Classwork**) and `justification_deadline` (see **Schedule Class**).
+> `trainings` gained `classwork_deadline_default_days` and
+> `justification_deadline_default_days` — per-training day counts the client
+> uses to pre-fill a new session's deadline fields; both save through the
+> existing training-edit endpoint's unrestricted `Training.*` write and are
+> not otherwise documented here. A new `session_justifications` table
+> (`id`, `session_student_id`, `upload_id`, `text`, `status`
+> `ENUM('pending','approved','rejected')`, `reviewed_by`, `reviewed_at`,
+> `review_note`, `created`, `modified`) backs **Justifications** / **Submit
+> Justification** / **Review Justification** below.
 
 ## My Trainings
 
@@ -835,11 +858,42 @@ Retrieve class session details including attendance.
 Response `class` payload contains:
 
 - `Session`, `Teacher`, `SessionStudent`, `Location`.
+- `teacher` — `true` when the requester is the session's teacher, the subject's teacher (`TrainingActivity.TrainingSubject.teacher_id`), or a manager (`user_group_id <= 140`). Recomputed server-side on every call from the session/subject data — the same definition `attendance()` independently recomputes below, so the two never disagree.
+- `enrollment` — the requester's `TrainingsUser.id` for this training, or `null`. Being on the session roster (`session_students`, e.g. a pilot-group invite or manual add with no enrollment) is enough to open the class even without one; `enrollment=null` is what the client uses to explain the missing progress/evaluation in that case. Below `user_group_id 170`, a caller who is neither enrolled, on the roster, nor a teacher/manager gets a 404.
+- `attendances` — the session roster, returned by an internal call to `attendance()`; see **Attendance** below for the full per-row shape and its own access rule.
+- `Session.signature`, when present, has its server-only `statuses` baseline stripped (and the same key inside every `history` entry) — see **Sign Attendance**'s note on `statuses`. This action has no teacher/student gate on the roster it exposes, so leaving `statuses` in would let any enrolled student read every classmate's attendance baseline.
 - `TrainingActivity` — the bound activity (`id`, `kind`, `lesson_id`, `exam_id`, `training_subject_id`) with its nested children:
   - `TrainingActivity.TrainingSubject` including `Training` and `Training.Metric[]` — competency metrics defined on the training (`id`, `name`, `training_id`), ordered by name. Used to render the metric grid alongside attendance without an extra request.
   - `TrainingActivity.Lesson` (when `kind=LESSON`) with `LearningObjective[]` — objectives attached to the lesson (`id`, `name`, `description`, `training_subject_lesson_id`), ordered by name.
   - `TrainingActivity.Exam` (when `kind=EXAM`) — includes `type` and `access_mode`, so the session page knows to render the student exam-taking panel for a `SCHEDULED` online exam.
 - `attendances` — `ActivityProgress` rows for the session (scoped to the requesting user unless teacher/manager).
+
+### Attendance
+
+<mark style="color:blue;">`GET`</mark> `/trainings/onsite/attendance/{sessionId}/{teacherParam}.json`
+
+Return the roster and attendance for a class session. Called internally by **View Class** (its `attendances` field is this response), and independently reachable at its own URL/ACO.
+
+The `{teacherParam}` URL segment is accepted for route compatibility only and is **ignored** — whether the caller sees the full roster is always recomputed server-side from the session/subject teacher and `user_group_id <= 140`, the same rule **View Class**'s `teacher` field uses. It cannot be used to grant teacher-level access from the URL.
+
+Company-scoped: the session's `Training.company_id` must match the caller's company, or `404 Training Session not found`.
+
+#### Response
+
+`attendances` is an object keyed by `trainings_user_id` (or `ss-{session_student_id}` when the roster row has no matching `activity_progress`), one entry per roster row, sorted by `user_name`:
+
+| Field | Description |
+|-------|-------------|
+| id | `ActivityProgress.id`, or `null` if none exists yet for this user/activity |
+| session_student_id | `session_students.id` |
+| attendance_status | `attended` \| `attended_post_class` \| `absent` \| `absent_justified` \| `null` |
+| enrolled | `true` when the roster user has any `trainings_users` row for this training (any status), matching `store_attendance`'s write guard |
+| value | boolean, `true` when `attendance_status` is `attended` or `attended_post_class` |
+| user_id, user_name, user_group, photo | roster user display fields |
+| time, signature, remarks, measures, modified, created | from the matching `activity_progress` row, `null` if none |
+| exam_status, exam_rating, code, notes | from `activity_progress.value` / `score` / `code` / `notes` — exam activities only |
+
+**Access.** Non-teacher, non-manager callers (`user_group_id > 140` and not the session/subject teacher) see only their own roster row. Teachers and managers see every row. Roster rows with `session_students.user_id IS NULL` (an unexpanded pilot-group placeholder) are excluded entirely.
 
 ### Schedule Class
 
@@ -856,8 +910,37 @@ Create or update a class session. Sent as `application/x-www-form-urlencoded`.
 | remarks | string | No | Notes |
 | notify | boolean | No | Send notification to students |
 | students | string | Yes | Comma-separated student user IDs (creates `session_students` rows with `invited=1`). |
+| allow_classwork_upload | boolean | No | Whether students may upload classwork for this session |
+| classwork_deadline | int | No | Unix timestamp deadline for classwork upload, or empty to clear |
+| classwork_description | string | No | Classwork brief shown to students |
+| justification_deadline | int | No | Unix timestamp — deadline for a student to submit an absence justification for this session. Sent on every save; absent or empty clears it to `NULL` (unlike the three classwork fields below, this one is **not** preserve-when-omitted). |
 
 A `training_activity_id` may be the activity of a `SCHEDULED` online exam (`kind=EXAM`, online). No special handling is needed beyond the standard access gate — the roster (`students`) defines who may take the exam during the window that opens at `start`.
+
+**Classwork fields are preserved when omitted.** `allow_classwork_upload`, `classwork_deadline`, and `classwork_description` are normally set via **Request Classwork** below, not this endpoint. When editing an existing session, any of the three that is absent from the payload keeps its currently stored value rather than being reset to off/empty — an unrelated edit (date, teacher, location) never silently cancels a teacher's already-saved homework request. A field is only changed when the caller explicitly includes it. A brand-new session has nothing to preserve and defaults to off/no-deadline/no-description.
+
+### Request Classwork
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/request_classwork.json`
+
+Enable, edit, or cancel a classwork upload request for a session. The only write path for `classwork_description`; `manager_class` only ever preserves it.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| session_id | string | Yes | `TrainingSession.id` |
+| allow_classwork_upload | boolean | No | Enable/disable the request |
+| classwork_deadline | int | No | Unix timestamp; empty/absent clears it to `NULL` |
+| classwork_description | string | No | Homework brief. `400 Homework description is too long (2000 characters max)` above 2000 characters (`mb_strlen`) |
+
+**Access.** Company-scoped (`404 Training Session not found`). Caller must be the session's or subject's teacher, or a manager (`user_group_id <= 140`), else `404 Not authorized to modify this class`. Blocked once the session is signed: `400 Attendance for this class is already signed.`
+
+**Side effect — roster notification.** On the disabled/never → enabled transition only (never on disable, never on an edit of an already-enabled request), every enrolled roster student gets a non-urgent in-app message with the training/subject/date/location, the homework brief, and the deadline. Guarded by `Session.classwork_notified_at` (claim-before-send, reset to `NULL` on every disable so a later re-enable notifies again). Notification failure does not fail the request.
+
+#### Response
+
+```json
+{ "result": true }
+```
 
 ### Delete Class
 
@@ -992,18 +1075,36 @@ List scheduled class sessions in a date range. Company-scoped via `Training.comp
 
 <mark style="color:green;">`POST`</mark> `/trainings/onsite/store_attendance.json`
 
-Record attendance for a class session.
+Record attendance for a class session. The payload is now keyed by `session_students.id` (was `activity_progress.id`); each entry carries an `attendance_status` value rather than a bare 1/0 flag.
 
 **Body**
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | data[session_id] | string | Yes | `TrainingSession.id` |
-| data[attendance][{activity_progress_id}][value] | int/bool | Yes | 1/0 attendance flag |
-| data[attendance][{activity_progress_id}][exam_value] | int/bool | No | Exam activities only — overrides `value` |
-| data[attendance][{activity_progress_id}][exam_rating] | number | No | Exam score |
-| data[attendance][{activity_progress_id}][notes] | string | No | Exam notes |
-| data[attendance][{activity_progress_id}][code] | string | No | Exam code |
+| data[attendance][{session_student_id}][attendance_status] | string | No | One of `attended`, `attended_post_class`, `absent`, `absent_justified`. `400 Invalid attendance status: {value}` if set to anything else. |
+| data[attendance][{session_student_id}][exam_value] | int/bool | No | EXAM activities only — teacher pass/fail grade, written to `activity_progress.value` alongside (not derived from) attendance |
+| data[attendance][{session_student_id}][exam_rating] | number | No | Exam score |
+| data[attendance][{session_student_id}][notes] | string | No | Exam notes |
+| data[attendance][{session_student_id}][code] | string | No | Exam code |
+
+Only the fields actually present in a row are written — an attendance-only save never clobbers a grade, and vice versa.
+
+**Empty attendance map is a no-op, not an error.** `data[attendance]` absent, non-array, or `{}` returns `{"store": true, "grades": []}` rather than `400 Missing POST params`. The client drops unenrolled rows before posting, so a session whose entire roster is unenrolled (or has no students at all) legitimately submits nothing — and since **Sign Attendance** saves attendance before signing, the old 400 blocked signing that class outright.
+
+**Access.** Company-scoped (`404 Training Session not found` if the session's training belongs to another company). `user_group_id <= 140` (manager) may always write; above that, the caller must be the session's `teacher_id` or the subject's `teacher_id`, else `404 Not authorized to modify this class attendance`.
+
+**Enrollment guard.** Any row whose `session_students.user_id` has no `trainings_users` row for this training (any status) is refused outright — `400 Cannot record attendance for a student not enrolled in this training.` Checked for every row before anything is written, so one bad row fails the whole request.
+
+**Closed sessions.** Once `Session.status` is no longer `open`/`scheduled`, non-managers (`user_group_id > 140`) may only submit the transition `absent`/`absent_justified` → `attended_post_class`; any other change on a closed session is rejected with `400 Attendance for this class is closed.` Managers are exempt.
+
+#### Response
+
+```json
+{ "store": true, "grades": [ { "session_student_id": "ss-1", "user_id": "u-1", "value": 1 } ] }
+```
+
+`grades[]` lists the rows actually applied: `{session_student_id, user_id, value}` for a LESSON activity's derived attendance, or `{session_student_id, user_id, ...submitted exam fields}` for an EXAM activity's grade fields.
 
 ### Sign Attendance
 
@@ -1016,9 +1117,19 @@ Digitally sign class attendance (teacher confirmation).
 | classId | string | Yes | Class session ID |
 | password | string | Yes | Teacher's password for verification |
 
+**Repeatable.** A session that is already `closed` can be signed again — a fresh signature is written over the old one, and every prior signature is preserved in the new signature's `history` array rather than being discarded.
+
+**Resolves undecided attendance.** Any roster row still `attendance_status=NULL` is resolved to `absent` at sign time — but only for a student actually enrolled in the training (any `trainings_users` status); an unenrolled roster row's status, including `NULL`, is left untouched.
+
+**Sign window.** A teacher (`user_group_id > 140`) may normally only sign within 72h before / 6h after `Session.datetime`. Outside that window a re-sign is still allowed if every change since the LAST signature is exclusively `absent`/`absent_justified` → `attended_post_class` (crediting a late post-class submission); any other change outside the window is rejected with `400 Attendance signature for this class is closed already`. Managers (`user_group_id <= 140`) are not window-limited. Above `user_group_id 140`, the caller must additionally be the session's own `teacher_id` (not the subject teacher) or gets `404 Not authorized to sign this class`.
+
+**Company-scoped.** `404 Class not found` if the session's training belongs to another company.
+
+**Side effect — missed-class email.** Distinct from the notification below: for every roster row newly resolved to `absent` (enrolled students only), a separate templated email (`trainings/missed_class`) is sent once per student per session, guarded by `session_students.missed_email_sent_at` (claimed with a conditional `UPDATE ... WHERE missed_email_sent_at IS NULL` before sending, so concurrent sign calls can't double-send). A re-sign does not re-send it to a student already marked absent on a prior sign.
+
 **Side effect — scheduled-exam window.** Signing sets `Session.status='closed'` and `Session.signed_at` (unix). For a `SCHEDULED` online exam this closes the access window from that moment (earlier than the `access_window_days` cutoff). New attempts are then rejected (`403`); an already-open attempt may still be submitted.
 
-**Side effect — attendance notification.** On a successful first sign (status transitioning from `scheduled`/`open` to `closed`), every student with an `activity_progress` row for the session receives a non-urgent in-app message via `Messages.Message::fastSave`, sender = signing teacher. Per-recipient body includes:
+**Side effect — attendance notification.** Runs on every successful sign — first or repeat, since signing itself is repeatable — but is idempotent per student via `session_students.attendance_notified_at` (claim-before-send: a conditional `UPDATE ... WHERE attendance_notified_at IS NULL` before sending, same pattern as `missed_email_sent_at` above), so each student with an `activity_progress` row for the session receives at most one non-urgent in-app message via `Messages.Message::fastSave` (sender = signing teacher), no matter how many times the class is (re-)signed. Per-recipient body includes:
 
 - Their attendance result (Attended / Not attended).
 - For exam activities: rating (`score`) and result (Passed / Failed, derived from `value`).
@@ -1028,11 +1139,90 @@ Digitally sign class attendance (teacher confirmation).
 
 The message `redirect` field is `/trainings/onsite/class/{sessionId}`. Notification failures do not affect the sign response.
 
+**Response `signature`.** The persisted `signature` JSON carries a server-only `statuses` map (`session_students.id => attendance_status` as of this sign) used purely as the next sign's carve-out baseline — it is stripped, along with the same key inside every `history` entry, before being returned here or from **View Class**.
+
 ### Unsign Class
 
 <mark style="color:green;">`POST`</mark> `/trainings/onsite/unsign_class.json`
 
 Remove digital signature from a class.
+
+### Justifications
+
+<mark style="color:blue;">`GET`</mark> `/trainings/onsite/justifications/{sessionId}.json`
+
+List absence-justification rows for a session, scoped by role.
+
+**Access.** Company-scoped (`404 Training Session not found`). A student who is not a reviewer sees only their own roster row's justification(s). A reviewer — the session's or subject's teacher, or a manager (`user_group_id <= 140`) — sees every justification for the session. A caller with no roster row on the session (and not a reviewer) gets an empty list rather than an error.
+
+#### Response
+
+`justifications[]`, ordered by `created DESC`:
+
+| Field | Description |
+|-------|-------------|
+| id | `SessionJustification.id` (UUID) |
+| status | `pending` \| `approved` \| `rejected` |
+| text | Student's free-text justification, or `null` |
+| review_note | Reviewer's note, or `null` |
+| reviewed_at | Unix timestamp, or `null` if not yet decided |
+| upload_id | Linked `SessionJustification` upload id, or `null` |
+| created | Unix timestamp |
+| user_id, user_name | The justifying student |
+
+### Submit Justification
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/submit_justification.json`
+
+A student submits a justification for their own absence.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| session_id | string | Yes | `TrainingSession.id` |
+| text | string | No | Free-text justification |
+| upload_id | string | No | Supporting document upload id |
+
+**Guards.** Caller must be on the session roster (`session_students`), else `404 Not on this session roster`. May submit only when their own `attendance_status` is exactly `absent` (not `absent_justified`, not present, not `NULL`) **and** they have no `pending` justification already on this session, else `400 A justification cannot be submitted for this attendance`. Enforced inside a row-locked transaction (`SELECT ... FOR UPDATE` on the `session_students` row) so two near-simultaneous submits cannot both create a pending row.
+
+#### Response
+
+```json
+{ "saved": true }
+```
+
+### Review Justification
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/review_justification.json`
+
+Approve or reject a pending justification.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string | Yes | `SessionJustification.id` |
+| decision | string | Yes | `approved` or `rejected`. Anything else → `400 Invalid decision` |
+| review_note | string | No | Max 255 characters (`mb_strlen`) — `400 Review note is too long (255 characters max)` above that |
+
+**Access.** Restricted to a manager (`user_group_id <= 140`) or the session's/subject's teacher, else `404 Not authorized to review this justification`. Company-scoped via the justification's session (`404 Justification not found`, same message as a genuinely missing id — a manager of another company cannot distinguish the two).
+
+**Re-decision is refused.** The status flip is an atomic conditional update (`pending` → decision); a justification that is already `approved`/`rejected` cannot be re-decided — `400 This justification has already been decided`.
+
+**Effect on approval.** Approving sets `session_students.attendance_status = absent_justified`, unless the student already counts as present (e.g. credited `attended_post_class` after submitting but before review) — in that case the justification is still recorded as approved, but the attendance status is left unchanged rather than downgraded. Rejection never changes `attendance_status`. For a LESSON activity, `activity_progress.value` is recomputed from all sibling sessions of the activity afterward, same as `store_attendance`/`sign_class`; EXAM activities are skipped (their `value` is the teacher's grade). All writes (justification status, `session_students`, `activity_progress`) happen in one transaction.
+
+#### Response
+
+```json
+{ "saved": true, "newStatus": "absent_justified" }
+```
+
+### Session Uploads
+
+Classwork submissions and absence-justification evidence go through the generic upload endpoints (see [uploads.md](uploads.md)), tagged with one of two reserved `Upload.model` values: `SessionClasswork` and `SessionJustification`. Both are keyed on `Upload.foreign_key = sessions.id` — not the student — with the uploader identified separately via `Upload.user_id`.
+
+**Immutable, forever, for everyone.** Once a row carries either tag it can never be deleted (`GET /uploads/delete/{id}.json` → `403 This file can not be deleted.`) and never re-tagged to a different model/foreign_key (`POST /uploads/confirm/{id}.json` → `403 This file can not be reassigned.`) — by anyone, student, teacher, or manager included. A student may add new files but never remove or retarget what they already submitted; the submission record must stay intact for a teacher to reconsider an absence against it.
+
+**Write gate.** The uploader must be on the session roster (`session_students.user_id`), else `403 Uploads are not enabled for this session`. `SessionClasswork` additionally requires `sessions.allow_classwork_upload = true` for that session; `SessionJustification` has no further condition. Enforced on every path that can attach one of these tags: `POST /uploads/sign.json` (before the presigned S3 PUT is issued — gating at `complete()` would be too late, the object is already in S3 by then), `POST /uploads/create.json`, and `POST /uploads/confirm/{id}.json`.
+
+**Read scope.** Enforced on `GET /uploads/index/{model}/{foreignKey}.json`, `GET /uploads/download/{id}.json` and `GET /uploads/proxy/{id}.json`. A plain student sees only their own uploads for the session. The session's own teacher, the subject's teacher, or a manager (`user_group_id <= 140`) see every upload on the session. Company-scoped: a session belonging to another company (or missing) is refused the same way as a genuinely absent one — `404 Training Session not found` from `index`, plain `404` from `download`/`proxy` — so a caller can't distinguish "wrong company" from "doesn't exist".
 
 ---
 
@@ -1379,6 +1569,26 @@ Retrieve students with filtering. All filter parameters optional (use empty stri
 <mark style="color:blue;">`GET`</mark> `/manager/trainings/students/view/{enrollmentId}.json`
 
 Retrieve full student enrollment details.
+
+#### Attendance Status Breakdown
+
+For a non-`DISTANCE` training, the response includes a top-level `training.AttendanceStatus` object — per-status **session** counts for this student in this training, sourced from `Training::getAttendanceStatusBreakdown($trainingId, $userId)`. It is keyed by `users.id`, **not** the enrollment (`TrainingsUser.id`) id — attendance status lives on `session_students`, which is keyed by user, and a roster row can exist without any enrollment at all.
+
+Five integer keys, always all present:
+
+| Key | Meaning |
+|-----|---------|
+| attended | Sessions where `session_students.attendance_status = 'attended'` |
+| attended_post_class | Sessions credited `attended_post_class` (late/post-class submission) |
+| absent | Sessions marked `absent` |
+| absent_justified | Sessions marked `absent_justified` (approved justification) |
+| unmarked | Sessions whose `attendance_status` is still `NULL` — not yet decided (attendance not signed) |
+
+Counts only sessions under a non-deleted `training_activities` row (`training_activities.deleted = 0`).
+
+**`DISTANCE` trainings.** `training.AttendanceStatus` is omitted from this response entirely when `Training.type = 'DISTANCE'` (attendance-by-session doesn't apply — distance trainings track `getProgress` instead).
+
+**Same object, student report endpoint.** <mark style="color:blue;">`GET`</mark> `/trainings/students/report/{enrollmentId}.json` returns the identical breakdown nested at `training.Training.AttendanceStatus` — explicitly `null` (rather than omitted) for a `DISTANCE` training. Access: a caller with `user_group_id > 170` may only request their own enrollment (`400 Incorrect enrollment id requested` otherwise); `user_group_id <= 170` may request any enrollment id.
 
 #### Reset attempts in the response
 

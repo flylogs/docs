@@ -42,8 +42,22 @@ Flylogs offers two types of knowledge evaluation exams:
 
 <figure><img src="../.gitbook/assets/Screenshot 2025-04-03 at 09.48.26.png" alt=""><figcaption><p>Onsite exams in existing In the AIR LAW subject syllabus.</p></figcaption></figure>
 
+### **Attendance and post-class evaluation**
 
+For onsite classes and exams, attendance is part of the evaluation. Each student is set to one of four statuses when the teacher signs the register:
 
+* **Attended** and **Attended (post-class)** both count as present for progress and attendance-rate purposes.
+* **Absent** and **Absent (justified)** both count as missed, but only a plain **Absent** is left open for the student to justify — see [Missed classes and class work](missed-classes-and-class-work.md).
+
+**Attended (post-class)** is the status to use when a student didn't attend live but still completed the class afterwards — for example after reviewing the class content and any requested class work. It credits the student the same way **Attended** does, while keeping the record honest about how it happened: reports keep post-class credit in its own bucket, separate from students who were simply there on the day.
+
+<figure><img src="../.gitbook/assets/trainingsEvaluateStudent.png" alt=""><figcaption><p>The evaluation window for a student on a class: remarks, corrective measures and performance metrics.</p></figcaption></figure>
+
+<!-- SCREENSHOT TODO — add trainingsPostClassEvaluation.png to .gitbook/assets/, then uncomment:
+
+<figure><img src="../.gitbook/assets/trainingsPostClassEvaluation.png" alt=""><figcaption><p>Setting a student to Attended (post-class) when reopening a signed register.</p></figcaption></figure>
+
+-->
 ### **Flight training evaluation**
 
 On each flight, Flylogs will check for training enrollments for both PIC and SIC. You will be able to evaluate any of the crew members and introduce as many flight missions as necessary. On each of the performed flight missions, the performance metrics will be there to be evaluated as neccesary.
@@ -67,4 +81,3 @@ Additionally, you can require SIC pilots or students to sign the flight mission 
 &#x20;
 
 <figure><img src="../.gitbook/assets/trainingsEvaluationSettings.png" alt="" width="375"><figcaption><p>Additional options for flight mission evaluation.</p></figcaption></figure>
-

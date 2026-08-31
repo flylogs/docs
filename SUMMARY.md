@@ -102,6 +102,7 @@
 * [Student evaluation](training-courses/student-evaluation.md)
 * [Competency-Based Evaluation (KSA)](training-courses/competency-based-evaluation-ksa.md)
 * [Teacher tools](training-courses/teacher-tools.md)
+* [Missed classes and class work](training-courses/missed-classes-and-class-work.md)
 * [Student management](training-courses/student-management.md)
 
 ## Documents
