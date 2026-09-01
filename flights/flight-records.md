@@ -28,11 +28,11 @@ As the name indicates, this is just a draft that can be easily edited.
 
 Drafts are usually only visible by the crew selected on the flight and do not appear on regular flight listings. A draft can be edited and deleted by the crew but this depends on your company settings.
 
-To edit a draft you will need to have at least CREATE FLIGHT permissions within your company. A draft will always be indicated by a green DRAFT box.
+To edit a draft you will need to have at least CREATE FLIGHT permissions within your company. A draft will always be indicated by a **Draft** badge next to the flight number, and a banner reminding you it does not count as a finalized logbook entry until confirmed.
 
 Drafts are automatically cleaned from the system after 60 days if they are not confirmed into flights.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/5sPPuW-y6L.png)
+![](../.gitbook/assets/flight-view-confirm-button.png)
 
 ***
 
@@ -48,13 +48,13 @@ The **Confirm** button only appears when:
 
 _To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings/flights.md#flight-permissions)_._<br>
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/o-8DINhaSx.png)
+![](../.gitbook/assets/flight-view-confirm-button.png)
 
 When pressed a confirmation dialog will ask to please check the data before proceeding.
 
 Also, depending on the company settings, you may be required to enter your password to sign the action.<br>
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/x6ZL5XJ0Mo.png)
+![](../.gitbook/assets/flight-confirm-dialog.png)
 
 **Forgot to dispatch?** If the confirmed flight was created directly instead of dispatched from a schedule, Flylogs automatically looks for the schedule it belongs to (same PIC, aircraft, and an overlapping time window) and links it for you. See [Automatic schedule matching on confirm](audit-trails.md#automatic-schedule-matching-on-confirm) for details. Available on the Club, Premium, and Unlimited plans.
 

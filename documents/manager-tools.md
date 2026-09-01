@@ -10,15 +10,14 @@ Company managers have access to extra data on top of the regular document view, 
 
 ### Download registry
 
-For each document, managers can see the full download history of the current version, including:
+For each document, managers can see the full read history of the current version — filterable by name and by user group, and split into **Read** vs **Pending** — including:
 
 * User name and group
-* Download date
-* IP information when available
+* Read date
 
 Re-downloads by the same user are not duplicated — the registry reflects unique readers per version, which is the figure that matters for compliance.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/TitB2ImhZs.png)
+![](../.gitbook/assets/doc-read-receipts.png)
 
 ### Pending users
 

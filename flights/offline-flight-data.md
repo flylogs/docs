@@ -16,7 +16,7 @@ When you save a flight while offline, Flylogs:
 
 You do not need to press anything to trigger the sync. It happens in the background the moment a connection is detected.
 
-![Offline saved flight notice on the flight view](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/_placeholder_offline_banner.png)
+![Offline saved flight notice on the flight view](../.gitbook/assets/offline-flight-banner.png)
 
 ## The 48-hour storage window
 

@@ -10,12 +10,18 @@ Your TMAs can even add details to each maintenance window, upload documents, [si
 
 ### Create a future maintenance
 
-To create any maintenance windows, past or future, go into the aircraft details page and click on the **ADD MAINTENANCE** button  you will find on top of the job list.<br>
+To create any maintenance windows, past or future, go into the aircraft details page and click **New job** on top of the Maintenance jobs list.
 
-The new maintenance record window will pop up:
+The new maintenance job window will pop up. If the aircraft has a [maintenance plan](maintenance-plans.md) assigned, its upcoming actions are suggested at the top — the one due next is flagged **Next due**. Picking one fills in the job's name and description and copies over its work orders; once its CRS is signed, the plan automatically schedules the following action.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/62awtJj1XB.png)
+![](../../.gitbook/assets/mx-new-job-form.png)
 
-You can enter past or future dates depending on your needs, but keep into consideration, that future dates will block the aircraft schedule from being book for the maintenance job time frame that you specify.
+You can enter past or future **Start**/**End** dates depending on your needs, and optionally set the job to **Repeat** (daily, weekly, monthly, quarterly, semesterly or yearly) for recurring checks. Keep in mind that future dates will block the aircraft schedule from being booked for the maintenance job time frame that you specify.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/9bSQqrdh6d.png)
+Besides dates, a job can also be due by **airframe hours** or **landings** — record the airframe reading at creation and set a validity interval when you [sign the CRS](README.md#signing-the-crs); Flylogs then tracks the remaining hours/landings until the next check is due.
+
+### Tracking your jobs
+
+The aircraft's Maintenance jobs panel groups jobs that belong to the same recurring family (e.g. every "50 hour check") together, and summarizes them by status — **Completed**, **Scheduled**, **Overdue** (past due and not yet done) — plus your average utilization. Each job also shows an **Awaiting CRS** badge until it's signed, and an interval badge when it's hours/landings-based.
+
+![](../../.gitbook/assets/mx-jobs-panel.png)

@@ -18,25 +18,24 @@ Student pilots will only be required to upload a valid medical certificate in or
 
 **What the general check requires:** one valid licence, one valid rating and one valid medical. Pilots normally hold several ratings (type rating, IR, SEP, MEP, FI…), and only one of them needs to be valid for this general check to pass — a lapsed rating you no longer use, or one that only becomes effective in a few weeks, no longer blocks the pilot. Whether a *specific* rating is required for a given flight is decided by the flight type's [required certificates](#per-flight-type-certificate-requirements) for each seat, which are checked individually.
 
-The configuration page in the company settings area is fairly simple, just click both checkboxes to fully enable the PDCS and instantly the system will watch your back.
+The configuration lives in **Company Settings → Pilots → Documentation Compliance**. Two toggles control the PDCS itself:
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/HlWlsXHOyV.png)
+* **Check pilot documentation validity** — the master switch for licence/rating/medical checks. Turned off, all checks below, the pilot dashboard, and self-booking are skipped.
+* **Block scheduling and flight dispatch with invalid documents** — requires the master switch above. When on, managers cannot save a schedule with an expired PIC document, and pilots cannot dispatch or log a flight without valid documents. This does not affect self-booking, which has its own **Allow self-booking without valid documents** toggle in the Self-Scheduling tab.
 
-For example; A pilot with an expired license will not be able to publish schedule availability if any of his/her licenses are expired - like shown in the image below.
+The two other toggles in this same panel are related but separate: **Block Pilots that do not meet established Currency** (recency of flight experience, not document validity) and **Allow pilots to edit their certificates**.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/D6XoUgqoLn.png)
+![](../.gitbook/assets/pdcs-settings.png)
+
+For example, a pilot with expired certificates will not be able to be scheduled or dispatched — like shown in the image below, from the pre-flight dispatch view.
 
 ### Manager warnings
 
-When managers select any pilot to create a schedule record, Flylogs automatically displays on the right side the relevant information for the crew member.
+When managers select any pilot for a schedule or dispatch, Flylogs automatically displays the crew's certificate status.
 
-This includes all certificates, ordered by expiration date.
+**If any certificates are expired, a visual alert pops up listing exactly which certificates are invalid or expired, and depending on your company settings, it will block the pilot from being scheduled or dispatched.**
 
-
-
-**If any certificates are expired, a visual alert will pop up, and depending on your company settings, it will block the pilot from being scheduled.**
-
-![Pilot expired certificate warning for the Manager Scheduling a flight.](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/-GrEMu89zC.png)
+![Pilot with expired certificates blocking pre-flight dispatch — the crew licences panel lists each certificate as valid or expired.](../.gitbook/assets/dispatch-expired-docs.png)
 
 ### Per–flight type certificate requirements
 
@@ -44,7 +43,9 @@ Beyond the company-wide PDCS, you can define — **for each flight type** — ex
 
 For example, on a school's **Dual** flight type you might require the instructor acting as **PIC** to hold a valid **licence**, **Class 1 medical** and **single-engine rating**, while the student sitting as **SIC** only needs a valid **medical**.
 
-To configure this, open **Company Settings → Flight Types**, edit a flight type, and pick the required certificates under each seat in the *Required certificates* section. The flight types list shows a summary of each type's requirements underneath its row.
+To configure this, open **Flights → Flight types**, edit a flight type, and pick the required certificates under each seat in the *Required certificates* section.
+
+![](../.gitbook/assets/flight-type-required-certs.png)
 
 Once configured, Flylogs checks each crew member against **their seat's required certificates for the chosen flight type**, evaluating validity at the relevant moment — a check for a future flight reflects whether the certificates will still be valid then, and warns if one expires before the flight ends. These checks surface throughout the crew workflow:
 

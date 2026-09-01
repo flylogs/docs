@@ -4,12 +4,12 @@
 
 Flylogs SMS, is an integrated Safety Management System based on the [ICAO recommendations](https://www.unitingaviation.com/publications/safetymanagementimplementation/content/#/) fully compliant with the [ICAO Doc 9859](https://www.icao.int/safety/safetymanagement/pages/guidancematerial.aspx).
 
-**You may create:**
+**Every report is filed under one of two ICAO Annex 19 classifications**, each with its own severities:
 
-* Information events
-* Incidents
-* Accidents
-* Hazard reports
+* **Safety Occurrence** → severity is **Incident** or **Accident**
+* **Safety Information** → severity is **General Information** or **Hazard**
+
+See [Report classification](#report-classification) below.
 
 
 
@@ -26,7 +26,7 @@ You can only create a report from a flight if the flight is confirmed. You do no
 
 
 
-![Create a report from an existing flight](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/fHUiacthHN.png)
+![Create a report from an existing flight — flight details are linked automatically](../.gitbook/assets/safety-report-linked-flight.png)
 
 When saved, your report will automatically be associated to the flight, showing all flight information, aircraft maintenance and airworthiness status at the time of the event. Flylogs helps you gather all the information on any event by requesting to the flight's crew members to create a report for the same event.
 
@@ -46,6 +46,24 @@ A draft has no report number yet — it shows a grey **Draft** badge in your rep
 ### Creating a report offline
 
 You can create safety reports even with no internet connection. See [Offline safety reports](offline-safety-reports.md) for the full workflow — in short, the report is stored on your device and syncs automatically when you reconnect, and attachments are the only part that needs a connection.
+
+### Report classification
+
+Near the top of the form — before the department selector — you choose the report's **classification**, following the ICAO Annex 19 distinction:
+
+* **Safety Occurrence** — something happened (or could have) that affects aviation safety: an incident, an accident, or a hazard that materialised.
+* **Safety Information** — data or knowledge that helps understand aviation safety more broadly, whether or not it's tied to a single event: audits, inspections, risk assessments, manufacturer bulletins and similar.
+
+![](../.gitbook/assets/safety-report-classification.png)
+
+The selector shows guidance and examples for each option inline, so you don't have to guess. It defaults to **Safety Occurrence**.
+
+Your classification decides which **severity** you pick next:
+
+* **Safety Occurrence** → severity (**Incident** or **Accident**) is derived automatically further down the form, from the damage and injuries you record.
+* **Safety Information** → you choose directly between **General Information** and **Hazard**.
+
+See [Safety Reports](safety-reports.md) for the full classification reference, including how it changes what a manager sees when reviewing the report.
 
 ### Department
 
@@ -86,4 +104,4 @@ Different reports on a same flight are grouped and the kept with the same IDENTI
 
 In order to achieve this, reports must be created from the flight view page.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/d\_DPS1qYAB.jpeg)
+![Second report on the same flight, sharing the "-1" suffixed identification number](../.gitbook/assets/safety-report-grouping.png)

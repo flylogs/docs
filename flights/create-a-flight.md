@@ -56,9 +56,9 @@ The timezone is a setting that the company management can set in the company set
 
 
 
-To view the required timezone in the flight create form, put your mouse pointer on top of the time inputs and the tooltip will display the required timezone.
+The flight create form shows the required timezone (and whether it expects 12h or 24h format) right above the time inputs, so you always know which timezone to enter times in.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/laEzRhOo_d.png)
+![](../.gitbook/assets/flight-timezone.png)
 
 Once the flight times have been entered correctly the following fields will be available:
 

@@ -10,8 +10,8 @@ Each scheduled flight, if confirmed by the pilots, is due to happen. A scheduled
 
 The PIC, SIC or supervisor can cancel their own booking manually, right up until the company's *Dispatch cancel limit* (Company settings → Schedule → Schedule cancellations) is reached — inside that window the cancel option is no longer available to them, and they should ask the PIC or a scheduling manager to cancel it instead. Staff with scheduling rights are not subject to this limit and can always cancel any booking from the [Schedule Review page](schedule-review-page.md). Either way, the system asks for a cancellation reason.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/r4H5zas0kq.png)
+![](../.gitbook/assets/cancel-dialog.png)
 
 This information is stored and displayed in the Schedule cancellation analytics page so you can have a better understanding of why your flights are being cancelled.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/ucrS0ZIWxe.png)
+![](../.gitbook/assets/cancellations-analytics.png)

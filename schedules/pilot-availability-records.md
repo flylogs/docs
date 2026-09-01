@@ -12,9 +12,9 @@ The tool is available for any pilot or company user with pilot functions enabled
 
 ### Access to the tool
 
-You will find a button to publish your flight availability both in your pilot dashboard (home page) and in the Schedules section.
+You will find a **My Availability** button both in your pilot dashboard (home page) and in the Schedules section.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/IvkdlXljWY.png)
+![](../.gitbook/assets/martha-availability.png)
 
 Every pilot has 2 main options in their availability management page:
 
@@ -28,9 +28,9 @@ Availability slots can be more than 24 hours long, so the pilot can easily mark 
 
 #### Example
 
-You can click on the 10am of the Monday, and drag the mouse to the Thursday 5pm creating a single slot of availability.
+You can click on Monday 10am, and drag the mouse to Thursday 5pm, creating a single slot of availability — marked Available, Not Available, or Maybe.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/XhEne8I3pJ.png)
+![](../.gitbook/assets/martha-availability-grid.png)
 
 > The system allows to mark my self as I am always available or choose the desired time frames with 30 minute accuracy.\
 > Additionally, just underneath the I am always available option, the pilot can enter some comments for the Roster Manager.

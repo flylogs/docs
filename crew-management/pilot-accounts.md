@@ -76,7 +76,7 @@ By deactivating a pilot account, this user will disappear from all your forms an
 
 > Any deactivated pilots, will still be able to login to the Flylogs to see and download their logbooks, but all other functions will be removed.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/23bhSItsv4.png)
+![Deactivating a pilot: turn off the Active account toggle on their Edit Pilot page.](../.gitbook/assets/pilot-deactivate.png)
 
 ***
 

@@ -2,10 +2,12 @@
 
 Every time the flight schedule is published by your Roster Manager, Flylogs will deliver all flights to each pilot in a single email summarizing all flights.
 
-If you require your pilots to confirm, they will have the option to do so.<br>
+If you require your pilots to confirm, they will have the option to do so — the flight appears under **Upcoming Flights** on their Schedule page, awaiting **Accept** or **Reject**.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/nB2P5d4z42.png)
+![](../.gitbook/assets/martha-upcoming.png)
 
-Each pilot can configure the calendar live feed into their devices (smartphones or personal computers). This will show all schedule flights for the pilot, even future ones as soon as they get published.
+Each pilot can subscribe to their Flylogs activity — scheduled flights, recorded flights, events and training sessions — from a private calendar feed URL, addable to Google Calendar, Apple Calendar or Outlook. It's found on the **Calendar Subscription** card on their own profile page.
 
-The calendar does not allow to confirm or reject scheduled flights. To do so, the pilot still needs to login into Flylogs to manage the slots.
+![](../.gitbook/assets/calendar-subscription.png)
+
+The calendar feed does not allow to confirm or reject scheduled flights. To do so, the pilot still needs to login into Flylogs to manage the slots.

@@ -13,7 +13,6 @@ The main features of the system are:
 * Group level access privileges
 * File version control
 * Download registry
-* File comments
 * File folders
 
 ### How the index page works
@@ -74,9 +73,9 @@ This filtering is applied **before pagination**, so search results and folder co
 
 ### File version control
 
-Each time you update a published document you can publish the new version. Flylogs keeps old versions hidden but still available to you in the future.
+Each time you update a published document you can publish the new version. Flylogs keeps old versions listed underneath the latest one, so they stay available for anyone with access to the document.
 
-Every new version renews the cycle: every authorized member needs to download the file again, comments are cleared and the download registry is reset for the new version.
+Every new version renews the cycle: every authorized member needs to download the file again, and the download registry is reset for the new version.
 
 ### File size limit
 

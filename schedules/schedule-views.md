@@ -14,15 +14,18 @@ Each mode has its benefits, but in all of them, you can switch between them as d
 
 ### Schedule LifeCycle Indicators
 
-We have a legend to understand the status of each flight.
+Each booking is color-filled by status, per the legend shown under the calendar:
 
-**Green Border:** Flight is scheduled and confirmed.
+* **Draft** (grey)
+* **Scheduled** (blue)
+* **Confirmed** (green)
+* **Delay** (orange)
+* **Departed** (purple)
+* **Landed** (green, checkmark)
+* **Canceled** (red)
+* **Dispatched** (teal)
 
-**Black Border:** Flight is cancelled.
-
-**Red Border:** Flight is not confirmed by one or more members of the crew.
-
-Additionally, the member that has not confirmed the flight will appear boxed, and the member who cancelled will appear crossed with a line through the text.
+A small icon on the booking also flags crew confirmation status — for example a warning icon when a crew member hasn't confirmed yet, or when their documentation needs attention.
 
 
 
@@ -30,13 +33,13 @@ Additionally, the member that has not confirmed the flight will appear boxed, an
 
 #### Daily View
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/nCVI_-KOCv.png)
+![](../.gitbook/assets/schedule-day-view.png)
 
 Daily view is perfect for operators like flight schools with up to ten aircraft. This view allows to easily view all day schedule.
 
 #### Week view
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/UxUqfs8isR.png)
+![](../.gitbook/assets/schedule-week-view.png)
 
 Week view is better suited for larger operators where tight scheduling of large fleets is a key factor of the operation, specially if night operation is very common. In this case, the user can scroll horizontally throughout the whole week.
 
