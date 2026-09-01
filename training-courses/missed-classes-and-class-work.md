@@ -6,6 +6,8 @@ description: What happens when a student misses an onsite class — the email, c
 
 Onsite classes and exams track attendance as part of the training record, and follow up automatically when a student misses one. This page walks through the whole flow, from an unmarked register to a resolved, reported outcome. For where each of these actions lives on screen, see [Teacher tools](teacher-tools.md), [Student evaluation](student-evaluation.md) and [Student management](student-management.md).
 
+<figure><img src="../.gitbook/assets/trainingsAttendanceWorkflow.png" alt=""><figcaption><p>The full flow: class session, attendance, signature, class work and absence justification.</p></figcaption></figure>
+
 ### The four attendance statuses
 
 Each student on a class register is set to one of:

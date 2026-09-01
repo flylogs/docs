@@ -110,6 +110,8 @@ Numbering follows the ICAO Doc 9859 probability scale: 5 is the most likely (`Fr
 
 > Regardless of `user_group_id`, a `draft` report is visible **only to its author**. Drafts never appear in another user's list or view, nor in any analytics/stats endpoint.
 
+> The [change history](#change-history) is manager-only (`user_group_id < 111`). It is omitted from the view payload for everyone else — including the report's author and its assigned reviewer.
+
 ---
 
 ## List Safety Reports
@@ -305,6 +307,8 @@ Full details for a single report including flight, aircraft, and reporter.
 
 > `allowEdit` is `true` for managers (`user_group_id < 111`), the report creator, or any flight crew member, provided the report is not deleted.
 
+> For managers (`user_group_id < 111`) the response also carries `report.SafetyReportChange` — the report's change history. The key is **omitted entirely** for every other user; see [Change History](#change-history).
+
 ---
 
 ## Export Safety Report (PDF)
@@ -347,7 +351,7 @@ On creation of an `open` report, the system sends notifications to crew members 
 | SafetyReport.flight_phase | string | Yes | Flight phase code (see enumerations) |
 | SafetyReport.safety_report_category_id | number | Yes | Category ID |
 | SafetyReport.safety_report_department_id | number | No | Department ID (see [Form Options](#form-options-bulk)) |
-| SafetyReport.anonymous | boolean | No | If `true`, reporter identity is not stored |
+| SafetyReport.user_id | string | No | Reporter. **Not client-controlled**: the reporter is always the authenticated user. The only value that changes anything is an **empty string**, which files the report anonymously (`user_id` stored as `NULL`). Any other value is ignored. |
 | SafetyReport.flight_id | UUID | No | Linked flight ID |
 | SafetyReport.flight_type_id | number | No | Flight type ID |
 | SafetyReport.parent_id | UUID | No | Parent report ID (creates a child/related report) |
@@ -407,6 +411,10 @@ Update an existing safety report. The `id` can also be supplied in the request b
 
 Edit permission follows the same rules as `allowEdit` in the view endpoint. If the editing user is not the original report creator, the `events` and `actions` fields are protected and cannot be changed.
 
+**Event date/time.** As on create, `date` is accepted as an alias for `datetime` — post either. (Before this was fixed, `edit` accepted `date` and silently discarded it, so the event time could not be changed from the edit form.)
+
+**Immutable columns.** `user_id`, `company_id`, `idn`, `created`, `deleted` and `reported` are stripped from the request before the save. The reporter is fixed when the report is filed and no edit can move it — including the anonymity choice, which is a create-time decision. Posting any of these fields is not an error; they are silently ignored.
+
 On save of a non-draft report, managers and the report owner are notified. If the status changed, the notification includes the old and new status.
 
 **Submitting a draft (`draft → open`).** The draft's author may promote their own draft to `open` by posting `status=open`. On this transition the report is assigned its `idn` and the same "new safety report" notifications a direct creation sends are fired **once**. Editing a draft that stays a draft, or any change to a draft, remains silent. A non-manager can only make the `draft → open` transition on their **own** draft; managers are unrestricted.
@@ -439,11 +447,123 @@ Drafts are also what the neo client stores when a report is created offline: the
 
 ---
 
+## Change History
+
+Every write against a safety report is appended to an audit trail. The trail is
+**read-only** — there is no endpoint that edits or removes a row, and nothing in
+the application updates one.
+
+**Access.** The history is returned as `report.SafetyReportChange` on
+[View Safety Report](#view-safety-report), and **only** to managers
+(`user_group_id < 111` — the same bar `allowEdit` uses for "manager"). For every
+other user, including the report's own author and an assigned reviewer, the key
+is absent from the payload altogether. There is no separate endpoint.
+
+> Reports created before this feature shipped have no history: there was nothing
+> to reconstruct a trail from. A manager viewing one gets `"SafetyReportChange": []`.
+
+#### Logged actions
+
+| `action` | Written when |
+|----------|--------------|
+| `create` | The report is filed (or saved as a draft). Its diff is the opening state. |
+| `submit` | A draft is promoted to `open`. Logged after the `idn` is assigned, so the row carries it. |
+| `edit` | Any field change — the edit endpoint, the investigation modal and the management modal all land here. A save that moves no tracked field writes **no** row. |
+| `delete` | The report is soft-deleted (also written for each child report). |
+| `attachment_add` | A file is attached to the report (any upload path: direct-to-S3 `complete`, `confirm`, or the legacy multipart endpoint). `comments` holds the file name. |
+| `attachment_remove` | An attached file is deleted. `comments` holds the file name. |
+| `comment_add` | A comment is posted on the report. `comments` holds the comment text. |
+| `comment_remove` | A comment is deleted. |
+
+#### Response shape
+
+```json
+"SafetyReportChange": [
+  {
+    "id": "412",
+    "action": "edit",
+    "label": "Modified",
+    "icon": "fa fa-pen-to-square",
+    "class": "warning",
+    "comments": null,
+    "created": 1756636800,
+    "user": { "id": "123", "name": "John", "surname": "Doe" },
+    "fields": [
+      {
+        "field": "status",
+        "label": "Status",
+        "from": "open",
+        "to": "closed",
+        "from_label": "Open",
+        "to_label": "Closed"
+      },
+      {
+        "field": "events",
+        "label": "Description of events",
+        "kind": "text",
+        "from": 412,
+        "to": 508,
+        "from_label": "412 characters",
+        "to_label": "508 characters"
+      },
+      {
+        "field": "involved_users",
+        "label": "Involved individuals",
+        "kind": "set",
+        "from": ["12", "18"],
+        "to": ["12"],
+        "from_label": "Ann Lee, Bob Ray",
+        "to_label": "Ann Lee"
+      }
+    ]
+  }
+]
+```
+
+Rows are ordered newest first. `user` is `null` when the actor could not be
+resolved (a deleted account, or a change made outside a session).
+
+#### Field entries
+
+| Key | Description |
+|-----|-------------|
+| `field` | Column name, or `involved_users` / `aircraft` for the two association sets |
+| `label` | English field name; localise from `field` if you have translations |
+| `kind` | Absent for a plain value; `text` for a narrative column; `set` for an association |
+| `from` / `to` | Raw stored values. For `kind: "text"` these are **character counts**, not content. For `kind: "set"` they are id arrays. |
+| `from_label` / `to_label` | Display strings **resolved at write time** — see below. `—` marks an absent value. |
+
+**Labels are historical.** `from_label` and `to_label` were resolved when the
+change was made and are stored with the row. A pilot who is later renamed or
+deleted, or a category that is later renamed, does not change what an old row
+says. Render them as they arrive; do not re-resolve the ids.
+
+**Narrative fields are not copied.** `events`, `actions`, `result`,
+`corrective_measures` and `met_conditions` are logged as a size change only
+(`kind: "text"`). Their comparison ignores markup, so a Quill re-wrap of
+identical text writes no row.
+
+#### Tracked fields
+
+`idn`, `type`, `status`, `severity`, `name`, `datetime`, `location`,
+`safety_report_department_id`, `safety_report_category_id`, `flight_phase`,
+`air_space`, `damages`, `personal_damages`, `immediate_consequences`,
+`flight_id`, `flight_type_id`, `parent_id`, `user_id`, `reviewer_id`,
+`reviewer_outcome`, `risk_probability`, `risk_severity`,
+`mitigated_risk_probability`, `mitigated_risk_severity`, `events`, `actions`,
+`result`, `corrective_measures`, `met_conditions`, plus the `involved_users` and
+`aircraft` sets.
+
+`modified`, `company_id` and `deleted` are not tracked — the first is noise and
+the other two never move on an edit.
+
+---
+
 ## Delete Safety Report
 
 <mark style="color:red;">`GET`</mark> `/safety_reports/delete/{id}.json`
 
-Soft-delete a safety report and all its child reports (sets `deleted = true`). Restricted to managers (`user_group_id ≤ 110`).
+Soft-delete a safety report and all its child reports (sets `deleted = true`). Restricted to managers (`user_group_id ≤ 110`). The deletion is appended to the [change history](#change-history) of the report **and of every child** it cascades to.
 
 #### Path Parameters
 
@@ -679,7 +799,16 @@ Report counts grouped by department. Reports with no department assigned are exc
 
 <mark style="color:blue;">`GET`</mark> `/safety_reports/form_options.json`
 
-Returns **every** department with its categories nested, in a single payload. This is the single source for the safety-report create form's dropdowns: a client caches the whole department/category tree in one request — used by the neo app at login so the form works **offline**.
+Returns the departments available **to the authenticated user's company**, with their categories nested, in a single payload. This is the single source for the safety-report create form's dropdowns: a client caches the whole department/category tree in one request — used by the neo app at login so the form works **offline**.
+
+**Filtered by company type.** `safety_report_department` is one global taxonomy shared by every company, so the list is narrowed here against `companies.type`:
+
+| `companies.type` | Departments returned |
+|------------------|----------------------|
+| `school` | All except `Flight Operations - AOC` (1), `Flight Operations - SPO` (3) and `Cabin Crew` (5) — a training organisation has none of them |
+| `gen`, `aoc`, `spo`, unset | The full list |
+
+The filter is on the offered list only: it never rejects a `safety_report_department_id` on create or edit, and a report already filed under a now-hidden department keeps it. A client that renders a stored department should not assume its id is present in this response.
 
 #### Response
 

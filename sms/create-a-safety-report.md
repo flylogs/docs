@@ -49,9 +49,19 @@ You can create safety reports even with no internet connection. See [Offline saf
 
 ### Department
 
-If your organisation has configured departments, a **Department** selector appears at the very top of the report form. Select the department most relevant to the event being reported (e.g. Flight Operations, Maintenance, Cabin Crew).
+A **Department** selector appears near the top of the report form. Choose the department that owns the activity where the event happened.
 
-Assigning a department is optional but recommended — it allows safety managers to filter the report list and analytics by organisational area.
+The department decides who reviews your report and where it is filed, so it matters: a report filed under the wrong department is hard to find again.
+
+**You are asked to confirm it.** As soon as you choose a department, the form shows what that department covers and — just as usefully — what it is *not* for, with a note on where those events belong instead. The rest of the form stays closed until you press **Yes, use this department**; **Choose another** takes you back to the list. Picking a different department later re-opens the explanation for the new one.
+
+This step is only on the create form. When you edit an existing report the department is already set, so it is shown without asking again.
+
+#### Which departments you see
+
+The department list depends on your organisation's type. **Flight schools do not see Flight Operations - AOC, Flight Operations - SPO or Cabin Crew** — departments a training organisation does not have, and a common source of misfiled reports. Every other organisation type sees the full list.
+
+If an older report was filed under a department your organisation no longer sees, opening that report for editing still shows it, so it is never silently changed.
 
 ### Anonymous reports
 

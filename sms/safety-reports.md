@@ -99,3 +99,52 @@ Filters can be combined freely. The date range is the only filter available to s
 The report list shows **25 reports per page** by default. You can change the page size to **50 or 100** with the selector in the filter bar, and move between pages with the pagination controls below the list. The header shows the total number of reports matching the active filters.
 
 The Excel export always includes **all** reports matching the current filters, not just the visible page.
+
+***
+
+### Attachments
+
+The report view page lists a report's attachments but does not change them: there is no upload or delete button there. Files are added, renamed and removed from the report's **edit** page, by anyone who may edit the report.
+
+One place to change a report's evidence means one place those changes are recorded from — every file added or removed appears in the change history below.
+
+***
+
+### Change history
+
+Every report keeps a record of what was changed on it, by whom, and when. Open a
+report and scroll to **Change history** at the bottom of the page.
+
+**Who can see it:** managers only — Company Administrator, Operations Manager
+and Compliance & Safety Manager. Nobody else sees the section at all, not the
+person who filed the report and not the reviewer assigned to it.
+
+Each entry names the action and the person behind it, with the date and time in
+your company's timezone and format. Entries that changed report fields expand
+into a before/after table:
+
+| Entry | Meaning |
+|-------|---------|
+| **Created** | The report was filed, or saved as a draft |
+| **Submitted** | A draft was submitted and received its report number |
+| **Modified** | Report fields were changed — from the edit page, the investigation box or the management box |
+| **Deleted** | The report was deleted |
+| **File attached / File removed** | An attachment was added or removed, with the file name |
+| **Comment added / Comment removed** | A comment was posted or deleted |
+
+A save that changes nothing does not create an entry.
+
+The long text boxes — description of events, root cause, result, corrective
+measures and weather — are recorded as *changed*, with the length before and
+after, rather than storing a second copy of the text in the log.
+
+> **Reports filed before this feature was released have no history.** There was
+> no record to rebuild one from, so their history starts empty and fills up from
+> the next change onwards.
+
+#### The reporter never changes
+
+The person who filed a report is fixed at the moment it is created. Editing a
+report — by anyone, manager included — cannot move it, and the anonymity choice
+is likewise made once, when the report is filed. On the edit page the reporter is
+shown as read-only text for exactly this reason.
