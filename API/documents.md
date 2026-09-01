@@ -222,18 +222,29 @@ Creating a **root folder** is subject to the company plan's folder limit:
 | Premium | Unlimited |
 | Unlimited | Unlimited |
 
-The limit applies only when creating a new root folder (no `id`, and `document_folder_id` empty/`0`/omitted). Editing an existing folder is never blocked. When the limit is reached the endpoint responds:
+Subfolders (non-empty `document_folder_id`) never count against this limit. The check applies whenever a folder becomes root-level: on create, and on edit when an existing subfolder is moved to root (`document_folder_id` cleared). Renaming a folder, moving it between two non-root parents, or editing an existing root folder without changing its parent is never blocked by this limit. When the limit is reached the endpoint responds:
 
 ```
 HTTP 400 Bad Request
 You have reached the limit of folders for your subscription plan. Please upgrade your plan to add more folders.
 ```
 
+#### Nesting limits
+
+Folders can nest up to **4 levels** deep. `document_folder_id` is validated on every create/edit:
+
+| Violation | Response |
+|-----------|----------|
+| New parent is the folder itself, or one of its own descendants (would create a cycle) | `400 Bad Request` — "Cannot move a folder into its own subfolder." |
+| Resulting depth would exceed 4 levels | `400 Bad Request` — "Folders can be nested at most 4 levels deep." |
+
 ### Delete Folder
 
 <mark style="color:blue;">`GET`</mark> `/documents/delete_folder/{id}/true.json`
 
-Delete a folder and its contents.
+Delete a folder, cascading to every subfolder nested inside it at any depth.
+
+Documents are never deleted by this call. Any document found anywhere in the deleted branch — in the folder itself or in any of its subfolders — is moved to the root folder (`document_folder_id` cleared) before the folder rows are removed.
 
 #### Path Parameters
 

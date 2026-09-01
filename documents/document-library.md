@@ -24,24 +24,42 @@ Each row shows the document name, description, latest version uploader and creat
 
 ### File folders
 
-For better organization, you can create folders for your documents. Folders are flat per company — they are not nested. Subfolders are not supported, so every new folder is created at the root level and each document belongs to exactly one folder.
+For better organization, you can create folders for your documents, and folders can contain subfolders — up to 4 levels deep in total. Each document belongs to exactly one folder, at any level of the tree.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/Ee0r0ZX5Ha.png)
+![](../.gitbook/assets/document-subfolders.png)
 
-Use folders to separate operational manuals, training material, forms, etc. The same access rules apply regardless of the folder a document lives in.
+The sidebar shows the full folder tree. Folders with subfolders get an expand/collapse arrow, and the breadcrumb above the document list always shows the full path from the Main Folder down to wherever you're browsing.
+
+Use folders and subfolders to separate operational manuals, training material, forms, etc. — for example an "Aircraft Manuals" folder holding one subfolder per aircraft type. The same access rules apply regardless of where in the tree a document lives.
+
+> Creating, renaming, moving and deleting folders is available to users in **group level 149 or lower** (administrators and managers) — a slightly broader set of roles than can publish documents themselves (group level 120 or lower). Other users can browse and open folders but won't see folder management controls.
+
+#### Creating and moving folders
+
+Clicking **New Folder** creates the new folder inside whichever folder you're currently browsing — click into a folder first to create a subfolder there, or stay on the Main Folder to create a new top-level folder.
+
+Editing a folder also lets you move it elsewhere in the tree via the **Parent folder** field, without touching the documents inside it.
+
+![](../.gitbook/assets/document-folder-move.png)
+
+A folder can't be moved into itself or into one of its own subfolders, and a move that would push it past the 4-level depth limit is not allowed.
+
+#### Deleting a folder
+
+Deleting a folder removes it and every subfolder nested inside it. Documents are never deleted this way — any document found anywhere in the deleted branch is moved to the Main Folder, where it stays fully accessible. A folder with subfolders shows a warning to that effect before you confirm.
 
 #### Folder limit by plan
 
-The number of folders you can create depends on your company's subscription plan:
+The number of **top-level** folders you can create depends on your company's subscription plan. Subfolders don't count against this limit — once you're at the cap, you can still organize further by nesting subfolders inside your existing folders.
 
-| Plan | Folders |
+| Plan | Top-level folders |
 |------|---------|
 | Free | 3 |
 | Club Essentials | Unlimited |
 | Premium | Unlimited |
 | Unlimited | Unlimited |
 
-On the Free plan, once you reach 3 folders the **New Folder** button is disabled. Delete an existing folder or upgrade your plan to add more. All paid plans have no folder limit.
+On the Free plan, once you reach 3 top-level folders the **New Folder** button is disabled while browsing the Main Folder. Delete an existing top-level folder or upgrade your plan to add more. All paid plans have no folder limit.
 
 ### Group level access privileges
 
