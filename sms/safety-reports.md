@@ -18,7 +18,7 @@ They can also request third parties to complete a report on an existing event, g
 
 Related events will appear grouped together and will share some common details like date, location, type of event, etc.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/cYPNBm9ROy.png)
+![](../.gitbook/assets/safety-reports-list.png)
 
 ***
 
@@ -28,7 +28,7 @@ Each report can be associated to a flight. If it is, the flight information will
 
 All other report information is displayed below and only the safety manager or other, higher level managers can edit or delete the stored information.
 
-![](https://tawk.link/61f94bae9bd1f31184da67e3/kb/attachments/J6eXYFldiB.png)
+![](../.gitbook/assets/safety-report-flight-view.png)
 
 Additionally, the person writing the report or any manager can comment on the report and upload files as needed that will be attached to the existing report.
 
