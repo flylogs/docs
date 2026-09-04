@@ -15,7 +15,7 @@ It is **one-way out**: Flylogs only writes the files it generates and never read
 Only a company **manager** (Company Administrator) can set this up — the Company Settings page is restricted to manager-level user types, and the connection additionally refuses to complete for anyone who is not a Company Administrator.
 
 {% hint style="info" %}
-Cloud storage sync works on **every plan**, but the data you can export follows your plan: training records need a plan that includes Trainings, and safety reports need a plan that includes Safety. See [What you can export](#what-you-can-export).
+Cloud storage sync requires a **paid plan** (Club Essentials, Premium or Unlimited) — it is not available on the Free plan. On a paid plan, the data you can export still follows your plan tier: training records need a plan that includes Trainings, and safety reports need a plan that includes Safety. See [What you can export](#what-you-can-export).
 {% endhint %}
 
 {% hint style="warning" %}
@@ -55,9 +55,9 @@ Tick the datasets you want. Each one produces one or more CSV files under your d
 
 | Dataset | Files | Plan required |
 | --- | --- | --- |
-| Flights logbook | `flights/flights.csv` | Any plan |
-| Aircraft and aircraft logbook | `aircraft/aircraft.csv`, `aircraft/aircraft_logbook.csv` | Any plan |
-| Pilots list and certificates | `pilots/pilots.csv`, `pilots/pilot_certificates.csv` | Any plan |
+| Flights logbook | `flights/flights.csv` | Any paid plan |
+| Aircraft and aircraft logbook | `aircraft/aircraft.csv`, `aircraft/aircraft_logbook.csv` | Any paid plan |
+| Pilots list and certificates | `pilots/pilots.csv`, `pilots/pilot_certificates.csv` | Any paid plan |
 | Training records | `trainings/training_enrolments.csv`, `trainings/training_records.csv` | Trainings (Premium, Unlimited) |
 | Safety reports | `safety/safety_reports.csv` | Safety (Premium, Unlimited) |
 

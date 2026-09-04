@@ -39,7 +39,7 @@ Some tabs are only available on certain subscription plans. When a tab is not in
 | Duty Limits | — | — | ✓ | ✓ |
 | Billing | — | ✓ | ✓ | ✓ |
 | Integrations | — | — | ✓ | ✓ |
-| Cloud storage | ✓ | ✓ | ✓ | ✓ |
+| Cloud storage | — | ✓ | ✓ | ✓ |
 | API | — | paid activation | paid activation | included |
 
 See [Account types](../account-types.md) for a full plan comparison.

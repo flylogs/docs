@@ -102,6 +102,22 @@ The Excel export always includes **all** reports matching the current filters, n
 
 ***
 
+### Who can edit a report
+
+Three roles, and no others:
+
+* **The person who filed it.** Anonymous reports have no reporter, so nobody but a manager can edit them.
+* **The assigned reviewer**, through the Investigation and Management boxes.
+* **Managers** (Administrator, Operations Manager, Compliance & Safety Manager).
+
+Being crew of the flight a report is about is **not** enough. Crew see the report — a pilot sees reports filed against flights they flew — but they cannot change it. A report about a flight is very often a report about the people who flew it, so its subjects do not get to edit it.
+
+A deleted report cannot be edited by anyone, managers included.
+
+The **Manage → Edit report** button only appears for the people above; if you can open a report but see no Edit option, you are on it as crew or as a reader.
+
+***
+
 ### Attachments
 
 The report view page lists a report's attachments but does not change them: there is no upload or delete button there. Files are added, renamed and removed from the report's **edit** page, by anyone who may edit the report.

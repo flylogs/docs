@@ -45,3 +45,10 @@ Single flight, multiple missions example:
 Also, you can have the same mission, repeated as many times as needed in following flights. In this case, all repetitions will appear in the training report of the pilot:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-03-27 at 16.54.04.png" alt="Repeated flight missions"><figcaption><p>Flight mission training progress for a student pilot</p></figcaption></figure>
+
+### Gating progression
+
+By default a student may fly the missions of a course in any order. Two optional controls change that, both switched on per course and both off by default:
+
+* [**Stage Checks**](stage-checks.md) — group missions into ordered stages, each ending in a check the student must pass before flying the next stage.
+* [**Mission Authorizations**](mission-authorizations.md) — require an individual signature before a student may fly a particular mission, such as a first solo under EASA FCL.020.

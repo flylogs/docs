@@ -1986,3 +1986,214 @@ Generate a teaching activity report.
 | training | string | Yes | Training ID |
 | from | string | Yes | Start date |
 | to | string | Yes | End date |
+
+## Stage Checks
+
+Ordered blocks of flight missions, each ending in a check the student must pass before flying a later stage.
+
+Every endpoint below is inert unless the training has `stage_checks = 1`. Recording, overriding and voiding additionally require `user_group_id <= 135` **or** being the training's `manager_id`; a 403 is returned otherwise.
+
+### List stages
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/stages/index/{trainingId}.json`
+
+Returns the training's stages ordered by `(order, id)`.
+
+### Create a stage
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/stages/add/{trainingId}.json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| name | string | Yes | Stage name |
+| code | string | No | Short code, e.g. `S1` |
+| description | string | No | Free text |
+| order | integer | No | Position, defaults to 0 |
+| check_training_flight_id | string | No | Mission nominated as this stage's check |
+
+### Edit a stage
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/stages/edit/{id}.json`
+
+Accepts any of the fields above. Only the fields sent are changed.
+
+### Delete a stage
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/stages/delete/{id}.json`
+
+Soft-deletes the stage and detaches its missions (`training_stage_id` set to `NULL`). The missions themselves are not deleted.
+
+### Reorder stages
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/stages/reorder/{trainingId}.json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| ids[] | string[] | Yes | Every stage id, in the wanted order |
+
+Positions are rewritten in one transaction, so no two stages are left sharing an order.
+
+### Record a stage check
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/stage_checks/record.json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| trainings_user_id | string | Yes | Enrollment id |
+| training_stage_id | string | Yes | Stage being checked |
+| result | string | Yes | `SAT` or `UNSAT` |
+| pass | string | Yes | The acting user's password — re-authentication for the signature |
+| remarks | string | No | Free text |
+| user_training_flight_id | integer | No | Mission the check was flown on |
+
+Results are append-only. A re-check is a new row with `attempt + 1`; the latest non-voided attempt decides the student's state.
+
+The stored signature holds the signing user, timestamp, IP, browser and a keyed hash bound to that specific result, so a stamp cannot be altered or copied onto another record.
+
+### Override a stage
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/stage_checks/override.json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| trainings_user_id | string | Yes | Enrollment id |
+| training_stage_id | string | Yes | Stage to clear |
+| reason | string | Yes | Why the student may proceed without a pass |
+| pass | string | Yes | The acting user's password |
+
+Recorded as `result = OVERRIDE`. A request without a reason is rejected.
+
+### Void a result
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/stage_checks/void/{id}.json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| void_reason | string | Yes | Why the result is being withdrawn |
+
+Results are voided, never edited. A voided result stays in the history and the previous result decides the state again. Voiding an already-voided result returns 400.
+
+### Stage status
+
+<mark style="color:blue;">`GET`</mark> `/trainings/students/stage_status/{enrollmentId}.json`
+
+Readable by the enrolled student for their own enrollment, and by anyone who may manage the training.
+
+```json
+{
+  "stage_checks": 1,
+  "stages": [{ "TrainingStage": { "id": "…", "order": 1, "code": "S1", "name": "Presolo" } }],
+  "gate": {
+    "stages":   { "<stageId>": "OPEN | CHECK_DUE | COMPLETE | BLOCKED" },
+    "missions": { "<missionId>": "OK | BLOCKED_STAGE" }
+  },
+  "results": [{ "StageCheckResult": { "attempt": 1, "result": "UNSAT", "…": "…" } }]
+}
+```
+
+`results` includes voided rows — the audit trail is the point.
+
+**This endpoint reports; it does not enforce.** The refusal that actually stops a flight happens when the mission is written, and a blocked mission returns 400 with *"This mission is blocked: an earlier stage check has not been passed."*
+
+## Mission Authorizations
+
+A signed release for one student to fly one mission. Single-use: the flight that uses it consumes it. Inert unless the training has `stage_checks = 1` and the mission has a `require_authorization` level.
+
+`training_flights.require_authorization` is a **ceiling on `user_group_id`** — `NULL` means no authorization is needed, `170` lets flight instructors and everyone above them sign, `130` restricts it to company management. Because group ids descend in authority, a **higher number is the looser rule**.
+
+### Grant
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/mission_authorizations/grant.json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| trainings_user_id | string | Yes | Enrollment id |
+| training_flight_id | string | Yes | Mission being authorised |
+| pass | string | Yes | The signer's password — re-authentication for the signature |
+| limitations | string | No | Free text, e.g. `circuits only, wind below 15kt` |
+| remarks | string | No | Free text |
+| aircraft_id | integer | No | Restrict the release to one aircraft |
+
+403 when the caller's `user_group_id` does not clear the mission's level. 400 when the mission needs no authorization, or when an open grant already exists for that student and mission.
+
+The stored signature holds the signer, timestamp, IP, browser and a keyed hash bound to that grant. `granted_by_group_id` and `required_level` are stamped at grant time, so later changes to a user's group or the mission's level never rewrite what a past release meant.
+
+### Revoke
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/mission_authorizations/revoke/{id}.json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| revoke_reason | string | Yes | Why the release is being withdrawn |
+
+400 when the grant has already been used by a flight — that is history and cannot be withdrawn.
+
+### List
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/mission_authorizations/index.json` — open (unused, unrevoked) grants for the company.
+
+<mark style="color:blue;">`GET`</mark> `/trainings/mission_authorizations/pending/{enrollmentId}.json` — the full history for one enrollment, including used and withdrawn grants. Readable by the student for their own enrollment, and by instructors and above.
+
+### Consumption
+
+A grant is consumed when the mission row is written, and is **not** conditional on the mission being passed — a mission flown but failed still used the release. Three rules follow from that:
+
+* Re-saving the flight that consumed a grant is allowed (the grant records `consumed_flight_id`).
+* A *different* flight is refused; it needs its own signature.
+* Deleting or cancelling the flight restores the grant.
+
+### Blocked flights
+
+A refused mission opens one `mission_blocks` row per (enrollment, mission) and sends one urgent message to the people who can sign it. Repeated refusals reuse that row and send nothing.
+
+An hourly cron widens the audience one rung per `company_settings.training_block_escalation_hours` (default 4) while the block is unresolved: flight instructor → enrollment instructor → course tutor → student's supervisor → anyone in the company who clears the level. Rungs that cannot sign are skipped, never notified. Issuing the grant, flying the mission, or cancelling the flight resolves the block.
+
+## Course Approvals
+
+Recorded decisions over two subjects: `GRADUATION` (a `trainings_users.id`) and `REVISION` (a `training_revisions.id`). Only `GRADUATION` gates anything, and only while the course has `stage_checks = 1`.
+
+All actions require `user_group_id <= 135` or being the training's `manager_id`.
+
+### Queue
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/approvals/index.json` — everything `PENDING` in the company, oldest request first. A course manager (group > 135) sees only courses they manage.
+
+### Decide
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/approvals/decide/{id}.json`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| status | string | Yes | `APPROVED` or `REJECTED` |
+| pass | string | Yes | The approver's password |
+| decision_reason | string | On reject | Mandatory when rejecting |
+
+400 when the item was already decided. An approved `REVISION` is stamped with `approved_by/at` and a SHA-256 `snapshot_hash` of the course content; an approved `GRADUATION` releases the enrollment to complete.
+
+Graduation requests are created automatically: the first time a student's stages are all cleared, a `PENDING` row is opened. Repeating the check does not queue a second one.
+
+### Course change log
+
+Every structural edit is recorded in `training_changes`: the entity (`STAGE`, `MISSION`, …), its name **as it read at the time**, the action (`CREATED` / `UPDATED` / `DELETED`), a field-level `{field: {from, to}}` diff, and who made it. Each row is linked to the revision it belongs to.
+
+`GET /manager/trainings/trainings/view/{id}.json` returns the open revision with its `changes[]`, so an approver sees the list before deciding rather than approving a revision number.
+
+Two rules worth knowing:
+
+* **A no-op edit records nothing.** Re-saving a record without changing a field opens no revision and queues no approval.
+* **Only posted fields are compared.** A partial update is not treated as clearing everything it omitted.
+
+### Undoing a change
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/revert/{changeId}.json` — approvers only.
+
+Answers `200` with `result: false` and a plain-language `message` when the change cannot be undone. Those are business answers, not errors:
+
+* *"A later change to the same item has to be reverted first."*
+* *"That mission has already been flown by a student, so it cannot be removed."*
+* *"That stage still has missions assigned to it."*
+* *"This deletion was recorded before full snapshots were kept…"*
+
+`UPDATED` restores the recorded `from` values; a reorder restores the recorded id sequence; `CREATED` deletes the entity after an in-use check; `DELETED` restores the row from `training_changes.snapshot`.
+
+The revert is stamped on the change (`reverted_at`, `reverted_by`) so it cannot be applied twice, and it opens a revision of its own — an undo is a change to the course like any other.

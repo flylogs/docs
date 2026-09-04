@@ -51,17 +51,28 @@ After **10 failed login attempts**, further attempts are temporarily blocked for
 
 The limit is applied two ways at once:
 
-* **Per account** — repeated wrong passwords for your email address lock that address, no matter where the attempts come from.
+* **Per account, per network** — repeated wrong passwords for your email address *from the same internet connection* block that combination.
 * **Per network** — many failed attempts from the same device or internet connection are also blocked, even across different accounts.
 
-A **successful login immediately clears the limit** for your account. If you are locked out and cannot wait, you have two options that are **not** affected by the limit:
+Both are tied to where the attempts came from, so **someone else guessing at your email address from somewhere else cannot lock you out**. Your own sign-in from your own connection is unaffected by their attempts.
+
+A **successful login immediately clears the limit** for your account on the connection you signed in from. If you are locked out and cannot wait, you have two options that are **not** affected by the limit:
 
 * Reset your password with the [Forgotten password recovery procedure](#forgotten-password-recovery-procedure) above.
 * Sign in with a [passkey](account-security.md#passkeys), if you have one registered.
 
 {% hint style="info" %}
-This limit only applies to the **password** login. **Passkey** sign-in, entering your **2FA** code, and **switching between companies** once you are already signed in are never counted against it.
+This limit only applies to the **password** login. **Passkey** sign-in, entering your **2FA** code, and **switching between companies** once you are already signed in are never counted against it. 2FA codes have their own separate limit, described below.
 {% endhint %}
+
+### Verification code (2FA) attempt limit
+
+Wrong two-factor codes are limited too, so a correct password on its own is never enough to get in.
+
+* **Authenticator app (TOTP)** — after **10 wrong codes**, verification is blocked for **15 minutes** for that account, and the login page shows _"Too many failed verification attempts. Try again in 15 minutes"_. A correct code clears the counter immediately.
+* **Emailed code** — each emailed code is destroyed after **5 wrong tries**. Request a new code (start the login again) to get a fresh one.
+
+This limit is per account, and it is separate from the password limit above: being blocked on codes does not lock your password, and vice versa.
 
 ### Multiple company accounts
 

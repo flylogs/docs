@@ -105,8 +105,8 @@ Numbering follows the ICAO Doc 9859 probability scale: 5 is the most likely (`Fr
 | user_group_id | Access |
 |--------------|--------|
 | ≤ 110 | Full access: view all reports, edit any, delete |
-| 111–150 | View all reports, edit own / crew reports |
-| > 150 | View only own reports and `published` reports |
+| 111–150 | View all reports, edit own reports and reports they are the assigned reviewer of |
+| > 150 | View only own reports, reports of flights they crewed, and `published` reports; edit only own reports and reports they are the assigned reviewer of |
 
 > Regardless of `user_group_id`, a `draft` report is visible **only to its author**. Drafts never appear in another user's list or view, nor in any analytics/stats endpoint.
 
@@ -305,7 +305,9 @@ Full details for a single report including flight, aircraft, and reporter.
 }
 ```
 
-> `allowEdit` is `true` for managers (`user_group_id < 111`), the report creator, or any flight crew member, provided the report is not deleted.
+> `allowEdit` is `true` for managers (`user_group_id < 111`), the report creator, and the assigned reviewer (`reviewer_id`), provided the report is not deleted.
+>
+> Being crew of the reported flight grants **view** access but not edit: the crew of a flight are the subjects of a report about it, not its owners. (Crew used to be listed as editors here, but only `view` ever applied it — `edit` rejected the save with `You are not authorized to edit this report`. The two now share one rule and the stricter reading won.)
 
 > For managers (`user_group_id < 111`) the response also carries `report.SafetyReportChange` — the report's change history. The key is **omitted entirely** for every other user; see [Change History](#change-history).
 
@@ -409,7 +411,7 @@ Severity is determined by `type`:
 
 Update an existing safety report. The `id` can also be supplied in the request body as `SafetyReport.id`.
 
-Edit permission follows the same rules as `allowEdit` in the view endpoint. If the editing user is not the original report creator, the `events` and `actions` fields are protected and cannot be changed.
+Edit permission follows the same rules as `allowEdit` in the view endpoint — the two are decided by the same code, so a report the view endpoint reports as editable can always be saved. If the editing user is not the original report creator, the `events` and `actions` fields are protected and cannot be changed.
 
 **Event date/time.** As on create, `date` is accepted as an alias for `datetime` — post either. (Before this was fixed, `edit` accepted `date` and silently discarded it, so the event time could not be changed from the edit form.)
 
