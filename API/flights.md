@@ -1,5 +1,33 @@
 # Flights
 
+## Flight status
+
+Every flight carries a single `status` field describing where it sits in its lifecycle.
+It is the only lifecycle field on a flight: the legacy `draft` and `deleted` booleans
+have been removed from both the database and every API response, and are no longer
+accepted in requests.
+
+| Status | Meaning |
+|--------|---------|
+| `DRAFT` | Unconfirmed flight created directly, without a schedule. The default for a newly created flight. |
+| `SCHEDULED` | Unconfirmed flight created from a schedule booking. |
+| `DELAYED` | Computed at read time only, never stored: a `SCHEDULED` flight whose scheduled time is more than one hour past. |
+| `DISPATCHED` | Dispatched through the dispatch/FRAT flow, not yet confirmed. |
+| `LANDED` | Confirmed flight. Only `LANDED` flights count toward logbooks, aircraft hours, duty records, billing and reports. |
+| `CANCELED` | Removed while still unconfirmed (was `draft = 1`, `deleted = 1`). |
+| `DELETED` | Removed after having been confirmed (was `draft = 0`, `deleted = 1`). |
+
+Mapping from the old booleans, for clients migrating off them:
+
+| Old condition | Equivalent status filter |
+|---------------|--------------------------|
+| `draft = 0 AND deleted = 0` | `status = LANDED` |
+| `draft = 1 AND deleted = 0` | `status IN (DRAFT, SCHEDULED, DELAYED, DISPATCHED)` |
+| `deleted = 0` | `status NOT IN (CANCELED, DELETED)` |
+| `deleted = 1` | `status IN (CANCELED, DELETED)` |
+
+---
+
 ## List Flights
 
 <mark style="color:blue;">`GET`</mark> `/flights/load/page:{page}/from:{from}/to:{to}/aircraft:{aircraftId}/pilot:{pilotId}/base:{baseId}/flight_type:{typeId}/.json`
@@ -36,7 +64,7 @@ GET /flights/load/page:1/from:2025-01-01/to:2025-03-31/aircraft:/pilot:/base:/fl
       "Flight": {
         "id": "5678",
         "date": "2025-03-10",
-        "draft": false,
+        "status": "LANDED",
         "callsign": "EC-ABC",
         "departure_airport": "LEMD",
         "landing_airport": "LEBL",
@@ -149,8 +177,7 @@ Users with `user_group_id > 170` may only view flights they are involved in (cre
     "Flight": {
       "id": "5678",
       "date": "2025-03-10",
-      "draft": false,
-      "deleted": false,
+      "status": "LANDED",
       "callsign": "EC-ABC",
       "departure_airport": "LEMD",
       "landing_airport": "LEBL",
@@ -267,7 +294,7 @@ Users with `user_group_id > 170` may only view flights they are involved in (cre
 
 <mark style="color:green;">`POST`</mark> `/flights/cancel.json`
 
-Cancel (soft-delete) a flight record. The flight is marked as deleted and a `cancel` entry is added to its change history. There is **no date restriction** — a flight can be cancelled at any time, including flights dated in the past.
+Cancel (soft-delete) a flight record. The flight moves to `CANCELED` if it was still unconfirmed, or to `DELETED` if it had already been confirmed (`LANDED`), and a `cancel` entry is added to its change history. There is **no date restriction** — a flight can be cancelled at any time, including flights dated in the past.
 
 #### Request Body
 
@@ -286,7 +313,7 @@ The caller must satisfy **at least one** of the following, otherwise the request
 * Is a crew member of the flight — the **PIC** (`pic_id`), **SIC** (`sic_id`), or **Supervisor** (`supervisor_id`), or
 * Is the user who created the flight (`user_id`).
 
-Company Administrators, Operations Managers, and Compliance & Safety Managers hold these permissions by default. Note that the front-end only surfaces the Cancel action for **draft** flights; the endpoint itself does not restrict by draft/confirmed state.
+Company Administrators, Operations Managers, and Compliance & Safety Managers hold these permissions by default. Note that the front-end only surfaces the Cancel action for unconfirmed flights; the endpoint itself does not restrict by status.
 
 ---
 
@@ -294,11 +321,11 @@ Company Administrators, Operations Managers, and Compliance & Safety Managers ho
 
 <mark style="color:green;">`POST`</mark> `/flights/confirm/{id}.json`
 
-Confirm a draft flight (marks it `LANDED`, updates aircraft books, billing, and duty records). The flight must already have a block time, aircraft, and PIC. Requires the **Flight.confirm** company permission; when `require_flight_password` is enabled on the company, a `pass` field with the caller's password is also required.
+Confirm an unconfirmed flight (moves it to `status = LANDED`, updates aircraft books, billing, and duty records). The flight must already have a block time, aircraft, and PIC. Requires the **Flight.confirm** company permission; when `require_flight_password` is enabled on the company, a `pass` field with the caller's password is also required.
 
 #### Overlap check
 
-Confirmation is blocked when the flight's block times overlap another **confirmed** (non-draft, non-deleted) flight on the **same aircraft**. The response is `400` with the usual `message`, plus a **`conflicts`** array naming the blocking flight(s) so a client can link to them:
+Confirmation is blocked when the flight's block times overlap another **confirmed** (`status = LANDED`) flight on the **same aircraft**. The response is `400` with the usual `message`, plus a **`conflicts`** array naming the blocking flight(s) so a client can link to them:
 
 ```json
 {

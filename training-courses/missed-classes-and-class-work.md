@@ -37,9 +37,24 @@ A teacher can request class work (homework) from the class page's **Documents** 
 
 Once the register is signed, the request itself is frozen — it can't be turned on, changed or cancelled after that point. Students can still upload their work after signing, which is the point: class work is often finished after a missed class, not before it's caught up with. Each student only ever sees their own submissions; the teacher and any training manager see everyone's, to evaluate.
 
+**One file, replaceable until the deadline — or until it's graded.** Class work is a single file. A student who wants to hand in something different deletes what they uploaded and uploads again, as often as they like. Two things close that window, whichever comes first: the deadline passing, or the teacher grading the work. After either, the file is locked — what the teacher graded is what stays. The teacher and any training manager can still remove it if something has to go.
+
+While a class work request is open, the student's class page shows a yellow banner asking for the work. Once they've submitted, it turns green and says so instead of nagging — the banner reports the state rather than demanding an action.
+
+A student who submitted **nothing** by the deadline can still upload afterwards — that's the whole point of the missed-class flow. Work that arrives after the deadline is accepted and marked **Late** wherever it's shown, to the student and to the teacher alike. Extending the deadline afterwards removes the mark from anything the new deadline covers.
+
 <figure><img src="../.gitbook/assets/trainingsClassworkRequest.png" alt=""><figcaption><p>Requesting class work from the Documents tab.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/trainingsStudentsHomework.png" alt=""><figcaption><p>What the student sees: the brief, the deadline, and their own upload area. Students never see another student's file.</p></figcaption></figure>
+
+### Grading class work
+
+The teacher — or the subject's teacher, or any training manager — grades from the same **Documents** tab. The class work box lists every student on the register: their file (with who uploaded it, when, and a **Late** mark if it applies), a score out of 10, and a comment for the student.
+
+Students who handed nothing in still get a row, so a zero with an explanation is possible. Either the score or the comment is enough — an entirely empty grade isn't saved. Re-grading overwrites the previous mark rather than adding a second one.
+
+Saving a grade sends the student an in-app message with the score and the comment, linking back to the class. It's a message only — no email, no phone notification. The student also sees their grade on the class page, under their own submission. Nobody sees anyone else's mark.
+
 ### Justifying an absence
 
 A student marked **Absent** can submit a justification from the class page's **Attendance** tab — an explanation, a document, or both.
@@ -59,7 +74,7 @@ The class's teacher, or any training manager, reviews pending justifications fro
 
 -->
 {% hint style="info" %}
-Class work files and justification documents can't be deleted or moved once uploaded, by anyone, including managers. They're the evidence behind an attendance decision, so the record stays intact.
+A class work file can be deleted by the student who uploaded it, but only until the deadline passes or a teacher grades it — after either, it's locked. Justification documents can never be deleted by the student who submitted them, deadline or not: they're the evidence behind an attendance decision, so the record stays intact. The class's teacher, the subject's teacher and training managers can remove either kind at any time, for the cases where something has to go — a corrupt file, or work posted to the wrong class. No file can ever be moved to a different record.
 {% endhint %}
 
 ### Attended after the fact

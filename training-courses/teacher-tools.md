@@ -74,6 +74,16 @@ From the class page's **Documents** tab, a teacher can request class work (homew
 
 Once attendance is signed, the request is frozen — it can no longer be enabled, changed or cancelled. Students can still upload their work after signing, and the teacher and any training manager can review everyone's submissions from the same tab; each student only ever sees their own.
 
+Class work is one file per student. Students can replace theirs — delete, upload again — until the deadline passes or you grade it, whichever comes first; after either, it locks. Grading early is therefore a way to freeze a submission. Anything submitted after the deadline is still accepted and shown to you marked **Late**.
+
+### Grading class work
+
+The same **Documents** tab lists every student on the register with their submission — who uploaded it, when, and whether it was late — plus a score out of 10 and a comment for the student. Students who submitted nothing still get a row, so you can record a zero with an explanation. A score, a comment, or both: an empty grade isn't saved. Re-grading replaces the previous mark.
+
+Saving sends the student an in-app message with their score and your comment, linking back to the class. No email, no phone notification. Students see only their own grade.
+
+The subject's teacher and training managers can grade too — the same people who can see the whole roster's submissions.
+
 {% hint style="info" %}
 Class work is requested from the Documents tab, not while scheduling the class — see [Schedule a class or an exam](schedule-a-class-or-an-exam.md).
 {% endhint %}
@@ -83,7 +93,7 @@ Class work is requested from the Documents tab, not while scheduling the class �
 A student marked **Absent** can submit a justification — an explanation, a document, or both — from the class page's **Attendance** tab. The class teacher or any training manager reviews it there: **approve** it, which sets the student to **Absent (justified)**, or **reject** it, each with an optional note explaining the decision. A submission only gets one decision; if the student wants to make their case again, they submit a new one.
 
 {% hint style="info" %}
-Class work files and justification documents can't be deleted or moved once uploaded, by anyone — they're the evidence behind an attendance decision.
+A student can delete their own class work file to replace it, until the deadline passes or you grade it — never after. Justification documents can never be deleted by the student who submitted them. You and any training manager can remove either at any time, for a corrupt file or work posted to the wrong class. Nothing can be moved to a different record.
 {% endhint %}
 
 #### Student evaluation pop up window:

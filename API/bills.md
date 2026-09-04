@@ -12,7 +12,7 @@ Billing and wallet management. Requires a **non-free** company plan. Pilots need
 
 <mark style="color:blue;">`GET`</mark> `/bills/index/{userId}/{offset}.json`
 
-List wallet movement records for a pilot. Managers can view any pilot's bills; regular users (`user_group_id ≥ 150`) see only their own. Linked flight info is included if the flight is not deleted.
+List wallet movement records for a pilot. Managers can view any pilot's bills; regular users (`user_group_id ≥ 150`) see only their own. Linked flight info is included unless the flight's `status` is `CANCELED` or `DELETED`.
 
 #### Query Parameters
 
@@ -163,7 +163,7 @@ Create a manual wallet transaction for one or more pilots. If `id` is provided, 
 
 <mark style="color:green;">`POST`</mark> `/bills/flight.json?id={flightId}`
 
-Retrieve flight billing data (GET) or create/update a flight bill (POST). Flight must be confirmed and not deleted.
+Retrieve flight billing data (GET) or create/update a flight bill (POST). Flight must be confirmed (`status = LANDED`).
 
 #### Query Parameters
 

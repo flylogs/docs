@@ -61,11 +61,17 @@ List active uploads for a given model record. Scoped to the authenticated user's
       "width": "1920",
       "height": "1080",
       "active": true,
-      "expiration": null
+      "expiration": null,
+      "created": "1788524764",
+      "user_name": "Martha Smith"
     }
   ]
 }
 ```
+
+`created` (unix seconds, a `double` — microsecond precision) and `user_name` (the uploader's full name, `null` when the user no longer resolves) are returned for every tag, so a shared list can be attributed without a second request. Resolving the names costs one extra query per page, and none when the page is empty.
+
+Rows tagged `SessionClasswork` or `SessionJustification` additionally carry `deadline` (unix, or `null`) and `late` (boolean) — see [trainings.md](trainings.md) § Session Uploads.
 
 ---
 

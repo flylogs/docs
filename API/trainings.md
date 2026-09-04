@@ -30,7 +30,11 @@
 > (`id`, `session_student_id`, `upload_id`, `text`, `status`
 > `ENUM('pending','approved','rejected')`, `reviewed_by`, `reviewed_at`,
 > `review_note`, `created`, `modified`) backs **Justifications** / **Submit
-> Justification** / **Review Justification** below.
+> Justification** / **Review Justification** below. A new
+> `session_classwork_grades` table (`id`, `session_student_id` **UNIQUE**,
+> `upload_id`, `score` `decimal(3,1)`, `feedback`, `graded_by`, `graded_at`,
+> `created`, `modified`) backs **Classwork Grades** / **Rate Classwork**
+> below.
 
 ## My Trainings
 
@@ -415,9 +419,9 @@ Compact progress + attendance roll-up for an enrollment. Cheap to call (no neste
 - `theory.attendance` — derived from `Training::getAttendance`. `given` = `session_students.invited = 1` rows whose `sessions.training_activity` is subject-scoped and `sessions.datetime < now()`. `taken` = subset where `attended = 1`.
 - For `Training.type == "DISTANCE"` the `attendance` block mirrors `progress` (no live sessions exist for distance training).
 - `flight` is `null` when `Training.flights == false`.
-- `flight.progress` — `total` = count of `TrainingFlight` templates in the training. `completed` = distinct templates with at least one `UserTrainingFlight.completed = 1` row (non-draft, non-deleted flight). Same logic as `Training.FlightProgress` in `My Trainings`.
+- `flight.progress` — `total` = count of `TrainingFlight` templates in the training. `completed` = distinct templates with at least one `UserTrainingFlight.completed = 1` row (flight `status = LANDED`). Same logic as `Training.FlightProgress` in `My Trainings`.
 - `flight.attendance` — per-mission attempt counts across all `user_training_flights` for the enrollment (each row = one attempt). `passed = sum(completed = 1)`. Useful for "X attempts / Y passes" badges.
-- `flight.hours.planned` = `SUM(TrainingFlight.hours)`. `flight.hours.flown` = `SUM(Flight.block_time) / 3600` over non-draft, non-deleted flights linked through `user_training_flights`. Rounded to one decimal.
+- `flight.hours.planned` = `SUM(TrainingFlight.hours)`. `flight.hours.flown` = `SUM(Flight.block_time) / 3600` over flights with `status = LANDED` linked through `user_training_flights`. Rounded to one decimal.
 - `status` mirrors `TrainingsUser.status` — one of `ACTIVE`, `COMPLETED`, `STOPPED`, `FAILED`, `EXPELLED`. `status_reason` is the free text a manager gave when closing the enrollment, `null` otherwise. See [Enrollment status](#enrollment-status).
 
 #### Errors
@@ -868,6 +872,11 @@ Response `class` payload contains:
   - `TrainingActivity.Exam` (when `kind=EXAM`) — includes `type` and `access_mode`, so the session page knows to render the student exam-taking panel for a `SCHEDULED` online exam.
 - `attendances` — `ActivityProgress` rows for the session (scoped to the requesting user unless teacher/manager).
 
+Alongside `class`, the response carries:
+
+- `classwork_submitted` — `true` when the requester has an active `SessionClasswork` upload of their own on this session. One count query; lets a client render the homework state without waiting on the uploads list.
+- `classwork_grade` — **the requester's own** homework grade for this session, or `null` when they have not been graded (or are not on the roster). `{ score: 0.0-10.0 | null, feedback: string | null, graded_at: int }`. Scoped by construction: the roster row is resolved by (session, caller), so it can never return another student's mark. This exists because students are ACL-denied the Onsite sub-actions and so cannot call **Classwork Grades** — it is the only way a student reads their own grade. Reviewers get their own row here too, and use **Classwork Grades** for the roster.
+
 ### Attendance
 
 <mark style="color:blue;">`GET`</mark> `/trainings/onsite/attendance/{sessionId}/{teacherParam}.json`
@@ -1147,6 +1156,57 @@ The message `redirect` field is `/trainings/onsite/class/{sessionId}`. Notificat
 
 Remove digital signature from a class.
 
+### Classwork Grades
+
+<mark style="color:blue;">`GET`</mark> `/trainings/onsite/classwork_grades/{sessionId}.json`
+
+List the homework grades for a session, scoped by role.
+
+**Access.** Company-scoped (`404 Training Session not found`). A reviewer — the session's or subject's teacher, or a manager (`user_group_id <= 140`) — sees every grade on the session. Anyone else is scoped to their own roster row.
+
+**Students cannot call this endpoint.** On deployments where the Onsite sub-actions are ACL-restricted (the default), a student gets `403 ACL_DENIED` here exactly as they do for **Justifications**. A student's own grade is therefore carried on the **Class** payload instead, as `classwork_grade` — see below. Clients should read a student's mark from there and reserve this endpoint for the teacher's roster view.
+
+#### Response
+
+`grades[]`, ordered by `graded_at DESC`:
+
+| Field | Description |
+|-------|-------------|
+| id | `SessionClassworkGrade.id` (UUID) |
+| user_id | The graded student |
+| upload_id | The upload that was graded, or `null` when the student submitted nothing |
+| score | `0.0`–`10.0`, or `null` for feedback-only grading |
+| feedback | Teacher's comment, or `null` |
+| graded_by | User id of the reviewer who graded |
+| graded_at | Unix timestamp |
+
+### Rate Classwork
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/rate_classwork.json`
+
+Grade one student's homework.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| session_id | string | Yes | `TrainingSession.id` |
+| user_id | int | Yes | The student being graded |
+| score | decimal | No | `0`–`10`, one decimal. Rounded to one decimal server-side (`7.46` → `7.5`). Empty clears a previously set score |
+| feedback | string | No | Comment shown to the student |
+
+**Access.** Reviewer only — the session's or subject's teacher, or a manager (`user_group_id <= 140`). A non-reviewer gets `404 Not authorized to grade this class`, the same response as a session that does not exist, so a caller cannot probe for sessions in another company.
+
+**Guards.** `400 Score must be a number between 0 and 10` for a non-numeric or out-of-range score (validated before any write, so an invalid value never reaches the `decimal(3,1)` column). `400 A grade needs a score or feedback` when both are empty. `404 Student is not on this session roster` when the `user_id` has no `session_students` row on this session.
+
+**Upsert.** Keyed on the roster row (`session_classwork_grades.session_student_id` is `UNIQUE`), so re-grading overwrites and two reviewers saving at once cannot produce two grades. `upload_id` is re-resolved on every save to whatever active `SessionClasswork` upload the student currently has, or `null`.
+
+**Side effect — student notification.** Every successful save sends the student a **non-urgent** in-app message (no push, no email) with the training, session, score and feedback, linking to the class page. A re-grade notifies again. Notification failure is logged and does not fail the request.
+
+#### Response
+
+```json
+{ "result": true, "grade": { "id": "...", "user_id": 490, "upload_id": null, "score": 8.5, "feedback": "...", "graded_by": 618, "graded_at": 1788517402 } }
+```
+
 ### Justifications
 
 <mark style="color:blue;">`GET`</mark> `/trainings/onsite/justifications/{sessionId}.json`
@@ -1218,9 +1278,30 @@ Approve or reject a pending justification.
 
 Classwork submissions and absence-justification evidence go through the generic upload endpoints (see [uploads.md](uploads.md)), tagged with one of two reserved `Upload.model` values: `SessionClasswork` and `SessionJustification`. Both are keyed on `Upload.foreign_key = sessions.id` — not the student — with the uploader identified separately via `Upload.user_id`.
 
-**Immutable, forever, for everyone.** Once a row carries either tag it can never be deleted (`GET /uploads/delete/{id}.json` → `403 This file can not be deleted.`) and never re-tagged to a different model/foreign_key (`POST /uploads/confirm/{id}.json` → `403 This file can not be reassigned.`) — by anyone, student, teacher, or manager included. A student may add new files but never remove or retarget what they already submitted; the submission record must stay intact for a teacher to reconsider an absence against it.
+**Never re-tagged.** Once a row carries either tag its model/foreign_key are frozen for everyone (`POST /uploads/confirm/{id}.json` → `403 This file can not be reassigned.`).
 
-**Write gate.** The uploader must be on the session roster (`session_students.user_id`), else `403 Uploads are not enabled for this session`. `SessionClasswork` additionally requires `sessions.allow_classwork_upload = true` for that session; `SessionJustification` has no further condition. Enforced on every path that can attach one of these tags: `POST /uploads/sign.json` (before the presigned S3 PUT is issued — gating at `complete()` would be too late, the object is already in S3 by then), `POST /uploads/create.json`, and `POST /uploads/confirm/{id}.json`.
+**Delete rules.** `GET /uploads/delete/{id}.json` → `403 This file can not be deleted.` unless one of:
+
+| Caller | `SessionClasswork` | `SessionJustification` |
+|--------|--------------------|------------------------|
+| Reviewer — session teacher, subject teacher, or manager (`user_group_id <= 140`) | Always | Always |
+| The student who submitted the row | Until `sessions.classwork_deadline` passes **or** the work is graded, whichever is first | Never |
+| Anyone else | Never | Never |
+
+A student replaces their homework by deleting it and uploading again. Two independent locks close that window, either one being enough: the deadline passing, and a grade existing for that student on that session (any row in `session_classwork_grades` for their roster row). A grade locks the file even inside the window — replacing it afterwards would leave the teacher's mark attached to work nobody graded. A reviewer can still delete a graded file; redoing the grade is theirs to do. Absence evidence keeps the older rule — a student may add to it but never withdraw it. The reviewer lookup ignores the ownership narrowing that normally restricts `user_group_id > 170` to their own rows, so a session teacher who is themselves a line-pilot account can delete a student's submission rather than silently getting `{"result": false}` with HTTP 200.
+
+**Write gate.** The uploader must be on the session roster (`session_students.user_id`), else `403 Uploads are not enabled for this session`. `SessionJustification` has no further condition — several pieces of evidence for one missed class are ordinary. `SessionClasswork` additionally requires:
+
+- `sessions.allow_classwork_upload = true` for that session, and
+- **no active `SessionClasswork` upload of their own on that session** — homework is one file. A student holding a submission must delete it first (subject to the deadline above); a second upload is `403 Uploads are not enabled for this session`.
+
+The deadline does **not** gate uploading: a student who submitted nothing may still submit after it, and that submission arrives flagged late (see **Late submissions** below) rather than refused.
+
+Enforced on every path that can attach one of these tags: `POST /uploads/sign.json` (before the presigned S3 PUT is issued — gating at `complete()` would be too late, the object is already in S3 by then), `POST /uploads/create.json`, and `POST /uploads/confirm/{id}.json`. `POST /uploads/complete/{id}.json` re-runs the same gate at activation: the one-file limit counts active rows, so two `sign()` calls made before either completed would both have seen zero. A row refused there is deleted along with its S3 object.
+
+**Late submissions.** `GET /uploads/index/{model}/{foreignKey}.json` adds two fields to every row carrying one of these tags: `deadline` (the governing `classwork_deadline` / `justification_deadline`, or `null`) and `late` (`true` when the row's `created` second is after it). Both are derived per request, never stored — a teacher who extends the deadline afterwards un-flags the submissions the extension now covers. Nothing about `late` refuses or restricts anything; it is a label.
+
+**Uploader identity.** The same listing returns `created` (unix, from the row) and `user_name` (the uploader's full name, or `null` when the user no longer resolves) on every upload row, for all tags — so a roster's submissions can be attributed without a second request.
 
 **Read scope.** Enforced on `GET /uploads/index/{model}/{foreignKey}.json`, `GET /uploads/download/{id}.json` and `GET /uploads/proxy/{id}.json`. A plain student sees only their own uploads for the session. The session's own teacher, the subject's teacher, or a manager (`user_group_id <= 140`) see every upload on the session. Company-scoped: a session belonging to another company (or missing) is refused the same way as a genuinely absent one — `404 Training Session not found` from `index`, plain `404` from `download`/`proxy` — so a caller can't distinguish "wrong company" from "doesn't exist".
 
