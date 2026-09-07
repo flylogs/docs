@@ -526,6 +526,33 @@ Removes one of the authenticated user's watchlist entries. Users can only delete
 
 ---
 
+## Schedule management scope (`/schedules/edit.json`, `/schedules/delete.json`)
+
+Who may edit or delete a booking **created by somebody else** depends on the user group and on the **ALLOW FI SCHEDULE MANAGEMENT** company setting (`schedule_allow_fi_management`, under *Company settings > Schedule*, returned by `GET /companies/settings.json`).
+
+The threshold is the *schedule manager limit*: `150` normally, raised to `170` while the setting is enabled.
+
+| User group | `schedule_allow_fi_management = 0` | `schedule_allow_fi_management = 1` |
+|-----------|-----------|-----------|
+| Chief Pilot and above (`user_group_id <= 150`) | Full edit and delete on any booking of the company | Full edit and delete on any booking of the company |
+| Flight Instructor (`user_group_id` 151–170) | Own bookings only (own = `Schedule.user_id`) | Full edit and delete on any booking of the company, including bookings created by other instructors |
+| Captain / Pilot / Student (`user_group_id > 170`) | Own bookings only | Own bookings only |
+
+Users at or below the limit are not subject to any of the crew-level restrictions:
+
+* the record lookup is not narrowed to `Schedule.user_id = <me>`, so a booking created by another user resolves instead of returning `404 Not Found`;
+* the "you must be the aircraft owner or PIC/SIC/supervisor" check is skipped (`403 You cannot edit this booking.`);
+* the SIC anticipation window (`schedule_flight_cancellation_min_time`) is not enforced on edit;
+* on delete, neither the 12-hour anticipation rule nor the "PIC already confirmed" rule applies.
+
+Company scoping still applies to everyone: a booking belonging to another company is always `404 Not Found`.
+
+The same limit already decides who gets the editable master calendar from `GET /schedules/get.json` and the unfiltered `POST /manager/schedules/review.json` list, so an instructor who can see the whole schedule while the setting is on can also act on it.
+
+{% hint style="info" %}
+`/schedules/cancel.json` is the crew-facing cancel endpoint and is **not** affected: it always requires the caller to be the booking's creator, PIC or SIC. Managers cancel through `/manager/schedules/cancel.json`, which is ACL-restricted and not granted to group 170.
+{% endhint %}
+
 ## Self-booking role behaviour (`/schedules/edit.json`)
 
 The schedule create/edit endpoint applies these role rules to self-bookings (`self_schedule = 1`):

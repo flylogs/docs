@@ -4,6 +4,21 @@ The **Schedule Manager** is the main working view for building and editing your 
 
 This page is reserved for **schedule management roles** — Company Managers, Roster Managers and Aircraft Managers. Members with a Flight Instructor rank (or pilots, depending on your company settings) may see the calendar in a **Read‑only** mode, where flights are visible but cannot be created or edited. Members without any schedule access are blocked from the page.
 
+### Who can edit the schedule
+
+| Rank | Access |
+|------|--------|
+| Company Administrator, Operations Manager, Crew Scheduling, Flight Dispatcher, Chief Pilot and other management ranks | Full edit of every booking in the company |
+| Flight Instructor | Depends on the **FI Schedule Management** setting — see below |
+| Captain, Pilot, Student Pilot | No access to this page (their bookings are made from the Schedules page) |
+
+**FI Schedule Management** lives in *Company settings > Schedule* (“Allow Flight instructors to manage the schedule and book flights for other pilots”).
+
+* **Off** — Flight Instructors get the calendar in **Read‑only** mode: bookings are visible but cannot be created, moved or deleted.
+* **On** — Flight Instructors work the calendar exactly like a manager. They can create bookings for other pilots and **edit, move, resize and delete any booking of the company, including bookings created by another instructor or by a manager**. The anticipation limits that apply to crew (the cancellation window, and the rule that stops a SIC removing a booking the PIC already accepted) do not apply to them while they are managing the schedule.
+
+Bookings of other companies are never reachable, whatever the setting.
+
 {% hint style="info" %}
 All times on this page are shown in your **company time zone**, displayed in the page header.
 {% endhint %}
