@@ -64,14 +64,28 @@ If the profile has custom rule overrides, a yellow callout lists which fields ha
 
 When a duty record is saved, Flylogs:
 
-1. Finds all flights for that pilot on that day.
-2. Takes the **earliest flight departure** as the start of the FDP (minus any commute time configured in Duty Limits settings).
-3. Takes the **latest flight arrival** as the end of the FDP.
+1. Finds the pilot's flights for that day, separating the ones they **operated** (CM1 or CM2) from the ones they only **supervised** (the third crew seat).
+2. Takes the **start of the duty period** as the start of the FDP (minus any commute time configured in Duty Limits settings).
+3. Takes the **latest arrival of a flight they operated** as the end of the FDP.
 4. Looks up the regulatory FDP limit from the active profile using:
    - The **report time** (local hour of FDP start)
-   - The **number of sectors** flown
+   - The **number of sectors** they operated
 5. Flags the record as a **violation** if the actual FDP exceeds the limit.
 6. Flags **WOCL** if the duty period overlaps the Window of Circadian Low (02:00–05:59 local).
+
+### Duty is not FDP
+
+The two are counted differently, and supervision is where they part company.
+
+**Duty** covers everything the operator asks of the crew member. Occupying any of the three crew seats on a flight — including the Supervisor seat, from the ground — puts that flight inside their duty period, and therefore into the daily, weekly and monthly duty totals (ORO.FTL.210 cumulative limits).
+
+**FDP** is narrower. It ends at the last landing of a flight the person actually operated, and a flight they only supervised is not a **sector**: ORO.FTL.105(23) defines a sector as a segment of an FDP, from the aircraft first moving for take-off until it comes to rest. So supervised flights never shorten their maximum FDP the way extra sectors do.
+
+Supervision does reach the FDP in one case: when it happens **before** a flight the person operates that day. It has already opened their duty period, so the FDP is measured from there — which is the conservative and correct reading.
+
+* Supervises 07:00–08:00, then flies 09:00–11:00 → one FDP from 07:00 (less commute) to 11:00, **one** sector.
+* Flies 09:00–11:00, then supervises 15:00–17:00 → FDP still ends at 11:00; duty runs to 17:00.
+* Supervises three solo flights and flies none → duty for the whole period, **no FDP** at all.
 
 ---
 

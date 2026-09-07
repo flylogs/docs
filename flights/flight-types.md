@@ -90,7 +90,17 @@ The instructor then gets the duty period for that day and no flight hours at all
 
 > **Do not put the supervising instructor in CM2.** A CM2 whose classification is anything other than *None* logs block time — including the *Supervisor* classification, which is reported on its own line but still counts as time flown. That is the usual reason a ground-based instructor ends up with hours they never flew.
 
-> **Known limitation:** the per-day **number of flights** in the activity-times report counts the CM1 and CM2 seats only, so a flight the instructor only supervised will show duty but will not raise their flight count for the day. The FDP sector count does include it.
+**What the supervising instructor gets, and does not get:**
+
+| | Supervised flight counts? |
+|---|---|
+| Logbook hours | No — *Supervisor Role* is *None* |
+| Duty period, and the weekly / monthly duty totals | **Yes** |
+| FDP (flight duty period) | Only if the supervision happened **before** a flight they themselves operated that day |
+| Sectors, which shorten the maximum FDP | No — a flight watched from the ground is not a sector |
+| The per-day **number of flights** in the activity-times report | No — that column counts the CM1 and CM2 seats only |
+
+See [FTL Compliance & Forecast](../schedules/ftl-compliance-forecast.md) for how duty and FDP differ.
 
 ### Default flight condition
 

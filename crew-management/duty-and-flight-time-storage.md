@@ -21,6 +21,14 @@ Flylogs can automatically calculate your crew duty times based on a few paramete
 
 If the system is set for automatic calculation, our automatic task will check daily for the previous day flights and calculate each pilot´s duty time based on database records and the company configured settings before and after mandatory times.
 
+#### Which flights count toward a pilot's duty
+
+Every flight the pilot is on the crew of counts — **all three seats**, CM1, CM2 and the third seat (shown as *Supervisor*, *Examiner* or *Specialist* depending on your company type). The duty period is stretched to cover the earliest departure and the latest arrival among them, plus the commute times.
+
+This is independent of the flight type's time classification: a seat set to log **no** hours still produces duty. An instructor who supervises a student's solo flight from the ground gets the duty for it and none of the flight time.
+
+Flight duty period (FDP) is counted more narrowly than duty — see [FTL Compliance & Forecast](../schedules/ftl-compliance-forecast.md#duty-is-not-fdp).
+
 The pilots can have the option to enter/modify these times if the company allows them to do so.
 
 In that case, the pilot will see this panel in his/her welcome and profile pages:

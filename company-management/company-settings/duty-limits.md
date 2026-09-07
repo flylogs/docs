@@ -44,7 +44,7 @@ FTL Compliance requires a **Premium** or **Unlimited** subscription.
 
 The **FTL Compliance** section (right column) enables automatic Flight Duty Period (FDP) calculation against a recognised regulatory scheme — EASA ORO.FTL, FAA 14 CFR Part 117, or a custom set of limits.
 
-* **FTL enabled** — activates FDP calculation on every duty record. When a record is saved, the system calculates the FDP from the pilot's flights that day and compares it against the limit for that report time and number of sectors. Violations are flagged in red across duty reports and the pilot view.
+* **FTL enabled** — activates FDP calculation on every duty record. When a record is saved, the system calculates the FDP from the flights the pilot **operated** that day and compares it against the limit for that report time and number of sectors. Flights they only supervised count as duty but are not sectors — see [Duty is not FDP](../../schedules/ftl-compliance-forecast.md#duty-is-not-fdp). Violations are flagged in red across duty reports and the pilot view.
 * **Notify crew** — sends the pilot an automatic message when a violation is detected.
 
 **FTL Profiles** define which regulatory scheme applies and from when. Click **Add** to create a profile, choose the scheme (`ORO.FTL`, `14 CFR Part 117`, or `Custom`), and set an effective date. The profile active as of the duty record date is the one used for limit lookups. Multiple profiles can coexist to handle regulatory transitions.
