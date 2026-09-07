@@ -57,6 +57,18 @@ They also won't appear on this training's student report or progress pages, sinc
 <figure><img src="../.gitbook/assets/trainingsNotEnrolledInvitee.png" alt=""><figcaption><p>A "Not enrolled" invitee on a class register, shown read-only.</p></figcaption></figure>
 
 -->
+#### Marking a training as completed, and the completion date
+
+Most courses complete themselves: as soon as the last lesson, exam and flight mission is done, the enrollment is closed automatically and the certificate becomes available. When you need to close one by hand — a course finished on paper, or a student who finished before you set the course up in Flylogs — open their training progress page, click "**Manage enrollment**" and choose "**Mark as completed**".
+
+Flylogs then asks you for the **completion date**, prefilled with the date the records say the student actually finished: the latest of their last completed lesson, last passed exam and last completed flight mission. Change it if the real date was different.
+
+That date matters, because it is the date printed on the certificate and the date its expiry is counted from. A student who finished on a Thursday but is only marked completed two weeks later still gets a certificate dated that Thursday, valid for the full period from then — not one dated the day you pressed the button.
+
+The date cannot be in the future, and cannot be earlier than the day the student was enrolled. Where nothing has been recorded for the student yet, the field simply defaults to today.
+
+**Who can do this:** company managers. Instructors, students and external auditors cannot mark an enrollment as completed or change its completion date.
+
 #### Enrollment status: stopping, failing or expelling a student
 
 Not every enrollment ends with a pass. When a student quits, is removed from the course, or does not pass, you can **close the enrollment without deleting any of their work** — every lesson, exam attempt and flight mission stays on record.

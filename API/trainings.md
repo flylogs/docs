@@ -1651,6 +1651,10 @@ Retrieve students with filtering. All filter parameters optional (use empty stri
 
 Retrieve full student enrollment details.
 
+#### Suggested completion date
+
+`TrainingsUser.completion_suggested_at` (unix seconds, or `null`) is the date the records say the student actually finished — the latest of their last completed activity, last passed exam and last completed flight mission, clamped between the enrollment date and now. It is derived on every read, never stored, and is there to prefill the completion-date field of a manual force-complete (`POST /manager/trainings/students/finish/{enrollmentId}.json`, field `completed_at`). `null` means nothing has been recorded for this student yet, in which case a client should default the field to today.
+
 #### Attendance Status Breakdown
 
 For a non-`DISTANCE` training, the response includes a top-level `training.AttendanceStatus` object — per-status **session** counts for this student in this training, sourced from `Training::getAttendanceStatusBreakdown($trainingId, $userId)`. It is keyed by `users.id`, **not** the enrollment (`TrainingsUser.id`) id — attendance status lives on `session_students`, which is keyed by user, and a roster row can exist without any enrollment at all.
@@ -1843,6 +1847,7 @@ Close or reopen an enrollment without deleting any progress. Sent as `applicatio
 |-------|------|----------|-------------|
 | status | string | Yes | `ACTIVE`, `COMPLETED`, `STOPPED`, `FAILED` or `EXPELLED`. May also be passed as a second URL segment (`.../status/{enrollmentId}/STOPPED.json`). |
 | reason | string | No | Free text, max 255 chars. Stored in `TrainingsUser.status_reason` and included in the student's notification. |
+| completed_at | int or string | No | `COMPLETED` only: the date the student actually finished, as unix seconds or `YYYY-MM-DD` (a date-only value is anchored at 12:00 UTC). Omitted, the server derives it from the recorded progress — the latest of the last completed activity, passed exam and completed mission — and falls back to now when nothing was ever recorded. Also accepted as `completion_date`. The same field is accepted by `POST /manager/trainings/students/finish/{enrollmentId}.json`. |
 
 #### Access
 
@@ -1853,6 +1858,7 @@ Close or reopen an enrollment without deleting any progress. Sent as `applicatio
 #### Side effects
 
 - Writes `status`, `status_reason`, `status_changed` (unix) and `status_changed_by` (user id), appends the change to `TrainingsUser.notes`, and inserts a `trainings_user_status_changes` row (see [Status history](#status-history)).
+- `COMPLETED` stamps `status_changed` with the completion date — supplied, derived or now — and writes `TrainingsUser.validity` as that date plus `Training.validity` days (null when the training has no validity period). `status_changed` is the completion date the certificate is issued for; `modified` is only the row's last edit and must not be read as a finish date. `ACTIVE` (a reopen) clears `validity`; the terminated statuses leave it alone.
 - Notifies the student, worded per status — completion keeps the original congratulations message, the closing statuses say what happened and quote `reason` when given, and `ACTIVE` announces the enrollment was reopened. The message is flagged **urgent**, so on top of the in-app message and push notification the student is emailed, provided their address is confirmed and `user_credentials.alerts = 1`. Emails count against the company's send quota.
 - No progress row is created, modified or deleted.
 
@@ -1870,7 +1876,7 @@ Close or reopen an enrollment without deleting any progress. Sent as `applicatio
 
 | Status | When |
 |--------|------|
-| `400 Bad Request` | Not a POST, missing enrollment id, or a `status` outside the five allowed values. |
+| `400 Bad Request` | Not a POST, missing enrollment id, a `status` outside the five allowed values, or a `completed_at` that is unparseable, in the future, or earlier than the enrollment date. |
 | `404 Not Found` | Enrollment not found, or training/student outside the caller's company. |
 
 ---
@@ -1908,7 +1914,7 @@ There are two boolean training-level flags that govern automatic completion beha
 
 | Field | Description |
 |-------|-------------|
-| `Training.auto_finish` | When `1`, every write to `ActivityProgress` or `UserTrainingFlight` triggers a re-evaluation of the enrollment. If all activities AND all flight missions are complete, `TrainingsUser.status` is set to `COMPLETED` and `TrainingsUser.validity` is stamped with `now + Training.validity * DAY` (i.e. `Training.validity` is the certificate lifetime in **days**). |
+| `Training.auto_finish` | When `1`, every write to `ActivityProgress` or `UserTrainingFlight` triggers a re-evaluation of the enrollment. If all activities AND all flight missions are complete, `TrainingsUser.status` is set to `COMPLETED`, `TrainingsUser.status_changed` is stamped with the completion date and `TrainingsUser.validity` with `completion date + Training.validity * DAY` (i.e. `Training.validity` is the certificate lifetime in **days**). |
 | `Training.allow_auto_restart` | When `1`, on a **DISTANCE** training, students can self-serve a lesson reset via `POST /trainings/lessons/reset.json` (see above) once they've exhausted lesson-gate exam attempts without passing. |
 
 ### Completion rule (used by `TrainingsUser::checkTrainingFinished`)
@@ -1917,7 +1923,7 @@ An enrollment auto-completes (`status` `ACTIVE` → `COMPLETED`) when **all** of
 
 1. The training's date window allows it: `Training.start <= today <= Training.end` (NULL bounds are treated as open-ended).
 2. `Training::getProgress(training_id, enrollment_id).finished == true` — every mandatory activity has `ActivityProgress.value = 1`, and every mandatory lesson-gate exam has been passed.
-3. **Flights** (applies to every training type that has flight missions, not just DISTANCE): for every `TrainingFlight` row attached to the training there is at least one `UserTrainingFlight` row with `completed = 1` scoped to this enrollment. A training with zero `TrainingFlight` rows passes this clause trivially.
+3. **Flights** — only when `Training.flights = 1`. Then, for every `TrainingFlight` row attached to the training there is at least one `UserTrainingFlight` row with `completed = 1` scoped to this enrollment (this applies to every training type that has flight missions, not just DISTANCE). A training with zero `TrainingFlight` rows passes this clause trivially, and so does one whose flight section is switched off: turning `Training.flights` off does not delete the `training_flights` rows, and those leftovers are shown nowhere and cannot be flown, so they no longer block completion.
 
 If `Training.auto_finish = 0`, the check still works when called manually (e.g. admin recompute), but it is **not** invoked automatically on writes.
 
@@ -1926,6 +1932,7 @@ Frontend implications:
 - After a successful `POST /trainings/lessons/complete.json`, `POST /trainings/exams/finish.json` or any UserTrainingFlight write, re-fetch `/trainings/trainings/view/{enrollmentId}.json` to see whether `TrainingsUser.status` flipped to `COMPLETED`. Don't rely on a separate "did it finish?" call.
 - The certificate endpoint only succeeds once `status = 'COMPLETED'` is persisted — there is no "force compute" query string.
 - Only an `ACTIVE` enrollment can auto-complete. A `STOPPED` / `FAILED` / `EXPELLED` one is skipped and never gets its `validity` stamped.
+- Read the completion date from `TrainingsUser.status_changed`, never from `TrainingsUser.modified`: `modified` is the row's last edit and moves whenever anything touches the enrollment. Legacy rows completed before `status_changed` existed carry `null`, which is the only case where `modified` is a reasonable fallback.
 - Surface both flags (`Training.auto_finish`, `Training.allow_auto_restart`) in the training detail view so the UI can decide whether to show a "Reset lesson" button and whether to expect automatic finishing.
 
 ---
