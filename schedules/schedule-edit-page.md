@@ -17,7 +17,7 @@ This page is reserved for **schedule management roles** — Company Managers, Ro
 * **Off** — Flight Instructors get the calendar in **Read‑only** mode: bookings are visible but cannot be created, moved or deleted.
 * **On** — Flight Instructors work the calendar exactly like a manager. They can create bookings for other pilots and **edit, move, resize and delete any booking of the company, including bookings created by another instructor or by a manager**. The anticipation limits that apply to crew (the cancellation window, and the rule that stops a SIC removing a booking the PIC already accepted) do not apply to them while they are managing the schedule.
 
-Bookings of other companies are never reachable, whatever the setting.
+Bookings of other companies are never reachable, whatever the setting. The setting also adds the **Schedule > Edit** entry to the instructor's menu; it does not open Schedule review, Availabilities or Cancellations, which remain management-only pages.
 
 {% hint style="info" %}
 All times on this page are shown in your **company time zone**, displayed in the page header.

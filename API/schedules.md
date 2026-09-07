@@ -547,7 +547,9 @@ Users at or below the limit are not subject to any of the crew-level restriction
 
 Company scoping still applies to everyone: a booking belonging to another company is always `404 Not Found`.
 
-The same limit already decides who gets the editable master calendar from `GET /schedules/get.json` and the unfiltered `POST /manager/schedules/review.json` list, so an instructor who can see the whole schedule while the setting is on can also act on it.
+The same limit decides who gets the editable master calendar from `GET /schedules/get.json`, so an instructor who can see the whole schedule while the setting is on can also act on it.
+
+The setting only opens the schedule editor endpoints — `GET /schedules/get.json`, `GET /schedules/view/{id}.json`, `POST /schedules/edit.json` and `POST /schedules/delete.json`. It does **not** grant the `manager_*` schedule actions: `POST /manager/schedules/review.json`, `GET /schedules/notify/{id}.json`, `/manager/schedules/cancel`, `/manager/schedules/history`, `/manager/schedules/availabilities`, `/manager/schedules/cancellations` and `/manager/schedules/reminders` stay ACL-restricted to management ranks and return `403 Forbidden` for group 170 whatever the setting says.
 
 {% hint style="info" %}
 `/schedules/cancel.json` is the crew-facing cancel endpoint and is **not** affected: it always requires the caller to be the booking's creator, PIC or SIC. Managers cancel through `/manager/schedules/cancel.json`, which is ACL-restricted and not granted to group 170.
