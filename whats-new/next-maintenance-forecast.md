@@ -38,7 +38,9 @@ We also tried the two obvious clever fixes — sampling the same weeks from prev
 
 ### One click from prediction to job
 
-**Create maintenance** opens the normal new-job form with everything filled in: the aircraft, the name *Flylogs predicted maintenance*, a working day on the predicted date, and — the part that is easy to get wrong by hand — the airframe hours and landings the aircraft is expected to have **on that date**, not the ones it has today.
+**Create** opens the normal new-job form with everything filled in: the aircraft, the name of the check that is actually due, a working day on the predicted date, and — the part that is easy to get wrong by hand — the airframe hours and landings the aircraft is expected to have **on that date**, not the ones it has today.
+
+If the aircraft is on a maintenance plan, the suggestion **is** that plan's action: the row is named after it, the form opens with it already selected in the plan panel, and saving copies its work orders and links the job to the plan. That also keeps the chain going — jobs are matched back to their plan by name, so the next forecast finds this one.
 
 That distinction matters more than it looks. A job carries the reading it was raised at, and the next interval counts from there. Fill in today's counter and every following cycle starts short by whatever the aircraft flies in the meantime.
 
@@ -47,6 +49,16 @@ The description is written for you, and it says out loud that the dates and read
 <figure><img src="../.gitbook/assets/mx-predicted-create-form.png" alt="The new maintenance job form opened from a prediction"><figcaption><p>Opened from the suggestion for FL-INS: an aircraft with no maintenance history, so the form offers a nominal first check twelve months out at the readings it is expected to have by then.</p></figcaption></figure>
 
 Everywhere, a **Scheduled** tag means the shop booked it and an **Estimated** tag means we worked it out. The estimate never blocks anything, anywhere.
+
+***
+
+### It follows your maintenance plan
+
+If an aircraft is attached to a maintenance plan, the plan is what decides — not whatever the last job card happened to carry. Each plan action is anchored to the last time it was completed, and its hours interval, landings interval and repeat period are all counted forward from there. Whichever lands first is the one you are shown.
+
+That is what makes it work for aircraft that flight hours say nothing about. A simulator on a **monthly** plan is due a month after the last one, whatever it has been used for — and if that month has already passed, it is reported as overdue and the suggested job opens dated today.
+
+Plans win only for the checks they own. An aircraft on an annual plan that also runs 50-hour checks as ordinary jobs keeps both forecasts.
 
 ***
 

@@ -39,7 +39,7 @@ Keyed by aircraft id. `planned` is the soonest open, dated job that has not fini
         "date": 1791100800,
         "band": { "early": 1789804800, "late": 1794124800 },
         "trigger": "hours",
-        "job": { "ref": "585", "name": "Rev 100 h" },
+        "job": { "ref": "585", "name": "Rev 100 h", "plan_id": null },
         "note": "Rev 100 h at the blended 90/365-day utilisation.",
         "remaining_hours": 42.5,
         "remaining_landings": null,
@@ -67,8 +67,11 @@ Keyed by aircraft id. `planned` is the soonest open, dated job that has not fini
 | forecast.date | Unix seconds. `null` for `beyond_horizon`, `no_interval`, `no_rate` and `no_jobs`; for `overdue` it is the date the counter actually crossed the limit |
 | forecast.band | Calibrated P10–P90 window in unix seconds, `null` when overdue. Measured coverage against real fleet history is ~84% |
 | forecast.trigger | Which limit comes first: `hours`, `landings` or `calendar` |
+| forecast.job | `ref` is the anchoring job's `n_id`; `name` is the plan action where a plan drove the forecast, otherwise the job's own name; `plan_id` is the `maintenance_plans.id` behind it, or `null`. A client raising a job from the forecast should use `name` and `plan_id` as-is — jobs are matched back to their plan by name, so renaming breaks the next forecast |
 | forecast.remaining_hours | Negative when overdue |
 | forecast.projected | Airframe reading expected **on `date`** — not the aircraft's reading today. For an `hours` trigger it is the due reading exactly; for `calendar` and `landings` triggers the counter is flown forward at the blended rate. An overdue aircraft projects its current reading, since the job would be raised now. `null` whenever `date` is `null` |
+
+**Maintenance plans take precedence.** Where the aircraft is linked to a `maintenance_plan`, each plan action is anchored to the latest completed job belonging to it — matched on `maintenance_plan_id`, falling back to a case-insensitive name match, since only a handful of jobs carry the link — and the plan's `hours_interval`, `landings_interval` and `repeat` are counted forward from there. All three are offered and the soonest wins. A plan's calendar arm is never discarded for being stale: a monthly check nobody has done in a year is reported as overdue, not hidden. Jobs consumed by a plan no longer contribute an interval of their own, so an aircraft on an annual plan that also runs job-recorded 50 h checks keeps both.
 
 Use `projected` — never the aircraft's current reading — when raising a job against a forecast. A job carries the reading it was created at and its next interval is measured from there, so today's counter would start the following cycle short by everything flown between now and the check.
 
