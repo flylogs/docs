@@ -77,6 +77,29 @@ A live counter under the dropdown shows how many pilots would have self-schedule
 
 <figure><img src="../.gitbook/assets/aircraftSelfScheduleAccess.png" alt=""><figcaption><p>Scheduling settings on the aircraft edit page.</p></figcaption></figure>
 
+***
+
+### Which flight types an aircraft can fly
+
+Under **Scheduling** on the aircraft edit page there is a **Flight types** card. It is the aircraft's side of the aircraft restriction that lives on the [flight type](../flights/flight-types.md#aircraft) — the same setting, edited from whichever end is more convenient. Restricting one simulator type to two simulators is quicker from the flight type; setting up a newly delivered twin for the three types it may fly is quicker from here.
+
+<figure><img src="../.gitbook/assets/aircraft-flight-types.png" alt="The Flight types card on the aircraft edit page, with the limit switch on and the SIM flight type ticked"><figcaption><p>The B200 simulator, attributed to the <em>SIM</em> flight type. Every flight type in the company is listed; tick the ones this aircraft should be attributed to.</p></figcaption></figure>
+
+The important part is what an **empty** selection means, because it is not what it first looks like:
+
+| Nothing ticked | This aircraft flies **every flight type that has no aircraft attributed to it at all** |
+|---|---|
+| **Something ticked** | Those flight types become restricted to this aircraft (plus any other aircraft already attributed to them) |
+
+So an aircraft with nothing ticked is **not grounded** — that is the normal state for most of a fleet, and it is why the card starts empty on every existing aircraft. The reading of an empty list belongs to the flight type, not to the aircraft: a flight type nobody has restricted is open to everything.
+
+Two things follow from that, and the card says so in the note under it:
+
+* **Ticking a flight type here restricts that flight type.** If *Night* was open to the whole fleet and you tick it on one aircraft, *Night* is now flyable on that aircraft only. That is a company-wide change made from an aircraft page — deliberate, but worth knowing before you tick.
+* **Unticking the last aircraft reopens the flight type.** Remove the only aircraft attributed to a type and the type goes back to "any aircraft", not "no aircraft".
+
+If you want an aircraft simply excluded from one flight type, do it from the [flight type](../flights/flight-types.md#aircraft) instead: tick the aircraft that *may* fly it, and everything else is excluded by construction.
+
 Your aircraft can also be configured for rental individually. You can specify different rental rates for different services. This rates at the same time, can also be customized for each pilot later on.
 
 Flylogs will automatically calculate the correct amount to be billed based on the flight information. Billing by block time, flight time or tach time can be configured.

@@ -10,9 +10,9 @@ Each flight type belongs to your company. A starter set is created automatically
 
 ## Where to configure
 
-**Flights → Flight types.** Click **New Flight Type** to add one, or the pencil on a row to edit it. Drag rows by the handle at the left to change their order.
+**Flights → Flight types.** Click **New Flight Type** to add one, or the pencil on a row to edit it — both open a **full page**, not a pop-up, so there is room for every setting and you can link straight to a type. Drag rows by the handle at the left to change their order.
 
-<figure><img src="../.gitbook/assets/flight-types-list.png" alt="The flight types list, with one row per type and its three time-classification columns"><figcaption><p>Each row shows the three seats' time classification, whether the type is offered on scheduling, and the certificates required per seat.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-types-list.png" alt="The flight types list, with one row per type and its three time-classification columns"><figcaption><p>Each row shows the three seats' time classification, whether the type is offered on scheduling, and — in the grey strip below it — the certificates required per seat and the aircraft the type is restricted to. Here <em>SIM</em> reads <strong>ONLY ON B200, A320</strong> and <em>ME</em> <strong>ONLY ON EC-HYP, EC-IPB</strong>; every other type carries no aircraft tag, so it flies with the whole fleet.</p></figcaption></figure>
 
 Flight types live in the manager area, so pilots and students never see this page; which of your staff roles can open it is decided by your company's role permissions. Reordering is stricter than the rest: it is refused for anyone above user group 110 (company administrators and above), so a manager who can create and edit types may still be unable to drag them into a new order.
 
@@ -32,7 +32,7 @@ The third seat is renamed to match your operation, from your company type: **Exa
 
 ## Options
 
-<figure><img src="../.gitbook/assets/flight-type-form.png" alt="The flight type edit form, showing basic information, pilot time classification, default flight condition and required certificates"><figcaption><p>The flight type form. The side panel repeats what each time classification credits.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-type-form.png" alt="The flight type page, with each setting group on its own card: basic information, pilot time classification, default flight condition and aircraft"><figcaption><p>The flight type page. Each group of settings sits on its own card, so you can jump to the one you came for instead of reading down a single long form. The panel on the right stays in view and repeats what each time classification credits.</p></figcaption></figure>
 
 ### Name
 
@@ -106,6 +106,34 @@ See [FTL Compliance & Forecast](../schedules/ftl-compliance-forecast.md) for how
 
 Optionally set **VFR** or **IFR** as the type's default. When a crew member picks this flight type on the flight form, the flight's **Rules** field is pre-filled with that value (you can still change it per flight). Leave it empty for no default.
 
+### Aircraft
+
+Some flight types only make sense on part of the fleet. A simulator type belongs on the simulators, a multi-engine type on the twins, a glider-tow type on the tug. The **Aircraft** card is where you say so.
+
+<figure><img src="../.gitbook/assets/flight-type-aircraft.png" alt="The Aircraft card on a flight type, with the limit switch on and two simulators ticked"><figcaption><p>The <em>SIM</em> flight type restricted to the two simulators. Aircraft in grey (EC-HOU, EC-IOC, EC-IRE here) are inactive — they can still be ticked, and stay ticked while they are parked.</p></figcaption></figure>
+
+The rule has exactly two states:
+
+| The list is… | The flight type… |
+|--------------|------------------|
+| **empty** (switch off) | can be flown with **any** aircraft in your fleet — this is the default, and how every existing flight type behaves |
+| **has aircraft in it** | can **only** be flown with the aircraft you ticked |
+
+An empty list is therefore never "no aircraft allowed", it is "no restriction" — the same convention as [pilot attributions](../crew-management/pilot-attributions.md). Turning the switch back off clears the list and reopens the type to the whole fleet.
+
+Two consequences worth knowing before you tick anything:
+
+* **Ticking everything is not the same as ticking nothing.** A type with the whole current fleet ticked is still a closed list, so an aircraft you buy next year will *not* be able to fly it until someone adds it. If what you mean is "anything", leave the switch off.
+* **Parking an aircraft keeps it on the list.** Marking an aircraft inactive does not quietly widen the restriction — the link survives so the type still means what you set when the aircraft comes back. Deleting an aircraft does drop it.
+
+Restricted aircraft show as green tags under the type in the flight types list, so the whole fleet mapping is readable at a glance without opening each type one by one.
+
+#### Editing it from the aircraft instead
+
+The same links can be edited from the other end, on the aircraft's own page — see [Which flight types an aircraft can fly](../aircraft/create-your-aircraft.md#which-flight-types-an-aircraft-can-fly). It is one relationship seen from two sides, so a change made there shows up here and vice versa.
+
+> **Rolling out:** this release stores and displays the restriction, and the aircraft page above manages it. Applying it to the aircraft picker on the flight form and in the schedule editor is the next step, so until then the pickers still offer the whole fleet.
+
 ### Visibility — visible on self-booking
 
 A toggle (shown as the **Scheduling** column in the list) that controls whether the flight type appears in the **self-booking / scheduling** flight-type picker. Turn it off for types that should only be used when logging a flight after the fact (e.g. Test or Ferry), and on for the everyday operations crew book themselves onto.
@@ -126,6 +154,7 @@ Define, **per seat** (*To act as PIC* / *To act as SIC* / *To act as Supervisor*
 * **Logbook time.** The CM1 / CM2 / Supervisor classifications above decide exactly what time each crew member's logbook receives — and how it rolls up into their PIC / FI totals.
 * **Duty and FDP.** Independently of the classification, everyone in any of the three seats on a confirmed flight gets that flight folded into their duty day and counted as an FDP sector.
 * **Rules pre-fill.** Choosing the type on the flight form sets the flight's VFR/IFR rules from the type's default flight condition.
+* **Aircraft.** A type restricted to specific aircraft can only be flown with those; an unrestricted type works with the whole fleet.
 * **Crew documentation.** Under each selected CM1/CM2 on the flight form, a badge names any required certificate that person is missing or expired for that flight type. The seat's classification is also shown next to its label, so you can see at a glance what the seat will log.
 
 ### Schedules, dispatch & booking

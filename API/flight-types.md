@@ -54,11 +54,17 @@ List active (non-deleted) flight types for the company, ordered by `order` field
         "booking": true,
         "order": "0",
         "deleted": false
+      },
+      "Aircraft": {
+        "12": "EC-KMH",
+        "18": "EC-JMZ"
       }
     }
   ]
 }
 ```
+
+`Aircraft` is the [fleet restriction](#aircraft-restriction-optional) as `id → registration`. It is **always present**, and an **empty** value (`[]`) means the type is unrestricted — see below.
 
 ---
 
@@ -70,7 +76,7 @@ List all flight types including soft-deleted ones. Intended for management views
 
 #### Response
 
-Same structure as `index`, includes all records regardless of `deleted` status.
+Same structure as `index` (including `Aircraft`), includes all records regardless of `deleted` status.
 
 ---
 
@@ -122,6 +128,44 @@ Create a new flight type. Also returns the `flightClassification` reference data
 | FlightType.pic_flight_time | string | No | PIC time classification key |
 | FlightType.sic_flight_time | string | No | SIC time classification key |
 | FlightType.supervisor_flight_time | string | No | Supervisor time classification key. Defaults to `none` |
+
+#### Aircraft restriction (optional)
+
+A flight type can be restricted to a subset of the fleet. The rule is the same "empty means unrestricted" convention used by [pilot attributions](pilots.md):
+
+| Links | Meaning |
+|-------|---------|
+| **none** | The flight type can be flown with **any** of the company's aircraft |
+| **one or more** | The flight type can **only** be flown with those aircraft |
+
+An empty list is therefore never "no aircraft allowed". Listing every aircraft in the fleet and sending no list at all are **not** the same thing: the explicit list keeps rejecting aircraft added later, the empty one does not.
+
+Send the links as a standard HABTM list alongside the `FlightType` fields (applies to both `manager_add` and `manager_edit`):
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| Aircraft.Aircraft[] | array | No | Aircraft ids the type is restricted to. When the key is present it **replaces** the whole set; an empty value clears the restriction. When the key is **absent**, existing links are left untouched — so a client that predates this feature cannot wipe a restriction it does not know about. |
+
+Ids that do not belong to the authenticated company are dropped silently. Inactive aircraft are accepted and kept (parking an aircraft must not widen a restriction); links to deleted aircraft are not returned.
+
+The same links can be written from the aircraft end — `POST /aircraft/edit.json` accepts `FlightType.FlightType[]` with identical semantics (key absent = untouched, empty = detach from every flight type, foreign ids dropped), and `GET /aircraft/view/{id}.json` returns the aircraft's attributed flight types under `FlightType`. See [Aircraft](aircraft.md). Detaching the last aircraft from a flight type makes that flight type unrestricted again — that is the empty-set rule, not a special case.
+
+Example (form-encoded) — restrict to two aircraft:
+
+```
+data[FlightType][name]=OPC Simulator
+data[Aircraft][Aircraft][]=12
+data[Aircraft][Aircraft][]=18
+```
+
+Clear the restriction (fly with anything):
+
+```
+data[FlightType][name]=OPC Simulator
+data[Aircraft][Aircraft][]=
+```
+
+> **Advisory for now:** the restriction is stored and returned, but nothing enforces it yet — the flight form and schedule editor still accept any aircraft. Treat it as configuration until the enforcing release lands.
 
 #### Required certificates (optional)
 
@@ -208,6 +252,8 @@ Same fields as create, wrapped under `FlightType`.
 
 `requiredCertificates` is the flat list of the flight type's per-seat requirements (see [Required certificates](#required-certificates-optional) above).
 
+`attributedAircraft` is the [fleet restriction](#aircraft-restriction-optional) as `id → registration`, and is `[]` when the type is unrestricted. It is a map rather than a bare id list so a client can label an aircraft that is missing from its own cached fleet.
+
 ```json
 {
   "flights": 42,
@@ -216,7 +262,11 @@ Same fields as create, wrapped under `FlightType`.
     { "role": "pic", "certificate_type": "licence" },
     { "role": "pic", "certificate_type": "medical_class_1" },
     { "role": "sic", "certificate_type": "medical_class_2" }
-  ]
+  ],
+  "attributedAircraft": {
+    "12": "EC-KMH",
+    "18": "EC-JMZ"
+  }
 }
 ```
 

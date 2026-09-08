@@ -93,7 +93,7 @@ Retrieve aircraft attributed to the authenticated user.
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/view/{id}.json`
 
-Retrieve full details for a single aircraft, including maintenance, rates, and logbook reference.
+Retrieve full details for a single aircraft, including maintenance, rates, logbook reference and the flight types the aircraft is attributed to (`FlightType`, an array of `{id, name, color}` — empty is the normal case and means the aircraft flies every unrestricted flight type; see [Flight-type attributions](#flight-type-attributions-optional)).
 
 #### Path Parameters
 
@@ -419,6 +419,38 @@ Add a new aircraft to the fleet. Admin access required.
 <mark style="color:green;">`POST`</mark> `/aircraft/edit.json`
 
 Update aircraft details. Admin access required.
+
+#### Flight-type attributions (optional)
+
+The aircraft end of the fleet restriction that flight types own (see [Flight Types → Aircraft restriction](flight-types.md#aircraft-restriction-optional)). The rows are the same rows; only the direction of editing differs, so an empty set is read the flight type's way:
+
+| Links | Meaning |
+|-------|---------|
+| **none** | The aircraft flies every flight type that itself names **no** aircraft. It is not grounded. |
+| **one or more** | Those flight types are restricted to this aircraft (plus whatever other aircraft they name). |
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| FlightType.FlightType[] | array | No | Flight type ids this aircraft is attributed to. When the key is present it **replaces** the whole set; an empty value detaches the aircraft from every flight type. When the key is **absent**, existing links are left untouched — so an older client posting an aircraft edit cannot wipe restrictions it knows nothing about. |
+
+Ids outside the authenticated company are dropped silently. Detaching the last aircraft from a flight type makes that flight type unrestricted again, which reopens it to the whole fleet — that is the empty-set rule, not a special case.
+
+`POST /aircraft/add.json` does **not** accept these: it saves the `Aircraft` fields alone and would drop the links silently. Attribute the aircraft in a follow-up edit.
+
+Example (form-encoded):
+
+```
+data[Aircraft][id]=45
+data[FlightType][FlightType][]=524
+data[FlightType][FlightType][]=368
+```
+
+Detach from everything:
+
+```
+data[Aircraft][id]=45
+data[FlightType][FlightType][]=
+```
 
 ---
 
