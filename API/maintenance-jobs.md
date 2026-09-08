@@ -35,6 +35,7 @@ Keyed by aircraft id. `planned` is the soonest open, dated job that has not fini
       "planned": null,
       "forecast": {
         "status": "due",
+        "basis": "history",
         "date": 1791100800,
         "band": { "early": 1789804800, "late": 1794124800 },
         "trigger": "hours",
@@ -43,6 +44,7 @@ Keyed by aircraft id. `planned` is the soonest open, dated job that has not fini
         "remaining_hours": 42.5,
         "remaining_landings": null,
         "due_hours": 11767.1,
+        "projected": { "hours": 11767.1, "landings": 10062 },
         "rate": {
           "hours_per_day": 1.575, "landings_per_day": 1.1,
           "short": 1.42, "long": 1.73, "short_hours": 127.8, "long_hours": 631.5
@@ -60,11 +62,15 @@ Keyed by aircraft id. `planned` is the soonest open, dated job that has not fini
 | Field | Description |
 |-------|-------------|
 | planned | Booked work: `ref`, `name`, `start`, `finish` (unix seconds; `finish` may be `null`). `null` when nothing is booked. An open job with no `start` is a wish-list item, not a booking, and is not reported here |
+| forecast.basis | `history` — projected from this aircraft's own signed-off intervals. `first_maintenance` — the aircraft has **no** maintenance history, so a nominal first check is offered instead: the sooner of the next 50 flight hours, the next 50 sectors, or 12 months out for an aircraft with no rate. `job.name` is `null` in that case, and clients MUST label it as a starting suggestion rather than a tracked interval |
 | forecast.status | `due`, `overdue`, `beyond_horizon` (further out than 400 days), `no_interval` (the open jobs carry no hours/landings/calendar interval), `no_rate` (not flown recently enough to project), `no_jobs` |
 | forecast.date | Unix seconds. `null` for `beyond_horizon`, `no_interval`, `no_rate` and `no_jobs`; for `overdue` it is the date the counter actually crossed the limit |
 | forecast.band | Calibrated P10–P90 window in unix seconds, `null` when overdue. Measured coverage against real fleet history is ~84% |
 | forecast.trigger | Which limit comes first: `hours`, `landings` or `calendar` |
 | forecast.remaining_hours | Negative when overdue |
+| forecast.projected | Airframe reading expected **on `date`** — not the aircraft's reading today. For an `hours` trigger it is the due reading exactly; for `calendar` and `landings` triggers the counter is flown forward at the blended rate. An overdue aircraft projects its current reading, since the job would be raised now. `null` whenever `date` is `null` |
+
+Use `projected` — never the aircraft's current reading — when raising a job against a forecast. A job carries the reading it was created at and its next interval is measured from there, so today's counter would start the following cycle short by everything flown between now and the check.
 
 **Consumers must treat `planned` as authoritative and the forecast as advisory.** A client that lets an estimate block a booking or fail a save is wrong: the estimate is a planning aid, not a limit.
 
