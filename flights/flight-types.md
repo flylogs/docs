@@ -132,7 +132,7 @@ Restricted aircraft show as green tags under the type in the flight types list, 
 
 The same links can be edited from the other end, on the aircraft's own page — see [Which flight types an aircraft can fly](../aircraft/create-your-aircraft.md#which-flight-types-an-aircraft-can-fly). It is one relationship seen from two sides, so a change made there shows up here and vice versa.
 
-> **Rolling out:** this release stores and displays the restriction, and the aircraft page above manages it. Applying it to the aircraft picker on the flight form and in the schedule editor is the next step, so until then the pickers still offer the whole fleet.
+> **Advisory, not a hard stop.** The flight form and the schedule editor **warn** when the chosen aircraft is not on the type's list — "SIM can only be flown with B200, A320", shown under the aircraft field — but they do not block the save, and the pickers still offer the whole fleet. That is deliberate: a flight logged after the fact may legitimately predate the restriction. Tell us if you would rather it refused the save outright.
 
 ### Visibility — visible on self-booking
 

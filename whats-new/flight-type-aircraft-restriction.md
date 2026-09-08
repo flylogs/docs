@@ -54,8 +54,10 @@ Practically: more room as flight types keep gaining settings, a link you can sen
 
 ***
 
-### Rolling out
+### Where you'll see it
 
-This release stores, displays and manages the restriction from both pages. Applying it to the aircraft picker on the flight form and in the schedule editor is the next step — until then those pickers still offer the whole fleet.
+Pick an aircraft the type isn't allowed on and both the flight form and the schedule editor say so — *"SIM can only be flown with B200, A320"*, under the aircraft field.
+
+It is a **warning, not a block**: the save still goes through, and the pickers still list the whole fleet. A flight logged after the fact may legitimately predate the restriction, so we would rather flag it than refuse it. If your operation wants it to refuse, tell us.
 
 See [Flight Types → Aircraft](../flights/flight-types.md#aircraft) for the full reference.

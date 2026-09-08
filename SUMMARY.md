@@ -57,6 +57,7 @@
   * [Workorders](aircraft/aircraft-maintenance/workorders.md)
   * [Maintenance plans](aircraft/aircraft-maintenance/maintenance-plans.md)
   * [Inventory](aircraft/aircraft-maintenance/inventory.md)
+  * [Next maintenance forecast](aircraft/aircraft-maintenance/next-maintenance-forecast.md)
 * [Scheduled maintenance windows](aircraft/aircraft-maintenance/schedule-maintenance-windows.md)
 
 ## Flights

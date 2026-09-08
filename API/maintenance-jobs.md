@@ -1,14 +1,74 @@
 # Maintenance Jobs
 
-Manage maintenance jobs for aircraft. Requires **premium** or **unlimited** subscription plan.
+Manage maintenance jobs for aircraft. Requires a **club**, **premium** or **unlimited** subscription plan; every action in this plugin 404s on any other plan.
 
 ## Access control
 
 | Action | Allowed |
 |--------|---------|
-| List / view (`index`, `view`, `history`, `forecast`) | Any authenticated company user on a premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` and `>= 250` |
+| List / view (`index`, `view`, `history`, `forecasts`) | Any authenticated company user on a club/premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` and `>= 250` |
 | Create / edit / sign CRS / duplicate / delete | `user_group_id` in **1, 100, 105, 110, 300** (administrators, managers and mechanics), or the aircraft owner |
 | Attach / detach aircraft reports (`link_reports`, `unlink_report`) | Same as create: `user_group_id` in **1, 100, 105, 110, 300**, or the aircraft owner. Groups 120–200 are denied at ACL level |
+
+## Next maintenance forecast
+
+Answers, per aircraft, where the next maintenance stands: the job the shop has **booked**, and — only useful when nothing is booked — an **estimate** of when the running intervals will come due.
+
+Batched for the whole fleet in a handful of queries, so a calendar can ask once for every aircraft rather than once per aircraft.
+
+<mark style="color:blue;">`GET`</mark> `/maintenance/jobs/forecasts.json`
+
+#### Query parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| ids | string | Optional. Comma-separated aircraft ids, e.g. `?ids=8,10,14`. Ids outside the session company are dropped, not answered. Omit for the whole active fleet |
+
+#### Response
+
+Keyed by aircraft id. `planned` is the soonest open, dated job that has not finished yet; `forecast` is `null` when the aircraft has no running interval or no utilisation to project from.
+
+```json
+{
+  "forecasts": {
+    "8": {
+      "planned": null,
+      "forecast": {
+        "status": "due",
+        "date": 1791100800,
+        "band": { "early": 1789804800, "late": 1794124800 },
+        "trigger": "hours",
+        "job": { "ref": "585", "name": "Rev 100 h" },
+        "note": "Rev 100 h at the blended 90/365-day utilisation.",
+        "remaining_hours": 42.5,
+        "remaining_landings": null,
+        "due_hours": 11767.1,
+        "rate": {
+          "hours_per_day": 1.575, "landings_per_day": 1.1,
+          "short": 1.42, "long": 1.73, "short_hours": 127.8, "long_hours": 631.5
+        }
+      }
+    },
+    "48": {
+      "planned": { "ref": "612", "name": "Rev 200 h", "start": 1789171200, "finish": 1789344000 },
+      "forecast": { "status": "due", "date": 1789689600, "…": "…" }
+    }
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| planned | Booked work: `ref`, `name`, `start`, `finish` (unix seconds; `finish` may be `null`). `null` when nothing is booked. An open job with no `start` is a wish-list item, not a booking, and is not reported here |
+| forecast.status | `due`, `overdue`, `beyond_horizon` (further out than 400 days), `no_interval` (the open jobs carry no hours/landings/calendar interval), `no_rate` (not flown recently enough to project), `no_jobs` |
+| forecast.date | Unix seconds. `null` for `beyond_horizon`, `no_interval`, `no_rate` and `no_jobs`; for `overdue` it is the date the counter actually crossed the limit |
+| forecast.band | Calibrated P10–P90 window in unix seconds, `null` when overdue. Measured coverage against real fleet history is ~84% |
+| forecast.trigger | Which limit comes first: `hours`, `landings` or `calendar` |
+| forecast.remaining_hours | Negative when overdue |
+
+**Consumers must treat `planned` as authoritative and the forecast as advisory.** A client that lets an estimate block a booking or fail a save is wrong: the estimate is a planning aid, not a limit.
+
+Older deployments answer `Maintenance.next` on `/aircraft/view.json` with a bare unix timestamp instead of the object above; clients should accept both.
 
 ## Recurring jobs
 

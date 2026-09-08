@@ -165,7 +165,7 @@ data[FlightType][name]=OPC Simulator
 data[Aircraft][Aircraft][]=
 ```
 
-> **Advisory for now:** the restriction is stored and returned, but nothing enforces it yet — the flight form and schedule editor still accept any aircraft. Treat it as configuration until the enforcing release lands.
+> **Advisory:** the restriction is **not** enforced by the API. `POST /flights/add.json`, `/flights/edit.json` and the schedule endpoints all accept an aircraft outside the list. The warning lives in the web client only, so an API integration that needs the rule applied must check it itself — read `Aircraft` from this endpoint and compare.
 
 #### Required certificates (optional)
 

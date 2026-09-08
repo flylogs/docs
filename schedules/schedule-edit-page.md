@@ -127,3 +127,9 @@ Available to anyone who can edit:
 
 * **Kiosk mode** — a full‑screen, auto‑refreshing display of the calendar for ops‑room screens, showing the base name and live **METAR**. It refreshes every couple of minutes and re‑centres on the current time.
 * **Print PDF** — export the current calendar view to a PDF named by date.
+
+### Estimated maintenance markers
+
+Aircraft with a maintenance job booked show it on the calendar as an amber block that blocks bookings for its duration, exactly as before.
+
+Aircraft with **nothing booked** instead get a blue all-day marker on the date Flylogs estimates their next check will fall due. It is a suggestion only: it overlaps freely, raises no conflict, and does not stop you booking a flight on that day. See [Next maintenance forecast](../aircraft/aircraft-maintenance/next-maintenance-forecast.md).

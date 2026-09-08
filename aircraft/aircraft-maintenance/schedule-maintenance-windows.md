@@ -25,3 +25,9 @@ Besides dates, a job can also be due by **airframe hours** or **landings** — r
 The aircraft's Maintenance jobs panel groups jobs that belong to the same recurring family (e.g. every "50 hour check") together, and summarizes them by status — **Completed**, **Scheduled**, **Overdue** (past due and not yet done) — plus your average utilization. Each job also shows an **Awaiting CRS** badge until it's signed, and an interval badge when it's hours/landings-based.
 
 ![](../../.gitbook/assets/mx-jobs-panel.png)
+
+### When nothing is booked yet
+
+If an aircraft has no upcoming job on the calendar, Flylogs estimates when the next check will fall due from the aircraft's own flying history and shows that estimate on the aircraft page, in the Schedule Manager calendar, on the Schedules page and in the flight form. Booked work always takes precedence over the estimate, and the estimate never blocks a booking.
+
+See [Next maintenance forecast](next-maintenance-forecast.md).

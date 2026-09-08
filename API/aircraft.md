@@ -187,10 +187,27 @@ Retrieve full details for a single aircraft, including maintenance, rates, logbo
         }
       }
     ],
-    "next": null
+    "next": {
+      "status": "due",
+      "date": 1791100800,
+      "band": { "early": 1789804800, "late": 1794124800 },
+      "trigger": "hours",
+      "job": { "ref": "585", "name": "100h Inspection" },
+      "note": "100h Inspection at the blended 90/365-day utilisation.",
+      "remaining_hours": 42.5,
+      "due_hours": 12600
+    }
   }
 }
 ```
+
+#### `Maintenance.next`
+
+Estimated next maintenance for this aircraft — the same object documented under [Maintenance Jobs → Next maintenance forecast](maintenance-jobs.md#next-maintenance-forecast), minus the `planned` wrapper (booked work is already in `Maintenance.scheduled`).
+
+`null` when the aircraft has no completed job carrying an interval, or no recent flying to project from. Deployments that predate the forecast answer with a **bare unix timestamp** instead of the object; clients should accept both, and must treat the value as advisory — it never limits a booking or a flight.
+
+Returned only on a **club**, **premium** or **unlimited** plan.
 
 #### Expiration Date Fields
 
