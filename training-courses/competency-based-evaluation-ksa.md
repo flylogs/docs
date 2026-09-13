@@ -29,7 +29,7 @@ This ensures traceability between **training content**, **lesson delivery**, and
 
 Learning Objectives are enabled at the **training level**.
 
-1. Open an **ONSITE** or **REMOTE** training
+1. Open an **ONSITE** training
 2. Click **Edit Training**
 3. Enable the option **“Enable Learning Objectives in lessons”**
 

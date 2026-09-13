@@ -31,9 +31,9 @@ Once an evaluation type is selected, instructors can enable:
 
 Flylogs offers two types of knowledge evaluation exams:
 
-1. **On-Site or Remote Exams**
+1. **On-Site Exams**
    * These are structured training exams conducted as part of the Flylogs training program. They can be integrated into the training syllabus and scheduled for a specific date.
-   * Exams are managed similarly to classes, allowing you to assign a location, instructor, and schedule.
+   * Exams are managed similarly to classes, allowing you to assign a location, instructor, and schedule. Like classes, they can be held in a physical location or live online.
    * Once the exam takes place, the instructor or a training manager can mark attendance and record grades.
 2. **Distance Training Evaluations**
    * Distance training programs require students to complete self-evaluation tests after each content unit.

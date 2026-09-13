@@ -17,16 +17,18 @@ Additionally, there is no limit in the amount of students.
 
 ### Training types
 
-Flylogs has 3 types of trainings you can create.
+Flylogs has 2 types of trainings you can create.
 
 * **Onsite training**\
-  Allows you and teachers to keep track of lessons, including class contents, attendance and exam results. Lessons are in physical locations that can be reserved.
-* **Remote training**\
-  Allows you and teachers to keep track of lessons, including class contents, attendance and exam results. Lessons are face to face online.
+  Allows you and teachers to keep track of lessons, including class contents, attendance and exam results. Lessons happen in scheduled classes with a teacher, who records attendance, performance and exam results. A class can take place in a physical location that you reserve, or face to face online — leave the location empty and share the meeting details in the class description.
 * **Distance learning**\
   Students use online content and self assessment tools to study and complete each lesson in their own time. You can assign a supervisor that will support the student in their Distance Learning. The time each student spends studying will be tracked.
 
-<figure><img src="../.gitbook/assets/Training types - visual selection.png" alt=""><figcaption></figcaption></figure>
+{% hint style="info" %}
+**Remote training is now part of Onsite training.** Remote courses always worked exactly like onsite ones — the same classes, attendance, exams and evaluation — so they are no longer a separate type. Existing remote courses have been converted to onsite automatically and nothing about how they work has changed.
+{% endhint %}
+
+<figure><img src="../.gitbook/assets/training-types-onsite-distance.png" alt="Which type of training should be created: Onsite training (scheduled classes in a classroom or live online) or Distance learning (self-paced with supervisor support)"><figcaption></figcaption></figure>
 
 ***
 
@@ -47,7 +49,7 @@ The system ensures that:
 
 This functionality applies to:
 
-* **ONSITE** and **REMOTE** theoretical or practical training
+* **ONSITE** theoretical or practical training, whether classes are held in a classroom or live online
 * Lessons delivered under CBTA or traditional training frameworks
 *   Evaluations performed by:
 

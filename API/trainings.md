@@ -14,6 +14,11 @@
 > attendance for one session out of several under the same activity;
 > `session_students.attendance_status` is the per-session record.
 
+> **Training types.** `trainings.type` is `ONSITE` or `DISTANCE`. The former
+> `REMOTE` type was retired — it always behaved as `ONSITE` — and existing rows
+> were converted. A write that still posts `type: "REMOTE"` is accepted and
+> stored as `ONSITE`; reads never return `REMOTE`.
+
 > **Schema additions — missed-class follow-up (task #514).** `session_students`
 > also gained `missed_email_sent_at` and `attendance_notified_at` (both unix,
 > `NULL` until sent) — independent claim-before-send guards for the
@@ -1309,7 +1314,7 @@ Enforced on every path that can attach one of these tags: `POST /uploads/sign.js
 
 ## Student Evaluation
 
-Per-student evaluation for an onsite/remote class session. Backed by `activity_progress` (one row per `(trainings_user_id, training_activity_id)`) plus two child tables:
+Per-student evaluation for an onsite class session. Backed by `activity_progress` (one row per `(trainings_user_id, training_activity_id)`) plus two child tables:
 
 - `user_training_objectives` — qualitative objective ratings (`UserTrainingObjective`).
 - `user_training_metrics` — competency/metric ratings, optional free-text comments (`UserTrainingMetric`).

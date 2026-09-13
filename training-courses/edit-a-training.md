@@ -9,7 +9,7 @@ Training management has been designed to be easy for anybody with little to none
 Main options in the training settings include the following:
 
 * Name of training
-* Type of training, (Onsite, remote or distance learning)
+* Type of training, (Onsite or distance learning)
 * Activate/deactivate the training, and method of flight mission evaluation,
 * Activate flight missions,&#x20;
 * Training availability and validity dates for expiration,
