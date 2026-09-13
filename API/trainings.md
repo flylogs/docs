@@ -2721,7 +2721,7 @@ Every endpoint requires the **premium** or **unlimited** plan; any other plan an
 | `exam_registrations/index`, `register`, `cancel`, `mine` | Any user in the company. `cancel` only works on the caller's own registration. |
 | `exam_sittings/manager_*` (reads included) | `user_group_id` **≤ 150** |
 
-The 18 new actions need `aco_sync`. The four student actions also need explicit `aros_acos` grants copied from `Trainings/Students/index`, like the catalog: see `flylogs/migrations/2026-09-13-exam-sittings-acl.md`.
+The 19 new actions need `aco_sync`. The four student actions also need explicit `aros_acos` grants copied from `Trainings/Students/index`, like the catalog: see `flylogs/migrations/2026-09-13-exam-sittings-acl.md`.
 
 ### Attempt rules
 
@@ -2888,6 +2888,26 @@ The user must belong to the session company and be live; otherwise the call answ
 }
 ```
 
+### Manager: reset a student's attempt history
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/exam_sittings/reset_attempts.json`
+
+```json
+{ "user_id": 490, "authority_rule_id": "…", "reason": "Restarted the ATPL course" }
+```
+
+This gives a fresh count for a student under one rule, typically after they restart their training having used up their attempts. It inserts one `exam_attempt_resets` row (`company_id`, `user_id`, `authority_rule_id`, `reset_at`, `reason`, `created_by`). The table is insert-only, and **no result is edited or deleted**.
+
+`ExamSittingFacts::history()` then ignores every sat result with `sat_at <= reset_at` for that student and rule, via the latest reset. That affects every verdict, the `attempt_no` stamped on new results, and the student's `standing`. Attempts, sittings and the completion window all start again. Earlier registrations still show their results and attempt numbers.
+
+| Response | When |
+|----------|------|
+| `{ "result": true, "reset": { "id": "…", "user_id": 490, "authority_rule_id": "…", "reset_at": 1789300000 } }` | Saved; the student is notified |
+| `{ "result": false, "reason": "REASON_REQUIRED" }` | Empty reason |
+| `404` | Rule not in the company, or student not a live user of the company |
+
+`candidates/{id}.json` carries `reset_at` per candidate (the latest reset under the sitting's rule, or `null`) and `sitting.Rule`. Requires `user_group_id` ≤ 150.
+
 ### Notifications
 
 The student receives a message through `Message::fastSave`: in-app, plus email according to their notification settings. It links to `/trainings/exam_sittings` and is sent:
@@ -2899,6 +2919,7 @@ The student receives a message through `Message::fastSave`: in-app, plus email a
 | `registration_status` → `REJECTED` | `Exam registration not accepted: {sitting}`, with the reason, HTML-escaped |
 | `registration_status` → `CANCELED` | `Exam registration cancelled: {sitting}`, with the reason, HTML-escaped |
 | `results` | `Exam results: {sitting}`, listing each subject whose result **changed** to `PASS`/`FAIL`, with its score |
+| `reset_attempts` | `Exam attempt history reset: {rule}`, with the reason, HTML-escaped |
 
 Nothing is sent for `ABSENT`, for a score-only correction, or when the same result is saved again. Messages are sent after the transaction commits; a failure is logged and never undoes the change.
 

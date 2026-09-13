@@ -19,6 +19,7 @@ Students register by choosing subjects. Flylogs counts every attempt and checks 
 | Create, edit, publish and delete sittings | Managers (`user_group_id` 150 or lower) |
 | Confirm, reject or mark registrations absent, and enter results | Managers (`user_group_id` 150 or lower) |
 | Register a student yourself | Managers (`user_group_id` 150 or lower) |
+| Reset a student's attempt history | Managers (`user_group_id` 150 or lower) |
 | Create and edit authority rules | Managers (`user_group_id` 150 or lower) |
 
 Managers find the page under **Trainings → Exam sittings**. Students open **Trainings** and use the **Exam sittings** button at the top of the page.
@@ -134,6 +135,18 @@ A registration you make yourself:
 
 A cancelled sitting can't take new registrations.
 
+### Resetting a student's attempt history
+
+A student who used up their attempts and then **restarts their training** needs a fresh count. In the **Register a student** panel, choose the student and click **Reset attempt history**. Then type the reason, which is required, and confirm.
+
+* The reset applies to the student under **that sitting's authority rule**. Other rules keep their own history.
+* **Nothing is deleted.** Every earlier result stays on the student's record with the attempt number it was given, and the reset itself is recorded with who made it, when, and why.
+* From now on, results sat **before the reset stop counting**: attempts, sittings and the completion window all start again from the next sitting.
+* The student is notified, with the reason you gave.
+* The panel shows the date of the student's last reset.
+
+The option only appears for sittings that use an authority rule. Sittings with no rule never block a student, so there is nothing to reset.
+
 ### Entering results
 
 For each subject, choose **Pass** or **Fail**, optionally type the score, and click **Save results**.
@@ -151,7 +164,8 @@ The student gets a message in Flylogs, and an email if their notification settin
 * the school **registers them** for a sitting (with the list of subjects);
 * their registration is **confirmed** (with the list of subjects);
 * their registration is **rejected** or **cancelled** by the school (with the reason you typed);
-* their **results** are entered, with each subject's result and score.
+* their **results** are entered, with each subject's result and score;
+* their **attempt history is reset** (with the reason you typed).
 
 Results are announced only when a result actually changes. Correcting a score, or saving the same result again, doesn't send another message. Marking a student absent doesn't send one either.
 
