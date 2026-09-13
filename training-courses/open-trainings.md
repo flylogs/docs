@@ -78,6 +78,28 @@ If you do add dates to a distance course, Flylogs takes you at your word: studen
 
 A course that does run on dates can run several times a year — for example January, April and September. Each run is a **date** with its own places and its own deadline.
 
+### Add a date
+
+1. Open the course from **Trainings → Edit**, then the **Open enrolment** tab.
+2. In the **Dates** card, click **Add a date**.
+3. Fill in the date. In **Places**, enter the **total** number of places for this run, for example 12. You never enter the places left: Flylogs counts them for you as students enrol.
+4. Click **Save**. The date is added to the list as a **Draft**.
+5. Click the green **Publish** button on the date's row.
+
+<figure><img src="../.gitbook/assets/trainingsOpenEnrolmentAddDate.png" alt="Add a date form with Name, Start, End, Enrolment opens, Enrolment deadline, Places, Location and Notes"><figcaption><p>The Add a date form. Places is the total for this run; leave it empty for unlimited places.</p></figcaption></figure>
+
+{% hint style="warning" %}
+**A new date is not visible until you publish it.** Saving creates it as a **Draft**, which students never see. Until you click **Publish** on the row, the date is not in the catalog and nobody can apply to it. An on-site course whose dates are all still drafts does not appear in the catalog at all, even when **Show this course in the catalog** is ticked.
+{% endhint %}
+
+<figure><img src="../.gitbook/assets/trainingsOpenEnrolmentDates.png" alt="Dates list with a Full date, a Published date and a Draft date, each showing places taken and its action buttons"><figcaption><p>The Dates list. The draft April date still needs its green <strong>Publish</strong> button pressed. The Places column shows how many places are taken out of the total.</p></figcaption></figure>
+
+### Places left
+
+The **Places** column shows each date as **taken of total**, for example *3 of 12 taken*. The places left are the difference, 9 in that example, and that is the number students see in the catalog. A date with no limit shows **Unlimited places**.
+
+The count is worked out every time the page loads, so it is always what enrolment will actually enforce. To offer more places, edit the date with the pencil and raise **Places**. Lowering it below the places already taken does not remove anyone.
+
 Each date has:
 
 * **Name** — how it appears to students (e.g. "January 2027").
@@ -93,6 +115,12 @@ Each date has:
 * **Full** — every place is taken. The date stays visible and accepts waitlist entries only. Flylogs sets this automatically the moment the last place goes; you can also set it by hand to stop enrolment without cancelling.
 * **Closed** — no longer taking anyone.
 * **Cancelled** — the run is called off.
+
+Each row has buttons for the status change that applies to it:
+
+* **Publish** (green) on a **Draft** date.
+* **Close enrolment** (grey) on a **Published** or **Full** date.
+* **Reopen** (blue) on a **Closed** or **Full** date.
 
 Raising the number of places on a **Full** date and pressing **Reopen** puts it back in the catalog.
 

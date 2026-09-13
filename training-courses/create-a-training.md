@@ -17,5 +17,3 @@ From the trainings view page, just click on the top right corner button **CREATE
 Once your trainings have been created and customized, which usually takes long time, you can simply copy it to create new courses.
 
 This allows you to have different training programs without having to start from scratch.
-
-{% embed url="https://youtu.be/GN5nNSHGGtI" %}
