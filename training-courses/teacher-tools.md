@@ -68,6 +68,23 @@ Signing automatically sends a missed-class email to every student marked **Absen
 Students invited to a class without being enrolled in the training appear on the register as **Not enrolled**, read-only. No attendance can be recorded for them and they're left out of the attendance count and the missed-class email — enrol them in the training first.
 {% endhint %}
 
+### Exporting a class report (PDF)
+
+The class teacher and any training manager can download a **PDF report** of a class or exam session — handy when your authority asks for evidence of theoretical training. Use the **PDF report** button next to **Edit Class** on the class page. Students don't see it, and a teacher who is on the class's own student list is treated as a student here too.
+
+The report uses the same layout as the flight record PDF: your company logo (or company name) top left, the report title in the middle and the export date top right, with page numbers on every page. It contains:
+
+* **Session identification** — training, subject, lesson or exam, date and time (in your company's time zone and date/time format), duration, teacher and location
+* **Lesson content** — goals and learning objectives (for exams: name, reference, type and duration)
+* **Attendance register** — every student's attendance status, remarks and corrective measures, plus the attendance count. For exams, the result earned in that sitting.
+* **Student evaluations** — each student's learning-objective and performance-metric ratings and comments, on your training's rating scale
+* **Session remarks**
+* **Attendance certification** — who signed the register, when, from which IP address, and the record's integrity hash, plus how many times it was signed before
+
+{% hint style="info" %}
+A class that hasn't been signed can still be exported, but the report is marked **UNSIGNED** on every page because its statuses can still change. Sign the class first when you need the final record. Students invited without an enrolment are shown as **Not enrolled** and left out of the attendance count.
+{% endhint %}
+
 ### Requesting class work
 
 From the class page's **Documents** tab, a teacher can request class work (homework) from students: turn it on, set a deadline and write a description of what's expected. Students are notified and see a banner on the class page until they've dealt with it.

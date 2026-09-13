@@ -2285,3 +2285,411 @@ Answers `200` with `result: false` and a plain-language `message` when the chang
 `UPDATED` restores the recorded `from` values; a reorder restores the recorded id sequence; `CREATED` deletes the entity after an in-use check; `DELETED` restores the row from `training_changes.snapshot`.
 
 The revert is stamped on the change (`reverted_at`, `reverted_by`) so it cannot be applied twice, and it opens a revision of its own — an undo is a change to the course like any other.
+
+## Open trainings
+
+> **Schema additions.** `trainings` gained `published` (tinyint), `enrollment_mode`
+> `ENUM('CLOSED','REQUEST','INSTANT')`, `requirements` (longtext),
+> `announcement_body` (longtext) and `cover_upload_id`. The existing
+> `announcement` (varchar 255) is now the **short strapline** on the catalog
+> card; the long copy lives in `announcement_body`.
+>
+> Two new tables: `training_intakes` (one dated run of a course) and
+> `training_enrollment_requests` (a student's application). `trainings_users`
+> gained a nullable `intake_id` — `NULL` for every enrollment that predates
+> this feature, for every one a manager still creates off-catalog, and for
+> every one taken on a `DISTANCE` course offered with no dates.
+>
+> An application is deliberately **not** a `trainings_users.status` value.
+> Every "enrollments of this training" query in the plugin assumes a row there
+> is a real enrollment, so a pending row living among them would leak into seat
+> counts, student lists, reports, exam gates and the completion cron.
+
+### Seat counting
+
+A seat on an intake is held by:
+
+- a `trainings_users` row with that `intake_id`, `deleted = 0` and status `ACTIVE` or `COMPLETED`; **plus**
+- a `training_enrollment_requests` row with status `APPROVED` whose `trainings_user_id` is still `NULL` — approved, but the enrollment has not been created yet.
+
+Waitlisted students hold **no** seat. Counts are derived on every read; there is no `seats_taken` column, so a stale counter can never overbook a course.
+
+`seats` `NULL` means **unlimited**, which is not the same as `0`. When `seats` is `NULL`, `seats_left` is `null` and `full` is always `false`.
+
+### Entry requirements
+
+`trainings.requirements` (free text) explains entry conditions to humans. `training_requirements` rows are the ones the system checks, one row per rule, with `kind` deciding which value column is read:
+
+| `kind` | Column | Meaning |
+|--------|--------|---------|
+| `CERTIFICATE` | `certificate_type` | an exact `user_certificates.type` |
+| `HOURS` | `hours_function` + `hours_min` | `total`/`pic`/`sic`/`dual`/`fi`/`night`/`ifr`/`xc`/`me`, in **hours** |
+| `COURSE` | `required_training_id` | another course, status `COMPLETED` |
+| `AGE` | `min_age` | age on the day they apply |
+
+**Certificate matching is strict**, and deliberately differs from flight dispatch. A rule naming `medical_class_1` is satisfied only by a certificate recorded as exactly that type: a `medical_class_2` does not satisfy it, and neither does one filed under the legacy coarse `medical` — *including* a coarse row whose free-text `name` reads "Medical Class 1". `CertificateComplianceEvaluator` takes its coarse→granular bridge as an injected `$familyMap`, and `EnrollmentPrerequisites` passes an empty one. Dispatch keeps the bridge (a school that never recorded classes would otherwise ground its fleet); an ATO asking for a Class 1 is asking a different question.
+
+Hours come from `PilotHoursTotals`, the same roll-up the pilot totals card shows: PICUS and the instructor/examiner classes count as PIC, the instructor classes also count as FI, supervisor counts as neither. `user_details.flight_hours` — the career total a pilot declares on their profile — is added to `total` **only**, because it carries no seat breakdown.
+
+A verdict is a list of per-rule answers, each with a reason **code**: `CERTIFICATE_MISSING`, `CERTIFICATE_EXPIRED`, `HOURS_SHORT`, `COURSE_NOT_COMPLETED`, `TOO_YOUNG`, `BIRTHDATE_UNKNOWN`. `BIRTHDATE_UNKNOWN` is not `TOO_YOUNG`: a profile with no date of birth is an unfilled field, not an underage applicant.
+
+Certificates with `status = 'revoked'` are dropped before evaluation; everything else is judged on its issue/expiration dates.
+
+A half-saved rule (kind `HOURS` with no `hours_min`, say) is **ignored**, never treated as unmeetable. Unknown kinds are ignored too, so an older backend never blocks everybody on a rule it cannot read.
+
+### Plan and access
+
+Every endpoint below requires the company to be on the **premium** or **unlimited** plan; any other plan answers `404`.
+
+The plugin's inherited gate only covers `manager_`-prefixed actions, so the three student-facing endpoints (`catalog/*`, `enrollment_requests/submit`, `enrollment_requests/withdraw`) check the plan themselves.
+
+| Endpoint group | Who |
+|----------------|-----|
+| `catalog/*`, `enrollment_requests/submit`, `enrollment_requests/withdraw` | Any user in the company |
+| `intakes/*`, `requirements/*`, `enrollment_requests/decide` | `user_group_id` **≤ 150** |
+
+New actions need an ACL entry. `aco_sync` creates the ACOs, but the `controllers` root grants read to every group **except 180, 240 and 250** — so the three student-facing actions also need explicit `aros_acos` rows, copied from `Trainings/Students/index`. Without them students get `403 ACL_DENIED`.
+
+### Catalog
+
+<mark style="color:blue;">`GET`</mark> `/trainings/catalog/index.json`
+
+Courses this company is currently offering. A course reaches the catalog in one of two ways, and in both it must be `published`, `active`, and not in `CLOSED` mode:
+
+- **Dated courses** need at least one intake in `PUBLISHED` or `FULL` whose `enroll_deadline` has not passed. A `NULL` deadline means "no deadline", not "expired".
+- **`DISTANCE` courses need no intake at all.** An intake schedules a classroom — a start day to gather a group around and a seat count to cap the room — and a distance course has neither, nor does it need anyone from the school to open the door. A published distance course is therefore listed on its own, with `Intakes: []`, and the student starts whenever it suits them. A school that *does* put dates on a distance course is taken at its word: those intakes are returned, and students apply to them exactly as on an on-site course.
+
+Because `location_id` and `month` are questions about a scheduled class, a course with no dates cannot answer them and drops out of a list filtered by either.
+
+`trainings.template` is **not** a visibility flag and is not filtered on. It marks a course as a blueprint other schools may build from (`manager_templates` lists it), which says nothing about whether this school teaches it — a school may well offer the same course it shares as a template. "Show this course in the catalog" (`published`) is the only switch that decides visibility. Until Sep 2026 the catalog excluded templates, which made a published one invisible with no explanation on any screen.
+
+Visible to every user in the company — the course's own requirements are the filter, not group membership.
+
+#### Path Parameters
+
+Filters ride as CakePHP **named parameters**, not a query string:
+`/trainings/catalog/index/type:ONSITE/month:2027-01.json`
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| type | string | No | `DISTANCE` or `ONSITE`. |
+| location_id | string | No | Only courses with a date at this location. Excludes dateless courses. |
+| month | string | No | `YYYY-MM` — courses with a date starting in that calendar month. Excludes dateless courses. |
+| page | integer | No | Paginated, 50 per page (`maxLimit` 200). |
+
+#### Response
+
+```json
+{
+  "courses": [
+    {
+      "Training": {
+        "id": "602852d0-953c-4783-a87d-31dc3626a689",
+        "name": "ATPL (A)",
+        "type": "DISTANCE",
+        "announcement": "Evening ATPL",
+        "announcement_body": "Full ATPL theory, evenings.",
+        "color": "#249ac3",
+        "enrollment_mode": "REQUEST",
+        "duration": 750
+      },
+      "Intakes": [
+        {
+          "id": "06236fe7-2d0d-4094-83e7-285780c6ccd4",
+          "name": "Jan 2027",
+          "status": "PUBLISHED",
+          "start": "2027-01-10",
+          "end": "2027-06-30",
+          "enroll_opens": null,
+          "enroll_deadline": "2026-12-15",
+          "seats": 2,
+          "location_id": null,
+          "seats_taken": 0,
+          "seats_left": 2,
+          "full": false
+        }
+      ],
+      "Me": {
+        "enrollment": "EXPELLED",
+        "enrollment_intake_id": null
+      }
+    }
+  ]
+}
+```
+
+`view` also returns `Requirements` (the rules) and `Me.prerequisites` (this caller's verdict, `null` when the course checks nothing — which is not the same as a verdict where every rule passed). Each verdict row carries a `label`: the certificate catalogue and course names live on the server, and a key like `medical_class_1` or a course uuid means nothing to a client.
+
+`Me` is what the **calling** user already is to this course: `enrollment` (the `trainings_users.status`, absent when never enrolled) and `request` (the newest application's status, with `request_intake_id` and `request_reason`). A closed enrollment — `COMPLETED`, `STOPPED`, `FAILED`, `EXPELLED` — does not stop a fresh application; retakes are normal.
+
+### Catalog course
+
+<mark style="color:blue;">`GET`</mark> `/trainings/catalog/view/{trainingId}.json`
+
+The announcement, the requirements text, a subject summary and every open date, plus the caller's own state. The course object is the response **root** (no wrapper key).
+
+Subjects carry `id`, `code`, `name`, `hours` and `order` only. This page is readable by anyone in the company who has **not** enrolled, so it never exposes lesson content.
+
+`404` when the course is not published, not active, belongs to another company, or the plan does not allow it — the same answer in every case, so the endpoint cannot be used to probe for course ids.
+
+```json
+{
+  "Training": {
+    "id": "602852d0-953c-4783-a87d-31dc3626a689",
+    "name": "ATPL (A)",
+    "requirements": "Class 1 medical",
+    "enrollment_mode": "REQUEST"
+  },
+  "Subjects": [
+    { "id": "7b1e…", "code": "010", "name": "Air Law", "hours": "52.00", "order": 1 }
+  ],
+  "Intakes": [
+    { "id": "06236fe7…", "name": "Jan 2027", "status": "PUBLISHED", "seats_left": 2, "full": false }
+  ],
+  "Me": {}
+}
+```
+
+### Catalog summary
+
+<mark style="color:blue;">`GET`</mark> `/trainings/catalog/summary.json`
+
+A deliberately cheap payload for the home-screen widget: how many courses are on offer plus the first three cards. No seat counts, no per-student state — it is fetched on every home screen.
+
+`count: 0` means the school is offering nothing, and is the signal to render no widget at all.
+
+```json
+{
+  "count": 1,
+  "courses": [
+    {
+      "id": "602852d0-953c-4783-a87d-31dc3626a689",
+      "name": "ATPL (A)",
+      "type": "DISTANCE",
+      "announcement": "Evening ATPL",
+      "color": "#249ac3",
+      "next_start": "2027-01-10",
+      "intakes": 1
+    }
+  ]
+}
+```
+
+### Apply to a course
+
+<mark style="color:green;">`POST`</mark> `/trainings/enrollment_requests/submit.json`
+
+#### Request Body
+
+Exactly one of `intake_id` or `training_id` identifies what is being applied to. Post `intake_id` for a seat on a date; post `training_id` on its own for a `DISTANCE` course offered with no dates. Posting both is not an error — the intake wins and names its own course, so a client cannot reach one course through another's dates.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| intake_id | string | Conditional | The date being applied to. Must belong to the caller's company. |
+| training_id | string | Conditional | The course being applied to, when it is offered with no dates. Must belong to the caller's company. Ignored when `intake_id` is present. |
+| note | string | No | Message for the school, shown to the manager in the approvals queue. |
+
+Neither field is a way past the rules: a course-level application to an `ONSITE` course is refused with `INTAKE_NOT_FOUND`, and so is one to a `DISTANCE` course whose type has since changed. `400 Missing Intake Id` is returned only when neither field is posted.
+
+#### Behavior
+
+What happens is decided by the **server**, from the course's `enrollment_mode` and the seats left. The client must not assume:
+
+| `outcome` | When |
+|-----------|------|
+| `ENROLLED` | `INSTANT` mode and seats free — the enrollment already exists. |
+| `PENDING` | `REQUEST` mode — a manager must approve it. |
+| `WAITLIST` | The intake is `FULL`, whatever the mode. |
+
+Taking the last seat flips the intake to `FULL` **in the same transaction** as the enrollment, under a `SELECT … FOR UPDATE` on the intake row, so two students racing for one seat produce exactly one enrollment.
+
+A **course-level application carries no seat**: there is no room to fill, so `WAITLIST` is unreachable, there is nothing to lock, and the mode alone decides between `ENROLLED` and `PENDING`. The resulting `trainings_users` row (or `training_enrollment_requests` row) keeps `intake_id` `NULL`, and is created through the same `TrainingsUser::enrol()` path as every other enrollment, so the audit trail is identical.
+
+A refusal is a **soft `200`** carrying `result: false` and a reason **code** — never a sentence, because the wording belongs to the client in seven locales:
+
+`NOT_PUBLISHED`, `COURSE_INACTIVE`, `ENROLLMENT_CLOSED`, `INTAKE_NOT_FOUND`, `INTAKE_NOT_OPEN`, `ENROLLMENT_NOT_OPEN_YET`, `ENROLLMENT_DEADLINE_PASSED`, `ALREADY_ENROLLED`, `ALREADY_APPLIED`, `PREREQUISITES_NOT_MET`.
+
+The order of those checks is part of the contract: publication → mode → intake state → enrolment window → who the student already is → capacity. A **full intake whose deadline has passed is closed, not waitlistable**. The deadline day itself is still open — it is the last day to apply, not the first closed one.
+
+With no intake, the middle of that order simply does not apply: publication and mode are checked as always, the intake state, window and capacity checks are skipped, and a live enrollment or a live application still blocks a second one. `INTAKE_NOT_FOUND` is what a course that needs dates answers when asked for a dateless application.
+
+#### Entry requirements at submit time
+
+Requirements are checked **after** the course's own eligibility, so a closed course answers `ENROLLMENT_CLOSED` rather than "you need a medical". What an unmet rule does depends on the mode:
+
+* `INSTANT` — refused, soft `200` with `reason: "PREREQUISITES_NOT_MET"` and the full verdict in `prerequisites_verdict`. There is no human in that path to notice.
+* `REQUEST` — allowed through. The verdict is stored on the application in `prerequisite_snapshot` as JSON, so the manager decides with it in front of them (a medical booked for Friday is a normal reason to approve anyway).
+
+The snapshot is what was true **at submit time**. Editing or deleting a rule afterwards does not rewrite it, which is why the approvals queue reads the stored copy rather than re-evaluating.
+
+A course with no requirement rows costs no extra queries: the facts a rule set needs are gathered per kind, so a course with no hours rule never pays for the aggregate queries `PilotHoursTotals` costs.
+
+A student may hold only one live application per intake — and one per course for the dateless kind, which the `one_open_request` unique key covers by folding a `NULL` intake into the key as `-`. A double submit answers `ALREADY_APPLIED` rather than creating a second one or failing.
+
+```json
+{ "result": true, "outcome": "PENDING", "request_id": "6e4ab9d0-6594-46e1-beff-6019c907bb7e" }
+```
+
+```json
+{ "result": true, "outcome": "ENROLLED", "trainings_user_id": "cab97254-4dab-4d9a-ae2e-851d052e2464" }
+```
+
+```json
+{ "result": false, "reason": "ALREADY_APPLIED" }
+```
+
+### Withdraw an application
+
+<mark style="color:green;">`POST`</mark> `/trainings/enrollment_requests/withdraw/{id}.json`
+
+Only the applicant may withdraw, and only while the application is still `PENDING` or `WAITLIST`. An answered application returns `result: false` with reason `REQUEST_ALREADY_ANSWERED`. Anyone else's application is `404`.
+
+```json
+{ "result": true }
+```
+
+### Course dates
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/intakes/index/{trainingId}.json`
+
+Every date of one course with its seat position. Paginated (`limit` 200, `maxLimit` 1000).
+
+```json
+{
+  "intakes": [
+    {
+      "TrainingIntake": {
+        "id": "06236fe7-2d0d-4094-83e7-285780c6ccd4",
+        "name": "Jan 2027",
+        "status": "PUBLISHED",
+        "start": "2027-01-10",
+        "end": "2027-06-30",
+        "enroll_deadline": "2026-12-15",
+        "seats": 2,
+        "seats_taken": 1,
+        "seats_left": 1,
+        "full": false
+      }
+    }
+  ],
+  "training": {
+    "Training": { "id": "602852d0…", "name": "ATPL (A)", "published": true, "enrollment_mode": "REQUEST" }
+  }
+}
+```
+
+### Save a course date
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/intakes/save.json`
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string | No | Omit to create. |
+| training_id | string | Yes | The course. **Fixed at creation** — sending a different one on an update is ignored, because moving a date would move its applications and enrollments with it. |
+| name | string | No | Shown to students, e.g. "Jan 2027". |
+| status | string | No | `DRAFT` (default), `PUBLISHED`, `FULL`, `CLOSED`, `CANCELED`. |
+| start / end | date | No | `YYYY-MM-DD`. `end` may not precede `start`. |
+| enroll_opens / enroll_deadline | date | No | `YYYY-MM-DD`. The deadline may not precede the opening. |
+| seats | integer | No | **Empty or absent means unlimited.** Send `0` only if you really mean nobody can enroll. |
+| location_id | string | No | |
+| notes | string | No | Internal, not shown to students. |
+
+`company_id` is taken from the session and never from the payload.
+
+```json
+{
+  "result": true,
+  "validationErrors": [],
+  "intake": { "TrainingIntake": { "id": "06236fe7…", "seats_taken": 0, "seats_left": 2, "full": false } }
+}
+```
+
+```json
+{
+  "result": false,
+  "validationErrors": { "end": ["The course cannot end before it starts"] }
+}
+```
+
+> Note the PHP quirk: an **empty** `validationErrors` serialises as `[]` (array), a populated one as an object. Check for emptiness before treating it as a map.
+
+### Delete a course date
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/intakes/delete/{id}.json`
+
+Soft delete. **Refused while any student is enrolled on the date** — cancel it instead, so the students and their history survive. The refusal is a soft `200` carrying the count:
+
+```json
+{
+  "result": false,
+  "message": "This intake has 1 enrolled student(s). Cancel it instead of deleting it.",
+  "enrolled": 1
+}
+```
+
+### Change a date's status
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/intakes/status/{id}/{status}.json`
+
+| Status | Meaning |
+|--------|---------|
+| `DRAFT` | Invisible to students. New dates start here. |
+| `PUBLISHED` | In the catalog, taking applications. |
+| `FULL` | Visible, **waitlist joins only**. Normally written by the application the moment the last seat goes; setting it by hand stops enrolment without cancelling the run. |
+| `CLOSED` | No longer taking anyone. |
+| `CANCELED` | The run is called off. |
+
+Raising `seats` and setting `PUBLISHED` puts a full date back in the catalog. An unknown status is `400`.
+
+```json
+{ "result": true, "message": "Intake updated", "status": "CLOSED" }
+```
+
+### Decide an application
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/enrollment_requests/decide/{id}/{decision}.json`
+
+`decision` is `APPROVE` or `REJECT`. A rejection takes `{ "reason": "…" }`, which the student sees on the course page.
+
+Approving creates the enrollment through `TrainingsUser::enrol()` — the same path the manager's own enrol screen uses, so the row and the `TrainingsUserStatusChange` audit entry are identical — stamps `trainings_user_id` on the application, and re-checks capacity **under a row lock**. A date that filled in the meantime answers `result: false` with `INTAKE_FULL` rather than overbooking.
+
+Approving a `WAITLIST` row is how a waitlisted student is promoted. Promotion is always manual; nothing is promoted automatically when a seat frees up.
+
+```json
+{ "result": true, "outcome": "APPROVED", "trainings_user_id": "af1a9796-f5ed-438e-b6d3-6655d959ac62" }
+```
+
+```json
+{ "result": false, "reason": "INTAKE_FULL" }
+```
+
+### Applications queue
+
+Open applications also appear on the existing approvals endpoint, as a third queue beside `approvals` and `flights`:
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/approvals/index.json`
+
+```json
+{
+  "approvals": [],
+  "flights": [],
+  "enrollments": [
+    {
+      "TrainingEnrollmentRequest": {
+        "id": "6e4ab9d0…",
+        "status": "PENDING",
+        "student_note": "Evenings please",
+        "created": "1789...",
+        "user_id": "490"
+      },
+      "Training": { "id": "602852d0…", "name": "ATPL (A)" },
+      "TrainingIntake": { "id": "06236fe7…", "name": "Jan 2027", "seats_taken": 0, "seats": 2 },
+      "Applicant": { "id": 490, "name": "Martha Smith" }
+    }
+  ]
+}
+```
+
+`PENDING` rows come before `WAITLIST` ones. The applicant's name arrives in `Applicant` rather than a `User` association: `users` lives in the main database while these rows live in `flylogs_trainings`, and the name is on `user_details` in any case. A course manager sees applications for their own courses; `user_group_id` ≤ 135 sees every course's.

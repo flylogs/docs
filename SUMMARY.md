@@ -98,6 +98,7 @@
 * [Training basics](training-courses/training-basics.md)
 * [Create a training](training-courses/create-a-training.md)
 * [Edit a training](training-courses/edit-a-training.md)
+* [Open trainings](training-courses/open-trainings.md)
 * [Flight Training](training-courses/flight-training.md)
 * [Stage Checks](training-courses/stage-checks.md)
 * [Mission Authorizations](training-courses/mission-authorizations.md)
