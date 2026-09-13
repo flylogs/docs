@@ -41,6 +41,8 @@ You can click on Monday 10am, and drag the mouse to Thursday 5pm, creating a sin
 
 To be able to select customized time frames, first disable the **I am always available** option. You will notice how all the green chunks disappear and you can click on the calendar.
 
+{% embed url="https://youtu.be/9TzFRb1zU7I" %}
+
 {% hint style="info" %}
 If you are using a touch device (tablet or a smartphone), note that you need to tap and hold on the desired time, then drag to the desired finish time and release.
 {% endhint %}

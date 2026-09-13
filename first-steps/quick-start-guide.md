@@ -6,6 +6,8 @@ description: Flylogs Company Account Setup Guide
 
 This guide is intended to help companies configure their Flylogs account from scratch in a logical and efficient order. Following these steps sequentially will ensure that your organization data, aircraft, users, and trainings are correctly integrated into the system.
 
+{% embed url="https://youtu.be/jjO1CYGbfb8" %}
+
 ***
 
 ### 1. Flylogs Account Configuration

@@ -2698,3 +2698,214 @@ Open applications also appear on the existing approvals endpoint, as a third que
 ```
 
 `PENDING` rows come before `WAITLIST` ones. The applicant's name arrives in `Applicant` rather than a `User` association: `users` lives in the main database while these rows live in `flylogs_trainings`, and the name is on `user_details` in any case. A course manager sees applications for their own courses; `user_group_id` ≤ 135 sees every course's.
+
+## Exam sittings
+
+> **Schema additions** (`flylogs_trainings`). Five new tables:
+> `exam_authority_rules` (attempt limits the school configures),
+> `exam_sittings` (one dated sitting), `exam_sitting_subjects` (the course
+> subjects a sitting offers), `exam_registrations` (a student put forward for a
+> sitting) and `exam_registration_subjects` (the subjects chosen, and the
+> official result of each).
+>
+> These tables are separate from the internal `exams` table. `exams.caa_exam` is unchanged, and official results **never** write `activity_progress`. None of the tables has a fee or price column.
+
+A sitting is `type` `AUTHORITY` (the authority's exam; Flylogs only manages registration and results) or `SCHOOL`. `datetime` is a unix timestamp. `registration_opens` / `registration_deadline` are `Y-m-d` dates, and the deadline day is the last day to register **or cancel**. `seats` and `max_subjects` `NULL` mean unlimited / no cap.
+
+### Plan and access
+
+Every endpoint requires the **premium** or **unlimited** plan; any other plan answers `404`. The student-facing actions check the plan themselves, because the plugin's inherited gate only covers `manager_` actions.
+
+| Endpoint group | Who |
+|----------------|-----|
+| `exam_registrations/index`, `register`, `cancel`, `mine` | Any user in the company. `cancel` only works on the caller's own registration. |
+| `exam_sittings/manager_*` (reads included) | `user_group_id` **≤ 150** |
+
+The 18 new actions need `aco_sync`. The four student actions also need explicit `aros_acos` grants copied from `Trainings/Students/index`, like the catalog: see `flylogs/migrations/2026-09-13-exam-sittings-acl.md`.
+
+### Attempt rules
+
+`exam_authority_rules` rows are **data the school edits**; no regulation is encoded in code.
+
+| Column | Meaning |
+|--------|---------|
+| `max_attempts_per_subject` | Attempts at one subject |
+| `max_sittings` | Distinct sittings used, across every subject |
+| `min_days_between_attempts` | Calendar days between two attempts at the same subject, pass or fail |
+| `completion_window_months` | Window within which later sittings must fall |
+| `window_starts_on` | `FIRST_ATTEMPT` or `FIRST_PASS`, at any subject |
+| `window_from_month_end` | `1` starts the window at the end of the anchor's calendar month |
+
+Every limit is nullable: `NULL` means **not limited**. `0` is refused by validation.
+
+`ExamAttemptPolicy` evaluates one subject at one candidate sitting and returns this verdict:
+
+```json
+{
+  "verdict": "BLOCK",
+  "reason": "TOO_SOON",
+  "reasons": [{ "reason": "TOO_SOON", "verdict": "BLOCK" }, { "reason": "LAST_ATTEMPT", "verdict": "WARN" }],
+  "rule": "EASA",
+  "attempts_used": 1, "attempt_no": 2, "max_attempts": 2,
+  "sittings_used": 1, "max_sittings": null,
+  "passed": false, "last_attempt_at": 1791877884,
+  "next_eligible_date": "2026-11-12", "window_ends": "2028-04-30"
+}
+```
+
+`BLOCK` reasons: `ATTEMPTS_EXHAUSTED`, `SITTINGS_EXHAUSTED`, `WINDOW_EXPIRED`, `TOO_SOON`. `WARN` reasons: `ALREADY_PASSED`, `LAST_ATTEMPT`, `LAST_SITTING`. `reason` is always the most severe reason present.
+
+* An attempt is an `exam_registration_subjects` row with `result` `PASS` or `FAIL` and a `sat_at`. `PENDING`, and absences (recorded on the registration), are not attempts.
+* History is scoped **per rule**: all the student's sat results in sittings with the same `authority_rule_id`. Sittings with no rule share one scope of their own, so they still get counters but never a `BLOCK`.
+* The candidate sitting's own results are left out, so a sitting whose results are in still reads as the attempt it was.
+* Days are counted in the company timezone.
+
+### Eligibility and seats
+
+A student may register for a subject when their enrolment on the subject's course is:
+
+* `COMPLETED`; or
+* `ACTIVE`, with every mandatory `EXAM` activity of the subject done (`activity_progress.value = 1` on that enrolment); or, when the subject has no mandatory exam, every mandatory `LESSON` done.
+
+`STOPPED`, `FAILED` and `EXPELLED` enrolments are not eligible.
+
+A registration holds a seat while it is `PENDING`, `CONFIRMED`, `SAT` or `ABSENT`. Counts are derived on every read. A sitting flips `PUBLISHED` → `FULL` when its last seat is taken and back again when one frees up; `FULL` is never set by hand.
+
+### Student: open sittings
+
+<mark style="color:blue;">`GET`</mark> `/trainings/exam_registrations/index.json` (named param `page`)
+
+This returns sittings in `PUBLISHED` or `FULL` that haven't taken place yet and whose deadline hasn't passed. Each sitting lists **only the subjects the caller is eligible for**, each with its `attempt` verdict. A sitting with no eligible subject and no registration of the caller's is left out.
+
+```json
+{
+  "sittings": [{
+    "ExamSitting": { "id": "…", "name": "October theory", "type": "AUTHORITY", "status": "PUBLISHED", "datetime": 1792400000, "registration_deadline": "2026-10-01", "seats": 20, "max_subjects": 4, "seats_taken": 3, "seats_left": 17, "rule_name": "EASA", "location_name": "Madrid" },
+    "Subjects": [{ "id": "…", "training_subject_id": "…", "code": "010", "name": "Air Law", "training_name": "ATPL(A)", "seats": null, "taken": 2, "seats_left": null, "eligible": true, "eligibility_reason": null, "attempt": { "verdict": "OK", "attempt_no": 1 } }],
+    "Registration": null,
+    "can_register": { "allowed": true, "reason": null }
+  }],
+  "paging": { "page": 1, "pageCount": 1 }
+}
+```
+
+### Student: register
+
+<mark style="color:green;">`POST`</mark> `/trainings/exam_registrations/register.json`
+
+```json
+{ "sitting_id": "…", "subjects": ["<exam_sitting_subjects.id>", "…"], "note": "optional" }
+```
+
+The server validates the request under a row lock on the sitting, so two students racing for the last seat get one registration and one refusal. A refusal is `{ "result": false, "reason": "…", "subject_id": "…" }`. The reasons, in the order they are checked:
+
+`SITTING_FULL`, `SITTING_NOT_OPEN`, `SITTING_PAST`, `REGISTRATION_NOT_OPEN_YET`, `REGISTRATION_DEADLINE_PASSED`, `ALREADY_REGISTERED`, `NO_SUBJECTS`, `TOO_MANY_SUBJECTS`, `SUBJECT_NOT_OFFERED`, `SUBJECT_NOT_ELIGIBLE`, `ATTEMPT_BLOCKED`, `SUBJECT_FULL`, `SITTING_FULL`.
+
+A new registration is `PENDING`. A subject whose verdict is `WARN` is accepted, and the warning comes back in the response:
+
+```json
+{ "result": true, "registration": { "id": "…", "status": "PENDING", "subjects": ["…"] }, "warnings": [{ "subject_id": "…", "reason": "LAST_ATTEMPT" }] }
+```
+
+### Student: cancel
+
+<mark style="color:green;">`POST`</mark> `/trainings/exam_registrations/cancel/{id}.json`
+
+This cancels the caller's own `PENDING` or `CONFIRMED` registration, up to and including the registration deadline, or until the sitting starts when there is no deadline. Refusals: `CANNOT_CANCEL_STATUS`, `CANCEL_DEADLINE_PASSED`. Another user's registration id answers `404`.
+
+### Student: my registrations
+
+<mark style="color:blue;">`GET`</mark> `/trainings/exam_registrations/mine.json` (named param `page`)
+
+This returns `registrations`, newest first, each with `ExamSitting`, `Subjects` (result, score, attempt_no) and `can_cancel`. It also returns `standing`: one entry per rule and subject the caller has ever sat, with the `attempt` verdict evaluated as of now (attempts used, passed, next eligible date, window end). `standing` is built from the whole history, not from the current page.
+
+### Manager: sittings
+
+| Method | Path | Notes |
+|--------|------|-------|
+| `GET` | `/manager/trainings/exam_sittings/index.json` | Named params `status`, `page`. Rows carry `seats_taken`, `rule_name`, `Subjects` and `Registrations` (count by status). `limit` 50. |
+| `GET` | `/manager/trainings/exam_sittings/view/{id}.json` | One sitting with `Subjects` and `Rule`. |
+| `GET` | `/manager/trainings/exam_sittings/options.json` | `trainings` (with `Subjects`), `rules`, `locations` for the form. |
+| `POST` | `/manager/trainings/exam_sittings/save.json` | Create or update. Ignores `status`, `company_id` and `deleted`. |
+| `POST` | `/manager/trainings/exam_sittings/status/{id}/{status}.json` | `DRAFT`, `PUBLISHED`, `CLOSED` or `CANCELED`. Publishing a sitting with no seats left lands on `FULL`. |
+| `POST` | `/manager/trainings/exam_sittings/delete/{id}.json` | Soft delete. Refused while any registration is `PENDING`, `CONFIRMED`, `ABSENT` or `SAT`; the response carries `registered`. |
+
+`save.json` takes an optional `subjects` array, `[{ "training_subject_id": "…", "seats": null }]`. When it is present, the offered subjects are reconciled to match it row by row: new subjects are added, seat changes are updated, and subjects left out are soft-deleted. Removing a subject that someone holds a seat for rolls the whole save back with `{ "result": false, "reason": "SUBJECT_HAS_REGISTRATIONS", "subject_id": "…", "registered": 2 }`. Every subject must belong to one of the company's courses (otherwise `404`), and so must the rule, course and location.
+
+### Manager: registrations and results
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/exam_sittings/registrations/{id}.json` (named params `page`, `limit` up to 1000)
+
+This returns every registration with `Applicant` `{ id, name }` and `Subjects`. Each subject carries its result and a `verdict` evaluated as of this sitting.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/exam_sittings/registration_status.json`
+
+```json
+{ "sitting_id": "…", "ids": ["…"], "status": "CONFIRMED", "reason": "optional, stored on REJECTED/CANCELED" }
+```
+
+| To | Allowed from |
+|----|--------------|
+| `CONFIRMED` | `PENDING`, `ABSENT`, `REJECTED`, `CANCELED` |
+| `REJECTED` | `PENDING`, `CONFIRMED` |
+| `CANCELED` | `PENDING`, `CONFIRMED`, `ABSENT` |
+| `ABSENT` | `PENDING`, `CONFIRMED` |
+
+`SAT` is never set here. Rows that can't make the requested change are skipped, not failed: `{ "result": true, "updated": [...], "skipped": [{ "id": "…", "reason": "INVALID_TRANSITION" | "SITTING_FULL" | "NOT_FOUND" }] }`. Moving a registration back into a seat-holding status is refused per row once the sitting is full.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/exam_sittings/results/{id}.json`
+
+```json
+{ "results": [{ "id": "<exam_registration_subjects.id>", "result": "PASS", "score": 88 }] }
+```
+
+`PASS`/`FAIL` stamps `sat_at` (the sitting's `datetime`) and `attempt_no` (from the student's earlier sat results under the same rule, this sitting excluded), and marks the registration `SAT`. `PENDING` clears the result; a `SAT` registration with nothing sat left returns to `CONFIRMED`. Skip reasons: `NOT_FOUND`, `UNKNOWN_RESULT`, `REGISTRATION_NOT_ACTIVE` (rejected or cancelled), `INVALID`.
+
+### Manager: register a student
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/exam_sittings/candidates/{id}.json`
+
+This returns every live user of the company (`users.deleted = 0`, `active = 1`) with an `ACTIVE` or `COMPLETED` enrolment on a course whose subjects the sitting offers, sorted by name. Each candidate carries `registered` (they already hold a live registration here) and `Subjects`, keyed by `exam_sitting_subjects.id`, each with `eligible`, `eligibility_reason` (`NOT_ENROLLED`, `ENROLMENT_CLOSED`, `EXAMS_NOT_PASSED`, `LESSONS_NOT_COMPLETE`) and `attempt`, the verdict at this sitting. Eligibility is shown here, not enforced.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/exam_sittings/register.json`
+
+```json
+{ "sitting_id": "…", "user_id": 490, "subjects": ["<exam_sitting_subjects.id>"], "note": "optional" }
+```
+
+The request is checked by `ExamRegistrationRules::decideForManager()` under the same row lock as a student's registration. A manager is **not** bound by the registration window, the sitting's date (so past sittings can be recorded), `DRAFT`/`CLOSED` status, or eligibility. A manager **is** bound by a `CANCELED` sitting, one live registration per student, `max_subjects`, the offered subjects, seats and the attempt rules (`ATTEMPT_BLOCKED`).
+
+The user must belong to the session company and be live; otherwise the call answers `404`. The registration is created `CONFIRMED` and the student is notified. Subjects the student isn't ready for, and attempt warnings, come back as `warnings`:
+
+```json
+{
+  "result": true,
+  "registration": { "id": "…", "status": "CONFIRMED", "subjects": ["…"] },
+  "warnings": [
+    { "subject_id": "…", "reason": "NOT_ELIGIBLE", "detail": "EXAMS_NOT_PASSED" },
+    { "subject_id": "…", "reason": "LAST_ATTEMPT" }
+  ]
+}
+```
+
+### Notifications
+
+The student receives a message through `Message::fastSave`: in-app, plus email according to their notification settings. It links to `/trainings/exam_sittings` and is sent:
+
+| Trigger | Subject |
+|---------|---------|
+| `manager_register` | `Registered for exam: {sitting}`, with the subject list |
+| `registration_status` → `CONFIRMED` | `Exam registration confirmed: {sitting}`, with the subject list |
+| `registration_status` → `REJECTED` | `Exam registration not accepted: {sitting}`, with the reason, HTML-escaped |
+| `registration_status` → `CANCELED` | `Exam registration cancelled: {sitting}`, with the reason, HTML-escaped |
+| `results` | `Exam results: {sitting}`, listing each subject whose result **changed** to `PASS`/`FAIL`, with its score |
+
+Nothing is sent for `ABSENT`, for a score-only correction, or when the same result is saved again. Messages are sent after the transaction commits; a failure is logged and never undoes the change.
+
+### Manager: authority rules
+
+| Method | Path | Notes |
+|--------|------|-------|
+| `GET` | `/manager/trainings/exam_sittings/rules.json` | Each rule carries `sittings`, the number of sittings using it. |
+| `POST` | `/manager/trainings/exam_sittings/rule_save.json` | Create or update. Empty limits are stored as `NULL`. |
+| `POST` | `/manager/trainings/exam_sittings/rule_delete/{id}.json` | Soft delete, refused while a sitting uses the rule (`sittings` in the response). |

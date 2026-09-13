@@ -12,7 +12,7 @@ This documentation will be updated continuously to integrate new changes as they
 
 
 
-{% embed url="https://www.youtube.com/watch?v=wSXQfCJkn6Q" %}
+{% embed url="https://youtu.be/uqOeHZhy8iY" %}
 
 Pilots worldwide are contributing to design Flylogs as a tool to save time to  pilots and company operators.
 

@@ -6,6 +6,8 @@ description: Create your company account easily and start your Flylogs premium
 
 If you need to manage crew, aircrafts or flights, you can start using Flylogs and streamline your operations quickly. Creating an account in Flylogs and start using the system is a 5 minute process that you will read about here:
 
+{% embed url="https://youtu.be/jjO1CYGbfb8" %}
+
 {% hint style="info" %}
 You should only create a new Flylogs account if you own or work in an aviation company at the management level. You will need a corporate email address with **@aviationcompanyname.tld**.
 
