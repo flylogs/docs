@@ -7,6 +7,8 @@ description: Comply with your local authority flight time and duty time regulati
 Control and comply with your CAA Duty and flight time limits.\
 You can set the time limits that apply to your operations easily in your company settings page.
 
+{% embed url="https://youtu.be/lJklIEq7utA" %}
+
 ![](../.gitbook/assets/dutyTimeconfigbox.png)
 
 The system gives you the option to automatically block overtime proactively before the flight scheduling happens with a visual warning. So the warning happens before the flight is performed or even scheduled.

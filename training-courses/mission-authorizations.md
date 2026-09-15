@@ -10,6 +10,8 @@ It is not solo-only: any flight mission in a course can be marked as requiring a
 
 Mission authorizations are part of the stage-checks feature and are **off by default**. They apply only while [**Require stage checks**](stage-checks.md) is enabled on the course.
 
+{% embed url="https://youtu.be/m5M4VWQy6q4" %}
+
 ### Marking a mission as requiring authorization
 
 Edit the mission and set **Requires authorization before the student may fly it**.

@@ -8,6 +8,8 @@ We are glad to announce the new **Pilot Documentation Control System (PDCS)**, w
 
 The **PDCS** allows you to have a better control of pilot documentation and expiration dates.
 
+{% embed url="https://youtu.be/OmonhYK-9ks" %}
+
 **This new function also adds a safety barrier that will prevent pilots with expired or missing license or medical certificates from:**
 
 * publishing their flight availability,

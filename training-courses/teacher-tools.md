@@ -4,8 +4,10 @@ description: Classroom management and teacher tools
 
 # Teacher tools
 
-Once a class or exam is scheduled, the assigned teacher and students get access to the scheduled event page details. Additionally, the selected teacher and all company managers, can add some extra content to the event, communicate with students and rate them. \
-\
+Once a class or exam is scheduled, the assigned teacher and students get access to the scheduled event page details. Additionally, the selected teacher and all company managers, can add some extra content to the event, communicate with students and rate them.
+
+{% embed url="https://youtu.be/E7SazQtlZTQ" %}
+
 **This is what teachers can do:**
 
 **In regular lessons:**

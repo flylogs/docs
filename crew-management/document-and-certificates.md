@@ -10,6 +10,8 @@ Using "My Certificates", users can create various types of documents, attach fil
 
 > Flylogs will send automatic expiration warnings, both to the user and the company managers.
 
+{% embed url="https://youtu.be/Puba9spPksE" %}
+
 <figure><img src="../.gitbook/assets/Screenshot 2023-04-18 at 19.50.45.png" alt=""><figcaption><p>Quick view of My certificates available to any Flylogs user.</p></figcaption></figure>
 
 ### Automatic Alerting

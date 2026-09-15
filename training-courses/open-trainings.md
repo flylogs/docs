@@ -6,6 +6,8 @@ A published course shows its announcement, the requirements, and — for courses
 
 > Trainings are available on the **Premium** and **Unlimited** plans. On any other plan the catalog is not shown at all.
 
+{% embed url="https://youtu.be/19Tn0TR1MFI" %}
+
 ## Publishing a course
 
 Open the course from **Trainings → Edit**, then the **Open enrolment** tab.

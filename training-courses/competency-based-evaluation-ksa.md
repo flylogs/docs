@@ -8,6 +8,8 @@ description: Student Competency-Based Evaluation (KSA) in Flylogs Trainings
 
 Flylogs Trainings supports **competency-based student evaluation (KSA)** through configurable learning objectives linked directly to lessons. This allows instructors and training managers to assess each student consistently against predefined objectives, in addition to tracking attendance.
 
+{% embed url="https://youtu.be/XutuWIDkKAY" %}
+
 ***
 
 ### Overview

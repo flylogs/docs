@@ -8,6 +8,8 @@ The Company Settings page is the control center of your Flylogs environment. Eve
 
 You will find it in the manager menu under **Company → Settings**. Only company managers can open this page.
 
+{% embed url="https://youtu.be/iUthroZZBS4" %}
+
 {% hint style="info" %}
 **Changes save automatically.** There is no Save button — every change is stored a moment after you make it, and a small confirmation appears at the bottom-right corner of the screen. Settings take effect for every user on their next page load; nobody needs to log out and back in.
 {% endhint %}
