@@ -439,6 +439,24 @@ Add a new aircraft to the fleet. Admin access required.
 
 Update aircraft details. Admin access required.
 
+#### Clocks
+
+Two fields choose which clock drives a computation. Both accept the same vocabulary and are validated: an unknown value answers `400` with a field error under `errors.Aircraft.<field>` (it used to reach the database and fail with a `500`).
+
+| Value | Meaning |
+|-------|---------|
+| `btime` | Block time (off-blocks → on-blocks) |
+| `ftime` | Flight time (take-off → landing) |
+| `ttime` | Tach: `abs(tach_end − tach_start)` from the readings entered on the flight |
+| `htime` | Hobbs: `abs(hobbs_end − hobbs_start)` from the readings entered on the flight |
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Aircraft.maintenance | string | Clock that advances the airframe hours. `htime` treats the Hobbs end reading as the airframe's absolute value (see [Maintenance Jobs](maintenance-jobs.md)). |
+| Aircraft.billing_timer | string | Clock a flight is billed on when billing is enabled for the aircraft. For `ttime` and `htime` a flight missing either reading, or whose readings differ by more than 24 h, is **not** auto-billed. Only read when `Aircraft.billing` is `1`. |
+
+`ttime` / `htime` need the matching `Aircraft.tach` / `Aircraft.hobbs` timer enabled, otherwise the flight form never collects the readings; the NEO client switches the Hobbs timer on for you when either clock is set to `htime`.
+
 #### Flight-type attributions (optional)
 
 The aircraft end of the fleet restriction that flight types own (see [Flight Types → Aircraft restriction](flight-types.md#aircraft-restriction-optional)). The rows are the same rows; only the direction of editing differs, so an empty set is read the flight type's way:

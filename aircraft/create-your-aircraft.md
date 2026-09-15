@@ -102,7 +102,7 @@ If you want an aircraft simply excluded from one flight type, do it from the [fl
 
 Your aircraft can also be configured for rental individually. You can specify different rental rates for different services. This rates at the same time, can also be customized for each pilot later on.
 
-Flylogs will automatically calculate the correct amount to be billed based on the flight information. Billing by block time, flight time or tach time can be configured.
+Flylogs will automatically calculate the correct amount to be billed based on the flight information. Billing by block time, flight time, tach time or Hobbs time can be configured. Tach and Hobbs billing charge the difference between the start and end meter readings entered on each flight, so the aircraft must have the matching timer enabled (Flylogs switches the Hobbs timer on for you when you pick Hobbs billing); a flight missing either reading is not auto-billed.
 
 Flylogs will automatically suggest the billing price based on the aircraft configuration, flight information and pilot customized price (if any).  &#x20;
 

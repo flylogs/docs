@@ -1646,6 +1646,8 @@ Retrieve exam results and (when enabled) correct answers.
 
 Retrieve students with filtering. All filter parameters optional (use empty string to skip).
 
+**Access:** staff `user_group_id <= 135`, Chief Pilot (150), Flight Instructors (170) and auditors (250). Crew Scheduling (140) and Flight Dispatcher (145) are ACL-denied. Flight Instructors (170) can read this list, `/manager/trainings/students/index.json` and `/manager/trainings.json` (the course list) but are ACL-denied every mutating `Students/manager_*` action (`enroll`, `edit`, `finish`, `status`, `reset`, `unroll`), which stay `<= 135` / Chief Pilot. Any other group gets `403 ACL_DENIED`.
+
 `status` accepts one of `ACTIVE` (default when omitted), `COMPLETED`, `STOPPED`, `FAILED`, `EXPELLED`, or `ALL` to return every enrollment regardless of status. Anything else returns `400 Unknown status`. Each row carries `TrainingsUser.status`, `TrainingsUser.status_reason` and `TrainingsUser.status_changed`.
 
 > **Breaking change.** This filter replaces the old `finished:{true|false}` segment, and `TrainingsUser.finished` no longer appears in any response — the `finished` column was dropped in favour of `status`. See [Enrollment status](#enrollment-status).

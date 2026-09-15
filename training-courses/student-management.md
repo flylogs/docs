@@ -8,6 +8,8 @@ Flylogs training allows any existing user in your company to be enrolled as a st
 
 To get started, go to the "**Trainings**" menu tab and click on "**STUDENTS**." On this page, you'll see the students currently enrolled in the selected training. You can choose any of your trainings, and the list will update to display all existing students and their progress.
 
+**Who can see this page:** company managers (Administrator, Operations, Compliance & Safety, HR, Financial and Trainings Manager), Chief Pilot, Flight Instructors and external auditors. Flight Instructors and auditors get a **read-only** view: they can open any student's record but cannot enroll, edit, complete or reset an enrollment — those actions are limited to staff up to and including Chief Pilot.
+
 #### Enrolling new students
 
 First, you'll need to add your students to one of your courses. To do this, click on the blue button labeled "Enroll students" in the top right corner. A small pop-up window will appear. In this window, you can choose students individually, or you can enroll an entire pilot group at once. We recommend creating pilot groups for each academic year and adding them in batches. This will make management easier, especially when you have multiple classes to oversee in the future.
@@ -20,6 +22,8 @@ Select the training in which you want to enroll the user(s). Additionally, you h
 Once you've enrolled at least one student, the current page will show a report detailing the progress of students enrolled in the selected training. This report, similar to the one in the screenshot below, provides essential information for tracking student progress. It includes details such as progress in theory learning lessons, flight training mission progress, attendance records, and the date of the last flight, if applicable.
 
 <figure><img src="../.gitbook/assets/trainingsUsersEnrolled.png" alt=""><figcaption><p>Students report page</p></figcaption></figure>
+
+**Who can see this:** company managers (training manager, operations manager and above) and external auditors. Flight instructors do not get the **Students** entry in the Trainings menu; they open a student's training record from the pilot profile instead — go to **Pilots**, open the student, and click the course in the **Trainings** box. That record is the same progress page described below, read-only for instructors.
 #### Student training progress page
 
 You'll find a comprehensive training progress report page for each of your students. This page, as shown in the screenshot below, details progress and attendance in ground school lessons, exams, and flight missions. Additionally, it offers basic analytics to help you understand the strengths and weaknesses of each student.

@@ -31,7 +31,7 @@ Automatic billing happens 2 minutes after the flight was confirmed.
 
 The bill will be issued to the selected pilot or the default billed pilot set in your company billing settings.
 
-Flylogs will automatically multiply the flight/bock or tach time by the first rate that you specify in the aircraft configuration.
+Flylogs will automatically multiply the flight, block, tach or Hobbs time (whichever billing criteria the aircraft is configured with) by the first rate that you specify in the aircraft configuration.
 
 The bill will appear in your flight billing list and also in the flight it self.
 

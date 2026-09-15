@@ -49,6 +49,8 @@ A teacher who is also enrolled as a student in the same class will be treated as
 Online exams are graded automatically and cannot be edited manually from the class page.
 {% endhint %}
 
+An onsite exam grade entered on the class page is recorded as one attempt for that sitting in the student's exam history, the same history the manager's **Add result** button writes to. Saving the class again updates that sitting's attempt rather than adding another one, and the student's pass/fail state and best score are recalculated from the full history.
+
 ### Attendance statuses and signing
 
 <figure><img src="../.gitbook/assets/trainingsMustSignPrompt.png" alt=""><figcaption><p>A class left unsigned for more than two days prompts the teacher to sign it.</p></figcaption></figure>

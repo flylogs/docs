@@ -72,6 +72,7 @@ Each Flight Instructor can be assigned as a **supervisor** to one or more studen
 * **Create and confirm flights** for themselves and their supervised students.
 * **View their own schedule** and the schedules of their assigned students.
 * **View their own FI assignment** — their list of supervised students.
+* **Open the Trainings → Students overview** (Premium plan required) — the same list of enrolled students and their theory/flight progress that managers and the Chief Pilot see, for every student in the company, not only supervised ones. It is read-only for instructors: enrolling, editing, completing or resetting an enrollment stays with staff up to Chief Pilot.
 * **Submit safety reports** for incidents or hazards they observe.
 * **Log their own flights** in the same way any pilot would.
 
@@ -92,7 +93,7 @@ The dashboard focuses on day-to-day instructional duties:
 
 ### Limitations
 
-* Can only view profiles and flights of their **directly supervised students** — not other pilots, other FIs or unsupervised students.
+* Can only view profiles and flights of their **directly supervised students** — not other pilots, other FIs or unsupervised students. The Trainings → Students overview is the one exception: it lists every enrolled student's training progress, read-only.
 * **Cannot edit confirmed flights** — once a flight is confirmed, only a Chief Pilot or manager can modify it.
 * Cannot create or modify schedule records unless the company setting "Allow FI to manage schedules" is enabled.
 * Cannot send schedule notifications for schedules they did not create.
