@@ -59,7 +59,7 @@ To sign the CRS:
 3. Set the **validity period** for the next maintenance window. You can combine any of:
    * **Flight hours** — hours of flight after which the next check is due.
    * **Landings** — number of landings after which the next check is due.
-   * **Fixed date** — a calendar date/time on which the CRS expires. After this date the aircraft cannot be scheduled until a new CRS is signed.
+   * **Fixed date** — a calendar date/time on which the CRS expires. After this date the aircraft cannot be scheduled until a new CRS is signed (or this job's fixed date is edited). Use it only for a real calendar expiry (an ARC, an annual inspection…). For hour- or landing-based checks leave it unset and rely on **Flight hours** / **Landings**: a fixed date set to the _estimated_ next-check day silently grounds the aircraft in the schedule from that day on. The schedule shows the responsible job and links back here when it refuses a booking.
 4. Attach any supporting **documents** (the CRS file itself, work reports, etc.).
 5. Confirm with your **password** and tick the certification statement:\
    _"I confirm the information above is accurate and certify that the work described has been completed in accordance with the applicable regulations."_

@@ -31,6 +31,7 @@ Aircraft are listed down the left side; time runs across the top. Each schedule 
 * **Now indicator & navigation** — A line marks the current time. Use **today / prev / next** to move through dates, or click a day heading to jump to it.
 * **Business hours shading** — Daylight hours for the base airport (sunrise to sunset) are highlighted so night operations are easy to spot.
 * **Maintenance blocks** — Open maintenance jobs appear as striped 🔧 background bands on the affected aircraft, and the slot cannot be booked over them.
+* **Airworthiness blocks** — A red ⛔ band covers an aircraft row from the moment its latest signed CRS stops being valid (the **Fixed date** set when the CRS was signed) or an aircraft document (insurance, airworthiness, registration…) expires. Selecting a slot inside the band is refused and a notice above the calendar names the aircraft, the instant and the maintenance job or document responsible, with a link to open the job. The same notice appears in the flight form, and Save is disabled, if you set a start inside the band by hand. To lift it, sign a new CRS, change that job's fixed date, or renew the document. Only the aircraft's **latest** signed CRS counts — an older job's fixed date no longer applies once a newer CRS is signed.
 * **Colour legend** — A legend below the calendar maps the left‑border colour of each block to its status (Draft, Scheduled, Confirmed, Delay, Departed, Landed, Canceled, Dispatched). A 🛣️ road icon marks local / touch‑and‑go training missions.
 
 ### Creating a flight
