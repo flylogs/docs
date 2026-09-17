@@ -76,6 +76,20 @@ Retrieve the full company profile, theme, operational settings, and billing conf
 }
 ```
 
+#### CompanyDetail — training organisation fields (task #967)
+
+Present on both `GET /companies/settings.json` and `GET /manager/companies/preferences.json`, saved through `POST /manager/companies/preferences.json` as `data[CompanyDetail][...]` (Company Administrators / Operations Managers only, like the rest of the preferences form).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `legal_name` | string \| null | Legal entity name printed on course completion certificates; falls back to `Company.name`. |
+| `approval_type` | string \| null | e.g. `ATO`, `DTO`. |
+| `approval_reference` | string \| null | e.g. `SI.ATO.041`. |
+| `regulatory_basis` | string \| null | Default regulatory basis; `trainings.regulatory_basis` overrides it per course. |
+| `certificate_prefix` | string \| null | Substituted for `{prefix}`. |
+| `certificate_pattern` | string | Certificate number pattern. Tokens `{prefix}` `{year}` `{seq}` `{seq:N}`; must contain a `{seq}` token (validation error otherwise). Default `{prefix}{year}-{seq:4}`. |
+| `certificate_next_number` | int ≥ 1 | The sequence the next issued certificate receives. Bumped atomically by the certificate endpoint (`LAST_INSERT_ID()`), never by NEO. |
+
 #### Key Settings Fields
 
 | Field | Values | Description |

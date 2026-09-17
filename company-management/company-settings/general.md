@@ -31,3 +31,24 @@ Use it when performing internal maintenance, migrating data, or if you need to t
 {% hint style="warning" %}
 Users who belong to more than one company are only blocked from **your** company — they can still log in to their other operators.
 {% endhint %}
+
+### Training organisation
+
+These fields are printed on the **course completion certificate** so the document reads as issued by your organisation rather than by Flylogs. They are company-wide: one legal entity per Flylogs account. Leave a field empty and that line is simply left off the certificate.
+
+* **Legal name** — the legal entity name printed in the certificate header. Falls back to the company name.
+* **Approval type** and **Approval reference** — e.g. `ATO` and `SI.ATO.041`, or your DTO reference. Printed together under the legal name and address.
+* **Regulatory basis (default)** — e.g. `Regulation (EU) No 1178/2011, Part-FCL`. Each course can override it from its own settings (see [Edit a training](../../training-courses/edit-a-training.md)).
+
+#### Certificate numbering
+
+Every certificate gets a **unique number** the first time it is downloaded, and keeps that number and its date of issue forever — re-downloading never changes them. The number follows your own scheme:
+
+* **Prefix** — free text substituted for `{prefix}`, e.g. `EGM-`.
+* **Number pattern** — built from these tokens: `{prefix}`, `{year}` (year of issue), `{seq}` (running counter) and `{seq:4}` (counter padded to 4 digits — any width works). The pattern must contain a `{seq}` token. Default: `{prefix}{year}-{seq:4}` → `EGM-2026-0001`. If the prefix is empty, the token and the separator after it are dropped, so `{prefix}-{year}-{seq:4}` still gives `2026-0042`.
+* **Next number** — the counter value the next certificate will receive. Set it once when you migrate from a paper register; after that it advances by itself. The preview line under the fields shows exactly what the next certificate number will look like.
+
+The address printed on the certificate is the company address from the **Billing information** card on this page, together with the city and country.
+
+**Who can edit this:** Company Administrators and Operations Managers (the same users who can edit the company preferences). Every manager and instructor (`Flight Instructor` and above) can see the list of issued certificates under **Trainings → Certificates**.
+

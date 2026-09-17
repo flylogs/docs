@@ -56,7 +56,7 @@ EASA Part-FCL theory exams are often set up as **4** attempts per subject and **
 
 ### How attempts are counted
 
-* Only a result of **Pass** or **Fail** counts as an attempt. A registration that was cancelled or rejected, or where the student didn't turn up, doesn't use an attempt.
+* A result of **Pass**, **Fail** or **Absent** counts as an attempt. The authority counts a no-show, so Flylogs does too: an absence is scored like a fail (it never counts as a pass). A registration that was cancelled or rejected, or whose results are still pending, doesn't use an attempt.
 * Attempts are counted **per subject**. Sittings and the completion window are counted **across all subjects** under the same rule.
 * Each rule keeps its own count. A school that runs EASA and FAA sittings side by side keeps two separate histories.
 * Days are calendar days in your company's timezone, so the time of day of an exam doesn't change the count.
@@ -107,15 +107,17 @@ The student ticks the subjects they want, up to the sitting's maximum, adds an o
 
 Under **My registrations**, students see every registration with its results, and a **Progress by subject** table: the attempts used, whether each subject is passed, the next date they can sit, and when their window ends.
 
+The same information also appears in the **Exams** tab of the student's course page (**Trainings → the course**), under the course's own exams, as an **Exam sittings** section limited to that course's subjects. Managers see the same section in the **Exams** tab of the student's enrolment page (**Manager → Trainings → Students → the student**). Both read the same record, so they never disagree.
+
 ## Managing registrations
 
-Click the registrations summary on a sitting's row to open its list. Each registration shows the student, their message, their subjects, and the attempt status of each subject.
+Click the registrations summary on a sitting's row to open its list. Each registration shows the student, their message, their subjects grouped by course, and the attempt status of each subject. Under the student's name, **Sitting N of M** tells you which sitting this is for them under the rule (and how many the rule allows); with no sitting limit it just reads **Sitting N**.
 
 Select rows and use:
 
 * **Confirm**: puts the student forward.
 * **Reject**: turns the registration down, with the reason you type. The student sees the reason.
-* **Mark absent**: the student didn't turn up. Their seat stays used, but no attempt is counted.
+* **Mark absent**: the student didn't turn up. Their seat stays used, and every subject still pending is recorded as **Absent**, which counts as a failed attempt. If that was wrong, confirm the registration again (or cancel it) and the absences are taken back.
 * **Cancel**: withdraws the registration and frees the seat.
 
 Rows that can't make the change you asked for are skipped, and Flylogs tells you why. For example, a rejected registration can't be marked absent. Bringing a rejected or cancelled registration back takes a seat, so it is refused once the sitting is full.
@@ -149,11 +151,15 @@ The option only appears for sittings that use an authority rule. Sittings with n
 
 ### Entering results
 
-For each subject, choose **Pass** or **Fail**, optionally type the score, and click **Save results**.
+For each subject, choose **Pass**, **Fail** or **Absent**, optionally type the score, and click **Save results**.
 
 * Flylogs records the attempt number from the student's earlier results under the same rule. Saving the same result again doesn't add an attempt.
-* The registration is marked as **Sat**.
+* A pass or fail marks the registration as **Sat**. Absences alone mark it **Absent**.
 * Setting a result back to **Pending** clears it. A registration with no results left goes back to **Confirmed**.
+
+### Official result reports
+
+Each registration has an **Official result report** link under the student's name. Click it to upload the authority's result report (PDF or image) for that student and that sitting, as evidence for audits. One report per student per sitting. Once a file is there it is listed under the student's subjects as a link that opens the file; the **Official result report** link (with a count) opens the upload box again to replace or delete it. The student sees the same link on their exam sittings page and in the **Exam sittings** section of their course's Exams tab. Only managers can upload or delete.
 
 Official results are kept **separately from the course**. They don't change the student's lessons, internal exams or course progress.
 

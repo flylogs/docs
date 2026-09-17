@@ -81,6 +81,19 @@ A class work file can be deleted by the student who uploaded it, but only until 
 
 If a student makes up a missed class — for example by working through the content and any requested class work — a training manager can reopen the signed register and change that student's status to **Attended (post-class)** instead of leaving them **Absent** or **Absent (justified)**. It counts as attendance, but stays visible in reports as credit given after the fact rather than attendance on the day.
 
+### Recovering a class in another sitting
+
+When the same lesson is taught more than once — a morning and an afternoon cohort, or a repeat a few weeks later — a student who misses their own sitting can simply attend the other one. Nothing needs to be done by hand: as soon as the student is marked **Attended** in the other sitting (the teacher adds them to that class's register if they are not on it), the missed sitting is credited automatically as **Attended (post-class)** and the lesson counts as attended in the student's progress.
+
+The record keeps the whole story. The missed sitting still shows that it was missed and which class recovered it — the register reads *Attended (post-class) — recovered in the class of {date}*, the same line appears on the printed class report, and the student's attendance breakdown counts it under **Credited after class**, with the number of those that were recovered in another sitting shown separately. The status the row had before (**Absent** or **Absent (justified)**) is remembered too.
+
+Two limits keep this honest:
+
+* The other sitting must be within **90 days** of the missed one, and within the student's current enrollment. Last year's run of the same lesson, or a previous enrollment, never excuses a new absence.
+* If the attendance that earned the credit is later corrected to **Absent**, the credit is withdrawn and the missed sitting goes back to what it was — or moves to another sitting the student did attend.
+
+A credit is only given for a sitting that has actually been marked absent. A sitting nobody has signed yet stays **Not marked** until the teacher decides it.
+
 ### Students invited but not enrolled
 
 Someone can be invited to a class without being enrolled in the training. They can open the class page, but no attendance or evaluation can be recorded for them: the register shows them read-only with a **Not enrolled** label, and they're excluded from the attendance ratio, the missed-class email and the class work notification. Enrol them in the training to start recording their results.

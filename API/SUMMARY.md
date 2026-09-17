@@ -24,6 +24,7 @@
 * [Maintenance Jobs](maintenance-jobs.md)
 * [Maintenance Plans](maintenance-plans.md)
 * [Manager Users](manager-users.md)
+* [Mass & Balance](mass-balance.md)
 * [Messages](messages.md)
 * [News](news.md)
 * [Pilot Groups](pilot-groups.md)

@@ -51,6 +51,7 @@
 * [Create your aircraft](aircraft/create-your-aircraft.md)
 * [ADSB surveillance](aircraft/adsb-surveillance.md)
 * [Aircraft logbook](aircraft/aircraft-logbook.md)
+* [Mass & Balance](aircraft/mass-and-balance.md)
 * [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
   * [Aircraft reports](aircraft/aircraft-maintenance/aircraft-reports.md)
   * [MEL / CDL items](aircraft/aircraft-maintenance/mel-cdl-items.md)

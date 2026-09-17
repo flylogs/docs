@@ -1680,7 +1680,7 @@ Counts only sessions under a non-deleted `training_activities` row (`training_ac
 
 **`DISTANCE` trainings.** `training.AttendanceStatus` is omitted from this response entirely when `Training.type = 'DISTANCE'` (attendance-by-session doesn't apply — distance trainings track `getProgress` instead).
 
-**Same object, student report endpoint.** <mark style="color:blue;">`GET`</mark> `/trainings/students/report/{enrollmentId}.json` returns the identical breakdown nested at `training.Training.AttendanceStatus` — explicitly `null` (rather than omitted) for a `DISTANCE` training. Access: a caller with `user_group_id > 170` may only request their own enrollment (`400 Incorrect enrollment id requested` otherwise); `user_group_id <= 170` may request any enrollment id.
+**Same object, student report endpoint.** <mark style="color:blue;">`GET`</mark> `/trainings/students/report/{enrollmentId}.json` returns the identical breakdown nested at `training.Training.AttendanceStatus` — explicitly `null` (rather than omitted) for a `DISTANCE` training. Access is decided by `ReportVisibility::level()` (see [Training Certificate](#training-certificate) below): the student, their supervisor and same-company staff (`user_group_id <= 170`) receive the full report with `training.verification: false`; **anyone else — including an anonymous caller, the endpoint is public — receives the verification subset** with `training.verification: true`.
 
 #### Reset attempts in the response
 
@@ -1911,7 +1911,64 @@ Retrieve training-related calendar events.
 
 Retrieve training completion certificate data. Gated strictly on `TrainingsUser.status = 'COMPLETED'`. If the auto-completion mechanism (below) hasn't fired, this endpoint returns `404 Training not finished yet` regardless of how complete the activities look.
 
+**Access** (`403` otherwise): the student, the enrollment's `supervisor_id`, or a user with `user_group_id <= 170` **of the same company** as the training. Managers of other companies are refused. This is the `ReportVisibility::level()` rule (`app/Lib/Trainings/ReportVisibility.php`), shared with the student report.
+
+**Issuing.** The first successful call **issues** the certificate: a sequence number is reserved atomically on `company_details.certificate_next_number`, formatted with `company_details.certificate_pattern` / `certificate_prefix` (tokens `{prefix}` `{year}` `{seq}` `{seq:N}`; see `CertificateNumber`), and a `training_certificates` row is written with a JSON `snapshot` of every printed field. Every later call returns that row unchanged — number and `issued_at` never move. `training_certificates.trainings_user_id` is unique (one certificate per enrollment); a lost race burns a sequence number, never duplicates one.
+
+#### Response additions
+
+| Field | Description |
+|-------|-------------|
+| `TrainingCertificate` | `{ id, number, sequence, issued_at, issued_by, trainings_user_id, training_id, user_id, snapshot }`. `snapshot` = `{ locale, number, issued_at, student{name,surname,dob,licence}, organisation{name,legal_name,address,zip,city,country,approval_type,approval_reference}, course{id,name,type,regulatory_basis,ground_hours,flight_hours,started,completed,valid_until}, signer{user_id,name,surname,position} }`. NEO renders the PDF from the snapshot. |
+| `Training.regulatory_basis` | Effective value: `trainings.regulatory_basis`, else `company_details.regulatory_basis`, else `null`. |
+| `Training.manager_position` | Free text printed under the signer; `null` → "Head of Training". |
+| `Training.ground_hours` | Planned theory hours: sum of `training_subjects.hours` (not deleted). |
+| `Training.flight_hours` | Hours actually flown: block time of `CONFIRMED` flights on the enrollment's completed `user_training_flights`, one flight counted once, `/3600`, 2 dp. |
+| `Training.Company.locale` | `companies.locale`; the certificate is rendered in this language. |
+| `Training.Company.CompanyDetail.{legal_name, approval_type, approval_reference, regulatory_basis, zip}` | Organisation block. `certificate_prefix` / `certificate_pattern` are **not** returned. |
+| `User.licence` | `user_certificates.name` of the student's valid (`status = valid`, not expired) `licence` row, newest `issue` first; `null` when none. No passport / address / phone. |
+| `TrainingsUser.created` | Enrollment date, printed as the course start. |
+
 **Manager fallback**: `Training.manager_id` may be `NULL`. When it is, `Training.Manager` is filled with the first company user in `user_group_id` ∈ (100, 105, 135) that has a non-empty `UserDetail.signature` so the certificate always has a signatory. Returned shape matches the normal Manager: `{ id, UserGroup.name, UserDetail.{name, surname, signature} }`. If no such user exists `Training.Manager` stays empty.
+
+---
+
+## Issued Certificates (manager)
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/certificates.json?page=&training_id=&q=`
+
+Every certificate the company has issued, newest first. Querystring pagination (`page`, 50 per page, `maxLimit` 500). `training_id` filters one course; `q` matches the certificate `number` or the student's name/surname (`LIKE %q%`; users live in `flylogs_main`, so matching students are resolved first and passed as `user_id IN (...)`).
+
+**Access:** `user_group_id <= 170` (`403` otherwise). ACO `controllers/Trainings/Trainings/manager_certificates` — needs `aco_sync`; inherits the root allow.
+
+#### Response
+
+```json
+{
+  "certificates": [
+    {
+      "TrainingCertificate": { "id": "…", "number": "EGM-2026-0001", "sequence": "1", "issued_at": "1789200000", "issued_by": "618", "trainings_user_id": "…", "training_id": "…", "user_id": "377" },
+      "Training": { "id": "…", "name": "ATPL(A) - INTEGRATED", "color": "#249ac3" },
+      "User": { "id": "377", "UserDetail": { "name": "Martha", "surname": "Smith" } },
+      "Issuer": { "id": "618", "UserDetail": { "name": "Iñigo", "surname": "García" } }
+    }
+  ],
+  "pagination": { "page": 1, "pageCount": 1, "count": 1, "limit": 50 }
+}
+```
+
+---
+
+## Student Report access and the verification payload
+
+<mark style="color:blue;">`GET`</mark> `/trainings/students/report/{enrollmentId}.json` is **public** (`Auth->allow`) because the certificate's QR code points at it. The response depends on the caller:
+
+| Caller | `training.verification` | Payload |
+|--------|-------------------------|---------|
+| The student, the enrollment's supervisor, or `user_group_id <= 170` of the training's company | `false` | The full report described above, plus `training.TrainingCertificate: { number, issued_at } \| null`. |
+| Anyone else, including no `Authorization` header | `true` | `training.TrainingsUser { id, training_id, status, status_changed, validity, created }`, `training.Training { id, name, type, Company { id, name, CompanyTheme{logo,color}, CompanyDetail{legal_name, approval_type, approval_reference, city, Country.name} } }`, `training.User.UserDetail { name, surname }` **masked** (first letter of each word + `*` per remaining character: `O******** K********`), `training.TrainingCertificate { number, issued_at } \| null`. No exams, subjects, flights, passport, date of birth, address or phone. |
+
+Reading the report never issues a certificate; only the certificate endpoint allocates numbers.
 
 ---
 
@@ -2711,6 +2768,8 @@ Open applications also appear on the existing approvals endpoint, as a third que
 > official result of each).
 >
 > These tables are separate from the internal `exams` table. `exams.caa_exam` is unchanged, and official results **never** write `activity_progress`. None of the tables has a fee or price column.
+>
+> **2026-09-16 (task #959):** `exam_registration_subjects.result` gained the value `ABSENT` (`flylogs/migrations/2026-09-16-exam-sittings-absent.sql`, ENUM change only), and `manager_student` was added (needs `aco_sync`).
 
 A sitting is `type` `AUTHORITY` (the authority's exam; Flylogs only manages registration and results) or `SCHOOL`. `datetime` is a unix timestamp. `registration_opens` / `registration_deadline` are `Y-m-d` dates, and the deadline day is the last day to register **or cancel**. `seats` and `max_subjects` `NULL` mean unlimited / no cap.
 
@@ -2757,7 +2816,7 @@ Every limit is nullable: `NULL` means **not limited**. `0` is refused by validat
 
 `BLOCK` reasons: `ATTEMPTS_EXHAUSTED`, `SITTINGS_EXHAUSTED`, `WINDOW_EXPIRED`, `TOO_SOON`. `WARN` reasons: `ALREADY_PASSED`, `LAST_ATTEMPT`, `LAST_SITTING`. `reason` is always the most severe reason present.
 
-* An attempt is an `exam_registration_subjects` row with `result` `PASS` or `FAIL` and a `sat_at`. `PENDING`, and absences (recorded on the registration), are not attempts.
+* An attempt is an `exam_registration_subjects` row with `result` `PASS`, `FAIL` or `ABSENT` and a `sat_at`. An absence spends the attempt like a `FAIL` (never a pass) — the authority counts a no-show, so the school does too (task #959). `PENDING` is not an attempt.
 * History is scoped **per rule**: all the student's sat results in sittings with the same `authority_rule_id`. Sittings with no rule share one scope of their own, so they still get counters but never a `BLOCK`.
 * The candidate sitting's own results are left out, so a sitting whose results are in still reads as the attempt it was.
 * Days are counted in the company timezone.
@@ -2819,7 +2878,15 @@ This cancels the caller's own `PENDING` or `CONFIRMED` registration, up to and i
 
 <mark style="color:blue;">`GET`</mark> `/trainings/exam_registrations/mine.json` (named param `page`)
 
-This returns `registrations`, newest first, each with `ExamSitting`, `Subjects` (result, score, attempt_no) and `can_cancel`. It also returns `standing`: one entry per rule and subject the caller has ever sat, with the `attempt` verdict evaluated as of now (attempts used, passed, next eligible date, window end). `standing` is built from the whole history, not from the current page.
+This returns `registrations`, newest first, each with `ExamSitting`, `Subjects` (result, score, attempt_no, and `training_id` so a course page can filter to its own subjects), `files` (see *Official result reports*) and `can_cancel`. It also returns `standing`: one entry per rule and subject the caller has ever sat (with `training_id`), with the `attempt` verdict evaluated as of now (attempts used, passed, next eligible date, window end). `standing` is built from the whole history, not from the current page.
+
+Both this endpoint and the manager's `manager_student` below are shaped by `ExamStudentRecord`, so the student's page and the manager's view of the same student always agree.
+
+### Manager: one student's record
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/exam_sittings/student/{user_id}.json` (named param `page`; `limit` 100, `maxLimit` 500)
+
+Same payload as `mine` (`registrations`, `standing`, `paging`) for the given student, who must belong to the session company and not be deleted (`404` otherwise). Requires `user_group_id` ≤ 150. Needs `aco_sync`; it inherits the root allow like every other `manager_*` action. NEO's enrolment pages (`/trainings/view/{enrolment}` for the student, `/manager/trainings/students/view/{enrolment}` for a manager) render an **Exam sittings** section inside their Exams tab from these two endpoints, filtered to the course's `training_id`. Both pages accept `?tab=exams`, and the manager sittings page accepts `?sitting={id}` to open one sitting's registration list directly.
 
 ### Manager: sittings
 
@@ -2853,7 +2920,7 @@ This returns every registration with `Applicant` `{ id, name }` and `Subjects`. 
 | `CANCELED` | `PENDING`, `CONFIRMED`, `ABSENT` |
 | `ABSENT` | `PENDING`, `CONFIRMED` |
 
-`SAT` is never set here. Rows that can't make the requested change are skipped, not failed: `{ "result": true, "updated": [...], "skipped": [{ "id": "…", "reason": "INVALID_TRANSITION" | "SITTING_FULL" | "NOT_FOUND" }] }`. Moving a registration back into a seat-holding status is refused per row once the sitting is full.
+`SAT` is never set here. Moving a registration to `ABSENT` stamps every subject whose `result` is still `PENDING` as `ABSENT`, with `sat_at` and `attempt_no` exactly as a `FAIL` would get them, inside the same transaction; leaving `ABSENT` (to `CONFIRMED`, `PENDING` or `CANCELED`) puts those subjects back to `PENDING` and clears the stamps, so a withdrawn absence never counts. Rows that can't make the requested change are skipped, not failed: `{ "result": true, "updated": [...], "skipped": [{ "id": "…", "reason": "INVALID_TRANSITION" | "SITTING_FULL" | "NOT_FOUND" }] }`. Moving a registration back into a seat-holding status is refused per row once the sitting is full.
 
 <mark style="color:green;">`POST`</mark> `/manager/trainings/exam_sittings/results/{id}.json`
 
@@ -2861,7 +2928,7 @@ This returns every registration with `Applicant` `{ id, name }` and `Subjects`. 
 { "results": [{ "id": "<exam_registration_subjects.id>", "result": "PASS", "score": 88 }] }
 ```
 
-`PASS`/`FAIL` stamps `sat_at` (the sitting's `datetime`) and `attempt_no` (from the student's earlier sat results under the same rule, this sitting excluded), and marks the registration `SAT`. `PENDING` clears the result; a `SAT` registration with nothing sat left returns to `CONFIRMED`. Skip reasons: `NOT_FOUND`, `UNKNOWN_RESULT`, `REGISTRATION_NOT_ACTIVE` (rejected or cancelled), `INVALID`.
+`PASS`/`FAIL`/`ABSENT` stamps `sat_at` (the sitting's `datetime`) and `attempt_no` (from the student's earlier sat results under the same rule, this sitting excluded). A `PASS` or `FAIL` anywhere marks the registration `SAT`; absences alone mark it `ABSENT`. `PENDING` clears the result; a `SAT` or `ABSENT` registration with nothing sat left returns to `CONFIRMED`. `ABSENT` is never announced to the student. Skip reasons: `NOT_FOUND`, `UNKNOWN_RESULT`, `REGISTRATION_NOT_ACTIVE` (rejected or cancelled), `INVALID`.
 
 ### Manager: register a student
 
@@ -2923,7 +2990,11 @@ The student receives a message through `Message::fastSave`: in-app, plus email a
 | `results` | `Exam results: {sitting}`, listing each subject whose result **changed** to `PASS`/`FAIL`, with its score |
 | `reset_attempts` | `Exam attempt history reset: {rule}`, with the reason, HTML-escaped |
 
-Nothing is sent for `ABSENT`, for a score-only correction, or when the same result is saved again. Messages are sent after the transaction commits; a failure is logged and never undoes the change.
+Nothing is sent for `ABSENT` (as a status or as a result), for a score-only correction, or when the same result is saved again. Messages are sent after the transaction commits; a failure is logged and never undoes the change.
+
+### Official result reports
+
+One report per **student per sitting**: managers attach the authority's result report to the student's registration through the generic uploads API with `model` `ExamRegistration` and `foreign_key` the `exam_registrations.id` (`/uploads/sign` → PUT → `/uploads/complete`, or the legacy `/uploads/create`; list with `/uploads/index/ExamRegistration/{registration_id}.json`). No new endpoint and no ACL change: the uploads index is company-scoped, and the registration id is a UUID the student already holds. `manager_registrations`, `mine` and `manager_student` each carry, per registration, `files` (count) and `Files` (list of `{ id, name, url, mime, icon }`, `url` being the signed CDN link `Upload::afterFind()` builds, valid about an hour), from `ExamStudentRecord::files()`. NEO shows the file as a plain link under the subjects on every view; the manager's registration list also opens an upload box per row on request.
 
 ### Manager: authority rules
 

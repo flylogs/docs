@@ -45,6 +45,19 @@ Example of pilot valid and expired training endorsements:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-04-20 at 12.43.36.png" alt=""><figcaption><p>Pilot trainings displaying the finished trainings.</p></figcaption></figure>
 
+### Certificate signer and regulatory basis
+
+The **Training manager** you pick on the training settings page is the person who signs the course completion certificate: their stored signature (or a stamp with their name when no signature is on file) is printed at the bottom right. Two fields next to it shape what the certificate says:
+
+* **Signer position** — free text printed under the signature, e.g. `Head of Training` or `Accountable Manager`. When empty, the certificate prints *Head of Training*. It replaces the signer's Flylogs role, which never appears on the certificate.
+* **Regulatory basis** — printed under the course name, e.g. `Regulation (EU) No 1178/2011, Part-FCL`. When empty, the company default from **Company settings → General → Training organisation** is used. Set it per course when your account runs courses under different regulations.
+
+Both fields only affect certificates issued from the moment you save. A certificate that has already been downloaded keeps the text it was issued with.
+
+{% hint style="info" %}
+If a training has no training manager, Flylogs falls back to any Company Administrator or Operations Manager with a signature on file so the certificate always carries a signatory. Pick a manager explicitly for courses you issue as an approved organisation.
+{% endhint %}
+
 ### Managing online exam questions
 
 Online exams draw from a **shared question bank**. The same question can be reused across several exams — for example a subject-level test and the lesson exams that feed it. Because the question is shared, editing its text or answers updates it **everywhere it appears**.

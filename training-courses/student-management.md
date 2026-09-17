@@ -41,7 +41,7 @@ For onsite trainings, the attendance ring on the student's progress page breaks 
 * **Missed** — the total number of sessions the student did not attend.
 * **Justified** — of those, how many have an approved absence justification.
 * **Not justified** — how many are still a plain, unresolved absence.
-* **Credited after class** — how many were later marked **Attended (post-class)**, i.e. the student made up the class afterwards.
+* **Credited after class** — how many were later marked **Attended (post-class)**, i.e. the student made up the class afterwards. When some of those were recovered by attending another sitting of the same lesson (see [Recovering a class in another sitting](missed-classes-and-class-work.md#recovering-a-class-in-another-sitting)), that number is shown alongside.
 
 The same split carries through to the training report and its PDF. See [Missed classes and class work](missed-classes-and-class-work.md) for how a student gets from "Absent" to one of these outcomes.
 
@@ -72,6 +72,21 @@ That date matters, because it is the date printed on the certificate and the dat
 The date cannot be in the future, and cannot be earlier than the day the student was enrolled. Where nothing has been recorded for the student yet, the field simply defaults to today.
 
 **Who can do this:** company managers. Instructors, students and external auditors cannot mark an enrollment as completed or change its completion date.
+
+#### The course completion certificate
+
+Once an enrollment is completed, the certificate can be downloaded from the student's training progress page (managers), from the Students overview, and by the student themselves from their training page — unless **Show certificate to students** is switched off on the training. It is the training organisation's document, printed in the **company language**:
+
+* **Organisation** — legal name, address, approval type and reference from **Company settings → General → Training organisation**.
+* **Student** — full name, date of birth (from the pilot profile) and licence. The licence line is the **name of the student's valid licence document** under *My Certificates* (type "Licence", not expired) — record the licence number there, e.g. `PPL(A) SI.FCL.12345`. Students with no licence get no licence line. Passport number, address and phone are never printed.
+* **Course** — name, regulatory basis, **theoretical training hours** (the planned syllabus hours of the course subjects) and **flight training hours** (the block time actually flown on the student's completed missions, each flight counted once), the course start date (the enrolment date) and the completion date.
+* **Issue** — the certificate number, the date of issue and the signature, name and position of the training manager (see [Edit a training](edit-a-training.md#certificate-signer-and-regulatory-basis)).
+
+**Numbering.** The certificate is *issued* the first time anyone downloads it: Flylogs reserves the next number from the company counter, stamps the date of issue and stores a copy of every printed field. Every later download — by the student, a manager, or from the certificates list — reproduces that same certificate. Editing the company details or the course afterwards does not alter a certificate already issued.
+
+**Issued certificates list.** **Trainings → Certificates** lists every certificate the organisation has issued: number, student, course, date of issue and who triggered it, with a search by number or student and a filter by training. Each row can be downloaded again or opened as a training report. Available to managers and instructors (`Flight Instructor` and above).
+
+**The QR code and privacy.** The QR code on the certificate opens the student's training report page. Anyone scanning it **without logging in** sees only what is needed to check the document is genuine: the student's name with all but the first letter of each word masked (`O******** K********`), the course, the organisation, whether the course is completed and on which date, and the certificate number. The full training report — attendance, exams, flights and the personal details — is shown only to the student, their supervisor, and managers or instructors of the same company, after logging in.
 
 #### Enrollment status: stopping, failing or expelling a student
 
