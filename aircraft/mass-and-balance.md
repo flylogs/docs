@@ -16,6 +16,8 @@ Flylogs does the arithmetic, but the pilot in command stays responsible for load
 
 Open the aircraft and find the **Mass & Balance** card, under *Certificates & expirations*. Click **Set up**, or **Edit** if a profile already exists.
 
+<figure><img src="../.gitbook/assets/mass-balance-aircraft-card.png" alt="Mass &#x26; Balance card on the aircraft page, showing basic empty mass, arm, max take-off mass, weighing date and the CG envelope"><figcaption><p>The Mass &#x26; Balance card on the aircraft page</p></figcaption></figure>
+
 A profile contains:
 
 | Section | What to enter |
@@ -28,6 +30,8 @@ A profile contains:
 | **Landing envelope** | Optional, for aircraft whose landing CG limits differ from take-off. |
 
 The preview chart updates as you type. Before saving you must tick the box confirming you checked every value against the flight manual and weighing report.
+
+<figure><img src="../.gitbook/assets/mass-balance-profile-editor.png" alt="Mass &#x26; Balance profile editor with the template panel, weighing and limits, loading stations and the CG envelope points"><figcaption><p>The profile editor: template, weighing and limits, loading stations and CG envelope</p></figcaption></figure>
 
 ### Type templates
 
@@ -54,6 +58,8 @@ Deleting a profile does not change loadsheets already saved on flights: each kee
 
 On a flight with an aircraft that has a profile, the **Loadsheet** card appears in the right-hand column. Click **Calculate loadsheet** (or **Open loadsheet** once one exists).
 
+<figure><img src="../.gitbook/assets/mass-balance-flight-card.png" alt="Loadsheet card on the flight page showing a Within limits badge, take-off and landing mass and CG, and an Open loadsheet button"><figcaption><p>The Loadsheet card on the flight page</p></figcaption></figure>
+
 1. For each seat and baggage station, enter the **mass** and optionally who or what is there. For a new loadsheet Flylogs fills in the names of the crew and of the passengers from the passenger manifest. Masses are always left for you to enter.
 2. For each fuel tank enter volumes:
    * **Take-off**: fuel on board at take-off.
@@ -61,6 +67,8 @@ On a flight with an aircraft that has a profile, the **Loadsheet** card appears 
    * **Trip**: fuel burnt before landing.
 3. The **Result** panel shows the zero fuel, ramp, take-off and landing mass and CG against the maximums, a list of every limit exceeded, and the points on the envelope chart.
 4. Click **Save**. The server recalculates the loadsheet with the aircraft's current profile and stores it with the flight, including a copy of the profile used.
+
+<figure><img src="../.gitbook/assets/mass-balance-loadsheet.png" alt="Loadsheet page: loading table on the left with occupants, masses and fuel; result panel on the right with masses, CG and the envelope chart"><figcaption><p>The loadsheet: what is loaded on the left, the result and the envelope on the right</p></figcaption></figure>
 
 The loadsheet checks:
 
