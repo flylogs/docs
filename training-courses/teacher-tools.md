@@ -72,6 +72,22 @@ Signing automatically sends a missed-class email to every student marked **Absen
 Students invited to a class without being enrolled in the training appear on the register as **Not enrolled**, read-only. No attendance can be recorded for them and they're left out of the attendance count and the missed-class email — enrol them in the training first.
 {% endhint %}
 
+### Student attendance signatures
+
+Some courses ask the students themselves to countersign their attendance, the way a flight debrief is signed. Turn it on per course with **Require students to sign assistance** on the training settings page (see [Edit a training](edit-a-training.md)). It applies to onsite and remote classes; distance courses don't use it.
+
+When it's on:
+
+* As soon as you record a student as **Attended** or **Attended (post-class)** and save, that student is notified and asked to sign. Each student is asked once per class.
+* The student opens the class page, presses **Sign my attendance** and confirms with their password. Their signature is stored with the date and time.
+* You see the signature date under each student's name on the register, and a **SIGNED** column appears on the class report PDF — showing the date, *Not signed*, or *—* for anyone who wasn't present to sign.
+
+Students can sign from four hours before the class until **seven days after** it. Absent students are never asked — there's nothing for them to attest.
+
+{% hint style="info" %}
+Signing the class yourself does **not** close the students' window: your signature certifies who was there, theirs confirms they were. A student can still sign after you've signed and locked the register, which is usually exactly when they get round to it.
+{% endhint %}
+
 ### Exporting a class report (PDF)
 
 The class teacher and any training manager can download a **PDF report** of a class or exam session — handy when your authority asks for evidence of theoretical training. Use the **PDF report** button next to **Edit Class** on the class page. Students don't see it, and a teacher who is on the class's own student list is treated as a student here too.
@@ -80,7 +96,7 @@ The report uses the same layout as the flight record PDF: your company logo (or 
 
 * **Session identification** — training, subject, lesson or exam, date and time (in your company's time zone and date/time format), duration, teacher and location
 * **Lesson content** — goals and learning objectives (for exams: name, reference, type and duration)
-* **Attendance register** — every student's attendance status, remarks and corrective measures, plus the attendance count. For exams, the result earned in that sitting.
+* **Attendance register** — every student's attendance status, remarks and corrective measures, plus the attendance count. For exams, the result earned in that sitting. On courses that require student attendance signatures, a **SIGNED** column shows when each student signed.
 * **Student evaluations** — each student's learning-objective and performance-metric ratings and comments, on your training's rating scale
 * **Session remarks**
 * **Attendance certification** — who signed the register, when, from which IP address, and the record's integrity hash, plus how many times it was signed before

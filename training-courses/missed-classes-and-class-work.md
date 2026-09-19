@@ -24,6 +24,16 @@ A signed register is locked. A training manager can reopen it with **Modify sign
 <figure><img src="../.gitbook/assets/trainingsAttendanceStatuses.png" alt=""><figcaption><p>The four attendance statuses on a class register.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/trainingsAttendanceSigned.png" alt=""><figcaption><p>A signed register: statuses are read-only, the totals are summarised, and only "Modify Signed Attendance" reopens it.</p></figcaption></figure>
+### Signing your own attendance
+
+Some courses ask students to countersign their attendance — the setting is **Require students to sign assistance** on the training, off by default. On those courses, a student recorded as **Attended** or **Attended (post-class)** is asked, once per class, to confirm it themselves.
+
+The student opens the class page, presses **Sign my attendance** and enters their password. The signature is stored with the date and time, and shown on the register and on the class report PDF next to their name.
+
+The window runs from four hours before the class until **seven days after** it. The teacher signing the register does not close it — that signature says who was there, the student's says they were, and the two are independent. Students who were absent are never asked to sign.
+
+If a student can't sign, the class page says why: the class hasn't started, the seven days have passed, their attendance isn't recorded as attended, or they've already signed.
+
 ### The missed-class email
 
 When the register is signed, Flylogs automatically emails every student marked **Absent**. The email names the class, its date and location, a summary of the content, and links straight to the class page. It also tells the student whether class work has been requested and how to justify the absence, with the relevant deadlines if set.

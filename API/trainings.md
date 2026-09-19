@@ -23,8 +23,20 @@
 > also gained `missed_email_sent_at` and `attendance_notified_at` (both unix,
 > `NULL` until sent) — independent claim-before-send guards for the
 > missed-class email and the attendance-signed notification respectively (see
-> **Sign Attendance**), so a re-sign never double-sends either one. `sessions`
-> gained `allow_classwork_upload`, `classwork_deadline`,
+> **Sign Class**), so a re-sign never double-sends either one.
+>
+> **Schema additions — student attendance signature (task #978).**
+> `session_students` gained `signature` (JSON `{time, ip, browser, hash}`,
+> `NULL` until the student countersigns — see **Sign Own Attendance**) and
+> `signature_requested_at` (unix, the claim-before-send guard for the
+> please-sign message raised by **Store Attendance**). These replace
+> `activity_progress.signature` for per-session signing: that row is
+> `UNIQUE (trainings_user_id, training_activity_id)`, so it holds one
+> signature per ACTIVITY and cannot represent two sittings of the same
+> lesson. The old column is still readable on historic rows and is no longer
+> written.
+>
+> `sessions` gained `allow_classwork_upload`, `classwork_deadline`,
 > `classwork_description`, `classwork_notified_at` (see **Request
 > Classwork**) and `justification_deadline` (see **Schedule Class**).
 > `trainings` gained `classwork_deadline_default_days` and
@@ -870,7 +882,7 @@ Response `class` payload contains:
 - `teacher` — `true` when the requester is the session's teacher, the subject's teacher (`TrainingActivity.TrainingSubject.teacher_id`), or a manager (`user_group_id <= 140`). Recomputed server-side on every call from the session/subject data — the same definition `attendance()` independently recomputes below, so the two never disagree.
 - `enrollment` — the requester's `TrainingsUser.id` for this training, or `null`. Being on the session roster (`session_students`, e.g. a pilot-group invite or manual add with no enrollment) is enough to open the class even without one; `enrollment=null` is what the client uses to explain the missing progress/evaluation in that case. Below `user_group_id 170`, a caller who is neither enrolled, on the roster, nor a teacher/manager gets a 404.
 - `attendances` — the session roster, returned by an internal call to `attendance()`; see **Attendance** below for the full per-row shape and its own access rule.
-- `Session.signature`, when present, has its server-only `statuses` baseline stripped (and the same key inside every `history` entry) — see **Sign Attendance**'s note on `statuses`. This action has no teacher/student gate on the roster it exposes, so leaving `statuses` in would let any enrolled student read every classmate's attendance baseline.
+- `Session.signature`, when present, has its server-only `statuses` baseline stripped (and the same key inside every `history` entry) — see **Sign Class**'s note on `statuses`. This action has no teacher/student gate on the roster it exposes, so leaving `statuses` in would let any enrolled student read every classmate's attendance baseline.
 - `TrainingActivity` — the bound activity (`id`, `kind`, `lesson_id`, `exam_id`, `training_subject_id`) with its nested children:
   - `TrainingActivity.TrainingSubject` including `Training` and `Training.Metric[]` — competency metrics defined on the training (`id`, `name`, `training_id`), ordered by name. Used to render the metric grid alongside attendance without an extra request.
   - `TrainingActivity.Lesson` (when `kind=LESSON`) with `LearningObjective[]` — objectives attached to the lesson (`id`, `name`, `description`, `training_subject_lesson_id`), ordered by name.
@@ -904,7 +916,10 @@ Company-scoped: the session's `Training.company_id` must match the caller's comp
 | enrolled | `true` when the roster user has any `trainings_users` row for this training (any status), matching `store_attendance`'s write guard |
 | value | boolean, `true` when `attendance_status` is `attended` or `attended_post_class` |
 | user_id, user_name, user_group, photo | roster user display fields |
-| time, signature, remarks, measures, modified, created | from the matching `activity_progress` row, `null` if none |
+| time, remarks, measures, modified, created | from the matching `activity_progress` row, `null` if none |
+| signature | the **student's own** attendance signature for THIS session, from `session_students.signature`: `{ time }` and nothing else, or `null`. The stored `ip`, `browser` and `hash` are never returned — a class payload is readable by the whole roster. Previously read from `activity_progress.signature`, which is per-activity and could not distinguish two sittings of the same lesson |
+| can_sign | `true` when the caller may countersign this row right now. **Only answered for the caller's own row**; `null` on everyone else's |
+| sign_blocked_reason | why `can_sign` is false: `not_required` \| `not_attended` \| `not_yet_open` \| `window_closed` \| `already_signed`. Own row only |
 | exam_status, exam_rating, code, notes | from `activity_progress.value` / `score` / `code` / `notes` — exam activities only |
 
 **Access.** Non-teacher, non-manager callers (`user_group_id > 140` and not the session/subject teacher) see only their own roster row. Teachers and managers see every row. Roster rows with `session_students.user_id IS NULL` (an unexpanded pilot-group placeholder) are excluded entirely.
@@ -1104,7 +1119,7 @@ Record attendance for a class session. The payload is now keyed by `session_stud
 
 Only the fields actually present in a row are written — an attendance-only save never clobbers a grade, and vice versa.
 
-**Empty attendance map is a no-op, not an error.** `data[attendance]` absent, non-array, or `{}` returns `{"store": true, "grades": []}` rather than `400 Missing POST params`. The client drops unenrolled rows before posting, so a session whose entire roster is unenrolled (or has no students at all) legitimately submits nothing — and since **Sign Attendance** saves attendance before signing, the old 400 blocked signing that class outright.
+**Empty attendance map is a no-op, not an error.** `data[attendance]` absent, non-array, or `{}` returns `{"store": true, "grades": []}` rather than `400 Missing POST params`. The client drops unenrolled rows before posting, so a session whose entire roster is unenrolled (or has no students at all) legitimately submits nothing — and since **Sign Class** saves attendance before signing, the old 400 blocked signing that class outright.
 
 **Access.** Company-scoped (`404 Training Session not found` if the session's training belongs to another company). `user_group_id <= 140` (manager) may always write; above that, the caller must be the session's `teacher_id` or the subject's `teacher_id`, else `404 Not authorized to modify this class attendance`.
 
@@ -1120,11 +1135,15 @@ Only the fields actually present in a row are written — an attendance-only sav
 
 `grades[]` lists the rows actually applied: `{session_student_id, user_id, value}` for a LESSON activity's derived attendance, or `{session_student_id, user_id, ...submitted exam fields}` for an EXAM activity's grade fields.
 
-### Sign Attendance
+**Side effect — student signature request.** On a training with `attendance_signature = 1`, every roster row that is now eligible to countersign (see **Sign Own Attendance**) gets one non-urgent in-app message asking the student to sign, sender = the caller, linking to `FRONTEND_HOST/trainings/onsite/class/{sessionId}`. Idempotent per student via `session_students.signature_requested_at` (claim-before-send: conditional `UPDATE ... WHERE signature_requested_at IS NULL`, same pattern as `missed_email_sent_at` and `attendance_notified_at`), so re-saving the sheet does not re-ask. Nothing is sent when the setting is off, and never to a student the policy would then refuse. Notification failures are swallowed and do not affect the response.
+
+This request is raised **here**, when attendance is recorded, rather than from **Sign Class** — the request and the ability to act on it now begin at the same moment.
+
+### Sign Class
 
 <mark style="color:green;">`POST`</mark> `/trainings/onsite/sign_class.json`
 
-Digitally sign class attendance (teacher confirmation).
+Digitally sign class attendance (teacher confirmation). This is the **teacher** closing the register. The student countersigning their own row is a different endpoint — see **Sign Own Attendance** below. The two are independent: signing the class does not close the students' signing window.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -1147,13 +1166,62 @@ Digitally sign class attendance (teacher confirmation).
 
 - Their attendance result (Attended / Not attended).
 - For exam activities: rating (`score`) and result (Passed / Failed, derived from `value`).
-- A reminder + frontend link to sign their own attendance, if `value=1` but `signature` is empty.
+- A reminder + frontend link to sign their own attendance, if the student attended and `session_students.signature` is empty — and only when the training has `attendance_signature = 1`. (This previously read `activity_progress.signature`, which is per-activity, and was sent regardless of the training setting.)
 - The next `TrainingActivity` in the same `training_subject_id` (by `order`). If a future `Session` exists for that activity, it is shown with date and a frontend class-view link; otherwise just the activity name.
 - If that next activity is an `Exam` of `type=ONLINE` and the student attended this one, an extra line linking to `FRONTEND_HOST/trainings/exams/start/{exam_uuid}`.
 
 The message `redirect` field is `/trainings/onsite/class/{sessionId}`. Notification failures do not affect the sign response.
 
 **Response `signature`.** The persisted `signature` JSON carries a server-only `statuses` map (`session_students.id => attendance_status` as of this sign) used purely as the next sign's carve-out baseline — it is stripped, along with the same key inside every `history` entry, before being returned here or from **View Class**.
+
+### Sign Own Attendance
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/sign_attendance.json`
+
+The **student** countersigns their own attendance for one class. Onsite and remote trainings only. Distinct from **Sign Class**, which is the teacher closing the register.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| class_id | string | Yes | Session id |
+| pass | string | Yes | The caller's own password — the re-entry is what makes this a signature |
+
+Writes `session_students.signature` (`{time, ip, browser, hash}`) for the `(session_id, caller)` roster row. It does **not** write `activity_progress.signature`: that row is `UNIQUE (trainings_user_id, training_activity_id)`, one per activity, so it cannot hold a per-sitting signature. The legacy column is still populated on historic rows and is never written again.
+
+**Eligibility.** Decided by `StudentAttendanceSignaturePolicy`, the same rules that produce `can_sign` / `sign_blocked_reason` on **View Class**:
+
+- The training must have `attendance_signature = 1` (`not_required`).
+- The caller's `session_students.attendance_status` must be `attended` or `attended_post_class` (`not_attended`).
+- Now must be at or after `Session.datetime - 4h` (`not_yet_open`) and at or before `Session.datetime + 7 days` (`window_closed`).
+- **The teacher having signed the class is irrelevant.** `sessions.signature` is not consulted. This endpoint previously rejected outright once the class was signed — while the only message that asks a student to sign is sent by that signing.
+
+Eligibility is checked **before** the password, so a caller is never asked for a credential only to be refused anyway.
+
+**Repeat calls are a no-op**, not an error: an already-signed row returns its existing `{time}` with `200`.
+
+**Access.** The caller must have a `session_students` row for the session (`404 You are not on the roster of this class`), and the session's `Training.company_id` must match theirs (`404 Training Session not found`). Beyond that, this action is ACL-gated per role on `acos.alias = 'sign_attendance'`: `UserGroup` 180 (Captain) is granted, 240 (Cabin Crew) and 250 (Auditor) are denied, and **200 (Student Pilot) must be granted for the feature to work at all** — a denied role gets `403 ACL_DENIED` no matter how valid the request is.
+
+#### Response
+
+```json
+{ "update": { "time": 1758200000 } }
+```
+
+`null` if nothing was stored. The `ip`, `browser` and `hash` persisted alongside are never returned.
+
+#### Errors
+
+| Status | Message |
+|--------|---------|
+| 400 | `Missing POST params` |
+| 400 | `This course does not ask students to sign their attendance.` |
+| 400 | `Your attendance for this class has not been recorded as attended.` |
+| 400 | `This class has not started yet.` |
+| 400 | `The signature period for this class has closed.` |
+| 400 | `The entered password was not correct` |
+| 400 | `Training is not activated by company manager` / `Training not started yet` / `Training finished already` |
+| 403 | `ACL_DENIED` — the caller's role is not granted this action |
+| 404 | `Training Session not found` (unknown session, or another company's) |
+| 404 | `You are not on the roster of this class` |
 
 ### Unsign Class
 

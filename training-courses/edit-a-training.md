@@ -33,6 +33,18 @@ This additional box, allows you to select the exercise grading scale, require st
 
 <figure><img src="../.gitbook/assets/trainingsEvaluationSettings.png" alt=""><figcaption></figcaption></figure>
 
+### Requiring student attendance signatures
+
+**Require students to sign assistance** asks every student recorded as present to countersign their own attendance for each class. The teacher's signature certifies who was in the room; the student's confirms they were there — the classroom equivalent of signing a flight debrief.
+
+The option appears on onsite and remote courses. Distance courses show **Do not allow to skip lesson time** in its place.
+
+With it on, each student marked **Attended** or **Attended (post-class)** is notified once per class, signs from the class page with their password, and the signature date is kept on the register and printed on the class report PDF. Students can sign from four hours before the class until seven days after it, whether or not the teacher has already signed and locked the register. Absent students are never asked.
+
+Leaving it off changes nothing for students: no request is sent, no signature is expected, and the class report has no signature column.
+
+See [Teacher tools](teacher-tools.md) for what this looks like on the class page.
+
 ### Training availability and validity
 
 **Training availability** sets a timeframe when the training course will be open to students enrolled in the course. You can define either the start date or the end date or both.
