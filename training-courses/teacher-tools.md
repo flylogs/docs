@@ -82,7 +82,11 @@ When it's on:
 * The student opens the class page, presses **Sign my attendance** and confirms with their password. Their signature is stored with the date and time.
 * You see the signature date under each student's name on the register, and a **SIGNED** column appears on the class report PDF — showing the date, *Not signed*, or *—* for anyone who wasn't present to sign.
 
+<figure><img src="../.gitbook/assets/trainingsStudentSignPrompt.png" alt=""><figcaption><p>What the student sees on the class page once you record them as present.</p></figcaption></figure>
+
 Students can sign from four hours before the class until **seven days after** it. Absent students are never asked — there's nothing for them to attest.
+
+<figure><img src="../.gitbook/assets/trainingsStudentSigned.png" alt=""><figcaption><p>After signing, the banner reports the date and time the student signed.</p></figcaption></figure>
 
 {% hint style="info" %}
 Signing the class yourself does **not** close the students' window: your signature certifies who was there, theirs confirms they were. A student can still sign after you've signed and locked the register, which is usually exactly when they get round to it.

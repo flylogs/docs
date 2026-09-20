@@ -39,6 +39,8 @@ This additional box, allows you to select the exercise grading scale, require st
 
 The option appears on onsite and remote courses. Distance courses show **Do not allow to skip lesson time** in its place.
 
+<figure><img src="../.gitbook/assets/trainingsAttendanceSignatureSetting.png" alt=""><figcaption><p>"Require students to sign assistance" on the training settings page.</p></figcaption></figure>
+
 With it on, each student marked **Attended** or **Attended (post-class)** is notified once per class, signs from the class page with their password, and the signature date is kept on the register and printed on the class report PDF. Students can sign from four hours before the class until seven days after it, whether or not the teacher has already signed and locked the register. Absent students are never asked.
 
 Leaving it off changes nothing for students: no request is sent, no signature is expected, and the class report has no signature column.

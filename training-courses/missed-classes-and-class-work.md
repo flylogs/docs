@@ -30,6 +30,10 @@ Some courses ask students to countersign their attendance — the setting is **R
 
 The student opens the class page, presses **Sign my attendance** and enters their password. The signature is stored with the date and time, and shown on the register and on the class report PDF next to their name.
 
+<figure><img src="../.gitbook/assets/trainingsStudentSignPrompt.png" alt=""><figcaption><p>The prompt on the student's class page.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/trainingsStudentSigned.png" alt=""><figcaption><p>Once signed, the same banner confirms when it was done.</p></figcaption></figure>
+
 The window runs from four hours before the class until **seven days after** it. The teacher signing the register does not close it — that signature says who was there, the student's says they were, and the two are independent. Students who were absent are never asked to sign.
 
 If a student can't sign, the class page says why: the class hasn't started, the seven days have passed, their attendance isn't recorded as attended, or they've already signed.
