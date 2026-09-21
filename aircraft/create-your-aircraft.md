@@ -75,6 +75,10 @@ Additionally, in the **Scheduling** box you can allow pilots to self-schedule fl
 
 A live counter under the dropdown shows how many pilots would have self-schedule access for the selected mode.
 
+{% hint style="warning" %}
+**This toggle is the only switch for self-booking.** There is no company-wide equivalent: the Schedule company settings shape self-bookings (slot length, daily cap, documents) but never enable or disable them, and turning off **All pilots see schedule** hides the master schedule without stopping a single booking. If pilots should not be scheduling their own flights, **Self-Schedule** must be off on **every** aircraft.
+{% endhint %}
+
 <figure><img src="../.gitbook/assets/aircraftSelfScheduleAccess.png" alt=""><figcaption><p>Scheduling settings on the aircraft edit page.</p></figcaption></figure>
 
 ***

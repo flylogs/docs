@@ -66,7 +66,15 @@ Restricting **who** is qualified to fly the aircraft is no longer done with a pe
 Below the dropdown, Flylogs shows a live counter — **"Currently X pilots will have access to self-schedule flights on this aircraft"** — recalculated for the selected access mode. It counts active pilots (`pilot = 1`, `active = 1`) that are attributed to this aircraft or have no attributions at all, within the selected group cap. When **Only instructors** is selected, students (group 200) and regular pilots are excluded from the count.
 
 {% hint style="info" %}
-**Students (user group 200)** never see aircraft set to **Certified pilots** or **Only instructors** in their Book a Flight aircraft list. Likewise, aircraft set to **Only instructors** are hidden from anyone above `user_group_id` 170.
+**Students (user group 200)** never see aircraft set to **Certified pilots** or **Only instructors** in their Book a Flight aircraft list. Likewise, aircraft set to **Only instructors** are hidden from anyone above `user_group_id` 170. Roles that do not fly — external auditors (250) and mechanics (300) — never self-schedule under any access mode.
+
+The dropdown is enforced when the booking is saved, not just when the aircraft list is drawn, so a booking that reaches the server for an aircraft the pilot is not entitled to is refused (*"You are not allowed to self schedule …"*). The same applies to an aircraft with self-scheduling switched off entirely (*"Self scheduling is not enabled on …"*).
+{% endhint %}
+
+{% hint style="warning" %}
+**Self-scheduling has no company-wide off switch.** It is enabled aircraft by aircraft. In particular, turning off **All pilots see schedule** in [Company settings → Schedule](../company-management/company-settings/schedule.md) hides the master schedule but leaves self-booking working. To stop pilots booking their own flights, switch **Self-Schedule** off on every aircraft.
+
+Switching it off on an aircraft stops new bookings; bookings pilots already hold on it stay editable by them until you move or cancel those bookings from [Schedule Review](schedule-review-page.md).
 {% endhint %}
 
 

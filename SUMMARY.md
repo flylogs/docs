@@ -127,6 +127,10 @@
 * [ICAO 8951 Risk Matrix](sms/icao-8951-risk-matrix.md)
 * [Safety report analytics](sms/safety-report-analytics.md)
 
+## Security & Compliance
+
+* [Data security and continuity](security/data-security-and-continuity.md)
+
 ## 🤖 API
 
 * [Description](API/description.md)

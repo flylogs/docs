@@ -84,9 +84,13 @@ When it's on:
 
 <figure><img src="../.gitbook/assets/trainingsStudentSignPrompt.png" alt=""><figcaption><p>What the student sees on the class page once you record them as present.</p></figcaption></figure>
 
-Students can sign from four hours before the class until **seven days after** it. Absent students are never asked — there's nothing for them to attest.
+Students can sign from four hours before the class onwards, and **by default there is no closing date** — a signature that arrives late is still better than a record nobody can complete. If your organisation wants one, set **Close signatures after (days)** on the training. Absent students are never asked — there's nothing for them to attest.
 
 <figure><img src="../.gitbook/assets/trainingsStudentSigned.png" alt=""><figcaption><p>After signing, the banner reports the date and time the student signed.</p></figcaption></figure>
+
+{% hint style="warning" %}
+**Switching the setting on is not retroactive.** It applies to classes from the moment you enable it. Everything taught and signed before that stays exactly as it is — those classes are not subject to the requirement and are never shown as missing a student signature.
+{% endhint %}
 
 {% hint style="info" %}
 Signing the class yourself does **not** close the students' window: your signature certifies who was there, theirs confirms they were. A student can still sign after you've signed and locked the register, which is usually exactly when they get round to it.

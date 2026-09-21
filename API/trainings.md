@@ -25,7 +25,12 @@
 > missed-class email and the attendance-signed notification respectively (see
 > **Sign Class**), so a re-sign never double-sends either one.
 >
-> **Schema additions — student attendance signature (task #978).**
+> **Schema additions — student attendance signature (task #978).** `trainings`
+> gained `attendance_signature_days` (smallint, `0` = no closing date, the
+> default) and `attendance_signature_from` (unix, `NULL` = no cut-off) — the
+> latter stamped by `Training::beforeSave` on the OFF -> ON transition and
+> backfilled for already-enabled courses, so the requirement never applies to
+> classes taught before a course adopted it.
 > `session_students` gained `signature` (JSON `{time, ip, browser, hash}`,
 > `NULL` until the student countersigns — see **Sign Own Attendance**) and
 > `signature_requested_at` (unix, the claim-before-send guard for the
@@ -892,6 +897,7 @@ Response `class` payload contains:
 Alongside `class`, the response carries:
 
 - `classwork_submitted` — `true` when the requester has an active `SessionClasswork` upload of their own on this session. One count query; lets a client render the homework state without waiting on the uploads list.
+- `signature_required` — whether THIS class is subject to the student attendance-signature requirement: the course flag AND the session falling at or after `trainings.attendance_signature_from`. Clients must gate the signature UI and the register's SIGNED column on this, **not** on `Training.attendance_signature`, which alone would render classes taught before the rule as unsigned.
 - `classwork_grade` — **the requester's own** homework grade for this session, or `null` when they have not been graded (or are not on the roster). `{ score: 0.0-10.0 | null, feedback: string | null, graded_at: int }`. Scoped by construction: the roster row is resolved by (session, caller), so it can never return another student's mark. This exists because students are ACL-denied the Onsite sub-actions and so cannot call **Classwork Grades** — it is the only way a student reads their own grade. Reviewers get their own row here too, and use **Classwork Grades** for the roster.
 
 ### Attendance
@@ -919,7 +925,7 @@ Company-scoped: the session's `Training.company_id` must match the caller's comp
 | time, remarks, measures, modified, created | from the matching `activity_progress` row, `null` if none |
 | signature | the **student's own** attendance signature for THIS session, from `session_students.signature`: `{ time }` and nothing else, or `null`. The stored `ip`, `browser` and `hash` are never returned — a class payload is readable by the whole roster. Previously read from `activity_progress.signature`, which is per-activity and could not distinguish two sittings of the same lesson |
 | can_sign | `true` when the caller may countersign this row right now. **Only answered for the caller's own row**; `null` on everyone else's |
-| sign_blocked_reason | why `can_sign` is false: `not_required` \| `not_attended` \| `not_yet_open` \| `window_closed` \| `already_signed`. Own row only |
+| sign_blocked_reason | why `can_sign` is false: `not_required` \| `not_attended` \| `not_yet_open` \| `window_closed` \| `already_signed`. Own row only. `not_required` covers both "this course does not ask" and "this class predates the requirement" |
 | exam_status, exam_rating, code, notes | from `activity_progress.value` / `score` / `code` / `notes` — exam activities only |
 
 **Access.** Non-teacher, non-manager callers (`user_group_id > 140` and not the session/subject teacher) see only their own roster row. Teachers and managers see every row. Roster rows with `session_students.user_id IS NULL` (an unexpanded pilot-group placeholder) are excluded entirely.
@@ -1135,7 +1141,7 @@ Only the fields actually present in a row are written — an attendance-only sav
 
 `grades[]` lists the rows actually applied: `{session_student_id, user_id, value}` for a LESSON activity's derived attendance, or `{session_student_id, user_id, ...submitted exam fields}` for an EXAM activity's grade fields.
 
-**Side effect — student signature request.** On a training with `attendance_signature = 1`, every roster row that is now eligible to countersign (see **Sign Own Attendance**) gets one non-urgent in-app message asking the student to sign, sender = the caller, linking to `FRONTEND_HOST/trainings/onsite/class/{sessionId}`. Idempotent per student via `session_students.signature_requested_at` (claim-before-send: conditional `UPDATE ... WHERE signature_requested_at IS NULL`, same pattern as `missed_email_sent_at` and `attendance_notified_at`), so re-saving the sheet does not re-ask. Nothing is sent when the setting is off, and never to a student the policy would then refuse. Notification failures are swallowed and do not affect the response.
+**Side effect — student signature request.** On a training with `attendance_signature = 1` **and** a session at or after `attendance_signature_from`, every roster row that is now eligible to countersign (see **Sign Own Attendance**) gets one non-urgent in-app message asking the student to sign, sender = the caller, linking to `FRONTEND_HOST/trainings/onsite/class/{sessionId}`. Idempotent per student via `session_students.signature_requested_at` (claim-before-send: conditional `UPDATE ... WHERE signature_requested_at IS NULL`, same pattern as `missed_email_sent_at` and `attendance_notified_at`), so re-saving the sheet does not re-ask. Nothing is sent when the setting is off, and never to a student the policy would then refuse. Notification failures are swallowed and do not affect the response.
 
 This request is raised **here**, when attendance is recorded, rather than from **Sign Class** — the request and the ability to act on it now begin at the same moment.
 
@@ -1190,8 +1196,10 @@ Writes `session_students.signature` (`{time, ip, browser, hash}`) for the `(sess
 **Eligibility.** Decided by `StudentAttendanceSignaturePolicy`, the same rules that produce `can_sign` / `sign_blocked_reason` on **View Class**:
 
 - The training must have `attendance_signature = 1` (`not_required`).
+- The session must fall at or after `trainings.attendance_signature_from`, the moment that course adopted the requirement. An earlier session is **out of scope**, and reports `not_required` — not `window_closed`, and never "outstanding". `NULL` means no cut-off was recorded and the requirement applies throughout. This is what stops enabling the setting from retroactively marking a course's entire history as unsigned.
 - The caller's `session_students.attendance_status` must be `attended` or `attended_post_class` (`not_attended`).
-- Now must be at or after `Session.datetime - 4h` (`not_yet_open`) and at or before `Session.datetime + 7 days` (`window_closed`).
+- Now must be at or after `Session.datetime - 4h` (`not_yet_open`).
+- **There is no closing date by default.** `trainings.attendance_signature_days` is opt-in: `0` (the default) means a student may sign at any time; `> 0` closes the window that many days after `Session.datetime` (`window_closed`).
 - **The teacher having signed the class is irrelevant.** `sessions.signature` is not consulted. This endpoint previously rejected outright once the class was signed — while the only message that asks a student to sign is sent by that signing.
 
 Eligibility is checked **before** the password, so a caller is never asked for a credential only to be refused anyway.

@@ -567,6 +567,45 @@ The schedule create/edit endpoint applies these role rules to self-bookings (`se
 
 `PENDING` bookings are auto-assigned when a matching FI publishes `AVAILABLE`/`ALWAYS` availability (`/schedules/add_availability.json`, `/schedules/edit_availability.json` — response field `assignedPending`), and auto-canceled by the cron when `start - schedule_flight_cancellation_min_time` (hours) is reached.
 
+### Aircraft gate on self-bookings
+
+Self-booking is enabled **per aircraft**, not by any company setting. `/schedules/edit.json`
+refuses a self-booking (`self_schedule = 1`, or any caller with `user_group_id > 170`) whose
+target aircraft is not published for it. The check runs when the booking lands on the aircraft
+— on create, and on an edit that posts a different `aircraft_id`; an edit that leaves the
+aircraft alone is not re-checked, so withdrawing an aircraft from self-booking stops new
+bookings without freezing the ones pilots already hold.
+
+Two columns decide it, both returned by `GET /aircraft/view/{id}.json`:
+
+| Column | Meaning |
+|--------|---------|
+| `self_schedule` | `0` = the aircraft is not open to self-booking at all. |
+| `self_schedule_access` | Who may book it: `all` (everyone, students included), `certified` (students, `user_group_id` 200, excluded), `instructors` (`user_group_id <= 170` only). Groups above 200 — external auditors (250) and mechanics (300) — never self-book under any mode. |
+
+Refusals:
+
+```
+HTTP 403 Forbidden
+{ "message": "Self scheduling is not enabled on EC-GV1. Please contact your administrator." }
+
+HTTP 403 Forbidden
+{ "message": "You are not allowed to self schedule EC-GV1. Please contact your administrator." }
+
+HTTP 404 Not Found
+{ "message": "Aircraft not found" }          // not a live aircraft of the caller's company
+```
+
+`GET /aircraft/pilot.json` already filters the aircraft list by the same rule, so a client that
+builds its booking form from that list never hits these errors. They exist because the columns
+used to be a listing filter only.
+
+{% hint style="info" %}
+`schedule_allow_see_master` does **not** gate self-booking — it only decides whether pilots may
+read the master schedule. A company with it off still has self-booking on every aircraft whose
+`self_schedule` is `1`.
+{% endhint %}
+
 ### Certificate gate on self-bookings
 
 A self-booking (`self_schedule = 1`) is rejected on the pilot's own certificates only when **both** company settings line up:

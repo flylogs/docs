@@ -13,7 +13,11 @@ This tab requires a **Premium** or **Unlimited** plan. On Free and Club plans th
 ### Permissions
 
 * **FI schedule management** — allows Flight Instructors to manage the schedule and book flights for other pilots, the same way scheduling staff does. When enabled, an instructor gets the Schedule Manager in full edit mode and can create, move, edit and delete **any** booking of the company — including bookings created by another instructor or by a manager — and is not held to the crew anticipation limits (the cancellation window, or the rule that stops a SIC removing a booking the PIC already accepted). When disabled, instructors can only handle their own bookings; the schedule editor is limited to staff roles. The setting opens the **Schedule Manager** page only — Schedule review, Availabilities, Cancellations and the roster/FTL pages stay reserved for management ranks. See [Schedule Edit page](../../schedules/schedule-edit-page.md).
-* **All pilots see schedule** — when enabled, captains, pilots and students can see the schedule slots of **all** aircraft and bases. When disabled, each pilot only sees slots for the aircraft and bases they are assigned to, and the master schedule views are reserved for staff and instructors.
+* **All pilots see schedule** — when enabled, every pilot and student gets **read-only** access to the company master schedule. When disabled, the master schedule views are reserved for staff and instructors and pilots reach only their own bookings.
+
+{% hint style="warning" %}
+**This switch does not control self-booking.** Turning it off hides the master schedule; it does not stop a pilot booking a flight. Self-scheduling is enabled **per aircraft**, in [Aircraft → Edit → Self-Schedule](../../aircraft/create-your-aircraft.md), and while any aircraft has it on, the pilots that aircraft is open to keep their booking widget. To stop self-booking company-wide, switch it off on every aircraft.
+{% endhint %}
 
 ### Calendar appearance
 
@@ -54,7 +58,11 @@ Flights that cross midnight are not checked against the windows, since they cann
 
 ### Self scheduling
 
-These limits apply to the [pilot self-scheduling feature](../../schedules/self-scheduling.md). Remember that self-scheduling must also be enabled per aircraft.
+These limits apply to the [pilot self-scheduling feature](../../schedules/self-scheduling.md).
+
+{% hint style="info" %}
+**Self-scheduling is not switched on here.** This section only shapes bookings that are already allowed. The on/off switch is **Self-Schedule** on each aircraft, together with the access mode that decides who may book it — everyone, certified pilots only, or instructors only. While no aircraft has it enabled, no pilot can self-book.
+{% endhint %}
 
 * **Max slots per day** — the maximum number of self-service reservations a pilot may hold on a single day. The server rejects any booking above the limit.
 * **Min / Max slot duration** — the shortest and longest slot a pilot can self-book.

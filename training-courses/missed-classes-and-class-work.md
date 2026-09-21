@@ -34,9 +34,11 @@ The student opens the class page, presses **Sign my attendance** and enters thei
 
 <figure><img src="../.gitbook/assets/trainingsStudentSigned.png" alt=""><figcaption><p>Once signed, the same banner confirms when it was done.</p></figcaption></figure>
 
-The window runs from four hours before the class until **seven days after** it. The teacher signing the register does not close it — that signature says who was there, the student's says they were, and the two are independent. Students who were absent are never asked to sign.
+The window opens four hours before the class and, by default, never closes — a school can set a closing date per course, but nothing requires one. The teacher signing the register does not close it either: that signature says who was there, the student's says they were, and the two are independent. Students who were absent are never asked to sign.
 
-If a student can't sign, the class page says why: the class hasn't started, the seven days have passed, their attendance isn't recorded as attended, or they've already signed.
+The requirement is not retroactive. A course that switches it on applies it to classes from that moment; everything taught before stays as it was recorded and is never shown as missing a signature.
+
+If a student can't sign, the class page says why: the class hasn't started, their attendance isn't recorded as attended, they've already signed, or the course's own closing date has passed.
 
 ### The missed-class email
 

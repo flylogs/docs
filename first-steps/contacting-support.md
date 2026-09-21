@@ -16,7 +16,7 @@ Look for the **red life-ring icon** in the top-right corner of the navigation ba
 
 Click it to open the **Reach Flylogs support** panel. If the panel is already open and minimised, clicking the button brings it back to full size.
 
-> The support button is only shown on desktop screens. On mobile, use the **Help** section from the navigation menu.
+> The support button appears on any screen wide enough to show the full navigation bar. On narrow screens and phones the navigation bar is replaced by a menu drawer — open it and choose **Help**, then use **Reach Flylogs support** on the Help and Support page.
 
 ***
 
@@ -95,15 +95,27 @@ Press **Escape** or click the backdrop to minimise the panel without losing your
 
 ***
 
-## Tracking your ticket
+## Tracking your reports
 
-After submission, your ticket is visible at **Help → My tickets** or by following the **View ticket** link on the confirmation screen.
+Go to **Help and Support**. The **Your reports** section at the top lists every report filed by anyone in your organisation, newest first.
 
-On the ticket page you can:
+Each row shows the reference number, title, category, severity, current status, the date it was opened and the date it last changed. Use the **Open / Closed / All** buttons to switch between what is still with us and what is finished. Long lists are paged.
+
+Click any row to open that report.
+
+You can also reach a report from:
+
+* the **View ticket** link on the confirmation screen shown right after you submit;
+* the similar-report links that appear under the subject field while you type a new report;
+* the button in any email notification about that report.
+
+On the report page you can:
 
 * Read the full details of what you submitted.
 * See the current status and any resolution notes left by the team.
 * Add follow-up comments if you have more information to share.
+
+> Replies you add on the report page reach the support team directly. The notification emails themselves are automated and cannot be replied to — use the button in the email to open the report and answer there.
 
 ***
 

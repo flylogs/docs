@@ -41,7 +41,11 @@ The option appears on onsite and remote courses. Distance courses show **Do not 
 
 <figure><img src="../.gitbook/assets/trainingsAttendanceSignatureSetting.png" alt=""><figcaption><p>"Require students to sign assistance" on the training settings page.</p></figcaption></figure>
 
-With it on, each student marked **Attended** or **Attended (post-class)** is notified once per class, signs from the class page with their password, and the signature date is kept on the register and printed on the class report PDF. Students can sign from four hours before the class until seven days after it, whether or not the teacher has already signed and locked the register. Absent students are never asked.
+With it on, each student marked **Attended** or **Attended (post-class)** is notified once per class, signs from the class page with their password, and the signature date is kept on the register and printed on the class report PDF. Students can sign from four hours before the class onwards, whether or not the teacher has already signed and locked the register. Absent students are never asked.
+
+**Close signatures after (days)** is optional and empty by default, meaning there is no deadline: a student can always complete the record. Set a number of days only if your organisation wants signatures to stop being accepted after a while — nothing else changes when that date passes, so leaving it open is usually the better choice.
+
+**Enabling it is not retroactive.** The requirement applies to classes from the moment you switch it on. Classes taught before that are not subject to it and will never be reported as missing a student signature — switching this on cannot make your existing training history look unsigned.
 
 Leaving it off changes nothing for students: no request is sent, no signature is expected, and the class report has no signature column.
 

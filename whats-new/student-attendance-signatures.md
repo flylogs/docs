@@ -19,7 +19,8 @@ The setting has been on the training settings page for a while, and schools have
 * **Signed with a password.** The student opens the class page, presses **Sign my attendance** and confirms with their own password. The signature is stored with its date and time.
 
 <figure><img src="../.gitbook/assets/trainingsStudentSignPrompt.png" alt=""><figcaption><p>The student's class page, asking for the signature.</p></figcaption></figure>
-* **Seven days to sign.** The window opens four hours before the class and closes seven days after it. **The teacher signing the register doesn't close it** — their signature certifies who was there, the student's confirms they were, and the two are independent.
+* **No deadline unless you want one.** The window opens four hours before the class and, by default, never closes: a late signature is worth more than a record nobody can complete. Schools that want a cut-off can set one per course. **The teacher signing the register doesn't close it either** — their signature certifies who was there, the student's confirms they were, and the two are independent.
+* **Not retroactive.** Switching the setting on applies it to classes from that moment. Classes taught and signed before then are not subject to it and are never reported as missing a student signature, so enabling it cannot make an existing training history read as unsigned.
 * **Absent students are never asked.** There's nothing for them to attest. Their justification and class-work options are unchanged.
 * **Always says why.** When a student can't sign, the class page tells them which of it is: too early, too late, not recorded as attended, or already signed.
 * **On the record.** The signature date appears under the student's name on the register, and the class report PDF gains a **SIGNED** column on courses that require it.
@@ -36,7 +37,9 @@ It sits alongside the teacher's own signature in the existing attendance flow �
 
 <figure><img src="../.gitbook/assets/trainingsAttendanceSignatureSetting.png" alt=""><figcaption><p>Training settings → Require students to sign assistance.</p></figcaption></figure>
 
-Training settings → **Require students to sign assistance**. Existing classes are unaffected; the request goes out the next time attendance is recorded.
+Training settings → **Require students to sign assistance**, with an optional **Close signatures after (days)** next to it (empty = no deadline).
+
+Existing classes are unaffected: the requirement starts the moment you switch it on, so classes already taught are not subject to it and keep their registers, their instructor signatures and their reports exactly as they are. The request goes out the next time attendance is recorded on a new class.
 
 ***
 
