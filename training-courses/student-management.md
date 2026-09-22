@@ -16,6 +16,8 @@ First, you'll need to add your students to one of your courses. To do this, clic
 
 Select the training in which you want to enroll the user(s). Additionally, you have the option to choose a tutor for the newly enrolled users or set a finish-by date if desired.
 
+Anyone who is already on the course is left alone: if a selected pilot group includes students who are training on that course right now, they keep the enrollment they have and the pop-up tells you how many were skipped. A student who appears in two selected groups is enrolled once, not twice. Students whose previous enrollment on the course is **closed** — completed, stopped, failed or expelled — are treated as re-takes and do get a new enrollment, with the old record kept alongside it, so take care when you re-add a group whose members have already finished the course.
+
 <figure><img src="../.gitbook/assets/trainingsEnrollUsers.png" alt=""><figcaption><p>Enroll new students pop up window.</p></figcaption></figure>
 #### Students report page
 
@@ -75,18 +77,85 @@ The date cannot be in the future, and cannot be earlier than the day the student
 
 #### The course completion certificate
 
-Once an enrollment is completed, the certificate can be downloaded from the student's training progress page (managers), from the Students overview, and by the student themselves from their training page — unless **Show certificate to students** is switched off on the training. It is the training organisation's document, printed in the **company language**:
+Once an enrollment is completed, the certificate can be downloaded from the student's training progress page (managers), from the Students overview, and by the student themselves from their training page — unless **Show certificate to students** is switched off on the training, or the certificate is still a [preview](#check-the-certificate-before-you-issue-it) or has been [withdrawn](#withdrawing-a-certificate). It is the training organisation's document, printed in the **company language**:
 
 * **Organisation** — legal name, address, approval type and reference from **Company settings → General → Training organisation**.
 * **Student** — full name, date of birth (from the pilot profile) and licence. The licence line is the **name of the student's valid licence document** under *My Certificates* (type "Licence", not expired) — record the licence number there, e.g. `PPL(A) SI.FCL.12345`. Students with no licence get no licence line. Passport number, address and phone are never printed.
 * **Course** — name, regulatory basis, **theoretical training hours** (the planned syllabus hours of the course subjects) and **flight training hours** (the block time actually flown on the student's completed missions, each flight counted once), the course start date (the enrolment date) and the completion date.
 * **Issue** — the certificate number, the date of issue and the signature, name and position of the training manager (see [Edit a training](edit-a-training.md#certificate-signer-and-regulatory-basis)).
 
-**Numbering.** The certificate is *issued* the first time anyone downloads it: Flylogs reserves the next number from the company counter, stamps the date of issue and stores a copy of every printed field. Every later download — by the student, a manager, or from the certificates list — reproduces that same certificate. Editing the company details or the course afterwards does not alter a certificate already issued.
+**Numbering.** A certificate is *issued* once. Flylogs reserves the next number from the company counter, stamps the date of issue and stores a copy of every printed field. Every later download — by the student, a manager, or from the certificates list — reproduces that same certificate. Editing the company details or the course afterwards does not alter a certificate already issued. That is deliberate: a certificate records what was certified on the day.
 
-**Issued certificates list.** **Trainings → Certificates** lists every certificate the organisation has issued: number, student, course, date of issue and who triggered it, with a search by number or student and a filter by training. Each row can be downloaded again or opened as a training report. Available to managers and instructors (`Flight Instructor` and above).
+#### Check the certificate before you issue it
 
-**The QR code and privacy.** The QR code on the certificate opens the student's training report page. Anyone scanning it **without logging in** sees only what is needed to check the document is genuine: the student's name with all but the first letter of each word masked (`O******** K********`), the course, the organisation, whether the course is completed and on which date, and the certificate number. The full training report — attendance, exams, flights and the personal details — is shown only to the student, their supervisor, and managers or instructors of the same company, after logging in.
+Because a certificate is frozen the moment it is issued, look at it first. On a completed enrollment, open "**Manage enrollment**" and choose "**Preview certificate**".
+
+<figure><img src="../.gitbook/assets/trainingsCertificatePreviewAction.png" alt="The Manage enrollment window, with Preview certificate as the first action"><figcaption><p><em>Preview certificate</em> renders the real document before it counts.</p></figcaption></figure>
+
+The preview is the real document — the signer and their position, the date of birth, the licence, the hours, the regulatory basis and the whole organisation block — so anything wrong is visible before it is permanent. It is watermarked, prints no date of issue, and says in plain words that it has no validity. **The student can never download a preview**; it does not appear on their training page and the download is refused to them outright.
+
+<figure><img src="../.gitbook/assets/trainingsCertificatePreviewPdf.png" alt="A course completion certificate with a large diagonal PREVIEW — NOT ISSUED watermark"><figcaption><p>A preview: watermarked, no date of issue, and a line stating it has no validity.</p></figcaption></figure>
+
+When the document is right, press "**Issue certificate**" — in the same window, or from the row in **Trainings → Certificates**. The certificate keeps the number the preview already reserved, so issuing never renumbers anything, and the date of issue is stamped at that moment.
+
+> **Courses that finish on their own are unaffected.** On a distance course where a student completes without anyone in the office involved, their own download issues a normal certificate exactly as before. A preview only exists because a manager asked for one.
+
+#### The certificates register
+
+**Trainings → Certificates** lists every certificate the organisation has: number, student, course, date of issue, who issued it and its **status**. Search by number or student, filter by course or by status.
+
+<figure><img src="../.gitbook/assets/trainingsCertificatesRegister.png" alt="The certificates register showing four certificates with Modified, Preview, Revoked and Live statuses"><figcaption><p>The register, with each certificate's status and the date and account behind a change.</p></figcaption></figure>
+
+| Status | What it means |
+|--------|---------------|
+| **Preview** | Created for checking and not issued. No date of issue, no student download. Waiting for someone to press *Issue certificate*. |
+| **Live** | Issued and untouched. |
+| **Modified** | Issued, then a printed field was corrected. **It behaves exactly like Live** — students download it as they always did. The label is information for your staff, not a restriction. |
+| **Revoked** | Withdrawn. The student loses the download; your staff keep it, printed as revoked. The record becomes read-only. |
+
+Every row can be downloaded again or opened as a training report.
+
+#### Correcting an issued certificate
+
+A wrong signatory, a blank position, a date typed wrong: from the register, press the pencil on the row and correct the fields the document prints. Withdrawn certificates show an eye instead of a pencil — they can be read but not changed.
+
+<figure><img src="../.gitbook/assets/trainingsCertificateEdit.png" alt="The certificate edit window with student, course, signer, organisation and language sections"><figcaption><p>Everything the certificate prints can be corrected — except what identifies it.</p></figcaption></figure>
+
+You can change the student's name, date of birth and licence; the course name, regulatory basis, theoretical and flight training hours, and the start, completion and validity dates; the signer's name and position; the whole organisation block; and the **certificate language**.
+
+**The number, the sequence and the date of issue cannot be changed.** They identify the document, and a certificate already handed to a student, an authority or an employer has to keep them.
+
+Saving marks the certificate **Modified** and records the date and the account that did it. Nothing changes for the student: they download the corrected certificate the same way, under the same number.
+
+#### Withdrawing a certificate
+
+When a certificate should never have been issued, press the pencil and choose "**Withdraw certificate**". Flylogs asks for a reason and records it with the date and your account.
+
+Withdrawing **never deletes anything** — the record and the frozen copy of the document survive, because the register has to keep showing that the number existed and was withdrawn. What changes:
+
+* The **student loses the download** entirely; the button disappears from their training page.
+* **Your staff keep it**, printed with a large red REVOKED across the page, a line through the document and the withdrawal date at the foot. The filename says so too.
+* The **verification page states it**, so the certificate no longer verifies as genuine.
+
+<figure><img src="../.gitbook/assets/trainingsCertificateRevokedPdf.png" alt="A certificate printed with a red REVOKED watermark struck through the page"><figcaption><p>A withdrawn certificate as a manager downloads it. The student cannot download it at all.</p></figcaption></figure>
+
+A **preview cannot be withdrawn** — it was never issued, so there is nothing to withdraw.
+
+**A withdrawn certificate can no longer be edited.** Opening it from the register shows the record read-only, with the withdrawal date and the reason, so you can still read exactly what the document said. To certify the student again, issue a new certificate from their enrolment.
+
+<figure><img src="../.gitbook/assets/trainingsCertificateRevokedReadOnly.png" alt="A withdrawn certificate opened from the register, read-only, with the withdrawal reason"><figcaption><p>A withdrawn certificate opens read-only — the record stays readable, but nothing in it can change.</p></figcaption></figure>
+
+**Who can do this:** issuing, correcting and withdrawing are restricted to **company managers**. The register itself stays readable by instructors (`Flight Instructor` and above), who can search it and download, but see no pencil and no *Issue* button.
+
+#### The QR code, verification and privacy
+
+The QR code on the certificate opens the student's training report page. Anyone scanning it **without logging in** sees only what is needed to check the document is genuine: the student's name with all but the first letter of each word masked (`O******** K********`), the course, the organisation, whether the course is completed and on which date, the certificate number — and the certificate's **status**, valid or withdrawn with the date it was withdrawn.
+
+<figure><img src="../.gitbook/assets/trainingsCertificateVerifyRevoked.png" alt="The public verification page showing a withdrawn certificate in red"><figcaption><p>Scanning a withdrawn certificate says so, in plain words, without a login.</p></figcaption></figure>
+
+A certificate that is still in a **Preview** state shows no number here at all: it has not been issued, so there is nothing to confirm.
+
+The full training report — attendance, exams, flights and the personal details — is shown only to the student, their supervisor, and managers or instructors of the same company, after logging in.
 
 #### Enrollment status: stopping, failing or expelling a student
 

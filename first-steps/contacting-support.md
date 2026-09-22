@@ -101,6 +101,8 @@ Go to **Help and Support**. The **Your reports** section at the top lists every 
 
 Each row shows the reference number, title, category, severity, current status, the date it was opened and the date it last changed. Use the **Open / Closed / All** buttons to switch between what is still with us and what is finished. Long lists are paged.
 
+A **blue dot** next to a row means that report has moved since you last opened it — the status changed, or the support team replied. The count beside the section heading tells you how many have, and the same number appears on the **Help** entry in the navigation menu, so you can see at a glance that something is waiting for you without going to your mailbox. Opening the report clears its mark. Your own replies do not mark your own report.
+
 Click any row to open that report.
 
 You can also reach a report from:

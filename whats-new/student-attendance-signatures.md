@@ -24,6 +24,7 @@ The setting has been on the training settings page for a while, and schools have
 * **Absent students are never asked.** There's nothing for them to attest. Their justification and class-work options are unchanged.
 * **Always says why.** When a student can't sign, the class page tells them which of it is: too early, too late, not recorded as attended, or already signed.
 * **On the record.** The signature date appears under the student's name on the register, and the class report PDF gains a **SIGNED** column on courses that require it.
+* **One place to chase them.** **Trainings → Pending signatures** lists everything still outstanding across your courses, grouped by course or by student, oldest first — **class attendance and flight mission debriefings together**, since a student chasing one is usually behind on the other. Opens on the last 90 days, widenable to a year or everything. A worklist, not a gate: it never holds back completion or a certificate.
 
 ***
 

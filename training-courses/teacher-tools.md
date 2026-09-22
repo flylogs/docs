@@ -96,6 +96,22 @@ Students can sign from four hours before the class onwards, and **by default the
 Signing the class yourself does **not** close the students' window: your signature certifies who was there, theirs confirms they were. A student can still sign after you've signed and locked the register, which is usually exactly when they get round to it.
 {% endhint %}
 
+### Chasing outstanding signatures
+
+**Trainings → Pending signatures** lists every student signature still missing across all your courses, so you don't have to open classes one by one looking for gaps. It covers **both** signatures a student can owe — the class attendance countersignature and the flight mission debriefing signature — because when you're chasing someone it rarely matters which of the two is outstanding. Group it by course or by student, filter to one course, and open the class or the flight straight from the list.
+
+<figure><img src="../.gitbook/assets/trainingsPendingSignatures.png" alt=""><figcaption><p>Outstanding signatures grouped by course, oldest class first.</p></figcaption></figure>
+
+Each row shows the date, the student, what is unsigned, and — for class attendance — whether they've been asked yet. The oldest item in each group is listed first, since that's the furthest from anyone's memory.
+
+It opens on the **last 90 days**, and you can widen it to a year or to everything. That default matters: debriefing signatures have been in Flylogs for years, so "all time" on an established school is an archive rather than a list anyone will work through.
+
+Classes taught before a course adopted the attendance requirement never appear. Flight debriefings have no such cut-off, because that signature has always been available — an old unsigned debriefing is genuinely outstanding.
+
+It is a worklist and nothing more: an outstanding signature never blocks course completion and never blocks a certificate.
+
+Available to training managers and above (user group 140 and below).
+
 ### Exporting a class report (PDF)
 
 The class teacher and any training manager can download a **PDF report** of a class or exam session — handy when your authority asks for evidence of theoretical training. Use the **PDF report** button next to **Edit Class** on the class page. Students don't see it, and a teacher who is on the class's own student list is treated as a student here too.

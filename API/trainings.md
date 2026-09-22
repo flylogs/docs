@@ -1180,6 +1180,43 @@ The message `redirect` field is `/trainings/onsite/class/{sessionId}`. Notificat
 
 **Response `signature`.** The persisted `signature` JSON carries a server-only `statuses` map (`session_students.id => attendance_status` as of this sign) used purely as the next sign's carve-out baseline — it is stripped, along with the same key inside every `history` entry, before being returned here or from **View Class**.
 
+### Pending Signatures
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/onsite/pending_signatures.json`
+
+Every student signature still outstanding across the company's courses — the worklist behind **Trainings → Pending signatures**. Read-only; nothing here gates completion or certificates.
+
+Two sources in one list, distinguished by `type`:
+
+- **`attendance`** — `session_students.signature IS NULL`. Returned only when the course has `attendance_signature = 1`, the session is at or after `trainings.attendance_signature_from` (or that column is `NULL`), and the roster row's `attendance_status` is `attended` or `attended_post_class`. Classes taught before a course adopted the requirement are therefore never reported as outstanding.
+- **`debriefing`** — `user_training_flights.signature IS NULL` on a course with `require_debriefing_signature = 1`, restricted to flown missions (`completed = 1`, `flight_id IS NOT NULL`). No adoption cut-off applies: this signature has always been available, so an old unsigned debriefing is genuinely outstanding. Its date is the flight's own `date`, falling back to the row's `created`.
+
+| Query | Description |
+|-------|-------------|
+| training | Limit to one `trainings.id` |
+| user | Limit to one student's `user_id` |
+| type | `attendance` or `debriefing`; both when omitted |
+| days | Recency window, default **90**; `0` for everything. Not cosmetic — the historic debriefing backlog runs to tens of thousands of rows |
+
+**Access.** `user_group_id <= 140`, else `403 Not allowed to review pending signatures`. Company-scoped through `Training.company_id`. Capped at 2000 rows.
+
+#### Response
+
+Each row carries `type`, and `flight_id` on a debriefing row. `session_id`, `subject_name` and `attendance_status` are `null` for a debriefing; `kind` is `MISSION`. Ordered newest first across both sources; each source is capped at 2000 rows.
+
+```json
+{ "pending": [ {
+  "type": "attendance",
+  "session_student_id": "123", "session_id": "…", "flight_id": null, "session_datetime": 1789000000,
+  "training_id": "…", "training_name": "ATPL(A) - INTEGRATED",
+  "subject_name": "Air Law", "item_name": "Lesson 1", "kind": "LESSON",
+  "user_id": "42", "user_name": "Ada Lovelace",
+  "attendance_status": "attended", "requested_at": null, "can_still_sign": true
+} ] }
+```
+
+`requested_at` is `session_students.signature_requested_at` — `null` means the student has never been asked (the class predates the notification, or attendance was recorded before it existed). `can_still_sign` is `false` only where the course set an optional closing date and it has passed; with the default of no closing date it is always `true`.
+
 ### Sign Own Attendance
 
 <mark style="color:green;">`POST`</mark> `/trainings/onsite/sign_attendance.json`
@@ -1206,7 +1243,7 @@ Eligibility is checked **before** the password, so a caller is never asked for a
 
 **Repeat calls are a no-op**, not an error: an already-signed row returns its existing `{time}` with `200`.
 
-**Access.** The caller must have a `session_students` row for the session (`404 You are not on the roster of this class`), and the session's `Training.company_id` must match theirs (`404 Training Session not found`). Beyond that, this action is ACL-gated per role on `acos.alias = 'sign_attendance'`: `UserGroup` 180 (Captain) is granted, 240 (Cabin Crew) and 250 (Auditor) are denied, and **200 (Student Pilot) must be granted for the feature to work at all** — a denied role gets `403 ACL_DENIED` no matter how valid the request is.
+**Access.** The caller must have a `session_students` row for the session (`404 You are not on the roster of this class`), and the session's `Training.company_id` must match theirs (`404 Training Session not found`). Beyond that, this action is ACL-gated per role on `acos.alias = 'sign_attendance'`: `UserGroup` 180 (Captain), 200 (Student Pilot) and 240 (Cabin Crew) are granted — the roles that sit in a classroom as students and therefore sign their own row. 250 (Auditor) is denied: an auditor observes a class, they do not attest to attending it. Every other role inherits access from the root `controllers` ALLOW. A denied role gets `403 ACL_DENIED` no matter how valid the request is.
 
 #### Response
 
@@ -1884,6 +1921,17 @@ Only `ACTIVE` enrollments:
 - are matched by supervisor auto-assignment when scheduling a training flight;
 - block a re-enrollment. Enrolling a student whose only enrollment is closed creates a fresh one (re-take).
 
+#### Certificate state on the enrollment views
+
+Both enrollment views carry the certificate's state, so a client can decide what to offer without calling the certificate endpoint — which would **issue** one.
+
+| Endpoint | Where | Shape |
+|----------|-------|-------|
+| `GET /manager/trainings/students/view/{enrollmentId}.json` | response root, `Certificate` | `{ id, number, status, issued_at, revoked_at, revoke_reason }` or `null` |
+| `GET /trainings/trainings/view/{enrollmentId}.json` | under `training`, `Certificate` | `{ number, status, issued_at }` or `null` |
+
+`null` means **nothing has been issued yet**, which for a student is still offerable: their own download issues it. `PREVIEW` and `REVOKED` are refused to them, so hide the button rather than let it 403. The manager view carries the `id` because that is what the three lifecycle endpoints above take.
+
 #### Status history
 
 Every transition is appended to `trainings_user_status_changes` and returned as `StatusChange` (oldest first) by both `GET /manager/trainings/students/view/{enrollmentId}.json` (response root) and `GET /trainings/trainings/view/{enrollmentId}.json` (under `training`):
@@ -1991,11 +2039,37 @@ Retrieve training completion certificate data. Gated strictly on `TrainingsUser.
 
 **Issuing.** The first successful call **issues** the certificate: a sequence number is reserved atomically on `company_details.certificate_next_number`, formatted with `company_details.certificate_pattern` / `certificate_prefix` (tokens `{prefix}` `{year}` `{seq}` `{seq:N}`; see `CertificateNumber`), and a `training_certificates` row is written with a JSON `snapshot` of every printed field. Every later call returns that row unchanged — number and `issued_at` never move. `training_certificates.trainings_user_id` is unique (one certificate per enrollment); a lost race burns a sequence number, never duplicates one.
 
+#### Previewing before issue
+
+`?preview=1` creates the row with `status: "PREVIEW"` instead of `LIVE`, so the document can be rendered and checked before it counts.
+
+```bash
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://fmc.flylogs.com/v1/trainings/trainings/certificate/{enrollmentId}.json?preview=1"
+```
+
+The flag is honoured **only** for `user_group_id <= 135` of the training's own company. Every other caller — the student, their supervisor, an instructor, a manager of another company — is served the normal path and issues `LIVE`, flag or no flag. That is what keeps the automatic case intact: a `DISTANCE` student who finishes on their own and downloads still gets a real certificate, exactly as before.
+
+The flag is a **no-op once a row exists**. Previewing again returns the same record, which is why issuing later keeps the reserved number rather than allocating a fresh one.
+
+#### Status and who may download what
+
+| `TrainingCertificate.status` | Meaning | Student / supervisor | Same-company staff (`<= 170`) |
+|------|---------|----------------------|-------------------------------|
+| `PREVIEW` | Created for checking, never issued. No `issued_at` is printed. | `403` | `200` |
+| `LIVE` | Issued, untouched. | `200` | `200` |
+| `MODIFIED` | Issued, then a printed field was corrected. Identical behaviour to `LIVE`. | `200` | `200` |
+| `REVOKED` | Withdrawn. Read-only — `certificate_edit` refuses it. | `403` | `200` |
+
+The `403` body is `{"message": "This certificate is not available"}`. It is decided on the **stored status**, not on the client: hiding the button is a courtesy, the refusal is the rule.
+
+NEO reflects the same statuses in the PDF — a diagonal `PREVIEW — NOT ISSUED` watermark with no date of issue, or a red `REVOKED` struck through the page with the withdrawal date — and puts `PREVIEW_` / `REVOKED_` in the filename.
+
 #### Response additions
 
 | Field | Description |
 |-------|-------------|
-| `TrainingCertificate` | `{ id, number, sequence, issued_at, issued_by, trainings_user_id, training_id, user_id, snapshot }`. `snapshot` = `{ locale, number, issued_at, student{name,surname,dob,licence}, organisation{name,legal_name,address,zip,city,country,approval_type,approval_reference}, course{id,name,type,regulatory_basis,ground_hours,flight_hours,started,completed,valid_until}, signer{user_id,name,surname,position} }`. NEO renders the PDF from the snapshot. |
+| `TrainingCertificate` | `{ id, number, sequence, issued_at, issued_by, trainings_user_id, training_id, user_id, status, issued_by_preview, edited_at, edited_by, revoked_at, revoked_by, revoke_reason, snapshot }`. `snapshot` = `{ locale, number, issued_at, status, student{name,surname,dob,licence}, organisation{name,legal_name,address,zip,city,country,approval_type,approval_reference}, course{id,name,type,regulatory_basis,ground_hours,flight_hours,started,completed,valid_until}, signer{user_id,name,surname,position} }`. NEO renders the PDF from the snapshot. |
 | `Training.regulatory_basis` | Effective value: `trainings.regulatory_basis`, else `company_details.regulatory_basis`, else `null`. |
 | `Training.manager_position` | Free text printed under the signer; `null` → "Head of Training". |
 | `Training.ground_hours` | Planned theory hours: sum of `training_subjects.hours` (not deleted). |
@@ -2011,9 +2085,11 @@ Retrieve training completion certificate data. Gated strictly on `TrainingsUser.
 
 ## Issued Certificates (manager)
 
-<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/certificates.json?page=&training_id=&q=`
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/certificates.json?page=&training_id=&q=&status=`
 
-Every certificate the company has issued, newest first. Querystring pagination (`page`, 50 per page, `maxLimit` 500). `training_id` filters one course; `q` matches the certificate `number` or the student's name/surname (`LIKE %q%`; users live in `flylogs_main`, so matching students are resolved first and passed as `user_id IN (...)`).
+Every certificate the company has, newest first. Querystring pagination (`page`, 50 per page, `maxLimit` 500). `training_id` filters one course; `q` matches the certificate `number` or the student's name/surname (`LIKE %q%`; users live in `flylogs_main`, so matching students are resolved first and passed as `user_id IN (...)`); `status` is one of `PREVIEW`, `LIVE`, `MODIFIED`, `REVOKED` and anything else is ignored rather than rejected.
+
+Rows carry the full record including `snapshot`, plus `Editor` and `Revoker` alongside `Issuer`, so a client can render the whole register and open an edit form without a second round trip.
 
 **Access:** `user_group_id <= 170` (`403` otherwise). ACO `controllers/Trainings/Trainings/manager_certificates` — needs `aco_sync`; inherits the root allow.
 
@@ -2023,13 +2099,111 @@ Every certificate the company has issued, newest first. Querystring pagination (
 {
   "certificates": [
     {
-      "TrainingCertificate": { "id": "…", "number": "EGM-2026-0001", "sequence": "1", "issued_at": "1789200000", "issued_by": "618", "trainings_user_id": "…", "training_id": "…", "user_id": "377" },
+      "TrainingCertificate": {
+        "id": "…", "number": "EGM-2026-0001", "sequence": "1",
+        "issued_at": "1789200000", "issued_by": "618",
+        "trainings_user_id": "…", "training_id": "…", "user_id": "377",
+        "status": "MODIFIED", "issued_by_preview": true,
+        "edited_at": "1789300000", "edited_by": "618",
+        "revoked_at": null, "revoked_by": null, "revoke_reason": null,
+        "snapshot": { "…": "every printed field" }
+      },
       "Training": { "id": "…", "name": "ATPL(A) - INTEGRATED", "color": "#249ac3" },
       "User": { "id": "377", "UserDetail": { "name": "Martha", "surname": "Smith" } },
-      "Issuer": { "id": "618", "UserDetail": { "name": "Iñigo", "surname": "García" } }
+      "Issuer": { "id": "618", "UserDetail": { "name": "Iñigo", "surname": "García" } },
+      "Editor": { "id": "618", "UserDetail": { "name": "Iñigo", "surname": "García" } },
+      "Revoker": { "id": null, "UserDetail": null }
     }
   ],
   "pagination": { "page": 1, "pageCount": 1, "count": 1, "limit": 50 }
+}
+```
+
+---
+
+## Certificate lifecycle (manager)
+
+Three write endpoints, all `POST`, all restricted to **`user_group_id <= 135`** of the certificate's own company (`403` otherwise, `404` when the id belongs to another company — the two are deliberately indistinguishable to a caller from outside). ACOs `controllers/Trainings/Trainings/{manager_certificate_issue, manager_certificate_edit, manager_certificate_revoke}` — need `aco_sync`; they inherit the root allow and no explicit grants are required, because the controller narrows access itself.
+
+The register (`manager_certificates`) stays readable at `<= 170`. Reading a register is not the same act as rewriting a certified document.
+
+Each returns `{ "result": true, "certificate": { …the updated row… } }`.
+
+### Issue a preview
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/certificate_issue/{certificateId}.json`
+
+```bash
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  "https://fmc.flylogs.com/v1/manager/trainings/trainings/certificate_issue/{certificateId}.json"
+```
+
+`PREVIEW` → `LIVE`. **The number and the sequence are not reallocated** — they were reserved when the preview was created, which is the whole point of previewing on the real record. `issued_at` *is* moved to now (the certificate is issued today, not on the day somebody looked at it) and `issued_by` is set to the caller. A certificate that is already `LIVE` or `MODIFIED` is returned untouched, so the call is idempotent.
+
+### Correct an issued certificate
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/certificate_edit/{certificateId}.json`
+
+```bash
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -d "signer[position]=Head of Training" \
+  -d "signer[name]=Ana" -d "signer[surname]=Ruiz" \
+  -d "course[ground_hours]=123.5" \
+  -d "course[completed]=1757894400" \
+  -d "locale=es" \
+  "https://fmc.flylogs.com/v1/manager/trainings/trainings/certificate_edit/{certificateId}.json"
+```
+
+{% hint style="warning" %}
+**Send bracket notation, not dotted keys.** PHP rewrites a dot in a POST field name to an underscore, so `course.ground_hours` arrives as `course_ground_hours`, falls outside the whitelist and is **silently dropped while the request still returns `200`**. Use `course[ground_hours]`. A JSON body with dotted keys is expanded server-side and works too.
+
+**Send the right `Content-Type` too.** These three endpoints read `$this->request->data`, which CakePHP fills from the declared content type. A urlencoded body sent as `application/json` is json_decoded to `null`, the action sees nothing, and `certificate_edit` answers `400 Nothing to change` — a failure that looks like a client bug. Send `application/x-www-form-urlencoded; charset=UTF-8` with a urlencoded body, or `application/json` with actual JSON.
+{% endhint %}
+
+The body is a fragment of the snapshot. Only these paths are read; **anything else in the body is ignored**, so `number`, `sequence`, `issued_at` and `status` cannot be rewritten from the client:
+
+| Section | Editable paths |
+|---------|----------------|
+| — | `locale` |
+| `student` | `name`, `surname`, `dob` (`YYYY-MM-DD`), `licence` |
+| `organisation` | `name`, `legal_name`, `address`, `zip`, `city`, `country`, `approval_type`, `approval_reference` |
+| `course` | `name`, `regulatory_basis`, `ground_hours`, `flight_hours`, `started`, `completed`, `valid_until` |
+| `signer` | `name`, `surname`, `position` |
+
+Coercion: the two `*_hours` are rounded to 2 dp (empty → `0`); the three `course` dates are unix seconds (empty → `null`); everything else is trimmed, and an empty string becomes `null` so a blank input **clears** a field rather than printing the word "null". A signer block whose name, surname and position all end up empty is set to `null` outright — and, conversely, naming a signer on a certificate that was issued without one creates the block.
+
+**Only keys actually present in the body are touched**, so a partial patch never blanks the rest of the certificate.
+
+Status transition: `LIVE` → `MODIFIED`. `PREVIEW` stays `PREVIEW` — it has not been issued, so there is nothing to amend — and `edited_at` / `edited_by` are stamped.
+
+A `REVOKED` certificate is **refused**: `400 A withdrawn certificate cannot be edited`. A withdrawn certificate is a closed record; the register exists to show what was withdrawn, not a later rewrite of it. Issue a new certificate from the enrolment instead.
+
+### Withdraw a certificate
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/certificate_revoke/{certificateId}.json`
+
+```bash
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -d "reason=Issued with the wrong signatory; reissued under a corrected record." \
+  "https://fmc.flylogs.com/v1/manager/trainings/trainings/certificate_revoke/{certificateId}.json"
+```
+
+`reason` is optional and truncated to 500 characters. Sets `status: "REVOKED"` plus `revoked_at`, `revoked_by` and `revoke_reason`.
+
+**The row and its snapshot are never deleted** — the register has to keep showing that the number existed and was withdrawn, and by whom. Withdrawing a `PREVIEW` is a `400` (`A preview has never been issued, so it cannot be withdrawn`); delete the preview if that is what you want.
+
+```json
+{
+  "result": true,
+  "certificate": {
+    "id": "db963496-fc8f-457b-8393-825c337e06f2",
+    "number": "2026-0001",
+    "status": "REVOKED",
+    "revoked_at": "1790068739",
+    "revoked_by": "3443",
+    "revoke_reason": "Issued with the wrong signatory; reissued under a corrected record.",
+    "snapshot": { "…": "unchanged, plus status: REVOKED" }
+  }
 }
 ```
 
@@ -2041,10 +2215,29 @@ Every certificate the company has issued, newest first. Querystring pagination (
 
 | Caller | `training.verification` | Payload |
 |--------|-------------------------|---------|
-| The student, the enrollment's supervisor, or `user_group_id <= 170` of the training's company | `false` | The full report described above, plus `training.TrainingCertificate: { number, issued_at } \| null`. |
-| Anyone else, including no `Authorization` header | `true` | `training.TrainingsUser { id, training_id, status, status_changed, validity, created }`, `training.Training { id, name, type, Company { id, name, CompanyTheme{logo,color}, CompanyDetail{legal_name, approval_type, approval_reference, city, Country.name} } }`, `training.User.UserDetail { name, surname }` **masked** (first letter of each word + `*` per remaining character: `O******** K********`), `training.TrainingCertificate { number, issued_at } \| null`. No exams, subjects, flights, passport, date of birth, address or phone. |
+| The student, the enrollment's supervisor, or `user_group_id <= 170` of the training's company | `false` | The full report described above, plus `training.TrainingCertificate: { number, issued_at, status, revoked_at, revoke_reason } \| null`. |
+| Anyone else, including no `Authorization` header | `true` | `training.TrainingsUser { id, training_id, status, status_changed, validity, created }`, `training.Training { id, name, type, Company { id, name, CompanyTheme{logo,color}, CompanyDetail{legal_name, approval_type, approval_reference, city, Country.name} } }`, `training.User.UserDetail { name, surname }` **masked** (first letter of each word + `*` per remaining character: `O******** K********`), `training.TrainingCertificate { number, issued_at, status, revoked_at, revoke_reason } \| null`. No exams, subjects, flights, passport, date of birth, address or phone. |
 
 Reading the report never issues a certificate; only the certificate endpoint allocates numbers.
+
+**The status travels with the number**, on both variants. Without it a withdrawn certificate would keep verifying as genuine for ever, which is the whole reason the QR code points here. `number` is `null` when `status` is `PREVIEW`: the certificate has not been issued, so the public page must not confirm a number for it.
+
+```json
+{
+  "training": {
+    "verification": true,
+    "User": { "UserDetail": { "name": "N****", "surname": "K******" } },
+    "Training": { "name": "EASA PPL(A) / National PPL(A)", "…": "…" },
+    "TrainingCertificate": {
+      "number": "2026-0004",
+      "issued_at": "1790068731",
+      "status": "REVOKED",
+      "revoked_at": "1790068739",
+      "revoke_reason": "Issued with the wrong signatory; reissued under a corrected record."
+    }
+  }
+}
+```
 
 ---
 
