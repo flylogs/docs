@@ -581,7 +581,9 @@ Two columns decide it, both returned by `GET /aircraft/view/{id}.json`:
 | Column | Meaning |
 |--------|---------|
 | `self_schedule` | `0` = the aircraft is not open to self-booking at all. |
-| `self_schedule_access` | Who may book it: `all` (everyone, students included), `certified` (students, `user_group_id` 200, excluded), `instructors` (`user_group_id <= 170` only). Groups above 200 — external auditors (250) and mechanics (300) — never self-book under any mode. |
+| `self_schedule_access` | Who may book it: `all` (everyone, students included), `certified` (students, `user_group_id` 200, excluded), `instructors` (`user_group_id <= 170` only), `pilots` (only the users named on the aircraft). Groups above 200 — external auditors (250) and mechanics (300) — never self-book under any mode. |
+
+The `pilots` mode is decided by a named list held on the aircraft, not by the user group: `GET /aircraft/view/{id}.json` returns it as `SelfSchedulePilotIds` (the user ids currently named, managers only) alongside `SelfSchedulePilotOptions` (the active pilots it can be built from) and a `SelfSchedulePilots.pilots` count. An **empty list means nobody** — the opposite of the pilot-side attributions, where empty means the whole fleet — and the list overrides those attributions for that aircraft. Post it back to `POST /aircraft/edit/{id}.json` as `data[SelfSchedulePilot][SelfSchedulePilot][]` (repeat the field per user id; post it once with an empty value to clear the list). Omitting the key leaves the list untouched, so a client that knows nothing about it cannot wipe it. Ids that are not active pilots of the caller's company are dropped.
 
 Refusals:
 

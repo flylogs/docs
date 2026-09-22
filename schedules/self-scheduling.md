@@ -45,7 +45,7 @@ The toggle only has an effect when **Require pilot documents** is enabled in the
 This setting governs **self-booking only**. The separate `Block PIC without documents` setting applies to manager schedule edits and flight dispatch, not to the self-booking widget. Currency requirements and billing-credit checks continue to apply independently.
 {% endhint %}
 
-<figure><img src="../.gitbook/assets/insufficientBalanceWarning.png" alt=""><figcaption><p>Pilots with insufficient balance see this warning and cannot book a flight.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/selfScheduleNoBalance.png" alt=""><figcaption><p>Pilots with insufficient balance see this warning and cannot book a flight.</p></figcaption></figure>
 
 ### Aircraft setup for Self Scheduling
 
@@ -60,10 +60,13 @@ Once self-scheduling is enabled, the **Who can self-schedule** dropdown appears.
 * **All pilots and students** (default): every pilot and student (`user_group_id` ≤ 200).
 * **Certified pilots**: pilots only, students excluded (`user_group_id` < 200).
 * **Only instructors**: Flight Instructors and above (`user_group_id` ≤ 170).
+* **Only selected pilots**: nobody but the pilots you tick on this aircraft — see [Reserving one aircraft for a few pilots](#reserving-one-aircraft-for-a-few-pilots) below.
 
-Restricting **who** is qualified to fly the aircraft is no longer done with a per-aircraft pilots list. Instead, use the **Aircraft Attributions** on each pilot's profile: a pilot with this aircraft attributed (or with no aircraft attributed at all, which means every aircraft) can self-schedule it, subject to the dropdown above.
+The first three modes cap the **user group**. Which aircraft each pilot is then offered comes from the **Aircraft Attributions** on their profile: a pilot with this aircraft attributed — or with no aircraft attributed at all, which means every aircraft — can self-schedule it, subject to the dropdown.
 
-Below the dropdown, Flylogs shows a live counter — **"Currently X pilots will have access to self-schedule flights on this aircraft"** — recalculated for the selected access mode. It counts active pilots (`pilot = 1`, `active = 1`) that are attributed to this aircraft or have no attributions at all, within the selected group cap. When **Only instructors** is selected, students (group 200) and regular pilots are excluded from the count.
+**Only selected pilots** works the other way round and is the one to use when an aircraft belongs to a few people: the list lives on the aircraft, it overrides the pilots' attributions, and an empty list means **nobody**.
+
+Below the dropdown, Flylogs shows a live counter — **"Currently X pilots will have access to self-schedule flights on this aircraft"** — recalculated for the selected access mode. For the group-cap modes it counts active pilots (`pilot = 1`, `active = 1`) that are attributed to this aircraft or have no attributions at all, within the selected group cap. When **Only instructors** is selected, students (group 200) and regular pilots are excluded from the count. For **Only selected pilots** it simply counts the pilots you ticked.
 
 {% hint style="info" %}
 **Students (user group 200)** never see aircraft set to **Certified pilots** or **Only instructors** in their Book a Flight aircraft list. Likewise, aircraft set to **Only instructors** are hidden from anyone above `user_group_id` 170. Roles that do not fly — external auditors (250) and mechanics (300) — never self-schedule under any access mode.
@@ -81,47 +84,41 @@ Switching it off on an aircraft stops new bookings; bookings pilots already hold
 
 A common setup in clubs and small schools is a single aircraft — a co-owned one, or one reserved for renters — that **only a handful of pilots** may book, while the rest of the fleet stays open as usual.
 
+That is what the **Only selected pilots** access mode is for.
+
+1. On the aircraft edit page, keep **Allow pilots to self-schedule flights on this aircraft** ticked.
+2. Set **Who can self-schedule** to **Only selected pilots**.
+3. Tick the pilots allowed to book it. The counter below the list confirms how many are selected.
+4. Save.
+
+<figure><img src="../.gitbook/assets/aircraftSelfSchedulePilots.png" alt=""><figcaption><p>The <strong>Only selected pilots</strong> mode: the aircraft itself names who may book it.</p></figcaption></figure>
+
+From then on, only those pilots see the aircraft in **Book a Flight**, and only they can book it. Everybody else stops seeing it there — whatever their own Aircraft Attributions say, and whatever their user group is.
+
 {% hint style="warning" %}
-**Do not use the Self-Schedule checkbox for this.** The checkbox is all-or-nothing for the aircraft: unticking it stops *everybody* from self-booking it, including your Chief Pilots and instructors, because they book through the very same **Book a Flight** widget. They would get *"Self scheduling is not enabled on …"*.
+**An empty list means nobody.** This is the opposite of the pilot-side Aircraft Attributions, where an empty list means *every* aircraft. If you select **Only selected pilots** and tick no one, the aircraft disappears from self-booking entirely — the form warns you when that is the case.
 {% endhint %}
 
-The combination to use is **Who can self-schedule** (the group cap) plus **Aircraft Attributions** (the pilot-by-pilot list):
-
-**Step 1 — Narrow the group on the aircraft.** On the aircraft edit page, keep **Allow pilots to self-schedule flights on this aircraft** ticked and set **Who can self-schedule** to the narrowest option that still includes the people you want:
-
-* the pilots allowed are instructors, Chief Pilots or staff → **Only instructors** (`user_group_id` ≤ 170, so Chief Pilots at 150 are included);
-* they are licensed pilots but not students → **Certified pilots**.
-
-The counter under the dropdown — *"Currently X pilots will have access…"* — updates with your choice and tells you how many people are left. Very often this single step is enough.
-
-<figure><img src="../.gitbook/assets/aircraftSelfScheduleAccess.png" alt=""><figcaption><p>Step 1: keep self-scheduling on and narrow the group that may book this aircraft.</p></figcaption></figure>
-
-**Step 2 — Exclude the pilots the group cap still lets through.** Go to each of those pilots' profiles → **Attributions** tab → **Attributed aircraft**, switch on **Limit aircraft attributed to this pilot** and tick every aircraft **except** the reserved one.
-
-{% hint style="danger" %}
-**A pilot with the limit switched off is attributed to every aircraft.** An empty attribution list does not mean "no aircraft", it means "all of them" — that is why a pilot who has never been edited can still see and book the reserved aircraft. Restricting an aircraft therefore means editing the pilots that must *not* have it, not the ones that must.
-{% endhint %}
-
-<figure><img src="../.gitbook/assets/pilotAttributionsSettings.png" alt=""><figcaption><p>Step 2: tick every aircraft except the reserved one for the pilots that must not book it.</p></figcaption></figure>
-
-**Step 3 — Check your work.** Go back to the aircraft edit page and read the counter again. It counts active pilots that are attributed to this aircraft *or* have no attributions at all, within the selected group cap, so it is the quickest way to confirm that only the intended pilots are left.
+<figure><img src="../.gitbook/assets/aircraftSelfSchedulePilotsEmpty.png" alt=""><figcaption><p>Nothing ticked: the aircraft is closed to self-booking, and the form says so.</p></figcaption></figure>
 
 {% hint style="info" %}
-The **Who can self-schedule** dropdown is checked again when the booking is saved, so a pilot outside the selected group is refused. **Aircraft Attributions** decide which aircraft each pilot is offered in **Book a Flight** and on the schedule. Use both together, as described above.
+**Do not use the Self-Schedule checkbox to restrict an aircraft.** The checkbox is all-or-nothing: unticking it stops *everybody* from self-booking the aircraft, including your Chief Pilots and instructors, because they book through the very same **Book a Flight** widget. They would get *"Self scheduling is not enabled on …"*. Use the access mode instead.
 {% endhint %}
+
+The list is stored on the aircraft and is kept when you switch to another access mode, so you can open an aircraft to the whole school for a weekend and switch back without rebuilding it. It is checked again when the booking is saved, not only when the aircraft list is drawn, so it is a real restriction and not just a filter.
+
+The pilots you can tick are the active pilots of your company (`pilot = 1`, `active = 1`). Deactivating a pilot removes them from self-booking without you having to edit the aircraft.
 
 ### An aircraft that its pilots see on its own
 
-The same two settings cover the opposite need: an aircraft reserved for a group of pilots who should **only** see that aircraft, and not the schedule of the rest of the school.
+The same mode covers the opposite need: an aircraft reserved for a group of pilots who should **only** see that aircraft, and not the schedule of the rest of the school.
 
 1. In [Company settings → Schedule](../company-management/company-settings/schedule.md), switch **All pilots see schedule** off. Pilots then no longer see the master schedule of the company.
-2. On each of those pilots' profiles → **Attributions** → **Attributed aircraft**, switch on **Limit aircraft attributed to this pilot** and tick **only** that aircraft.
-3. On the aircraft, keep self-scheduling on and set **Who can self-schedule** to the option matching those pilots.
+2. On the aircraft, set **Who can self-schedule** to **Only selected pilots** and tick those pilots.
+
+<figure><img src="../.gitbook/assets/companyAllPilotsSeeSchedule.png" alt=""><figcaption><p>Company settings → Schedule → Permissions: with <strong>All Pilots See Schedule</strong> off, a pilot only sees the aircraft they are entitled to.</p></figcaption></figure>
 
 Those pilots now see one aircraft on the Schedules page and in **Book a Flight**, with the bookings made on it, and nothing about the rest of the fleet. Managers keep the full view.
-
-
-
 
 ### Flight self-booking for pilots
 

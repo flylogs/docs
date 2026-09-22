@@ -12,8 +12,8 @@ By setting attributions for each pilot, Flylogs ensures that no Pilot in Command
 
 Administrators can assign aircraft and flight type permissions directly in each pilot’s profile using the Attributions tab. To view a pilot's attributions, simply navigate to their profile and select this tab. If no attributions are set (the default behavior), Flylogs will not impose any restrictions on the pilot’s flight assignments.
 
-{% hint style="danger" %}
-**No attributions means _every_ aircraft, not none.** A pilot whose **Limit aircraft attributed to this pilot** switch is off is treated as attributed to the whole fleet. So if you want to keep one aircraft for a few pilots, you have to edit the pilots that must **not** fly it — ticking every aircraft except that one — rather than only the pilots that may. The step-by-step recipe is in [Self scheduling → Reserving one aircraft for a few pilots](../schedules/self-scheduling.md#reserving-one-aircraft-for-a-few-pilots).
+{% hint style="info" %}
+**No attributions means _every_ aircraft, not none.** A pilot whose **Limit aircraft attributed to this pilot** switch is off is treated as attributed to the whole fleet, so attributions alone cannot keep one aircraft for a few people — you would have to edit everybody else. To reserve an aircraft, use the **Only selected pilots** self-scheduling mode on the aircraft itself, which reads the natural way and overrides the attributions: [Self scheduling → Reserving one aircraft for a few pilots](../schedules/self-scheduling.md#reserving-one-aircraft-for-a-few-pilots).
 {% endhint %}
 
 <figure><img src="../.gitbook/assets/pilotAttributionsSettings.png" alt=""><figcaption><p>To view a pilot's attributions, simply navigate to their profile and click on the Attributions tab. </p></figcaption></figure>
