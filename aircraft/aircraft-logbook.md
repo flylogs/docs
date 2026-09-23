@@ -39,6 +39,13 @@ Hovering a row shows extra detail: flight rules (IFR/VFR) and PIC for flights, o
 
 Use the **Download** button on the Logbook tab to export the full logbook as an Excel file, with the same columns as the on-screen table.
 
+The export also carries each flight's meter readings, but only for the meters the aircraft is set up to record (**Hobbs** and/or **Tach** on the aircraft edit page):
+
+* **Tach start / Tach end / Tach time** — for aircraft that record a tachometer.
+* **Hobbs start / Hobbs end / Hobbs time** — for aircraft that record a Hobbs meter.
+
+Readings are exported exactly as they are entered on the flight (two decimals) and the **time** column is the difference between the two readings, in decimal hours. It is left blank when either reading is missing. An aircraft with no meters configured exports the same columns as before.
+
 ### Setting up initial hours
 
 When you [create a new aircraft](create-your-aircraft.md), you enter its current flight time and landings — this becomes the first Setup log entry.

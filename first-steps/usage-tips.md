@@ -54,6 +54,32 @@ A **continuous internet connection is required**. Flylogs is not an offline-capa
 
 If your connection drops while you are editing a flight or a schedule, finish editing once the connection returns — your draft is **not** kept between sessions.
 
+## Dark mode
+
+Flylogs can be displayed with a light or a dark colour scheme.
+
+By default it **follows your device**: if your phone or computer is set to dark
+mode, Flylogs is dark; when your device switches back to light (for example at
+sunrise, if you use an automatic schedule), Flylogs follows immediately — no
+reload needed.
+
+To choose it yourself:
+
+* **Quickly** — click the sun/moon button in the top bar (on a phone, open
+  **More** and use the same button next to the language selector). This pins
+  Flylogs to light or dark and stops it following the device.
+* **Permanently** — go to **My Account → Appearance** and pick **Light**,
+  **Dark** or **System**. **System** restores the "follow my device" behaviour.
+
+{% hint style="info" %}
+The choice is stored in the browser you made it in, not in your Flylogs account.
+The same login can be dark on your phone and light on the office computer, and
+clearing your browser data resets it to **System**.
+{% endhint %}
+
+Printing and PDF exports (bills, schedules, reports, logbooks) always use the
+light scheme, so a document looks the same however the app is displayed.
+
 ## Restricted countries
 
 For legal and compliance reasons, access to Flylogs is **not available** from territories subject to comprehensive international sanctions. Connections originating from the following countries or regions are blocked at the network edge:
