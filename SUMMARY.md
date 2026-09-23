@@ -66,6 +66,7 @@
 * [Flight records](flights/flight-records.md)
 * [Flight types](flights/flight-types.md)
 * [Create a flight](flights/create-a-flight.md)
+* [Draft a mission comment](flights/draft-mission-comment.md)
 * [Offline flight data](flights/offline-flight-data.md)
 * [Flight audit and reporting](flights/flight-audit-and-reporting.md)
 * [Audit trails](flights/audit-trails.md)
@@ -126,6 +127,7 @@
 * [Offline safety reports](sms/offline-safety-reports.md)
 * [ICAO 8951 Risk Matrix](sms/icao-8951-risk-matrix.md)
 * [Safety report analytics](sms/safety-report-analytics.md)
+* [Flight remark findings](sms/flight-remark-findings.md)
 
 ## Security & Compliance
 

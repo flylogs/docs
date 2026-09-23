@@ -348,3 +348,97 @@ Retrieve the API server version. **No authentication required.**
   "db": "ok"
 }
 ```
+
+## Flight Remark Findings
+
+<mark style="color:blue;">`GET`</mark> `/reports/remark_digests.json`
+
+Findings mined from free-text `flights.remarks`, one digest per company per day.
+
+A background job reads each finished day's remarks and records anything that looks
+like an unreported defect or a safety-relevant event. **It creates nothing** — no
+aircraft report, no safety report, no maintenance job, no notification. This endpoint
+is read-only over what that job stored.
+
+{% hint style="warning" %}
+**Managers only.** The caller's `user_group_id` must be **110 or below**; anyone else
+gets `403`. These are crew-written remarks returned with an automated reading attached,
+so they are not a pilot-facing resource. Digests are scoped to the caller's company.
+{% endhint %}
+
+#### Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| limit | number | Digests to return, newest first. Default 12, clamped to 1–60. |
+
+#### Response
+
+| Field | Type | Description |
+|-------|------|-------------|
+| digests | array | `FlightRemarkDigest` rows, newest period first |
+| flights | object | Flights cited by any finding, keyed by flight id, so the list needs no follow-up requests |
+
+Each `FlightRemarkDigest`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| period_start / period_end | date | The day covered. Equal for daily digests; older rows may span a range |
+| remarks_total | number | Every non-empty remark on confirmed flights that day |
+| remarks_read | number | How many were actually read. Routine entries (`5T`, `NIL`, a repeated label) are filtered out before anything is read, so this is usually lower — it is what stops a digest implying coverage it did not have |
+| findings_count | number | Findings in this digest |
+| findings | array | See below |
+| tallies | object | `by_aircraft` and `by_type` counts, computed from the records, not generated |
+| model | string | The model that produced it, for traceability |
+| error | string | Set when the day was only partly read (for example the provider was unreachable mid-run) |
+
+Each finding:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| flight_id | string | Always a flight that was actually read — findings citing anything else are discarded before storage |
+| type | string | `defect`, `safety` or `other` |
+| quote | string | **Verbatim** substring of the remark. A quote that is not literally present in the remark is discarded rather than returned, so it can be trusted as the pilot's own words |
+| note | string | One line on why it stood out |
+| confidence | number | 0.0–1.0 |
+
+```json
+{
+  "digests": [
+    {
+      "FlightRemarkDigest": {
+        "id": "7",
+        "period_start": "2026-08-23",
+        "period_end": "2026-08-23",
+        "remarks_total": 3,
+        "remarks_read": 3,
+        "findings_count": 2,
+        "findings": [
+          {
+            "flight_id": "38b51b9a-dc40-4ea0-90af-bb8b9e7b502b",
+            "type": "defect",
+            "quote": "Nosewheel shimmy on the landing roll, got worse above 40 kt.",
+            "note": "Pilot reported a nosewheel shimmy that worsened during the landing roll.",
+            "confidence": 0.95
+          }
+        ],
+        "tallies": { "by_aircraft": { "FL-BLY": 2 }, "by_type": { "defect": 1, "safety": 1 } },
+        "model": "deepseek-v4-pro",
+        "error": null
+      }
+    }
+  ],
+  "flights": {
+    "38b51b9a-dc40-4ea0-90af-bb8b9e7b502b": { "id": "38b51b9a-...", "date": "2026-08-23", "aircraft": "FL-BLY" }
+  }
+}
+```
+
+#### Errors
+
+| Code | Meaning |
+|------|---------|
+| 403 | `user_group_id` above 110 |
+
+An installation with no AI provider configured simply has no digests; the endpoint
+still answers `200` with an empty list.

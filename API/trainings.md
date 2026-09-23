@@ -3272,3 +3272,85 @@ One report per **student per sitting**: managers attach the authority's result r
 | `GET` | `/manager/trainings/exam_sittings/rules.json` | Each rule carries `sittings`, the number of sittings using it. |
 | `POST` | `/manager/trainings/exam_sittings/rule_save.json` | Create or update. Empty limits are stored as `NULL`. |
 | `POST` | `/manager/trainings/exam_sittings/rule_delete/{id}.json` | Soft delete, refused while a sitting uses the rule (`sittings` in the response). |
+
+### Draft a mission comment
+
+<mark style="color:green;">`POST`</mark> `/trainings/missions/comment_draft.json`
+
+Drafts the comment for ONE training mission from the gradings supplied in the body.
+
+{% hint style="warning" %}
+**Reads nothing and writes nothing.** The mission travels in the request body, not
+as an id, and no record is looked up or stored. That is deliberate: the instructor
+may be grading a mission that has never been saved, and may have just typed a
+per-exercise comment that exists only in the form. A server-side lookup would
+summarise a stale copy — or nothing at all. The draft is kept only if the client
+subsequently saves the flight.
+{% endhint %}
+
+Access: caller's `user_group_id` must be **170 or below** (instructors and
+managers). Students get `403`.
+
+This call is **slow by API standards** (typically 5–15 seconds: it is a model
+call), so clients must show progress and set a generous timeout. A short per-user
+cooldown applies; calling again immediately returns `400`.
+
+#### Request Body
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| Mission.name | string | The mission's name, for context |
+| Mission.evaluation | string | Rating scale in use: `NUM` (1–5), `STD` (STD / STD + / STD -) or `NICE` (N/I/C/E). Read correctly per scale — an `N` means *not competent*, not a letter grade |
+| Mission.exercises | array | `{ name, rating, comments }` per exercise, as they stand in the form |
+| Mission.metrics | array | Same shape, for performance metrics |
+
+Items with **neither a rating nor a comment are ignored**: an ungraded exercise was
+not assessed, and summarising it would invent content.
+
+```json
+{
+  "Mission": {
+    "name": "EX 12 — Circuits",
+    "evaluation": "NUM",
+    "exercises": [
+      { "name": "Normal takeoff", "rating": "4", "comments": "" },
+      { "name": "Circuit pattern", "rating": "3", "comments": "Wide on the downwind leg." },
+      { "name": "Landing flare", "rating": "2", "comments": "Flaring high, needs more practice." }
+    ],
+    "metrics": [{ "name": "Airmanship", "rating": "4", "comments": "" }]
+  }
+}
+```
+
+#### Response
+
+| Field | Type | Description |
+|-------|------|-------------|
+| result | boolean | `false` when no draft could be produced |
+| message | string | Human-readable outcome |
+| comment | string | The draft, up to 1,500 characters |
+| model | string | The model that produced it |
+
+```json
+{
+  "result": true,
+  "message": "Draft generated. Review and edit before saving.",
+  "comment": "Normal takeoff and airmanship were solid. The circuit pattern was wide on the downwind leg, and the landing flare was high and needs more practice.",
+  "model": "deepseek-v4-pro"
+}
+```
+
+The generator is instructed to use only the gradings given and **never** to decide
+whether the mission is passed, whether the student is competent, or whether
+anything should be repeated. Treat the output as an editable draft for a qualified
+person, never as an assessment.
+
+#### Errors
+
+| Code | Meaning |
+|------|---------|
+| 400 | Not a POST, or the cooldown is still active |
+| 403 | `user_group_id` above 170 |
+
+Two cases answer `200` with `result: false` rather than failing: nothing has been
+graded yet, and no AI provider is configured on the installation.
