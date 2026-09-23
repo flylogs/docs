@@ -78,6 +78,7 @@
 * [Billing Rates](billing/billing-rates.md)
 * [Prepaid packages](billing/prepaid-packages.md)
 * [Online payments](billing/online-payments.md)
+* [Fuel & Excise](billing/fuel-and-excise.md)
 
 ## Schedules
 

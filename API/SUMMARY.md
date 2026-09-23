@@ -14,6 +14,7 @@
 * [Authentication](authentication.md)
 * [Bases](bases.md)
 * [Bills](bills.md)
+* [Refuelings](refuelings.md)
 * [Company](company.md)
 * [Documents](documents.md)
 * [Events](events.md)
