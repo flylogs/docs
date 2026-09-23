@@ -58,6 +58,8 @@ If your connection drops while you are editing a flight or a schedule, finish ed
 
 Flylogs can be displayed with a light or a dark colour scheme.
 
+<figure><img src="../.gitbook/assets/dark-mode.png" alt="A Flylogs page displayed with the dark colour scheme"><figcaption><p>Flylogs with the dark scheme selected</p></figcaption></figure>
+
 By default it **follows your device**: if your phone or computer is set to dark
 mode, Flylogs is dark; when your device switches back to light (for example at
 sunrise, if you use an automatic schedule), Flylogs follows immediately — no
