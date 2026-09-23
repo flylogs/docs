@@ -158,19 +158,3 @@ An aircraft that flew very little in the period, or has no history to compare ag
 What the fuel cost you, against the fuel extra charged on to pilots for the same period, per aircraft. Under-recovery usually means an hourly rate that has not kept up with the pump.
 
 Above, the two training aircraft each recover 86% of what their fuel cost. 9H-AMZ shows 0% — that is not a fault, it is a charter aircraft whose fuel is inside the hourly rate rather than billed as an extra. Where an aircraft's fuel was bought in more than one currency no comparison is offered, because there is no exchange rate to make one with.
-
-## Dark mode
-
-The page follows your Flylogs theme.
-
-<figure><img src="../.gitbook/assets/fuel-excise-dark.png" alt="The Fuel &#x26; Excise page in dark mode"><figcaption><p>The same page with the dark theme selected</p></figcaption></figure>
-
-## Linking to a tab
-
-Each tab has its own address, so you can bookmark the reclaim view or send it to your accountant:
-
-```
-/manager/bills/fuel                    the refuellings list
-/manager/bills/fuel?tab=reclaim        the excise reclaim report
-/manager/bills/fuel?tab=checks         the checks
-```
