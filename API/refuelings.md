@@ -8,6 +8,18 @@ Fuel uplifts, what they cost, and the excise duty inside that cost.
 
 **`unit_price` is the pump price** — excluding VAT, **including** excise duty. `excise_amount` is therefore a component *of* `net_amount`, never a line added on top of it. `net_amount + vat_amount == total_amount` always holds.
 
+Worked example — 1,000 l of AVGAS 100LL at €2.10, VAT 21%, Spanish duty €0.40620/l:
+
+| Field | Derivation | Value |
+|-------|-----------|-------|
+| `quantity_l` | already litres | `1000.000` |
+| `net_amount` | `unit_price × quantity` | `2100.00` |
+| `excise_amount` | `quantity_l × rate` | `406.20` |
+| `vat_amount` | `net_amount × vat_rate / 100` | `441.00` |
+| `total_amount` | `net_amount + vat_amount` | `2541.00` |
+
+The excise is inside the net, so it does not appear in the total. A client that adds `excise_amount` to `total_amount` double-counts the duty. The same uplift sent as `720` with `unit: "kgs"` yields identical figures, because AVGAS is 0.72 kg/l — but only once the aircraft has a `fuel_type`; without one, `quantity_l` is `null` and no duty is derived.
+
 ---
 
 ## List Refuelings
