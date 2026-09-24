@@ -78,7 +78,38 @@ By deactivating a pilot account, this user will disappear from all your forms an
 
 > Any deactivated pilots, will still be able to login to the Flylogs to see and download their logbooks, but all other functions will be removed.
 
-![Deactivating a pilot: turn off the Active account toggle on their Edit Pilot page.](../.gitbook/assets/pilot-deactivate.png)
+**Step by step**
+
+1. Go to **Pilots** in the left menu and open the pilot you want to deactivate, either by clicking their name in the list or from their profile page.
+2. On the pilot profile, click **Edit** (top right).
+
+![Step 2: open the pilot profile and click Edit.](../.gitbook/assets/pilot-deactivate-edit-button.png)
+
+3. Open the **Account** tab and, in the **Account status** card, turn **Active account** off.
+
+![Step 3: in the Account tab, turn the Active account toggle off.](../.gitbook/assets/pilot-deactivate-toggle.png)
+
+4. Click **Save Changes** at the bottom of the page. Nothing is applied until you save.
+
+![Step 4: save the change.](../.gitbook/assets/pilot-deactivate-save.png)
+
+> Deactivating is not deleting. **Delete pilot** (bottom right of the same page) removes the account and is not what you want when a pilot simply leaves the organization: deactivating keeps their flights, logbooks and training records.
+
+**Find a deactivated pilot again**
+
+Deactivated pilots are hidden from the pilot list by default. To see them, open **Pilots** and clear the **Active** checkbox in the filter bar. Reactivating is the same procedure in reverse: open the pilot, **Edit → Account → Active account** on, then **Save Changes**.
+
+![Clear the Active filter on the pilot list to see deactivated accounts.](../.gitbook/assets/pilot-deactivate-inactive-filter.png)
+
+**Expire the access on a future date**
+
+In the same **Account status** card, **Account expiration** sets a date from which the account can no longer sign in ("Your account has expired. Contact your administrator."). Use it for access that ends on a known date, such as a temporary or auditor account.
+
+> An expired account still counts as active: it keeps appearing in the pilot list and in flight and schedule forms. To take the person out of your daily forms, turn **Active account** off as described above.
+
+**If you only want to stop them flying**
+
+Turning **Flight privileges** off instead keeps the account usable (trainings, documents, logbook) but removes the user from PIC/SIC fields and from schedule availability. Use it for ground school teachers or office staff, and keep **Active account** off for people who have left.
 
 ***
 
