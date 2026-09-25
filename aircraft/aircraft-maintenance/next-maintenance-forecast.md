@@ -102,6 +102,6 @@ Nothing here replaces your approved maintenance programme. It is a planning aid:
 
 The forecast needs a **Club**, **Premium** or **Unlimited** subscription, like the rest of the maintenance section.
 
-Within that, it follows the visibility of the page it appears on: the aircraft page and the flight form show it to any user who can see the aircraft's maintenance information (`user_group_id` 170 or lower, or 250 and above), the Schedules page shows it for the aircraft you are personally booked on, and the blue calendar markers appear on the Schedule Manager page, which is limited to schedule managers.
+Within that, it follows the visibility of the page it appears on: the aircraft page and the flight form show it to any user who can see the aircraft's maintenance information (**Flight Instructor and above**, plus **Auditors and Mechanics**), the Schedules page shows it for the aircraft you are personally booked on, and the blue calendar markers appear on the Schedule Manager page, which is limited to schedule managers.
 
-The suggestion rows and the **Create** button on the jobs list appear only for the roles that may create maintenance jobs — `user_group_id` **1, 100, 105, 110** or **300** (administrators, managers and mechanics), or the aircraft's owner. Everyone else sees the list exactly as before.
+The suggestion rows and the **Create** button on the jobs list appear only for the roles that may create maintenance jobs — **Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics** — or the aircraft's owner. Everyone else sees the list exactly as before.

@@ -110,7 +110,7 @@ Classes taught before a course adopted the attendance requirement never appear. 
 
 It is a worklist and nothing more: an outstanding signature never blocks course completion and never blocks a certificate.
 
-Available to training managers and above (user group 140 and below).
+Available to **Crew Scheduling and above** — Trainings Managers, and every manager role more senior than them.
 
 ### Exporting a class report (PDF)
 

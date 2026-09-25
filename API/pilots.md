@@ -1,5 +1,7 @@
 # Pilots
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 ## Pilots List (Dropdown)
 
 <mark style="color:blue;">`GET`</mark> `/pilots/list[/active:{1|0|all}][/pilot:{1|0|all}].json`
@@ -48,7 +50,7 @@ All filter parameters are optional — use empty string to skip.
 |-----------|------|-------------|
 | page | number | Page number (starts at 1) |
 | search | string | Matches name, surname, name+surname, surname+name, `companyid`, `passport`, email prefix, or exact `User.id` |
-| user_group_id | string | Filter by user group/role. `150` is treated as `<= 150` (all managers) |
+| user_group_id | string | Filter by user group/role. `150` is treated as `<= 150` (Chief Pilot and above) |
 | pilot_group | string | Filter by pilot group ID |
 | base_id | string | Filter by base |
 | active | boolean | Filter active/inactive users (`active:false` to include only inactive) |
@@ -58,7 +60,7 @@ All filter parameters are optional — use empty string to skip.
 
 #### Permissions & Field Visibility
 
-- Viewers with `user_group_id > 170` (e.g. students) get a reduced field set and the result is restricted to users with `user_group_id <= 170` (i.e. they cannot see other students/clients).
+- Viewers with `user_group_id > 170` — Captain and below (e.g. students) get a reduced field set and the result is restricted to users with `user_group_id <= 170` — Flight Instructor and above (i.e. they cannot see other students/clients).
 - Billing fields (`User.billing`, `UserBill`, `UserBillPackage`) are only included when the company plan is **not** `free` and billing is enabled. They are flattened into `UserDetail.billing_balance` and `UserDetail.package_balance`.
 
 #### Response
@@ -116,7 +118,7 @@ All filter parameters are optional — use empty string to skip.
 
 <mark style="color:green;">`POST`</mark> `/pilots/create.json`
 
-Create a new pilot account. Restricted to `user_group_id` ∈ {1, 100, 105, 110, 120, 150}.
+Create a new pilot account. Restricted to `user_group_id` ∈ {1, 100, 105, 110, 120, 150} (Company Administrators, Operations Managers, Compliance & Safety Managers, Human Resources Managers and Chief Pilots).
 
 The free plan is capped at 100 pilots — additional pilots return `400`.
 
@@ -138,7 +140,7 @@ The free plan is capped at 100 pilots — additional pilots return `400`.
 }
 ```
 
-- `User.user_group_id` defaults to `190` if omitted; values below `150` are rejected.
+- `User.user_group_id` defaults to `190` (Pilot) if omitted; values below `150` (more senior than Chief Pilot) are rejected.
 - `User.company_id` is forced from the session; do not send.
 - `UserDetail.timezone_id` defaults to the requesting user's timezone.
 - If `User.email` is provided, `email_status` is computed via `User.checkConfirmedEmail`. When the email is set, the user is `active`, and `send_email` is true, a `newstaff` confirmation mail is sent.
@@ -182,10 +184,10 @@ Retrieve full pilot details including certificates, pilot groups, attributed air
 
 #### Permissions & Field Visibility
 
-- Viewer `user_group_id > 150` viewing another pilot: `User.email`, `User.user_group_id`, `User.user_login_count`, `User.email_status`, `User.expiration`, `UserDetail.phone`, and the entire `UserCertificate` array are stripped.
-- Viewer `user_group_id > 150`: `UserDetail.notes` and `UserDetail.billing_balance` are always stripped.
-- Viewer `user_group_id < 151`: gets `UserDetail.notes`, `address`, `pc`, `city`, `emergency_contact`, latest `UserLogin`, and (when billing is enabled) `billing_balance` / `package_balance`.
-- Viewer `user_group_id < 151`: also gets the notification preferences `User.alerts`, `User.message_alerts`, `User.newsletter` and `User.whatsapp`, read from the shared `user_credentials` row. They are absent for any other viewer.
+- Viewer `user_group_id > 150` (Flight Instructor and below) viewing another pilot: `User.email`, `User.user_group_id`, `User.user_login_count`, `User.email_status`, `User.expiration`, `UserDetail.phone`, and the entire `UserCertificate` array are stripped.
+- Viewer `user_group_id > 150` (Flight Instructor and below): `UserDetail.notes` and `UserDetail.billing_balance` are always stripped.
+- Viewer `user_group_id < 151` (Chief Pilot and above): gets `UserDetail.notes`, `address`, `pc`, `city`, `emergency_contact`, latest `UserLogin`, and (when billing is enabled) `billing_balance` / `package_balance`.
+- Viewer `user_group_id < 151` (Chief Pilot and above): also gets the notification preferences `User.alerts`, `User.message_alerts`, `User.newsletter` and `User.whatsapp`, read from the shared `user_credentials` row. They are absent for any other viewer.
 
 #### Response
 
@@ -276,7 +278,7 @@ Returns `404` if the pilot is not in the viewer's company.
 
 <mark style="color:green;">`POST`</mark> `/pilots/edit.json`
 
-Update pilot profile details. Restricted to `user_group_id` ∈ {1, 100, 105, 110, 120, 150}.
+Update pilot profile details. Restricted to `user_group_id` ∈ {1, 100, 105, 110, 120, 150} (Company Administrators, Operations Managers, Compliance & Safety Managers, Human Resources Managers and Chief Pilots).
 
 #### Request Body
 
@@ -301,12 +303,12 @@ Update pilot profile details. Restricted to `user_group_id` ∈ {1, 100, 105, 11
 
 - `User.id` is required.
 - `AttributedAircraft`, `FlightType`, and `PilotGroup` are passed as `{ id: truthy }` maps; only the keys are used. Existing pilot ↔ aircraft / flight-type / pilot-group joins are wiped before re-saving.
-- A `user_group_id` change to `< 150` requires the editor to have `user_group_id <= 120`.
-- Self-edits cannot demote yourself away from `user_group_id = 100` or below.
+- A `user_group_id` change to `< 150` requires the editor to have `user_group_id <= 120` (Human Resources Manager and above).
+- Self-edits cannot demote yourself away from `user_group_id = 100` or below (Company Administrator and above).
 - When `email` changes, `email_status` is recomputed and a `confirm` mail is sent if the user is active and `send_email` is true.
 - When `user_group_id` actually changes, all of the edited user's active sessions are deleted server-side, forcing them to re-authenticate on their next request. This avoids the cached `Auth.User('user_group_id')` from continuing to grant the previous role until the session naturally expires.
 - `User.alerts`, `User.message_alerts` and `User.newsletter` are notification preferences. They are not columns of `users`: they are saved on the `user_credentials` row shared by every company account of that email address, so setting them here changes them for all of that person's accounts. Omit a key to leave it untouched.
-- `User.created` is the account creation date, as a unix timestamp in seconds. It is only writable by editors with `user_group_id <= 150`; for anybody else, and for any non-numeric, non-positive or more-than-48h-in-the-future value, the key is silently dropped and the stored date is left untouched. The change is recorded in the account history (`GET /pilots/changes/{userId}.json`) under the `created` field.
+- `User.created` is the account creation date, as a unix timestamp in seconds. It is only writable by editors with `user_group_id <= 150` (Chief Pilot and above); for anybody else, and for any non-numeric, non-positive or more-than-48h-in-the-future value, the key is silently dropped and the stored date is left untouched. The change is recorded in the account history (`GET /pilots/changes/{userId}.json`) under the `created` field.
 - `User.whatsapp` is only honoured when `false`, which switches WhatsApp notifications off. It can never be enabled from here: turning it on requires the verification code sent to the pilot's phone, entered by the pilot from `POST /users/whatsapp.json`.
 
 #### Response
@@ -391,7 +393,7 @@ Check pilot landings/hours within rolling day windows against the company-config
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| userId | string | User ID. Forced to the authenticated user when null or when caller `user_group_id > 170`. |
+| userId | string | User ID. Forced to the authenticated user when null or when caller `user_group_id > 170` (Captain and below). |
 | d1 | number | First window in days (default `30`, max `999`). |
 | d2 | number | Second window in days (default `90`, max `999`). |
 | d3 | number | Third window in days (default `null`/disabled). |
@@ -653,8 +655,8 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
 | limit | number \| null | Earliest expiry timestamp (epoch seconds) across all certs with an expiration. |
 
 Special cases:
-- `user_group_id == 200` (student): `result` only requires `medical`.
-- `user_group_id == 300` (admin / non-pilot): `result` only requires `licence`.
+- `user_group_id == 200` (Student Pilot): `result` only requires `medical`.
+- `user_group_id == 300` (Mechanic — a non-flying role): `result` only requires `licence`.
 
 ### View Certificate
 
@@ -691,7 +693,7 @@ UserCertificate[photo]=@/path/to/scan.pdf
 ```
 
 - **Ownership.** On an update (`id` sent) the owner is always the one stored on the certificate: the posted `user_id` is ignored, so a certificate can never be moved between users. On a create, callers with `user_group_id > 170` (Captain, Pilot, Student Pilot, Cabin Crew, Auditor, Mechanic) always file on their own profile — the posted `user_id` is replaced with the authenticated user.
-- Managers, Chief Pilots and Flight Instructors (`user_group_id <= 170`) can file and edit certificates for any user in their own company. Everyone else gets `403` when editing a certificate that is not theirs, and `404` when the certificate belongs to another company.
+- Managers, Chief Pilots and Flight Instructors (`user_group_id <= 170` — Flight Instructor and above) can file and edit certificates for any user in their own company. Everyone else gets `403` when editing a certificate that is not theirs, and `404` when the certificate belongs to another company.
 - `issue` and `expiration` must parse as `Y-m-d` or they are silently dropped. `issue` may be left empty for document types that do not require one.
 - `name` (the free-text description) is optional — `type` already identifies the document. When omitted it stores as an empty string, and the apps show the certificate type instead.
 - If `photo` is present and uploads cleanly, an `Upload` record is created (`type` is `photo`/`video`/`document` based on MIME) and the file is sent to S3.
@@ -711,7 +713,7 @@ UserCertificate[photo]=@/path/to/scan.pdf
 
 <mark style="color:green;">`POST`</mark> `/pilots/delete_certificate/{id}.json`
 
-Delete a certificate. Callers with `user_group_id > 150` can only delete their own certificates; managers can delete any certificate within their company.
+Delete a certificate. Callers with `user_group_id > 150` (Flight Instructor and below) can only delete their own certificates; managers can delete any certificate within their company.
 
 ```json
 { "result": true }
@@ -723,7 +725,7 @@ Returns `404` if the certificate is not found in the caller's scope.
 
 <mark style="color:blue;">`GET`</mark> `/pilots/attributions/{userId}.json`
 
-Returns the aircraft and flight types attributed to a pilot. `{userId}` is optional; when omitted, the authenticated user is used. Callers with `user_group_id > 170` can only query themselves.
+Returns the aircraft and flight types attributed to a pilot. `{userId}` is optional; when omitted, the authenticated user is used. Callers with `user_group_id > 170` (Captain and below) can only query themselves.
 
 For each category, the response is an `id => label` map of the pilot's explicit attributions. If the pilot has no attribution set for a given category, the full active company list for that category is returned instead.
 
@@ -752,7 +754,7 @@ Returns `404` if the pilot is not in the caller's company and `403` when a non-m
 
 <mark style="color:green;">`POST`</mark> `/manager/pilots/notes.json`
 
-Persist a private (manager-only) note onto a pilot's `UserDetail.notes`. Requires `user_group_id <= 170`.
+Persist a private (manager-only) note onto a pilot's `UserDetail.notes`. Requires `user_group_id <= 170` (Flight Instructor and above).
 
 #### Request Body
 
@@ -794,7 +796,7 @@ Re-runs `PilotDutyRecord::autoCalc` for every PIC/SIC/Supervisor on flights logg
 
 Returns instructor → supervised-pilot trees for the company in a tree-view friendly shape (icon, color, href, text, nodes). Branches with more than 6 supervised pilots are flagged with `backColor = "#ff9900"`.
 
-For caller `user_group_id <= 150`, also returns `unAssignedStudents` — students whose `supervisor_id` is empty or points to an inactive instructor.
+For caller `user_group_id <= 150` (Chief Pilot and above), also returns `unAssignedStudents` — students whose `supervisor_id` is empty or points to an inactive instructor.
 
 ```json
 {
@@ -828,7 +830,7 @@ Paginated audit view of pilots and instructors with their latest flight, trainin
 |-----------|-------------|
 | from | Lower bound on `latest_flight_date` (`YYYY-MM-DD` or epoch seconds) |
 | to | Upper bound on `latest_flight_date` |
-| group | `user_group_id` (or `150` for `<= 150`) |
+| group | `user_group_id` (or `150` for `<= 150`, i.e. Chief Pilot and above) |
 | pilot | Truthy to restrict to pilots only |
 | pilot_group | Pilot group ID |
 | all_certs | If absent or false, certificates are filtered to `licence`, `rating`, `medical` only |
@@ -854,7 +856,7 @@ Per-pilot daily breakdown of duty / FDP / work time for a single month. **Premiu
 |-----------|-------------|
 | month | 1–12 (default current month) |
 | year | YYYY (default current year) |
-| group | `user_group_id` (`150` for `<= 150`) |
+| group | `user_group_id` (`150` for `<= 150`, i.e. Chief Pilot and above) |
 | data | `duty` (default), `flight`, or `work` — selects which `in_*`/`out_*` columns drive the totals |
 
 ```json

@@ -38,7 +38,7 @@ The toggle only has an effect when **Require pilot documents** is enabled in the
 | On                      | Off                                         | Warned, **cannot book**      |
 
 {% hint style="info" %}
-**Students (user group 200) are exempt from this certificate gate.** A student never acts as PIC — the system automatically assigns a Flight Instructor as PIC — so the student's own licence, rating and medical are not required to book.
+**Student Pilots are exempt from this certificate gate.** A student never acts as PIC — the system automatically assigns a Flight Instructor as PIC — so the student's own licence, rating and medical are not required to book.
 {% endhint %}
 
 {% hint style="info" %}
@@ -57,19 +57,19 @@ On the aircraft edit page, open the **Scheduling** box and tick **Allow pilots t
 
 Once self-scheduling is enabled, the **Who can self-schedule** dropdown appears. It controls which user groups may self-schedule this particular aircraft:
 
-* **All pilots and students** (default): every pilot and student (`user_group_id` ≤ 200).
-* **Certified pilots**: pilots only, students excluded (`user_group_id` < 200).
-* **Only instructors**: Flight Instructors and above (`user_group_id` ≤ 170).
+* **All pilots and students** (default): every Student Pilot and above.
+* **Certified pilots**: Pilot and above; Student Pilots excluded.
+* **Only instructors**: Flight Instructor and above.
 * **Only selected pilots**: nobody but the pilots you tick on this aircraft — see [Reserving one aircraft for a few pilots](#reserving-one-aircraft-for-a-few-pilots) below.
 
 The first three modes cap the **user group**. Which aircraft each pilot is then offered comes from the **Aircraft Attributions** on their profile: a pilot with this aircraft attributed — or with no aircraft attributed at all, which means every aircraft — can self-schedule it, subject to the dropdown.
 
 **Only selected pilots** works the other way round and is the one to use when an aircraft belongs to a few people: the list lives on the aircraft, it overrides the pilots' attributions, and an empty list means **nobody**.
 
-Below the dropdown, Flylogs shows a live counter — **"Currently X pilots will have access to self-schedule flights on this aircraft"** — recalculated for the selected access mode. For the group-cap modes it counts active pilots (`pilot = 1`, `active = 1`) that are attributed to this aircraft or have no attributions at all, within the selected group cap. When **Only instructors** is selected, students (group 200) and regular pilots are excluded from the count. For **Only selected pilots** it simply counts the pilots you ticked.
+Below the dropdown, Flylogs shows a live counter — **"Currently X pilots will have access to self-schedule flights on this aircraft"** — recalculated for the selected access mode. For the group-cap modes it counts active pilots (`pilot = 1`, `active = 1`) that are attributed to this aircraft or have no attributions at all, within the selected group cap. When **Only instructors** is selected, Student Pilots, Pilots and Captains are excluded from the count. For **Only selected pilots** it simply counts the pilots you ticked.
 
 {% hint style="info" %}
-**Students (user group 200)** never see aircraft set to **Certified pilots** or **Only instructors** in their Book a Flight aircraft list. Likewise, aircraft set to **Only instructors** are hidden from anyone above `user_group_id` 170. Roles that do not fly — external auditors (250) and mechanics (300) — never self-schedule under any access mode.
+**Student Pilots** never see aircraft set to **Certified pilots** or **Only instructors** in their Book a Flight aircraft list. Likewise, aircraft set to **Only instructors** are hidden from Captains, Pilots and Student Pilots. Roles that do not fly — Auditors and Mechanics — never self-schedule under any access mode.
 
 The dropdown is enforced when the booking is saved, not just when the aircraft list is drawn, so a booking that reaches the server for an aircraft the pilot is not entitled to is refused (*"You are not allowed to self schedule …"*). The same applies to an aircraft with self-scheduling switched off entirely (*"Self scheduling is not enabled on …"*).
 {% endhint %}
@@ -136,9 +136,9 @@ Once the pilot clicks on a time slot, the system will automatically pop up the b
 
 The self-booking modal behaves differently based on the user group of the person making the appointment:
 
-* **Pilots (user group 171–190)**: the process is unchanged — the pilot making the reservation is the PIC.
-* **Flight Instructors and staff (user group 170 or less, with the pilot flag)**: they fly as PIC and can optionally pick a **SIC** from the list of all active pilots of the company. The booking is saved directly as **SCHEDULED**.
-* **Students (user group 200)**: students can never be PIC, so they do not choose one. The system automatically selects an available **Flight Instructor** and assigns them as PIC (the student is stored as SIC). The chosen FI must: have published availability (AVAILABLE or ALWAYS — never MAYBE or UNAVAILABLE) covering the whole slot, have no conflicting schedule or class, be entitled to fly the selected aircraft (aircraft attributions — an empty list means all aircraft), and have the selected flight type attributed (empty list means all flight types). If the student has an **assigned instructor** (training supervisor), that instructor has priority over other available FIs.
+* **Captains and Pilots**: the process is unchanged — the pilot making the reservation is the PIC.
+* **Flight Instructors and staff (Flight Instructor and above, with the pilot flag)**: they fly as PIC and can optionally pick a **SIC** from the list of all active pilots of the company. The booking is saved directly as **SCHEDULED**.
+* **Student Pilots**: students can never be PIC, so they do not choose one. The system automatically selects an available **Flight Instructor** and assigns them as PIC (the student is stored as SIC). The chosen FI must: have published availability (AVAILABLE or ALWAYS — never MAYBE or UNAVAILABLE) covering the whole slot, have no conflicting schedule or class, be entitled to fly the selected aircraft (aircraft attributions — an empty list means all aircraft), and have the selected flight type attributed (empty list means all flight types). If the student has an **assigned instructor** (training supervisor), that instructor has priority over other available FIs.
 
 When a **student** opens the modal, Flylogs checks for an instructor in real time. If one is available it is shown in the **Flight instructor** box; if none is available, the modal warns that the booking will be saved as **pending** and confirmed automatically as soon as an instructor becomes available — and that it will be canceled automatically if no instructor is assigned before the company's cancellation deadline (flight start time minus the "minimum cancellation time" setting).
 
@@ -163,7 +163,7 @@ After the pilot clicks the "**Book this Slot**" button, the system locks the slo
 
 ### Instructor availability calendar
 
-When the **ALLOW FI SCHEDULE MANAGEMENT** company setting is enabled, Flight Instructors (user group 170 or less with the pilot flag) get access to a weekly **Instructor availability** calendar from the Schedules page, shown in the company timezone. Managers (user group 150 or less) always have access. This lets an FI plan around pending student bookings: if another instructor is available at the time of a pending slot, that instructor will likely take it.
+When the **ALLOW FI SCHEDULE MANAGEMENT** company setting is enabled, Flight Instructors (Flight Instructor and above, with the pilot flag) get access to a weekly **Instructor availability** calendar from the Schedules page, shown in the company timezone. **Chief Pilot and above** always have access. This lets an FI plan around pending student bookings: if another instructor is available at the time of a pending slot, that instructor will likely take it.
 
 ### Slot watchlist
 

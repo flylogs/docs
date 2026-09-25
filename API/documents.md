@@ -1,5 +1,7 @@
 # Documents
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 ## List Documents
 
 <mark style="color:blue;">`GET`</mark> `/documents.json`
@@ -121,6 +123,8 @@ Retrieve a single document with its file attachments.
 
 Upload a new document. Uses `multipart/form-data`.
 
+> **Access:** management groups — users with **`user_group_id` ≤ 150** (up to and including the Chief Pilot). The same limit applies to editing and deleting documents and to folder management below; higher groups get `403 Forbidden`.
+
 ---
 
 ## Document Statistics
@@ -129,7 +133,7 @@ Upload a new document. Uses `multipart/form-data`.
 
 Company-wide read-receipt compliance across all documents.
 
-> **Access:** staff only — users with **`user_group_id` ≤ 145**. Requests from any higher group return `403 Forbidden`.
+> **Access:** staff only — users with **`user_group_id` ≤ 145 (Flight Dispatcher and above)**. Requests from any higher group return `403 Forbidden`.
 
 A read receipt is **requested** once per document for each active user in one of the document's recipient groups (`flying_only` documents only count pilots). It is counted as **read** when that user has opened the document's **latest active upload**. Publishing a new version therefore resets everyone to unread. Deactivated and deleted users are excluded from the requested pool.
 
@@ -165,7 +169,7 @@ A read receipt is **requested** once per document for each active user in one of
 
 Per-user drilldown: every document required of that user (their group is a recipient, respecting `flying_only`) and whether they have read the latest active version.
 
-> **Access:** staff only — users with **`user_group_id` ≤ 145**. Returns `403 Forbidden` above 145, and `404` if the user is not in the caller's company.
+> **Access:** staff only — users with **`user_group_id` ≤ 145 (Flight Dispatcher and above)**. Returns `403 Forbidden` above 145, and `404` if the user is not in the caller's company.
 
 #### Path Parameters
 
@@ -201,6 +205,8 @@ Per-user drilldown: every document required of that user (their group is a recip
 <mark style="color:green;">`POST`</mark> `/documents/folder.json`
 
 Create or update a document folder.
+
+> **Access:** management groups — users with **`user_group_id` ≤ 150 (Chief Pilot and above)**.
 
 #### Request Body
 

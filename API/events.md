@@ -1,5 +1,7 @@
 # Events
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Company calendar events. The `calendar` endpoint is publicly accessible (no authentication required when called with a user token).
 
 ---
@@ -41,7 +43,7 @@ Returns the full list of event type definitions.
 
 <mark style="color:blue;">`GET`</mark> `/events/index.json`
 
-Returns events for the authenticated user's company. Users with `user_group_id > 120` see only events they are a recipient of (by user ID or user group). Accepts date range via query string.
+Returns events for the authenticated user's company. Users with `user_group_id > 120` (Financial Manager and below) see only events they are a recipient of (by user ID or user group). Accepts date range via query string.
 
 #### Query Parameters
 
@@ -81,7 +83,7 @@ Returns a flat array of event objects. Timestamps are in **milliseconds**.
 
 <mark style="color:blue;">`GET`</mark> `/events/view/{id}.json`
 
-Full details for a single event including recipients. Users with `user_group_id > 140` can only view events they are a recipient of; their `EventRecipient` list is cleared in the response.
+Full details for a single event including recipients. Users with `user_group_id > 140` (Flight Dispatcher and below) can only view events they are a recipient of; their `EventRecipient` list is cleared in the response.
 
 #### Path Parameters
 
@@ -188,7 +190,7 @@ Returns a unified calendar feed combining events, flights, scheduled flights, an
 
 **Authentication modes:**
 - No params: authenticated user's own calendar.
-- `userId` only: managers (`user_group_id < 171`) may view other users' calendars.
+- `userId` only: managers (`user_group_id < 171` — Flight Instructor and above) may view other users' calendars.
 - `userId` + `created` (user's created timestamp): unauthenticated access — used for external calendar feed URLs.
 
 Returns JSON when called as a JSON request, or `text/calendar` (iCal) otherwise.

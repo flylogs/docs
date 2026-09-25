@@ -1,5 +1,7 @@
 # Safety Reports
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Requires a **premium** or **unlimited** company plan.
 
 ---
@@ -102,15 +104,15 @@ Numbering follows the ICAO Doc 9859 probability scale: 5 is the most likely (`Fr
 
 ## Access Control
 
-| user_group_id | Access |
-|--------------|--------|
-| ≤ 110 | Full access: view all reports, edit any, delete |
-| 111–150 | View all reports, edit own reports and reports they are the assigned reviewer of |
-| > 150 | View only own reports, reports of flights they crewed, and `published` reports; edit only own reports and reports they are the assigned reviewer of |
+| user_group_id | Role | Access |
+|--------------|------|--------|
+| ≤ 110 | Compliance & Safety Manager and above | Full access: view all reports, edit any, delete |
+| 111–150 | Human Resources Manager through Chief Pilot | View all reports, edit own reports and reports they are the assigned reviewer of |
+| > 150 | Flight Instructor and below | View only own reports, reports of flights they crewed, and `published` reports; edit only own reports and reports they are the assigned reviewer of |
 
 > Regardless of `user_group_id`, a `draft` report is visible **only to its author**. Drafts never appear in another user's list or view, nor in any analytics/stats endpoint.
 
-> The [change history](#change-history) is manager-only (`user_group_id < 111`). It is omitted from the view payload for everyone else — including the report's author and its assigned reviewer.
+> The [change history](#change-history) is manager-only (`user_group_id < 111` — Compliance & Safety Manager and above). It is omitted from the view payload for everyone else — including the report's author and its assigned reviewer.
 
 ---
 
@@ -120,7 +122,7 @@ Numbering follows the ICAO Doc 9859 probability scale: 5 is the most likely (`Fr
 
 <mark style="color:blue;">`GET`</mark> `/safety_reports/index/{flightId}.json`
 
-List safety reports for the company. Only top-level reports (no `parent_id`) are returned. Users with `user_group_id > 150` see only reports where they are the reporter, PIC, SIC, supervisor, or the report is `published`. Results are paginated: default page size 25, maximum 100. Use the `limit` and `page` named parameters to navigate; the response includes a `paginate` object with the total count and page information.
+List safety reports for the company. Only top-level reports (no `parent_id`) are returned. Users with `user_group_id > 150` (Flight Instructor and below) see only reports where they are the reporter, PIC, SIC, supervisor, or the report is `published`. Results are paginated: default page size 25, maximum 100. Use the `limit` and `page` named parameters to navigate; the response includes a `paginate` object with the total count and page information.
 
 #### Path Parameters
 
@@ -305,11 +307,11 @@ Full details for a single report including flight, aircraft, and reporter.
 }
 ```
 
-> `allowEdit` is `true` for managers (`user_group_id < 111`), the report creator, and the assigned reviewer (`reviewer_id`), provided the report is not deleted.
+> `allowEdit` is `true` for managers (`user_group_id < 111` — Compliance & Safety Manager and above), the report creator, and the assigned reviewer (`reviewer_id`), provided the report is not deleted.
 >
 > Being crew of the reported flight grants **view** access but not edit: the crew of a flight are the subjects of a report about it, not its owners. (Crew used to be listed as editors here, but only `view` ever applied it — `edit` rejected the save with `You are not authorized to edit this report`. The two now share one rule and the stricter reading won.)
 
-> For managers (`user_group_id < 111`) the response also carries `report.SafetyReportChange` — the report's change history. The key is **omitted entirely** for every other user; see [Change History](#change-history).
+> For managers (`user_group_id < 111` — Compliance & Safety Manager and above) the response also carries `report.SafetyReportChange` — the report's change history. The key is **omitted entirely** for every other user; see [Change History](#change-history).
 
 ---
 
@@ -457,7 +459,7 @@ the application updates one.
 
 **Access.** The history is returned as `report.SafetyReportChange` on
 [View Safety Report](#view-safety-report), and **only** to managers
-(`user_group_id < 111` — the same bar `allowEdit` uses for "manager"). For every
+(`user_group_id < 111` — Compliance & Safety Manager and above — the same bar `allowEdit` uses for "manager"). For every
 other user, including the report's own author and an assigned reviewer, the key
 is absent from the payload altogether. There is no separate endpoint.
 
@@ -565,7 +567,7 @@ the other two never move on an edit.
 
 <mark style="color:red;">`GET`</mark> `/safety_reports/delete/{id}.json`
 
-Soft-delete a safety report and all its child reports (sets `deleted = true`). Restricted to managers (`user_group_id ≤ 110`). The deletion is appended to the [change history](#change-history) of the report **and of every child** it cascades to.
+Soft-delete a safety report and all its child reports (sets `deleted = true`). Restricted to managers (`user_group_id ≤ 110` — Compliance & Safety Manager and above). The deletion is appended to the [change history](#change-history) of the report **and of every child** it cascades to.
 
 #### Path Parameters
 

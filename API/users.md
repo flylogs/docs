@@ -1,5 +1,31 @@
 # Users
 
+## User groups
+
+`user_group_id` identifies the caller's role. Every access rule in this reference is expressed with it, so the values are listed here once. They are ordered from **most** to **least** privileged, which is what phrases like *Chief Pilot and above* mean throughout these pages: that role plus every role above it in this table.
+
+| `user_group_id` | Role |
+|---:|---|
+| 1 | Flylogs Administrator *(internal Flylogs staff, never a customer account)* |
+| 100 | Company Administrator |
+| 105 | Operations Manager |
+| 110 | Compliance & Safety Manager |
+| 120 | Human Resources Manager |
+| 130 | Financial Manager |
+| 135 | Trainings Manager |
+| 140 | Crew Scheduling |
+| 145 | Flight Dispatcher |
+| 150 | Chief Pilot |
+| 170 | Flight Instructor |
+| 180 | Captain |
+| 190 | Pilot |
+| 200 | Student Pilot |
+| 240 | Cabin Crew |
+| 250 | Auditor |
+| 300 | Mechanic |
+
+Note that a numerically **higher** `user_group_id` means **less** access. See [Account types](../company-management/account-types.md) for what each role can do in the application.
+
 ## User Profile
 
 <mark style="color:blue;">`GET`</mark> `/users/view.json`

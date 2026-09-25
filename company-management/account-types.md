@@ -52,7 +52,7 @@ Pilots can also be created with or without flying privileges. This way, you can 
 
 #### Pilot account types:
 
-* **Chief Pilot:** This pilot has access to view all other pilots, flights, documents, SMS and schedules.
+* **Chief Pilot:** This pilot has access to view all other pilots, flights, aircraft, SMS and schedules, and can publish and edit company documents and document folders as well as the documents attached to each aircraft. Editing the aircraft themselves and signing maintenance remains with administrators, operations managers and mechanics.
 * **Flight Instructors,** have a more limited access to view all their own flights, schedules and SMS. They can also view all students.
 * **Captain:** Own flights and schedule view/edit only.&#x20;
 * **Pilot:** Own flights and schedule view/edit only.
@@ -88,6 +88,8 @@ Auditor accounts have a few rules that always apply and cannot be turned off whe
 
 The table below summarises what each role can do across the main areas of Flylogs. ✅ = full access · View = read-only · — = no access.
 
+Roles are listed from **most** to **least** privileged. Where the rest of this manual says “**and above**” after a role — for example *Chief Pilot and above* — it means that role plus every role listed above it here.
+
 | Role | Manage users | Billing | Flights | Aircraft | Trainings | Safety | Schedule |
 |------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Company Administrator | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -98,7 +100,7 @@ The table below summarises what each role can do across the main areas of Flylog
 | Trainings Manager | — | — | View | — | ✅ | — | View |
 | Crew Scheduling | — | — | View | — | — | — | ✅ |
 | Flight Dispatcher | — | — | ✅ | View | — | — | ✅ |
-| Chief Pilot | View pilots | — | View all | — | — | View | View all |
+| Chief Pilot | View pilots | — | View all | View | — | View | View all |
 | Flight Instructor | View students | — | Own + students | — | Teach | Own | Own |
 | Captain | — | — | Own | — | — | Own | Own |
 | Pilot | — | — | Own | — | — | Own | Own |

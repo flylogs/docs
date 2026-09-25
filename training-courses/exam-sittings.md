@@ -16,11 +16,11 @@ Students register by choosing subjects. Flylogs counts every attempt and checks 
 | Action | Who |
 | ------ | --- |
 | See open sittings, register, cancel your own registration, see your own results | Every user in the company |
-| Create, edit, publish and delete sittings | Managers (`user_group_id` 150 or lower) |
-| Confirm, reject or mark registrations absent, and enter results | Managers (`user_group_id` 150 or lower) |
-| Register a student yourself | Managers (`user_group_id` 150 or lower) |
-| Reset a student's attempt history | Managers (`user_group_id` 150 or lower) |
-| Create and edit authority rules | Managers (`user_group_id` 150 or lower) |
+| Create, edit, publish and delete sittings | **Chief Pilot and above** |
+| Confirm, reject or mark registrations absent, and enter results | **Chief Pilot and above** |
+| Register a student yourself | **Chief Pilot and above** |
+| Reset a student's attempt history | **Chief Pilot and above** |
+| Create and edit authority rules | **Chief Pilot and above** |
 
 Managers find the page under **Trainings → Exam sittings**. Students open **Trainings** and use the **Exam sittings** button at the top of the page.
 

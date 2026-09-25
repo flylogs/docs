@@ -2,6 +2,20 @@
 
 * [Flylogs FCOM](README.md)
 
+## What's new
+
+* [Latest updates](whats-new/README.md)
+  * [Flight remark findings](whats-new/flight-remark-findings.md)
+  * [Draft a mission comment](whats-new/draft-mission-comment.md)
+  * [Student attendance signatures](whats-new/student-attendance-signatures.md)
+  * [Certificate preview and withdrawal](whats-new/certificate-preview-and-withdrawal.md)
+  * [Aircraft reserved for selected pilots](whats-new/aircraft-reserved-for-selected-pilots.md)
+  * [Next maintenance forecast](whats-new/next-maintenance-forecast.md)
+  * [Flight type aircraft restriction](whats-new/flight-type-aircraft-restriction.md)
+  * [Missed-class follow-up](whats-new/missed-class-follow-up.md)
+  * [Overnight duty time fix](whats-new/duty-time-overnight-calculation-fix.md)
+  * [Flight Risk Assessment (FRAT)](whats-new/flight-risk-assessment-frat.md)
+
 ## First Steps
 
 * [Company Sign Up](first-steps/company-sign-up.md)

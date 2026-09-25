@@ -1,5 +1,7 @@
 # Trainings
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 > **v2 schema**. The trainings plugin uses a unified-activities schema:
 > `training_activities` orders lessons + exams together (drag-drop ordering),
 > `activity_progress` is the single source of truth per (enrollment, activity),
@@ -190,7 +192,7 @@ The legacy per-row `Training.Progress` field has been **replaced** by `Training.
 
 <mark style="color:blue;">`GET`</mark> `/manager/trainings.json`
 
-List all trainings for the company. Manager-only (`user_group_id <= 135`). Paginated (50 per page), ordered by name asc.
+List all trainings for the company. Manager-only (`user_group_id <= 135` — Trainings Manager and above). Paginated (50 per page), ordered by name asc.
 
 #### Per-row fields
 
@@ -409,8 +411,8 @@ Compact progress + attendance roll-up for an enrollment. Cheap to call (no neste
 
 #### Access
 
-- Manager-level callers (`user_group_id <= 170`): any enrollment in caller's company.
-- Student-level callers (`user_group_id > 170`): only their own enrollment — `403` otherwise.
+- Manager-level callers (`user_group_id <= 170` — Flight Instructor and above): any enrollment in caller's company.
+- Student-level callers (`user_group_id > 170` — Captain and below): only their own enrollment — `403` otherwise.
 
 #### Response
 
@@ -560,7 +562,7 @@ Persist a new order for the unified activity list (lessons + non-lesson-gate exa
 | id    | string | Yes | Subject UUID |
 | items | string[] | Yes | Ordered list of `training_activity_id`. IDs not belonging to the subject are silently dropped (whitelist). |
 
-Authorization: caller's company must own the training; non-admin users (`user_group_id > 135`) must be the subject's teacher.
+Authorization: caller's company must own the training; non-admin users (`user_group_id > 135` — Crew Scheduling and below) must be the subject's teacher.
 
 #### Response
 
@@ -630,7 +632,7 @@ Create or update an exam on a subject. Send `id` to edit, omit to create (a `Tra
 | access_mode | enum | No | **ONLINE only.** `FREE` \| `SCHEDULED` (default `FREE`). `SCHEDULED` gates the exam behind a session. Ignored / forced `FREE` for `ONSITE`. |
 | access_window_days | int | No | **ONLINE + `SCHEDULED` only.** Days the window stays open after session start. Default `10` (used when omitted or `<= 0`). |
 
-Authorization: caller's company must own the training; non-admin users (`user_group_id > 135`) must be the subject's teacher.
+Authorization: caller's company must own the training; non-admin users (`user_group_id > 135` — Crew Scheduling and below) must be the subject's teacher.
 
 ### List Schedulable Exams
 
@@ -646,7 +648,7 @@ Exams in a subject that can be **scheduled into a session**: all `ONSITE` exams,
 
 Retrieve subject details with the full unified activity list (lessons + exams) and the enrolled student's progress, attendance and exam attempts.
 
-**Who can call this:** the enrolled student, the subject teacher, and managers (`user_group_id <= 150`). The endpoint resolves the student via `{enrollmentId}` (the `TrainingsUser.id` URL param), so attempts / progress / attendance always reflect that student regardless of which user is authenticated.
+**Who can call this:** the enrolled student, the subject teacher, and managers (`user_group_id <= 150` — Chief Pilot and above). The endpoint resolves the student via `{enrollmentId}` (the `TrainingsUser.id` URL param), so attempts / progress / attendance always reflect that student regardless of which user is authenticated.
 
 **Activity list:** `subject.TrainingActivity[]` is the canonical ordered list, sorted by `TrainingActivity.order ASC`. Lessons and exams are interleaved as a single sequence — typically `lesson → its gate exam → next lesson → next gate exam → … → subject-scope exams at the end`. Missing `TrainingActivity` rows are backfilled on read (live lesson / subject-scope exam without a TA row gets one inserted; a deleted TA row whose source is live again gets undeleted) so every live lesson and exam in the subject is guaranteed to appear.
 
@@ -884,8 +886,8 @@ Retrieve class session details including attendance.
 Response `class` payload contains:
 
 - `Session`, `Teacher`, `SessionStudent`, `Location`.
-- `teacher` — `true` when the requester is the session's teacher, the subject's teacher (`TrainingActivity.TrainingSubject.teacher_id`), or a manager (`user_group_id <= 140`). Recomputed server-side on every call from the session/subject data — the same definition `attendance()` independently recomputes below, so the two never disagree.
-- `enrollment` — the requester's `TrainingsUser.id` for this training, or `null`. Being on the session roster (`session_students`, e.g. a pilot-group invite or manual add with no enrollment) is enough to open the class even without one; `enrollment=null` is what the client uses to explain the missing progress/evaluation in that case. Below `user_group_id 170`, a caller who is neither enrolled, on the roster, nor a teacher/manager gets a 404.
+- `teacher` — `true` when the requester is the session's teacher, the subject's teacher (`TrainingActivity.TrainingSubject.teacher_id`), or a manager (`user_group_id <= 140` — Crew Scheduling and above). Recomputed server-side on every call from the session/subject data — the same definition `attendance()` independently recomputes below, so the two never disagree.
+- `enrollment` — the requester's `TrainingsUser.id` for this training, or `null`. Being on the session roster (`session_students`, e.g. a pilot-group invite or manual add with no enrollment) is enough to open the class even without one; `enrollment=null` is what the client uses to explain the missing progress/evaluation in that case. Below `user_group_id 170` (Captain and below), a caller who is neither enrolled, on the roster, nor a teacher/manager gets a 404.
 - `attendances` — the session roster, returned by an internal call to `attendance()`; see **Attendance** below for the full per-row shape and its own access rule.
 - `Session.signature`, when present, has its server-only `statuses` baseline stripped (and the same key inside every `history` entry) — see **Sign Class**'s note on `statuses`. This action has no teacher/student gate on the roster it exposes, so leaving `statuses` in would let any enrolled student read every classmate's attendance baseline.
 - `TrainingActivity` — the bound activity (`id`, `kind`, `lesson_id`, `exam_id`, `training_subject_id`) with its nested children:
@@ -906,7 +908,7 @@ Alongside `class`, the response carries:
 
 Return the roster and attendance for a class session. Called internally by **View Class** (its `attendances` field is this response), and independently reachable at its own URL/ACO.
 
-The `{teacherParam}` URL segment is accepted for route compatibility only and is **ignored** — whether the caller sees the full roster is always recomputed server-side from the session/subject teacher and `user_group_id <= 140`, the same rule **View Class**'s `teacher` field uses. It cannot be used to grant teacher-level access from the URL.
+The `{teacherParam}` URL segment is accepted for route compatibility only and is **ignored** — whether the caller sees the full roster is always recomputed server-side from the session/subject teacher and `user_group_id <= 140` (Crew Scheduling and above), the same rule **View Class**'s `teacher` field uses. It cannot be used to grant teacher-level access from the URL.
 
 Company-scoped: the session's `Training.company_id` must match the caller's company, or `404 Training Session not found`.
 
@@ -928,7 +930,7 @@ Company-scoped: the session's `Training.company_id` must match the caller's comp
 | sign_blocked_reason | why `can_sign` is false: `not_required` \| `not_attended` \| `not_yet_open` \| `window_closed` \| `already_signed`. Own row only. `not_required` covers both "this course does not ask" and "this class predates the requirement" |
 | exam_status, exam_rating, code, notes | from `activity_progress.value` / `score` / `code` / `notes` — exam activities only |
 
-**Access.** Non-teacher, non-manager callers (`user_group_id > 140` and not the session/subject teacher) see only their own roster row. Teachers and managers see every row. Roster rows with `session_students.user_id IS NULL` (an unexpanded pilot-group placeholder) are excluded entirely.
+**Access.** Non-teacher, non-manager callers (`user_group_id > 140` — Flight Dispatcher and below and not the session/subject teacher) see only their own roster row. Teachers and managers see every row. Roster rows with `session_students.user_id IS NULL` (an unexpanded pilot-group placeholder) are excluded entirely.
 
 ### Schedule Class
 
@@ -967,7 +969,7 @@ Enable, edit, or cancel a classwork upload request for a session. The only write
 | classwork_deadline | int | No | Unix timestamp; empty/absent clears it to `NULL` |
 | classwork_description | string | No | Homework brief. `400 Homework description is too long (2000 characters max)` above 2000 characters (`mb_strlen`) |
 
-**Access.** Company-scoped (`404 Training Session not found`). Caller must be the session's or subject's teacher, or a manager (`user_group_id <= 140`), else `404 Not authorized to modify this class`. Blocked once the session is signed: `400 Attendance for this class is already signed.`
+**Access.** Company-scoped (`404 Training Session not found`). Caller must be the session's or subject's teacher, or a manager (`user_group_id <= 140` — Crew Scheduling and above), else `404 Not authorized to modify this class`. Blocked once the session is signed: `400 Attendance for this class is already signed.`
 
 **Side effect — roster notification.** On the disabled/never → enabled transition only (never on disable, never on an edit of an already-enabled request), every enrolled roster student gets a non-urgent in-app message with the training/subject/date/location, the homework brief, and the deadline. Guarded by `Session.classwork_notified_at` (claim-before-send, reset to `NULL` on every disable so a later re-enable notifies again). Notification failure does not fail the request.
 
@@ -1127,11 +1129,11 @@ Only the fields actually present in a row are written — an attendance-only sav
 
 **Empty attendance map is a no-op, not an error.** `data[attendance]` absent, non-array, or `{}` returns `{"store": true, "grades": []}` rather than `400 Missing POST params`. The client drops unenrolled rows before posting, so a session whose entire roster is unenrolled (or has no students at all) legitimately submits nothing — and since **Sign Class** saves attendance before signing, the old 400 blocked signing that class outright.
 
-**Access.** Company-scoped (`404 Training Session not found` if the session's training belongs to another company). `user_group_id <= 140` (manager) may always write; above that, the caller must be the session's `teacher_id` or the subject's `teacher_id`, else `404 Not authorized to modify this class attendance`.
+**Access.** Company-scoped (`404 Training Session not found` if the session's training belongs to another company). `user_group_id <= 140` — Crew Scheduling and above (manager) may always write; above that, the caller must be the session's `teacher_id` or the subject's `teacher_id`, else `404 Not authorized to modify this class attendance`.
 
 **Enrollment guard.** Any row whose `session_students.user_id` has no `trainings_users` row for this training (any status) is refused outright — `400 Cannot record attendance for a student not enrolled in this training.` Checked for every row before anything is written, so one bad row fails the whole request.
 
-**Closed sessions.** Once `Session.status` is no longer `open`/`scheduled`, non-managers (`user_group_id > 140`) may only submit the transition `absent`/`absent_justified` → `attended_post_class`; any other change on a closed session is rejected with `400 Attendance for this class is closed.` Managers are exempt.
+**Closed sessions.** Once `Session.status` is no longer `open`/`scheduled`, non-managers (`user_group_id > 140` — Flight Dispatcher and below) may only submit the transition `absent`/`absent_justified` → `attended_post_class`; any other change on a closed session is rejected with `400 Attendance for this class is closed.` Managers are exempt.
 
 #### Response
 
@@ -1160,7 +1162,7 @@ Digitally sign class attendance (teacher confirmation). This is the **teacher** 
 
 **Resolves undecided attendance.** Any roster row still `attendance_status=NULL` is resolved to `absent` at sign time — but only for a student actually enrolled in the training (any `trainings_users` status); an unenrolled roster row's status, including `NULL`, is left untouched.
 
-**Sign window.** A teacher (`user_group_id > 140`) may normally only sign within 72h before / 6h after `Session.datetime`. Outside that window a re-sign is still allowed if every change since the LAST signature is exclusively `absent`/`absent_justified` → `attended_post_class` (crediting a late post-class submission); any other change outside the window is rejected with `400 Attendance signature for this class is closed already`. Managers (`user_group_id <= 140`) are not window-limited. Above `user_group_id 140`, the caller must additionally be the session's own `teacher_id` (not the subject teacher) or gets `404 Not authorized to sign this class`.
+**Sign window.** A teacher (`user_group_id > 140` — Flight Dispatcher and below) may normally only sign within 72h before / 6h after `Session.datetime`. Outside that window a re-sign is still allowed if every change since the LAST signature is exclusively `absent`/`absent_justified` → `attended_post_class` (crediting a late post-class submission); any other change outside the window is rejected with `400 Attendance signature for this class is closed already`. Managers (`user_group_id <= 140` — Crew Scheduling and above) are not window-limited. Above `user_group_id 140`, the caller must additionally be the session's own `teacher_id` (not the subject teacher) or gets `404 Not authorized to sign this class`.
 
 **Company-scoped.** `404 Class not found` if the session's training belongs to another company.
 
@@ -1198,7 +1200,7 @@ Two sources in one list, distinguished by `type`:
 | type | `attendance` or `debriefing`; both when omitted |
 | days | Recency window, default **90**; `0` for everything. Not cosmetic — the historic debriefing backlog runs to tens of thousands of rows |
 
-**Access.** `user_group_id <= 140`, else `403 Not allowed to review pending signatures`. Company-scoped through `Training.company_id`. Capped at 2000 rows.
+**Access.** `user_group_id <= 140` (Crew Scheduling and above), else `403 Not allowed to review pending signatures`. Company-scoped through `Training.company_id`. Capped at 2000 rows.
 
 #### Response
 
@@ -1280,7 +1282,7 @@ Remove digital signature from a class.
 
 List the homework grades for a session, scoped by role.
 
-**Access.** Company-scoped (`404 Training Session not found`). A reviewer — the session's or subject's teacher, or a manager (`user_group_id <= 140`) — sees every grade on the session. Anyone else is scoped to their own roster row.
+**Access.** Company-scoped (`404 Training Session not found`). A reviewer — the session's or subject's teacher, or a manager (`user_group_id <= 140` — Crew Scheduling and above) — sees every grade on the session. Anyone else is scoped to their own roster row.
 
 **Students cannot call this endpoint.** On deployments where the Onsite sub-actions are ACL-restricted (the default), a student gets `403 ACL_DENIED` here exactly as they do for **Justifications**. A student's own grade is therefore carried on the **Class** payload instead, as `classwork_grade` — see below. Clients should read a student's mark from there and reserve this endpoint for the teacher's roster view.
 
@@ -1311,7 +1313,7 @@ Grade one student's homework.
 | score | decimal | No | `0`–`10`, one decimal. Rounded to one decimal server-side (`7.46` → `7.5`). Empty clears a previously set score |
 | feedback | string | No | Comment shown to the student |
 
-**Access.** Reviewer only — the session's or subject's teacher, or a manager (`user_group_id <= 140`). A non-reviewer gets `404 Not authorized to grade this class`, the same response as a session that does not exist, so a caller cannot probe for sessions in another company.
+**Access.** Reviewer only — the session's or subject's teacher, or a manager (`user_group_id <= 140` — Crew Scheduling and above). A non-reviewer gets `404 Not authorized to grade this class`, the same response as a session that does not exist, so a caller cannot probe for sessions in another company.
 
 **Guards.** `400 Score must be a number between 0 and 10` for a non-numeric or out-of-range score (validated before any write, so an invalid value never reaches the `decimal(3,1)` column). `400 A grade needs a score or feedback` when both are empty. `404 Student is not on this session roster` when the `user_id` has no `session_students` row on this session.
 
@@ -1331,7 +1333,7 @@ Grade one student's homework.
 
 List absence-justification rows for a session, scoped by role.
 
-**Access.** Company-scoped (`404 Training Session not found`). A student who is not a reviewer sees only their own roster row's justification(s). A reviewer — the session's or subject's teacher, or a manager (`user_group_id <= 140`) — sees every justification for the session. A caller with no roster row on the session (and not a reviewer) gets an empty list rather than an error.
+**Access.** Company-scoped (`404 Training Session not found`). A student who is not a reviewer sees only their own roster row's justification(s). A reviewer — the session's or subject's teacher, or a manager (`user_group_id <= 140` — Crew Scheduling and above) — sees every justification for the session. A caller with no roster row on the session (and not a reviewer) gets an empty list rather than an error.
 
 #### Response
 
@@ -1380,7 +1382,7 @@ Approve or reject a pending justification.
 | decision | string | Yes | `approved` or `rejected`. Anything else → `400 Invalid decision` |
 | review_note | string | No | Max 255 characters (`mb_strlen`) — `400 Review note is too long (255 characters max)` above that |
 
-**Access.** Restricted to a manager (`user_group_id <= 140`) or the session's/subject's teacher, else `404 Not authorized to review this justification`. Company-scoped via the justification's session (`404 Justification not found`, same message as a genuinely missing id — a manager of another company cannot distinguish the two).
+**Access.** Restricted to a manager (`user_group_id <= 140` — Crew Scheduling and above) or the session's/subject's teacher, else `404 Not authorized to review this justification`. Company-scoped via the justification's session (`404 Justification not found`, same message as a genuinely missing id — a manager of another company cannot distinguish the two).
 
 **Re-decision is refused.** The status flip is an atomic conditional update (`pending` → decision); a justification that is already `approved`/`rejected` cannot be re-decided — `400 This justification has already been decided`.
 
@@ -1402,11 +1404,11 @@ Classwork submissions and absence-justification evidence go through the generic 
 
 | Caller | `SessionClasswork` | `SessionJustification` |
 |--------|--------------------|------------------------|
-| Reviewer — session teacher, subject teacher, or manager (`user_group_id <= 140`) | Always | Always |
+| Reviewer — session teacher, subject teacher, or manager (`user_group_id <= 140` — Crew Scheduling and above) | Always | Always |
 | The student who submitted the row | Until `sessions.classwork_deadline` passes **or** the work is graded, whichever is first | Never |
 | Anyone else | Never | Never |
 
-A student replaces their homework by deleting it and uploading again. Two independent locks close that window, either one being enough: the deadline passing, and a grade existing for that student on that session (any row in `session_classwork_grades` for their roster row). A grade locks the file even inside the window — replacing it afterwards would leave the teacher's mark attached to work nobody graded. A reviewer can still delete a graded file; redoing the grade is theirs to do. Absence evidence keeps the older rule — a student may add to it but never withdraw it. The reviewer lookup ignores the ownership narrowing that normally restricts `user_group_id > 170` to their own rows, so a session teacher who is themselves a line-pilot account can delete a student's submission rather than silently getting `{"result": false}` with HTTP 200.
+A student replaces their homework by deleting it and uploading again. Two independent locks close that window, either one being enough: the deadline passing, and a grade existing for that student on that session (any row in `session_classwork_grades` for their roster row). A grade locks the file even inside the window — replacing it afterwards would leave the teacher's mark attached to work nobody graded. A reviewer can still delete a graded file; redoing the grade is theirs to do. Absence evidence keeps the older rule — a student may add to it but never withdraw it. The reviewer lookup ignores the ownership narrowing that normally restricts `user_group_id > 170` (Captain and below) to their own rows, so a session teacher who is themselves a line-pilot account can delete a student's submission rather than silently getting `{"result": false}` with HTTP 200.
 
 **Write gate.** The uploader must be on the session roster (`session_students.user_id`), else `403 Uploads are not enabled for this session`. `SessionJustification` has no further condition — several pieces of evidence for one missed class are ordinary. `SessionClasswork` additionally requires:
 
@@ -1421,7 +1423,7 @@ Enforced on every path that can attach one of these tags: `POST /uploads/sign.js
 
 **Uploader identity.** The same listing returns `created` (unix, from the row) and `user_name` (the uploader's full name, or `null` when the user no longer resolves) on every upload row, for all tags — so a roster's submissions can be attributed without a second request.
 
-**Read scope.** Enforced on `GET /uploads/index/{model}/{foreignKey}.json`, `GET /uploads/download/{id}.json` and `GET /uploads/proxy/{id}.json`. A plain student sees only their own uploads for the session. The session's own teacher, the subject's teacher, or a manager (`user_group_id <= 140`) see every upload on the session. Company-scoped: a session belonging to another company (or missing) is refused the same way as a genuinely absent one — `404 Training Session not found` from `index`, plain `404` from `download`/`proxy` — so a caller can't distinguish "wrong company" from "doesn't exist".
+**Read scope.** Enforced on `GET /uploads/index/{model}/{foreignKey}.json`, `GET /uploads/download/{id}.json` and `GET /uploads/proxy/{id}.json`. A plain student sees only their own uploads for the session. The session's own teacher, the subject's teacher, or a manager (`user_group_id <= 140` — Crew Scheduling and above) see every upload on the session. Company-scoped: a session belonging to another company (or missing) is refused the same way as a genuinely absent one — `404 Training Session not found` from `index`, plain `404` from `download`/`proxy` — so a caller can't distinguish "wrong company" from "doesn't exist".
 
 ---
 
@@ -1606,7 +1608,7 @@ Online exams carry `access_mode`:
 
 `available_until` (online exams): the `YYYY-MM-DD HH:MM:SS` timestamp when the current student's window closes — `min(session.datetime + access_window_days, session signed-at)`. `null` for `FREE` exams or when there is no active session.
 
-`TrainingQuestion` is included with `TrainingSubject.name`, `TrainingSubject.code`, `Lesson.name` per question. For `user_group_id <= 135` each question also includes `TrainingQuestionOption` (the answer options). For `user_group_id > 150` the `TrainingQuestion` list is stripped.
+`TrainingQuestion` is included with `TrainingSubject.name`, `TrainingSubject.code`, `Lesson.name` per question. For `user_group_id <= 135` (Trainings Manager and above) each question also includes `TrainingQuestionOption` (the answer options). For `user_group_id > 150` (Flight Instructor and below) the `TrainingQuestion` list is stripped.
 
 Errors:
 
@@ -1793,7 +1795,7 @@ Counts only sessions under a non-deleted `training_activities` row (`training_ac
 
 **`DISTANCE` trainings.** `training.AttendanceStatus` is omitted from this response entirely when `Training.type = 'DISTANCE'` (attendance-by-session doesn't apply — distance trainings track `getProgress` instead).
 
-**Same object, student report endpoint.** <mark style="color:blue;">`GET`</mark> `/trainings/students/report/{enrollmentId}.json` returns the identical breakdown nested at `training.Training.AttendanceStatus` — explicitly `null` (rather than omitted) for a `DISTANCE` training. Access is decided by `ReportVisibility::level()` (see [Training Certificate](#training-certificate) below): the student, their supervisor and same-company staff (`user_group_id <= 170`) receive the full report with `training.verification: false`; **anyone else — including an anonymous caller, the endpoint is public — receives the verification subset** with `training.verification: true`.
+**Same object, student report endpoint.** <mark style="color:blue;">`GET`</mark> `/trainings/students/report/{enrollmentId}.json` returns the identical breakdown nested at `training.Training.AttendanceStatus` — explicitly `null` (rather than omitted) for a `DISTANCE` training. Access is decided by `ReportVisibility::level()` (see [Training Certificate](#training-certificate) below): the student, their supervisor and same-company staff (`user_group_id <= 170` — Flight Instructor and above) receive the full report with `training.verification: false`; **anyone else — including an anonymous caller, the endpoint is public — receives the verification subset** with `training.verification: true`.
 
 #### Reset attempts in the response
 
@@ -1982,9 +1984,9 @@ Close or reopen an enrollment without deleting any progress. Sent as `applicatio
 
 #### Access
 
-- `manager` prefix: `user_group_id > 190` (and below 250) is rejected by the plugin, same as every other manager trainings action. External auditors (250) have no ACL grant on this action and cannot call it.
+- `manager` prefix: `user_group_id > 190` — Student Pilot and below (and below 250) is rejected by the plugin, same as every other manager trainings action. External auditors (250) have no ACL grant on this action and cannot call it.
 - The enrollment's training **and** the student must both belong to the caller's company.
-- ACL grants mirror `manager_finish` exactly: allowed for company managers (`user_group_id` 100/135/150), denied for instructors (140/145) and for every student/pilot group (170/190/200/300).
+- ACL grants mirror `manager_finish` exactly: allowed for Company Administrators, Trainings Managers and Chief Pilots (`user_group_id` 100/135/150), denied for Crew Scheduling and Flight Dispatchers (140/145) and for every student/pilot group (170/190/200/300).
 
 #### Side effects
 
@@ -2035,7 +2037,7 @@ Retrieve training-related calendar events.
 
 Retrieve training completion certificate data. Gated strictly on `TrainingsUser.status = 'COMPLETED'`. If the auto-completion mechanism (below) hasn't fired, this endpoint returns `404 Training not finished yet` regardless of how complete the activities look.
 
-**Access** (`403` otherwise): the student, the enrollment's `supervisor_id`, or a user with `user_group_id <= 170` **of the same company** as the training. Managers of other companies are refused. This is the `ReportVisibility::level()` rule (`app/Lib/Trainings/ReportVisibility.php`), shared with the student report.
+**Access** (`403` otherwise): the student, the enrollment's `supervisor_id`, or a user with `user_group_id <= 170` (Flight Instructor and above) **of the same company** as the training. Managers of other companies are refused. This is the `ReportVisibility::level()` rule (`app/Lib/Trainings/ReportVisibility.php`), shared with the student report.
 
 **Issuing.** The first successful call **issues** the certificate: a sequence number is reserved atomically on `company_details.certificate_next_number`, formatted with `company_details.certificate_pattern` / `certificate_prefix` (tokens `{prefix}` `{year}` `{seq}` `{seq:N}`; see `CertificateNumber`), and a `training_certificates` row is written with a JSON `snapshot` of every printed field. Every later call returns that row unchanged — number and `issued_at` never move. `training_certificates.trainings_user_id` is unique (one certificate per enrollment); a lost race burns a sequence number, never duplicates one.
 
@@ -2048,7 +2050,7 @@ curl -H "Authorization: Bearer $TOKEN" \
   "https://fmc.flylogs.com/v1/trainings/trainings/certificate/{enrollmentId}.json?preview=1"
 ```
 
-The flag is honoured **only** for `user_group_id <= 135` of the training's own company. Every other caller — the student, their supervisor, an instructor, a manager of another company — is served the normal path and issues `LIVE`, flag or no flag. That is what keeps the automatic case intact: a `DISTANCE` student who finishes on their own and downloads still gets a real certificate, exactly as before.
+The flag is honoured **only** for `user_group_id <= 135` (Trainings Manager and above) of the training's own company. Every other caller — the student, their supervisor, an instructor, a manager of another company — is served the normal path and issues `LIVE`, flag or no flag. That is what keeps the automatic case intact: a `DISTANCE` student who finishes on their own and downloads still gets a real certificate, exactly as before.
 
 The flag is a **no-op once a row exists**. Previewing again returns the same record, which is why issuing later keeps the reserved number rather than allocating a fresh one.
 
@@ -2079,7 +2081,7 @@ NEO reflects the same statuses in the PDF — a diagonal `PREVIEW — NOT ISSUED
 | `User.licence` | `user_certificates.name` of the student's valid (`status = valid`, not expired) `licence` row, newest `issue` first; `null` when none. No passport / address / phone. |
 | `TrainingsUser.created` | Enrollment date, printed as the course start. |
 
-**Manager fallback**: `Training.manager_id` may be `NULL`. When it is, `Training.Manager` is filled with the first company user in `user_group_id` ∈ (100, 105, 135) that has a non-empty `UserDetail.signature` so the certificate always has a signatory. Returned shape matches the normal Manager: `{ id, UserGroup.name, UserDetail.{name, surname, signature} }`. If no such user exists `Training.Manager` stays empty.
+**Manager fallback**: `Training.manager_id` may be `NULL`. When it is, `Training.Manager` is filled with the first company user in `user_group_id` ∈ (100, 105, 135) (Company Administrators, Operations Managers and Trainings Managers) that has a non-empty `UserDetail.signature` so the certificate always has a signatory. Returned shape matches the normal Manager: `{ id, UserGroup.name, UserDetail.{name, surname, signature} }`. If no such user exists `Training.Manager` stays empty.
 
 ---
 
@@ -2091,7 +2093,7 @@ Every certificate the company has, newest first. Querystring pagination (`page`,
 
 Rows carry the full record including `snapshot`, plus `Editor` and `Revoker` alongside `Issuer`, so a client can render the whole register and open an edit form without a second round trip.
 
-**Access:** `user_group_id <= 170` (`403` otherwise). ACO `controllers/Trainings/Trainings/manager_certificates` — needs `aco_sync`; inherits the root allow.
+**Access:** `user_group_id <= 170` — Flight Instructor and above (`403` otherwise). ACO `controllers/Trainings/Trainings/manager_certificates` — needs `aco_sync`; inherits the root allow.
 
 #### Response
 
@@ -2123,7 +2125,7 @@ Rows carry the full record including `snapshot`, plus `Editor` and `Revoker` alo
 
 ## Certificate lifecycle (manager)
 
-Three write endpoints, all `POST`, all restricted to **`user_group_id <= 135`** of the certificate's own company (`403` otherwise, `404` when the id belongs to another company — the two are deliberately indistinguishable to a caller from outside). ACOs `controllers/Trainings/Trainings/{manager_certificate_issue, manager_certificate_edit, manager_certificate_revoke}` — need `aco_sync`; they inherit the root allow and no explicit grants are required, because the controller narrows access itself.
+Three write endpoints, all `POST`, all restricted to **`user_group_id <= 135` (Trainings Manager and above)** of the certificate's own company (`403` otherwise, `404` when the id belongs to another company — the two are deliberately indistinguishable to a caller from outside). ACOs `controllers/Trainings/Trainings/{manager_certificate_issue, manager_certificate_edit, manager_certificate_revoke}` — need `aco_sync`; they inherit the root allow and no explicit grants are required, because the controller narrows access itself.
 
 The register (`manager_certificates`) stays readable at `<= 170`. Reading a register is not the same act as rewriting a certified document.
 
@@ -2215,7 +2217,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 | Caller | `training.verification` | Payload |
 |--------|-------------------------|---------|
-| The student, the enrollment's supervisor, or `user_group_id <= 170` of the training's company | `false` | The full report described above, plus `training.TrainingCertificate: { number, issued_at, status, revoked_at, revoke_reason } \| null`. |
+| The student, the enrollment's supervisor, or `user_group_id <= 170` (Flight Instructor and above) of the training's company | `false` | The full report described above, plus `training.TrainingCertificate: { number, issued_at, status, revoked_at, revoke_reason } \| null`. |
 | Anyone else, including no `Authorization` header | `true` | `training.TrainingsUser { id, training_id, status, status_changed, validity, created }`, `training.Training { id, name, type, Company { id, name, CompanyTheme{logo,color}, CompanyDetail{legal_name, approval_type, approval_reference, city, Country.name} } }`, `training.User.UserDetail { name, surname }` **masked** (first letter of each word + `*` per remaining character: `O******** K********`), `training.TrainingCertificate { number, issued_at, status, revoked_at, revoke_reason } \| null`. No exams, subjects, flights, passport, date of birth, address or phone. |
 
 Reading the report never issues a certificate; only the certificate endpoint allocates numbers.
@@ -2412,7 +2414,7 @@ Generate a teaching activity report.
 
 Ordered blocks of flight missions, each ending in a check the student must pass before flying a later stage.
 
-Every endpoint below is inert unless the training has `stage_checks = 1`. Recording, overriding and voiding additionally require `user_group_id <= 135` **or** being the training's `manager_id`; a 403 is returned otherwise.
+Every endpoint below is inert unless the training has `stage_checks = 1`. Recording, overriding and voiding additionally require `user_group_id <= 135` (Trainings Manager and above) **or** being the training's `manager_id`; a 403 is returned otherwise.
 
 ### List stages
 
@@ -2573,7 +2575,7 @@ An hourly cron widens the audience one rung per `company_settings.training_block
 
 Recorded decisions over two subjects: `GRADUATION` (a `trainings_users.id`) and `REVISION` (a `training_revisions.id`). Only `GRADUATION` gates anything, and only while the course has `stage_checks = 1`.
 
-All actions require `user_group_id <= 135` or being the training's `manager_id`.
+All actions require `user_group_id <= 135` (Trainings Manager and above) or being the training's `manager_id`.
 
 ### Queue
 
@@ -2679,7 +2681,7 @@ The plugin's inherited gate only covers `manager_`-prefixed actions, so the thre
 | Endpoint group | Who |
 |----------------|-----|
 | `catalog/*`, `enrollment_requests/submit`, `enrollment_requests/withdraw` | Any user in the company |
-| `intakes/*`, `requirements/*`, `enrollment_requests/decide` | `user_group_id` **≤ 150** |
+| `intakes/*`, `requirements/*`, `enrollment_requests/decide` | `user_group_id` **≤ 150** (Chief Pilot and above) |
 
 New actions need an ACL entry. `aco_sync` creates the ACOs, but the `controllers` root grants read to every group **except 180, 240 and 250** — so the three student-facing actions also need explicit `aros_acos` rows, copied from `Trainings/Students/index`. Without them students get `403 ACL_DENIED`.
 
@@ -3025,7 +3027,7 @@ Open applications also appear on the existing approvals endpoint, as a third que
 }
 ```
 
-`PENDING` rows come before `WAITLIST` ones. The applicant's name arrives in `Applicant` rather than a `User` association: `users` lives in the main database while these rows live in `flylogs_trainings`, and the name is on `user_details` in any case. A course manager sees applications for their own courses; `user_group_id` ≤ 135 sees every course's.
+`PENDING` rows come before `WAITLIST` ones. The applicant's name arrives in `Applicant` rather than a `User` association: `users` lives in the main database while these rows live in `flylogs_trainings`, and the name is on `user_details` in any case. A course manager sees applications for their own courses; `user_group_id` ≤ 135 (Trainings Manager and above) sees every course's.
 
 ## Exam sittings
 
@@ -3049,7 +3051,7 @@ Every endpoint requires the **premium** or **unlimited** plan; any other plan an
 | Endpoint group | Who |
 |----------------|-----|
 | `exam_registrations/index`, `register`, `cancel`, `mine` | Any user in the company. `cancel` only works on the caller's own registration. |
-| `exam_sittings/manager_*` (reads included) | `user_group_id` **≤ 150** |
+| `exam_sittings/manager_*` (reads included) | `user_group_id` **≤ 150** (Chief Pilot and above) |
 
 The 19 new actions need `aco_sync`. The four student actions also need explicit `aros_acos` grants copied from `Trainings/Students/index`, like the catalog: see `flylogs/migrations/2026-09-13-exam-sittings-acl.md`.
 
@@ -3155,7 +3157,7 @@ Both this endpoint and the manager's `manager_student` below are shaped by `Exam
 
 <mark style="color:blue;">`GET`</mark> `/manager/trainings/exam_sittings/student/{user_id}.json` (named param `page`; `limit` 100, `maxLimit` 500)
 
-Same payload as `mine` (`registrations`, `standing`, `paging`) for the given student, who must belong to the session company and not be deleted (`404` otherwise). Requires `user_group_id` ≤ 150. Needs `aco_sync`; it inherits the root allow like every other `manager_*` action. NEO's enrolment pages (`/trainings/view/{enrolment}` for the student, `/manager/trainings/students/view/{enrolment}` for a manager) render an **Exam sittings** section inside their Exams tab from these two endpoints, filtered to the course's `training_id`. Both pages accept `?tab=exams`, and the manager sittings page accepts `?sitting={id}` to open one sitting's registration list directly.
+Same payload as `mine` (`registrations`, `standing`, `paging`) for the given student, who must belong to the session company and not be deleted (`404` otherwise). Requires `user_group_id` ≤ 150 (Chief Pilot and above). Needs `aco_sync`; it inherits the root allow like every other `manager_*` action. NEO's enrolment pages (`/trainings/view/{enrolment}` for the student, `/manager/trainings/students/view/{enrolment}` for a manager) render an **Exam sittings** section inside their Exams tab from these two endpoints, filtered to the course's `training_id`. Both pages accept `?tab=exams`, and the manager sittings page accepts `?sitting={id}` to open one sitting's registration list directly.
 
 ### Manager: sittings
 
@@ -3244,7 +3246,7 @@ This gives a fresh count for a student under one rule, typically after they rest
 | `{ "result": false, "reason": "REASON_REQUIRED" }` | Empty reason |
 | `404` | Rule not in the company, or student not a live user of the company |
 
-`candidates/{id}.json` carries `reset_at` per candidate (the latest reset under the sitting's rule, or `null`) and `sitting.Rule`. Requires `user_group_id` ≤ 150.
+`candidates/{id}.json` carries `reset_at` per candidate (the latest reset under the sitting's rule, or `null`) and `sitting.Rule`. Requires `user_group_id` ≤ 150 (Chief Pilot and above).
 
 ### Notifications
 
@@ -3288,7 +3290,7 @@ summarise a stale copy — or nothing at all. The draft is kept only if the clie
 subsequently saves the flight.
 {% endhint %}
 
-Access: caller's `user_group_id` must be **170 or below** (instructors and
+Access: caller's `user_group_id` must be **170 or below** (Flight Instructor and above — instructors and
 managers). Students get `403`.
 
 This call is **slow by API standards** (typically 5–15 seconds: it is a model
@@ -3350,7 +3352,7 @@ person, never as an assessment.
 | Code | Meaning |
 |------|---------|
 | 400 | Not a POST, or the cooldown is still active |
-| 403 | `user_group_id` above 170 |
+| 403 | `user_group_id` above 170 (Captain and below) |
 
 Two cases answer `200` with `result: false` rather than failing: nothing has been
 graded yet, and no AI provider is configured on the installation.

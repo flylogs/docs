@@ -1,10 +1,12 @@
 # Aircraft
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 ## List Aircraft
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/index.json`
 
-Retrieve the fleet list. Pilots (`user_group_id > 170`) see only active aircraft. Managers see all non-deleted aircraft.
+Retrieve the fleet list. Pilots (`user_group_id > 170` — Captain and below) see only active aircraft. Managers see all non-deleted aircraft.
 
 #### Named Parameters
 

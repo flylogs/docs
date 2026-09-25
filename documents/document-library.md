@@ -31,7 +31,7 @@ The sidebar shows the full folder tree. Folders with subfolders get an expand/co
 
 Use folders and subfolders to separate operational manuals, training material, forms, etc. — for example an "Aircraft Manuals" folder holding one subfolder per aircraft type. The same access rules apply regardless of where in the tree a document lives.
 
-> Creating, renaming, moving and deleting folders is available to users in **group level 149 or lower** (administrators and managers) — a slightly broader set of roles than can publish documents themselves (group level 120 or lower). Other users can browse and open folders but won't see folder management controls.
+> Publishing, editing and deleting documents, as well as creating, renaming, moving and deleting folders, is available to users in **group level 150 or lower** (administrators and managers, up to and including the Chief Pilot). Other users can browse and open folders and read the documents their group is authorized for, but won't see the publishing or folder management controls.
 
 #### Creating and moving folders
 

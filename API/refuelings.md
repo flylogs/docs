@@ -1,5 +1,7 @@
 # Refuelings
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Fuel uplifts, what they cost, and the excise duty inside that cost.
 
 **Access:** every endpoint below requires `user_group_id ≤ 130` (Financial Manager and above) and a **non-free** company plan. Anything else receives `404`. All results are scoped to the caller's own company.

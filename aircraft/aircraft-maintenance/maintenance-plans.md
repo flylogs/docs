@@ -21,8 +21,8 @@ You can still create free-form maintenance jobs with an empty title and any work
 Maintenance plans follow the same access rules as maintenance jobs:
 
 * The maintenance module requires a **premium** or **unlimited** subscription plan.
-* Staff up to user group 170 and the maintenance tier (user groups 250 and above) can **see** maintenance data: jobs, plans, inventory and the aircraft maintenance widget.
-* Only **administrators, managers and mechanics** (user groups 1, 100, 105, 110 and 300) can create, edit, reorder or delete plan actions, edit jobs or inventory, [sign or edit the CRS, or sign an inspection](README.md#signing-the-crs).
+* Staff down to **Flight Instructor**, plus **Auditors and Mechanics**, can **see** maintenance data: jobs, plans, inventory and the aircraft maintenance widget.
+* Only **Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics** can create, edit, reorder or delete plan actions, edit jobs or inventory, [sign or edit the CRS, or sign an inspection](README.md#signing-the-crs).
 
 ### Creating plan actions
 

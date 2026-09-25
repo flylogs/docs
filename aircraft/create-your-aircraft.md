@@ -69,9 +69,9 @@ You can control who is allowed to fly each aircraft through the **Aircraft Attri
 
 Additionally, in the **Scheduling** box you can allow pilots to self-schedule flights on the aircraft. When you enable it, a **Who can self-schedule** dropdown lets you choose the access level:
 
-* **All pilots and students** (default) — `user_group_id` ≤ 200.
-* **Certified pilots** — pilots only, students excluded (`user_group_id` < 200).
-* **Only instructors** — Flight Instructors and above (`user_group_id` ≤ 170).
+* **All pilots and students** (default) — every Student Pilot and above.
+* **Certified pilots** — Pilot and above; Student Pilots excluded.
+* **Only instructors** — Flight Instructor and above.
 
 A live counter under the dropdown shows how many pilots would have self-schedule access for the selected mode.
 

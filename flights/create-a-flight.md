@@ -32,12 +32,12 @@ _Noted with an \* are required fields._
 
 The list of crew you can pick depends on **your own user group** (role tier — lower numbers are more senior, e.g. instructors and staff; higher numbers are students and restricted roles):
 
-* **User group 170 or lower** (staff, instructors): the selector lists **all pilots** in the company.
+* **Flight Instructor and above** (staff and instructors): the selector lists **all pilots** in the company.
 * **User group above 170** (students and other restricted roles): the selector is limited to:
   * **yourself**, plus
   * any **pilot-flagged** user whose user group is **the same as yours or lower** (i.e. your tier and everyone more senior).
 
-  Users in a **higher** user group than yours are hidden. For example, a **user group 190** pilot sees other pilots in **group 190 and lower**, and does **not** see anyone in **group 200 or above (students)**.
+  Roles **less senior** than yours are hidden. For example, a **Pilot** sees other Pilots and every more senior role, but does **not** see **Student Pilots**.
 
 The person already chosen in another crew field (CM1, CM2 or Supervisor) is removed from the other two selectors so the same person can't be picked twice.
 

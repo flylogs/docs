@@ -1,5 +1,7 @@
 # Aircraft Reports
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Manage aircraft technical reports — defects, informational notes, maintenance actions,
 servicing entries, and **MEL** (Minimum Equipment List) / **CDL** (Configuration Deviation
 List) items. Requires **premium** or **unlimited** subscription plan.
@@ -286,7 +288,7 @@ Update an existing aircraft report.
 
 {% hint style="warning" %}
 **Editing a report whose `type` is `MEL` or `CDL` is role-gated**, unlike editing any
-other report type: only `user_group_id` in `(1, 100, 105, 110, 300)` may call this
+other report type: only `user_group_id` in `(1, 100, 105, 110, 300)` (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics) may call this
 endpoint on a MEL/CDL report — the "assigned pilot may raise" exception on **Create**
 does **not** carry over to **Edit**. Anyone else gets a `404 Not Found`.
 {% endhint %}
@@ -443,8 +445,8 @@ populating the releaser picker on the report form.
 }
 ```
 
-**Eligibility:** `user_group_id` in `(1, 100, 105, 110, 300)`, **or** the authenticated
-user themselves — except that a **Student Pilot (`user_group_id` 200)** calling this
+**Eligibility:** `user_group_id` in `(1, 100, 105, 110, 300)` (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics), **or** the authenticated
+user themselves — except that a **Student Pilot (`user_group_id` 200 — Student Pilot)** calling this
 endpoint never sees themselves in the list, only the five manager/mechanic groups. A
 student can raise a MEL/CDL item as an assigned pilot, but can never be its releaser.
 
@@ -456,7 +458,7 @@ student can raise a MEL/CDL item as an assigned pilot, but can never be its rele
 
 Grants the one-time extension on the MEL/CDL item linked to aircraft report `{id}`.
 
-**Access:** `user_group_id` in `(1, 100, 105, 110, 300)` only — `404 Not Found` otherwise.
+**Access:** `user_group_id` in `(1, 100, 105, 110, 300)` (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics) only — `404 Not Found` otherwise.
 
 #### Path Parameters
 

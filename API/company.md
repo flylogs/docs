@@ -1,5 +1,7 @@
 # Company
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 ## Company Settings
 
 <mark style="color:blue;">`GET`</mark> `/companies/settings.json`
@@ -234,7 +236,7 @@ Missing keys should be treated as `false`.
 
 Retrieve active alerts and notifications for the company dashboard. By default returns items expiring within ~3 months (some sources also look back ~30 days), sorted by date ascending.
 
-Results vary by role: managers (`user_group_id < 150`) receive all alerts; instructors receive only their own aircraft documents and their students' certificates.
+Results vary by role: managers (`user_group_id < 150` — Flight Dispatcher and above) receive all alerts; instructors receive only their own aircraft documents and their students' certificates.
 
 #### Query parameters
 

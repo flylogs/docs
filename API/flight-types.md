@@ -1,5 +1,7 @@
 # Flight Types
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Company-specific flight type definitions. Used to classify flights by purpose and determine logbook time allocation.
 
 ---
@@ -300,7 +302,7 @@ Soft-delete a flight type (sets `deleted = 1`). Only flight types belonging to t
 
 <mark style="color:green;">`POST`</mark> `/flight_types/manager_reorder.json`
 
-Set the display order of flight types. Restricted to managers (`user_group_id ≤ 110`).
+Set the display order of flight types. Restricted to managers (`user_group_id ≤ 110` — Compliance & Safety Manager and above).
 
 #### Request Body
 
@@ -336,7 +338,7 @@ A required type is satisfied when the user holds **at least one** certificate of
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| user_id | number | No | Target pilot. Defaults to the authenticated user. Allowed for **staff** (`user_group_id ≤ 170` — managers, instructors, dispatchers); a regular pilot/student (group > 170) passing another user's id gets `403 Forbidden`. The target must belong to the caller's company. |
+| user_id | number | No | Target pilot. Defaults to the authenticated user. Allowed for **staff** (`user_group_id ≤ 170` — Flight Instructor and above); a regular pilot or student (Captain and below) passing another user's id gets `403 Forbidden`. The target must belong to the caller's company. |
 | at | number | No | Unix seconds at which to evaluate certificate validity. Defaults to now. Pass a future time (e.g. a planned flight start) so forward scheduling reflects validity **at that moment**. |
 
 #### Response
@@ -385,7 +387,7 @@ Per-seat breakdown. For each seat: `compliant` is `false` when any required type
 | Status | When |
 |--------|------|
 | 404 | Flight type not found in the caller's company, or `user_id` is not a member of the company |
-| 403 | A user with `user_group_id > 170` passed a `user_id` other than their own |
+| 403 | A user with `user_group_id > 170` (Captain and below) passed a `user_id` other than their own |
 
 #### This endpoint is advisory
 

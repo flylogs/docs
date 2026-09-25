@@ -2,7 +2,7 @@
 
 ## Admin tier override
 
-Users with `user_group_id <= 110` (admin tier) can **create, edit, delete and confirm any flight at any time**, regardless of:
+**Company Administrators, Operations Managers and Compliance & Safety Managers** can **create, edit, delete and confirm any flight at any time**, regardless of:
 
 - Company `Flight.create` / `Flight.edit` / `Flight.confirm` permissions
 - Draft / confirmed status
@@ -27,7 +27,7 @@ The bypass lets a crew member or staff user edit a flight even when they do not 
 
 It applies when **both** conditions hold:
 
-- **Who:** the viewer is the **PIC** of the flight, **or** the viewer's `user_group_id < 200` (i.e. instructors, managers, admins — anyone above pilot/student tier).
+- **Who:** the viewer is the **PIC** of the flight, **or** the viewer is **Pilot or above** (any pilot, instructor or manager role — Student Pilots, Cabin Crew, Auditors and Mechanics excluded).
 - **When:**
   - the flight is a **DRAFT**, **or**
   - the flight is **CONFIRMED** and the current time is within the **`flights_block_days`** window measured from `Flight.landing_time`.
@@ -40,7 +40,7 @@ This setting has two effects:
 
 When `flights_block_days` is set, users cannot create a new flight (or edit an existing draft) with a date older than `today − N days`. The date picker enforces a minimum date and the server rejects out-of-window dates.
 
-Admin tier (`user_group_id <= 110`) is exempt and can log flights on any past date.
+Company Administrators, Operations Managers and Compliance & Safety Managers are exempt and can log flights on any past date.
 
 **2. Self-edit bypass window for confirmed flights**
 
@@ -49,7 +49,7 @@ Admin tier (`user_group_id <= 110`) is exempt and can log flights on any past da
 | `0` (Disabled) | Bypass **never** allowed for confirmed flights — only `Flight.edit` permission can edit. Drafts are still bypassable. |
 | `N > 0` | Bypass allowed for confirmed flights whose landing time is within the last `N` days. After `N` days the flight is locked from self-edit and only `Flight.edit` permission can edit. |
 
-> Note: the SIC alone does **not** get the bypass. They must either be a privileged group (`user_group_id < 200`) or use the **Cancel** action available to crew on draft flights.
+> Note: the SIC alone does **not** get the bypass. They must either be **Pilot or above** or use the **Cancel** action available to crew on draft flights.
 
 ## Confirm action — password requirement
 

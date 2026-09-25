@@ -1,5 +1,7 @@
 # Maintenance Plans
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Manage the approved maintenance programme of the fleet. Requires **premium** or **unlimited** subscription plan.
 
 A maintenance plan is an ordered list of **plan actions**. Each action is a job template: a title, a description, a recurrence (flight hours, landings and/or a time period) and its own template work orders. Each action can be linked to zero or more aircraft (many-to-many) — assigning aircraft is optional and can be done later.
@@ -10,8 +12,8 @@ Every plan action belongs to a named **maintenance programme** (the parent entit
 
 | Action | Allowed |
 |--------|---------|
-| List / view / suggestions / programmes (`index`, `view`, `for_aircraft`, `assigned`, `programmes`) | Any authenticated company user on a premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` and `>= 250` |
-| Manage (`edit`, `delete`, `reorder`) | `user_group_id` in **1, 100, 105, 110, 300** (administrators, managers and mechanics) |
+| List / view / suggestions / programmes (`index`, `view`, `for_aircraft`, `assigned`, `programmes`) | Any authenticated company user on a premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` (Flight Instructor and above) and `>= 250` |
+| Manage (`edit`, `delete`, `reorder`) | `user_group_id` in **1, 100, 105, 110, 300** (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics) |
 
 All endpoints are company-scoped: plans, programmes and aircraft are matched against the authenticated user's `company_id`.
 

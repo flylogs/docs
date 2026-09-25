@@ -1,5 +1,7 @@
 # Flights
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 ## Flight status
 
 Every flight carries a single `status` field describing where it sits in its lifecycle.
@@ -161,7 +163,7 @@ The clock fields `offblocks_time`, `takeoff_time`, `landing_time`, `onblocks_tim
 
 Retrieve full details for a single flight, including crew, airports, audit trail, and permissions.
 
-Users with `user_group_id > 170` may only view flights they are involved in (creator, PIC, SIC, supervisor, or owner of the aircraft). Otherwise returns `403 Forbidden`.
+Users with `user_group_id > 170` (Captain and below) may only view flights they are involved in (creator, PIC, SIC, supervisor, or owner of the aircraft). Otherwise returns `403 Forbidden`.
 
 #### Path Parameters
 

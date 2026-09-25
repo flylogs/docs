@@ -61,7 +61,7 @@ What this means in practice:
 * **Final totals stay accurate.** Even if you log flights out of order, the logbook ends up consistent — nothing is silently left wrong.
 * **It can be slow.** On an aircraft with a long flight history, saving one backdated flight forces a recalculation of every log entry after it. The save may take noticeably longer than logging a normal, current-dated flight.
 * **No warning is shown.** Flylogs does not currently warn you that a flight is out of chronological order, or tell you how many later entries will be recalculated — it just happens silently on save.
-* **The logbook block window can be bypassed by admins.** Companies can set how many days back a flight can be dated (`flights_block_days`). Regular pilots are blocked from entering flights older than this window, but admin/staff users (`user_group_id` ≤ 110) are exempt and can enter flights from any date in the past.
+* **The logbook block window can be bypassed by admins.** Companies can set how many days back a flight can be dated (`flights_block_days`). Regular pilots are blocked from entering flights older than this window, but Company Administrators, Operations Managers and Compliance & Safety Managers are exempt and can enter flights from any date in the past.
 
 **Recommendation:** only enter backdated flights when necessary (e.g. importing historical data or correcting a missed entry), and avoid doing so on aircraft with very large flight histories during busy operational periods, since the recalculation runs synchronously when you save.
 

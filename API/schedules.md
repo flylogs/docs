@@ -1,5 +1,7 @@
 # Schedules
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 ## List Schedules
 
 <mark style="color:blue;">`GET`</mark> `/schedules.json`
@@ -82,7 +84,7 @@ Retrieve upcoming schedule records and status definitions.
 
 Retrieve full details for a single schedule record, including history.
 
-Users with `user_group_id > 170` may only view schedules they are involved in (creator, PIC, SIC, supervisor, or owner of the aircraft). Otherwise returns `403 Forbidden`.
+Users with `user_group_id > 170` (Captain and below) may only view schedules they are involved in (creator, PIC, SIC, supervisor, or owner of the aircraft). Otherwise returns `403 Forbidden`.
 
 #### Path Parameters
 
@@ -416,7 +418,7 @@ person booking the slot ahead of time.
 
 Returns the Flight Instructor the system would auto-assign as PIC for a student self-booking, or `null` when none is available (the booking would then be stored with the `PENDING` status).
 
-Selection rules: the FI must have `user_group_id <= 170`, `pilot = true`, `active = true`; an availability record of type `AVAILABLE` or `ALWAYS` (never `MAYBE`/`UNAVAILABLE`) covering the full time frame; no conflicting schedule or onsite class; the aircraft within their aircraft attributions (empty list = all aircraft); and the flight type within their flight type attributions (empty list = all flight types). The student's assigned FI (training supervisor) has priority over other available FIs.
+Selection rules: the FI must have `user_group_id <= 170` (Flight Instructor and above), `pilot = true`, `active = true`; an availability record of type `AVAILABLE` or `ALWAYS` (never `MAYBE`/`UNAVAILABLE`) covering the full time frame; no conflicting schedule or onsite class; the aircraft within their aircraft attributions (empty list = all aircraft); and the flight type within their flight type attributions (empty list = all flight types). The student's assigned FI (training supervisor) has priority over other available FIs.
 
 #### Body Parameters
 
@@ -441,9 +443,9 @@ Selection rules: the FI must have `user_group_id <= 170`, `pilot = true`, `activ
 
 <mark style="color:blue;">`GET`</mark> `/schedules/fi_availabilities.json?start={unix}&end={unix}`
 
-Weekly availability of all Flight Instructors (`user_group_id <= 170` and `pilot = true`) of the company.
+Weekly availability of all Flight Instructors (`user_group_id <= 170` — Flight Instructor and above and `pilot = true`) of the company.
 
-**Access control:** managers (`user_group_id <= 150`) always; FIs (`user_group_id` 151–170 with `pilot = true`) only when the **ALLOW FI SCHEDULE MANAGEMENT** company setting (`schedule_allow_fi_management`) is enabled. All other users receive `403 Forbidden`.
+**Access control:** managers (`user_group_id <= 150` — Chief Pilot and above) always; FIs (`user_group_id` 151–170 with `pilot = true`) only when the **ALLOW FI SCHEDULE MANAGEMENT** company setting (`schedule_allow_fi_management`) is enabled. All other users receive `403 Forbidden`.
 
 #### Response
 
@@ -536,7 +538,7 @@ The threshold is the *schedule manager limit*: `150` normally, raised to `170` w
 |-----------|-----------|-----------|
 | Chief Pilot and above (`user_group_id <= 150`) | Full edit and delete on any booking of the company | Full edit and delete on any booking of the company |
 | Flight Instructor (`user_group_id` 151–170) | Own bookings only (own = `Schedule.user_id`) | Full edit and delete on any booking of the company, including bookings created by other instructors |
-| Captain / Pilot / Student (`user_group_id > 170`) | Own bookings only | Own bookings only |
+| Captain / Pilot / Student (`user_group_id > 170` — Captain and below) | Own bookings only | Own bookings only |
 
 Users at or below the limit are not subject to any of the crew-level restrictions:
 
@@ -561,16 +563,16 @@ The schedule create/edit endpoint applies these role rules to self-bookings (`se
 
 | User group | Behaviour |
 |-----------|-----------|
-| Students (`user_group_id > 190`) | Can never be PIC. Stored as SIC (`sic_status ACCEPTED`). The system auto-assigns an available FI as PIC (`pic_status PENDING`, status `SCHEDULED`). When no FI is available, the booking is saved with status **`PENDING`** and an empty PIC. Students are exempt from the certificate gate below. |
+| Students (`user_group_id > 190` — Student Pilot and below) | Can never be PIC. Stored as SIC (`sic_status ACCEPTED`). The system auto-assigns an available FI as PIC (`pic_status PENDING`, status `SCHEDULED`). When no FI is available, the booking is saved with status **`PENDING`** and an empty PIC. Students are exempt from the certificate gate below. |
 | Pilots (`user_group_id` 171–190) | Unchanged: the user making the reservation is the PIC. |
-| FIs / staff (`user_group_id <= 170`, `pilot = true`) | Fly as PIC. May pass another pilot in `pic_id`: it is stored as SIC with the instructor as PIC, saved directly as `SCHEDULED`. |
+| FIs / staff (`user_group_id <= 170` — Flight Instructor and above, `pilot = true`) | Fly as PIC. May pass another pilot in `pic_id`: it is stored as SIC with the instructor as PIC, saved directly as `SCHEDULED`. |
 
 `PENDING` bookings are auto-assigned when a matching FI publishes `AVAILABLE`/`ALWAYS` availability (`/schedules/add_availability.json`, `/schedules/edit_availability.json` — response field `assignedPending`), and auto-canceled by the cron when `start - schedule_flight_cancellation_min_time` (hours) is reached.
 
 ### Aircraft gate on self-bookings
 
 Self-booking is enabled **per aircraft**, not by any company setting. `/schedules/edit.json`
-refuses a self-booking (`self_schedule = 1`, or any caller with `user_group_id > 170`) whose
+refuses a self-booking (`self_schedule = 1`, or any caller with `user_group_id > 170` — Captain and below) whose
 target aircraft is not published for it. The check runs when the booking lands on the aircraft
 — on create, and on an edit that posts a different `aircraft_id`; an edit that leaves the
 aircraft alone is not re-checked, so withdrawing an aircraft from self-booking stops new
@@ -581,7 +583,7 @@ Two columns decide it, both returned by `GET /aircraft/view/{id}.json`:
 | Column | Meaning |
 |--------|---------|
 | `self_schedule` | `0` = the aircraft is not open to self-booking at all. |
-| `self_schedule_access` | Who may book it: `all` (everyone, students included), `certified` (students, `user_group_id` 200, excluded), `instructors` (`user_group_id <= 170` only), `pilots` (only the users named on the aircraft). Groups above 200 — external auditors (250) and mechanics (300) — never self-book under any mode. |
+| `self_schedule_access` | Who may book it: `all` (everyone, students included), `certified` (students, `user_group_id` 200, excluded), `instructors` (`user_group_id <= 170` — Flight Instructor and above only), `pilots` (only the users named on the aircraft). Groups above 200 — external auditors (250) and mechanics (300) — never self-book under any mode. |
 
 The `pilots` mode is decided by a named list held on the aircraft, not by the user group: `GET /aircraft/view/{id}.json` returns it as `SelfSchedulePilotIds` (the user ids currently named, managers only) alongside `SelfSchedulePilotOptions` (the active pilots it can be built from) and a `SelfSchedulePilots.pilots` count. An **empty list means nobody** — the opposite of the pilot-side attributions, where empty means the whole fleet — and the list overrides those attributions for that aircraft. Post it back to `POST /aircraft/edit/{id}.json` as `data[SelfSchedulePilot][SelfSchedulePilot][]` (repeat the field per user id; post it once with an empty value to clear the list). Omitting the key leaves the list untouched, so a client that knows nothing about it cannot wipe it. Ids that are not active pilots of the caller's company are dropped.
 
@@ -618,7 +620,7 @@ require_pic_docs = 1  AND  schedule_self_allow_nodocs = 0
 
 `schedule_self_allow_nodocs` is the self-booking override: when it is `1`, a pilot whose licence, rating or medical is missing or expired can still create the booking. Both settings are returned by `GET /companies/settings.json` under `CompanySetting`.
 
-The gate applies to pilots with `pilot = true` and `149 < user_group_id <= 190`. Managers (`user_group_id <= 149`), students (`> 190`) and non-pilots are never gated. Validity is evaluated with the same rule as `checkValidLicence` (a certificate is valid when `issue` is empty or past and `expiration` is empty or future).
+The gate applies to pilots with `pilot = true` and `149 < user_group_id <= 190` (Chief Pilots, Flight Instructors, Captains and Pilots). Managers (`user_group_id <= 149` — Flight Dispatcher and above), students (`> 190` — Student Pilot and below) and non-pilots are never gated. Validity is evaluated with the same rule as `checkValidLicence` (a certificate is valid when `issue` is empty or past and `expiration` is empty or future).
 
 When the gate rejects the booking:
 

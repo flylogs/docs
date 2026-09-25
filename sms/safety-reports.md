@@ -85,7 +85,7 @@ The report list supports filters to help you find specific events quickly. Avail
 
 * **Date range** — from / to
 
-**Managers and Safety Officers** (`user_group_id < 150`) **only**
+**Managers and Safety Officers only** — any manager account, from Company Administrator down to Flight Dispatcher. Chief Pilots, Flight Instructors and pilots never get these filters.
 
 * **Status** — Open, Reviewed, Closed, Published
 * **Category** — event classification category

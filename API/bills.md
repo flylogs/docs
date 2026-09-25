@@ -1,5 +1,7 @@
 # Bills
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Billing and wallet management. Requires a **non-free** company plan. Pilots need `billing: true` on their user record to appear in billing operations.
 
 ---
@@ -12,7 +14,7 @@ Billing and wallet management. Requires a **non-free** company plan. Pilots need
 
 <mark style="color:blue;">`GET`</mark> `/bills/index/{userId}/{offset}.json`
 
-List wallet movement records for a pilot. Managers can view any pilot's bills; regular users (`user_group_id ≥ 150`) see only their own. Linked flight info is included unless the flight's `status` is `CANCELED` or `DELETED`.
+List wallet movement records for a pilot. Managers can view any pilot's bills; regular users (`user_group_id ≥ 150` — Chief Pilot and below) see only their own. Linked flight info is included unless the flight's `status` is `CANCELED` or `DELETED`.
 
 #### Query Parameters
 
@@ -122,7 +124,7 @@ Full detail for a single bill including client info, company billing settings, a
 
 <mark style="color:green;">`POST`</mark> `/bills/create.json`
 
-Create a manual wallet transaction for one or more pilots. If `id` is provided, updates an existing record. `user_id` can be a single UUID, an array of UUIDs, or a pilot group UUID (group members are expanded automatically). Restricted to `user_group_id ≤ 145`.
+Create a manual wallet transaction for one or more pilots. If `id` is provided, updates an existing record. `user_id` can be a single UUID, an array of UUIDs, or a pilot group UUID (group members are expanded automatically). Restricted to `user_group_id ≤ 145` (Flight Dispatcher and above).
 
 #### Request Body
 

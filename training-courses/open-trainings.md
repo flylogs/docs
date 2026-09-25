@@ -154,10 +154,10 @@ Waitlisted rows appear in the same queue, marked as such. Approving one is how y
 | Action | Who |
 | ------ | --- |
 | See the catalog and apply | Every user in the company |
-| Publish a course, manage dates, set entry requirements | Managers (`user_group_id` 150 or lower) |
-| Approve or reject applications | Managers (`user_group_id` 150 or lower) |
+| Publish a course, manage dates, set entry requirements | **Chief Pilot and above** |
+| Approve or reject applications | **Chief Pilot and above** |
 
-A course manager sees the applications for their own courses; users at group 135 or lower see every course's applications.
+A course manager sees the applications for their own courses; **Trainings Managers and above** see every course's applications.
 
 ## What students see
 

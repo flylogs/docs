@@ -14,7 +14,7 @@ Each flight type belongs to your company. A starter set is created automatically
 
 <figure><img src="../.gitbook/assets/flight-types-list.png" alt="The flight types list, with one row per type and its three time-classification columns"><figcaption><p>Each row shows the three seats' time classification, whether the type is offered on scheduling, and — in the grey strip below it — the certificates required per seat and the aircraft the type is restricted to. Here <em>SIM</em> reads <strong>ONLY ON B200, A320</strong> and <em>ME</em> <strong>ONLY ON EC-HYP, EC-IPB</strong>; every other type carries no aircraft tag, so it flies with the whole fleet.</p></figcaption></figure>
 
-Flight types live in the manager area, so pilots and students never see this page; which of your staff roles can open it is decided by your company's role permissions. Reordering is stricter than the rest: it is refused for anyone above user group 110 (company administrators and above), so a manager who can create and edit types may still be unable to drag them into a new order.
+Flight types live in the manager area, so pilots and students never see this page; which of your staff roles can open it is decided by your company's role permissions. Reordering is stricter than the rest: only **Company Administrators, Operations Managers and Compliance & Safety Managers** can do it, so a manager who can create and edit types may still be unable to drag them into a new order.
 
 ## Naming: the three seats
 

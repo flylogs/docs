@@ -1,9 +1,11 @@
 # Manager Users
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Administrative endpoints for managing user accounts. Requires manager or administrator role.
 
 {% hint style="info" %}
-**Requests made by an External Auditor (`user_group_id` 250)** have `email`, `phone`, `phone2`, `address`, `city`, `pc` and `passport` stripped (returned as `null`) from every `User`/`UserDetail` object in the response, except the auditor's own record. This applies to every endpoint on this page — list, view, everything — automatically, based on the **caller's** role, not the target user's.
+**Requests made by an External Auditor (`user_group_id` 250 — Auditor)** have `email`, `phone`, `phone2`, `address`, `city`, `pc` and `passport` stripped (returned as `null`) from every `User`/`UserDetail` object in the response, except the auditor's own record. This applies to every endpoint on this page — list, view, everything — automatically, based on the **caller's** role, not the target user's.
 {% endhint %}
 
 ## List Users

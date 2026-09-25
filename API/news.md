@@ -1,5 +1,7 @@
 # News
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 ## List News
 
 <mark style="color:blue;">`GET`</mark> `/news.json`
@@ -8,7 +10,7 @@
 
 Retrieve company news articles. Paginated (10 per page).
 
-When the request is authenticated, results are scoped to the user's company and filtered by recipient `user_group_id` (for users with `user_group_id > 105`) and the optional `base_id` segment. Without authentication, only the public Flylogs feed is returned and full `entry` content is included.
+When the request is authenticated, results are scoped to the user's company and filtered by recipient `user_group_id` (for users with `user_group_id > 105` — Compliance & Safety Manager and below) and the optional `base_id` segment. Without authentication, only the public Flylogs feed is returned and full `entry` content is included.
 
 #### Path Parameters
 
@@ -63,8 +65,8 @@ When the request is authenticated, results are scoped to the user's company and 
 
 Retrieve a single news article by its slug. Behaviour depends on the viewer:
 
-- **Manager** (`user_group_id <= 135`): full `NewsRecipient` group list and `NewsRecipientUsers` total user count are included. The `view_count` is **not** incremented.
-- **Regular user** (`user_group_id > 135`): only their own `NewsSignature` is included. `view_count` is incremented on each view.
+- **Manager** (`user_group_id <= 135` — Trainings Manager and above): full `NewsRecipient` group list and `NewsRecipientUsers` total user count are included. The `view_count` is **not** incremented.
+- **Regular user** (`user_group_id > 135` — Crew Scheduling and below): only their own `NewsSignature` is included. `view_count` is incremented on each view.
 - **Unauthenticated**: only the public Flylogs feed is returned.
 
 #### Path Parameters

@@ -1,5 +1,7 @@
 # Reports
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Statistics, flight aggregates, landings, and weather (METAR/TAF) endpoints exposed by `ReportsController`.
 
 All responses are JSON. All endpoints require authentication unless noted.
@@ -14,7 +16,7 @@ Retrieve unique route pairs (departure → landing) flown by the authenticated u
 
 <mark style="color:blue;">`GET`</mark> `/reports/pilots_airports/{userId}.json`
 
-Retrieve routes for a specific user. Falls back to the authenticated user when `userId` is omitted or when the caller's `user_group_id` is greater than 170.
+Retrieve routes for a specific user. Falls back to the authenticated user when `userId` is omitted or when the caller's `user_group_id` is greater than 170 (Captain and below).
 
 #### Path Parameters
 
@@ -361,7 +363,7 @@ aircraft report, no safety report, no maintenance job, no notification. This end
 is read-only over what that job stored.
 
 {% hint style="warning" %}
-**Managers only.** The caller's `user_group_id` must be **110 or below**; anyone else
+**Managers only.** The caller's `user_group_id` must be **110 or below** (Compliance & Safety Manager and above); anyone else
 gets `403`. These are crew-written remarks returned with an automated reading attached,
 so they are not a pilot-facing resource. Digests are scoped to the caller's company.
 {% endhint %}
@@ -438,7 +440,7 @@ Each finding:
 
 | Code | Meaning |
 |------|---------|
-| 403 | `user_group_id` above 110 |
+| 403 | `user_group_id` above 110 (Human Resources Manager and below) |
 
 An installation with no AI provider configured simply has no digests; the endpoint
 still answers `200` with an empty list.

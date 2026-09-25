@@ -51,7 +51,7 @@ Two rules keep undo from making a mess:
 
 ### Who may sign a stage check
 
-Stage checks are signed by pilots at **Chief Pilot level or above** (`user_group_id` 150 and below), plus the training's own manager.
+Stage checks are signed by pilots at **Chief Pilot level or above**, plus the training's own manager.
 
 This is deliberately wider than who may *approve* a graduation: signing a check is an instructional act, approving a graduation is a management one.
 

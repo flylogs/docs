@@ -86,11 +86,11 @@ extend or close one.
 | Action | Who |
 |--------|-----|
 | File a report, view reports | Any user of a company on a **premium** or **unlimited** plan |
-| Close / reopen a report, edit management fields | `user_group_id` below 120, or 300 — administrators, managers and maintenance staff |
-| Attach / detach reports to a maintenance job | `user_group_id` 1, 100, 105, 110 or 300, or the user the aircraft is assigned to |
-| Raise a MEL/CDL item | `user_group_id` 1, 100, 105, 110 or 300, or the aircraft's assigned pilot |
-| Edit, extend or close a MEL/CDL item | `user_group_id` 1, 100, 105, 110 or 300 only — the assigned-pilot exception does not apply |
-| Be the releaser on a MEL/CDL item | `user_group_id` 1, 100, 105, 110 or 300, or the requesting user themselves — never a Student Pilot (200) |
+| Close / reopen a report, edit management fields | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics |
+| Attach / detach reports to a maintenance job | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or the user the aircraft is assigned to |
+| Raise a MEL/CDL item | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or the aircraft's assigned pilot |
+| Edit, extend or close a MEL/CDL item | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics only — the assigned-pilot exception does not apply |
+| Be the releaser on a MEL/CDL item | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or the requesting user themselves — never a Student Pilot |
 
 Aircraft reports are part of the maintenance module and require a **premium** or
 **unlimited** subscription plan.

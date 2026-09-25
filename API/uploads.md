@@ -1,5 +1,7 @@
 # Uploads
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Manages file attachments within the app. Files are stored in AWS S3 under `/files/{company_id}/{model}/{filename}`. Photo uploads also generate a thumbnail prefixed with `t_`.
 
 There are two ways to upload a file:
@@ -313,7 +315,7 @@ Confirm a previously uploaded file: moves it to its final S3 path and sets `acti
 
 <mark style="color:green;">`POST`</mark> `/uploads/expiration/{id}.json`
 
-Set or clear the expiration date of an upload. Admins (user_group_id ≤ 170) can update any upload in the company; regular users can only update their own.
+Set or clear the expiration date of an upload. Admins (`user_group_id` ≤ 170 — Flight Instructor and above) can update any upload in the company; regular users can only update their own.
 
 #### Path Parameters
 
@@ -349,7 +351,7 @@ Set or clear the expiration date of an upload. Admins (user_group_id ≤ 170) ca
 
 <mark style="color:red;">`GET`</mark> `/uploads/delete/{id}.json`
 
-Delete an upload record and remove the file from AWS S3. Admins (user_group_id ≤ 170) can delete any upload in the company; regular users can only delete their own.
+Delete an upload record and remove the file from AWS S3. Admins (`user_group_id` ≤ 170 — Flight Instructor and above) can delete any upload in the company; regular users can only delete their own.
 
 #### Path Parameters
 

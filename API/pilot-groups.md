@@ -1,6 +1,8 @@
 # Pilot Groups
 
-Groups of pilots for bulk operations (activation, welcome emails, billing). All endpoints require manager access (`user_group_id ≤ 150`), except `manager_do` and `manager_welcomize` which require `user_group_id ≤ 150`.
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
+Groups of pilots for bulk operations (activation, welcome emails, billing). All endpoints require manager access (`user_group_id ≤ 150` — Chief Pilot and above), except `manager_do` and `manager_welcomize` which require `user_group_id ≤ 150` (Chief Pilot and above).
 
 ---
 

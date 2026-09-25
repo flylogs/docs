@@ -1,14 +1,16 @@
 # Maintenance Jobs
 
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
 Manage maintenance jobs for aircraft. Requires a **club**, **premium** or **unlimited** subscription plan; every action in this plugin 404s on any other plan.
 
 ## Access control
 
 | Action | Allowed |
 |--------|---------|
-| List / view (`index`, `view`, `history`, `forecasts`) | Any authenticated company user on a club/premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` and `>= 250` |
-| Create / edit / sign CRS / duplicate / delete | `user_group_id` in **1, 100, 105, 110, 300** (administrators, managers and mechanics), or the aircraft owner |
-| Attach / detach aircraft reports (`link_reports`, `unlink_report`) | Same as create: `user_group_id` in **1, 100, 105, 110, 300**, or the aircraft owner. Groups 120–200 are denied at ACL level |
+| List / view (`index`, `view`, `history`, `forecasts`) | Any authenticated company user on a club/premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` (Flight Instructor and above) and `>= 250` |
+| Create / edit / sign CRS / duplicate / delete | `user_group_id` in **1, 100, 105, 110, 300** (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics), or the aircraft owner |
+| Attach / detach aircraft reports (`link_reports`, `unlink_report`) | Same as create: `user_group_id` in **1, 100, 105, 110, 300** (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics), or the aircraft owner. Groups 120–200 are denied at ACL level |
 
 ## Next maintenance forecast
 

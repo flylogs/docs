@@ -14,7 +14,7 @@ The Dispatch button is visible in the Schedule Review page when **all three** co
 1. **Schedule status** — the record must be in **Scheduled** or **Confirmed** status and not yet have a linked flight.
 2. **Full schedule access** — the user must have write access to schedules:
    - **Company Administrators and Operations Managers** (user group ≤ 140) always have full access.
-   - **Flight Instructors / Supervisors** (user groups 141–170) have full access only when the company setting **Allow FI schedule management** is enabled.
+   - **Flight Dispatchers, Chief Pilots and Flight Instructors** have full access only when the company setting **Allow FI schedule management** is enabled.
    - Pilots and Dispatchers (user groups above 170) can view the schedule but cannot dispatch.
 3. **Flight creation permission** — the user's account must be active and allowed to create flights. Users in groups above 150 additionally require an active pilot profile.
 

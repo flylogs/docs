@@ -4,7 +4,7 @@ description: Elevated pilot accounts with crew oversight and flight management c
 
 # Flight Instructor & Chief Pilot Accounts
 
-Flight Instructors (group 170) and Chief Pilots (group 150) are elevated pilot account types with broader visibility and additional operational capabilities compared to standard Pilot or Student accounts. They are still pilot-level accounts — they have no access to company management or billing — but they have a supervisory role over flights, crew and schedule.
+Flight Instructors and Chief Pilots are elevated pilot account types with broader visibility and additional operational capabilities compared to standard Pilot or Student accounts. They are still pilot-level accounts — they have no access to company management or billing — but they have a supervisory role over flights, crew and schedule.
 
 ***
 
@@ -24,6 +24,8 @@ The Chief Pilot is the highest-level pilot account. It is designed for the perso
 * **Access the pilot audit page** for a consolidated view of crew activity.
 * **Manage FI assignments** (flight schools only) — view which Flight Instructors are supervising which students, and identify students with no supervisor assigned.
 * **Access training student and session overviews** (Premium plan required).
+* **Manage the company document library** — publish new documents, upload new versions, edit or delete existing ones, and create, rename, move and delete folders.
+* **View the aircraft fleet** — aircraft details, status, and each aircraft's document folder, which they can also upload to and edit. Creating or editing the aircraft themselves, and signing maintenance, stays with administrators, operations managers and mechanics.
 * **Log their own flights** in the same way any pilot would.
 
 ### Chief Pilot dashboard
