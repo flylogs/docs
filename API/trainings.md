@@ -3055,6 +3055,8 @@ Every endpoint requires the **premium** or **unlimited** plan; any other plan an
 
 The 19 new actions need `aco_sync`. The four student actions also need explicit `aros_acos` grants copied from `Trainings/Students/index`, like the catalog: see `flylogs/migrations/2026-09-13-exam-sittings-acl.md`.
 
+`exam_sittings/manager_audit` was added later and needs its own `aco_sync` run — nothing else, since it inherits the same root allow as the other manager actions: see `flylogs/migrations/2026-09-25-exam-sittings-audit-acl.md`.
+
 ### Attempt rules
 
 `exam_authority_rules` rows are **data the school edits**; no regulation is encoded in code.
@@ -3274,6 +3276,50 @@ One report per **student per sitting**: managers attach the authority's result r
 | `GET` | `/manager/trainings/exam_sittings/rules.json` | Each rule carries `sittings`, the number of sittings using it. |
 | `POST` | `/manager/trainings/exam_sittings/rule_save.json` | Create or update. Empty limits are stored as `NULL`. |
 | `POST` | `/manager/trainings/exam_sittings/rule_delete/{id}.json` | Soft delete, refused while a sitting uses the rule (`sittings` in the response). |
+
+### Manager: the period audit
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/exam_sittings/audit.json`
+
+The return a school files with its authority: for a date range, how many subject
+papers were sat and how many were passed, failed, missed or resat. Same gate as
+every other manager action here (`user_group_id` **≤ 150**); the action is a new
+ACO, so it needs `aco_sync` before it answers anything but `403 ACL_DENIED`.
+
+Query string (all optional): `from`, `to` (`YYYY-MM-DD`, inclusive, read in the
+company timezone), `type` (`AUTHORITY`|`SCHOOL`), `authority`, `training_id`,
+`subject_id`, `canceled` (`1` to include canceled sittings). The window defaults
+to the last twelve months, and `from` after `to` is a `400`.
+
+The period is keyed on `exam_sittings.datetime`, **not** on
+`exam_registration_subjects.sat_at`: a sitting held in June belongs to June's
+return even if its results were typed in July. Sittings with no date set are out,
+as are registrations the school `REJECTED` or the student `CANCELED` — their
+subject lines were never sat.
+
+Counting, as `ExamSittingAudit` defines it:
+
+| Figure | Definition |
+|--------|------------|
+| `papers` | One subject paper sat by one candidate. Three subjects at one sitting is three papers. |
+| `pass` / `fail` / `absent` | The three results `ExamAttemptPolicy` spends an attempt on. `fail` is graded failures only. |
+| `fail_total` | `fail + absent` — the failed figure the report shows. A no-show spent the attempt without passing, so it is a failure; `absent` stays separate underneath so the split is still readable. |
+| `pending` | Ungraded lines. In no other figure, so an incomplete period says so instead of reporting a lower pass rate. |
+| `sat` | `pass + fail_total` — every paper that spent an attempt, and the pass-rate denominator. |
+| `pass_rate` | `pass / sat`, to one decimal, `null` when nothing was sat. |
+| `first_attempts` / `resits` | Split on `attempt_no > 1`. A row with no attempt number (legacy) counts as a first attempt. |
+| `first_pass_rate` / `resit_pass_rate` | Over `first_attempts` / `resits`, absences included, so both stay comparable with `pass_rate`. |
+| `avg_score` | Mean of the recorded marks. Absences and blank scores are left out — a blank is "not recorded", not a zero. |
+| `registered` / `no_shows` | Seats taken (registrations the school neither rejected nor the student withdrew) and the `ABSENT` ones among them. |
+| `candidates` | Distinct students with at least one graded paper. |
+
+The response carries `totals`, the same counter block broken down in
+`by_subject`, `by_sitting` (every sitting of the period, including ones with
+nothing graded yet), `by_authority` and `by_training`, plus `period`
+(`from`, `to`, `from_at`, `to_at`), `truncated` (the period holds more sittings
+than one read returns) and `rows` — the candidate-level lines behind every
+figure, each with `student`, `subject_code`, `subject_name`, `result`, `score`,
+`attempt_no` and `sat_at`.
 
 ### Draft a mission comment
 

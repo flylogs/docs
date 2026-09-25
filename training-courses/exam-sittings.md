@@ -21,6 +21,7 @@ Students register by choosing subjects. Flylogs counts every attempt and checks 
 | Register a student yourself | **Chief Pilot and above** |
 | Reset a student's attempt history | **Chief Pilot and above** |
 | Create and edit authority rules | **Chief Pilot and above** |
+| See the exam sittings audit for a period | **Chief Pilot and above** |
 
 Managers find the page under **Trainings → Exam sittings**. Students open **Trainings** and use the **Exam sittings** button at the top of the page.
 
@@ -180,3 +181,34 @@ Each message links to the student's **Exam sittings** page.
 ### Exporting for the authority
 
 **Export to Excel** downloads every registration of the sitting, with one row per student and subject: course, subject code and name, registration status, attempt number, result and score. Use it to send the candidate list to the authority.
+
+## The audit for your authority
+
+**Export to Excel** above covers one sitting. When your authority asks how many exams were sat over a period — a quarter, a half-year, a licensing year — use the audit instead.
+
+Open **Trainings → Audit** and pick the **Exam sittings** tab, or use the **Exam sittings audit** link at the top right of the exam sittings page.
+
+Choose the dates. The period is keyed on **when each sitting was held**, not on when you typed its results in, so a sitting held in June belongs to June's return even if you graded it in July. It defaults to the last twelve months. You can narrow it further to authority exams or school exams, and to one course.
+
+### What the figures mean
+
+* **One exam is one subject paper sat by one candidate.** A student who sits three subjects at one sitting counts as three exams. That is how an authority counts them.
+* **A student who didn't turn up counts as a failure.** They were entered for the paper and spent the attempt without passing, which is how the authority reads it. No-shows are inside the failed total, with their own **of which no-shows** figure underneath so you can still see the split.
+* **Pass rate** is passes out of every paper that spent an attempt — passes, failures and no-shows together.
+* **Resits** are papers with an attempt number above 1 — the attempt number Flylogs stamped from the student's earlier results under the same authority rule. The audit shows the first-attempt pass rate next to the resit pass rate, which is usually the pair an authority wants.
+* **Online module exams are not in here.** The audit covers formal sittings only. The exams students take inside a course's modules stay on the **Audit** tab next to it, where they are reported per course.
+* **Results pending** counts papers you haven't graded yet. They are in no other figure, so a period with results still to enter tells you so instead of quietly reporting a lower pass rate.
+* Canceled sittings are left out, since they never took place. Tick **Include canceled sittings** if you need them listed.
+
+Below the headline figures, the same counters are broken down **by subject**, **by sitting** and **by authority**.
+
+### Exporting the audit
+
+**Export to Excel** downloads the whole period as two sheets:
+
+* **Summary** — the headline figures, then the breakdowns by subject, sitting, authority and course.
+* **Detail** — one row per candidate and subject: date, sitting, authority, student, subject code and name, attempt number, result and score.
+
+Send the summary to your authority and keep the detail as the evidence behind it.
+
+> The audit reads the results you have entered. Sittings you have held but not yet graded appear with zero papers, so a missing figure always points at a sitting still waiting for its results.
