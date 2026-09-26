@@ -62,6 +62,7 @@
 ## Aircraft
 
 * [Aircraft management](aircraft/aircraft-basics.md)
+* [Aircraft manager](aircraft/aircraft-manager.md)
 * [Create your aircraft](aircraft/create-your-aircraft.md)
 * [ADSB surveillance](aircraft/adsb-surveillance.md)
 * [Aircraft logbook](aircraft/aircraft-logbook.md)

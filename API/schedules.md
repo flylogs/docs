@@ -557,6 +557,20 @@ The setting only opens the schedule editor endpoints — `GET /schedules/get.jso
 `/schedules/cancel.json` is the crew-facing cancel endpoint and is **not** affected: it always requires the caller to be the booking's creator, PIC or SIC. Managers cancel through `/manager/schedules/cancel.json`, which is ACL-restricted and not granted to group 170.
 {% endhint %}
 
+### Aircraft managers
+
+Independently of the setting above, the [manager of an aircraft](aircraft.md#aircraft-manager)
+(`Aircraft.user_id`) may edit any booking made **on that aircraft**, whatever their user group — the
+"you must be the aircraft owner or PIC/SIC/supervisor" check passes for them. Deleting somebody
+else's booking is **not** included: `/schedules/delete.json` still narrows to the booking's own
+creator for anyone above the schedule manager limit.
+
+`GET /schedules/manager_index.json` (the master board) is likewise open to them: a caller above
+`user_group_id` 170, and not 300, is admitted when they manage at least one aircraft, and the
+fleet returned is narrowed to exactly those aircraft. A caller who manages none still gets
+`404 Not Found`. Flight Instructors without **ALLOW FI SCHEDULE MANAGEMENT** keep their existing
+read-only board narrowed the same way.
+
 ## Self-booking role behaviour (`/schedules/edit.json`)
 
 The schedule create/edit endpoint applies these role rules to self-bookings (`self_schedule = 1`):

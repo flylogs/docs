@@ -2,6 +2,35 @@
 
 > Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
 
+## Aircraft manager
+
+`Aircraft.user_id` names the aircraft's **manager**: the one person responsible for that tail. The
+rule is per aircraft and **independent of `user_group_id`** — a Captain (180), a Pilot (190) or a
+Student Pilot (200) named on a tail gets the same authority over it as a Company Administrator, and
+none at all over any other aircraft.
+
+Two shared checks decide it (`AircraftManagerPolicy` server-side):
+
+| Check | Allowed for | Used by |
+|-------|-------------|---------|
+| `canEditAircraft` | `user_group_id` in **1, 100, 105, 110, 150, 300**, or the aircraft's manager | `aircraft/edit`, `aircraft/photo`, `aircraft/removePhoto`, [Mass & Balance](mass-balance.md) aircraft profile |
+| `canManageAircraft` | `user_group_id` in **1, 100, 105, 110, 300**, or the aircraft's manager | [Maintenance Jobs](maintenance-jobs.md) create / edit / sign / duplicate / delete / link, [Aircraft Reports](aircraft-reports.md) MEL/CDL create, edit, extend and delete |
+
+A call aimed at an aircraft the caller neither manages nor covers by group answers **`404`**, not
+`403` — the record is treated as not existing for that caller.
+
+Two further endpoints follow the same rule:
+
+* [`GET /aircraft/my_aircraft.json`](#my-aircraft) — the aircraft this user manages. Clients use it
+  to decide which per-aircraft actions to offer.
+* [`GET /schedules/manager_index.json`](schedules.md) — a caller above `user_group_id` 170 (and not
+  300) is admitted only when they manage at least one aircraft, and the board returned holds only
+  those aircraft.
+
+Changing the manager is staff-only: `aircraft/edit` silently drops `Aircraft.user_id`,
+`Aircraft.company_id`, `Aircraft.active` and `Aircraft.deleted` from a request made by someone who
+is only there because they manage the tail.
+
 ## List Aircraft
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/index.json`
@@ -70,7 +99,8 @@ Retrieve the fleet list. Pilots (`user_group_id > 170` — Captain and below) se
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/my_aircraft.json`
 
-Retrieve aircraft attributed to the authenticated user.
+Retrieve the aircraft the authenticated user is the [manager](#aircraft-manager) of
+(`Aircraft.user_id`), within the current company. Returns an empty list for a user who manages none.
 
 #### Response
 
@@ -439,7 +469,10 @@ Add a new aircraft to the fleet. Admin access required.
 
 <mark style="color:green;">`POST`</mark> `/aircraft/edit.json`
 
-Update aircraft details. Admin access required.
+Update aircraft details. Requires `canEditAircraft`: `user_group_id` in 1, 100, 105, 110, 150, 300,
+or being the [aircraft's manager](#aircraft-manager). A manager's request has `Aircraft.user_id`,
+`Aircraft.company_id`, `Aircraft.active` and `Aircraft.deleted` stripped before the save, so those
+four columns can only be changed by staff.
 
 #### Clocks
 

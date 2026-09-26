@@ -8,9 +8,10 @@ Manage maintenance jobs for aircraft. Requires a **club**, **premium** or **unli
 
 | Action | Allowed |
 |--------|---------|
-| List / view (`index`, `view`, `history`, `forecasts`) | Any authenticated company user on a club/premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` (Flight Instructor and above) and `>= 250` |
-| Create / edit / sign CRS / duplicate / delete | `user_group_id` in **1, 100, 105, 110, 300** (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics), or the aircraft owner |
-| Attach / detach aircraft reports (`link_reports`, `unlink_report`) | Same as create: `user_group_id` in **1, 100, 105, 110, 300** (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics), or the aircraft owner. Groups 120–200 are denied at ACL level |
+| List / view (`index`, `view`, `forecast`) | Any authenticated company user on a club/premium/unlimited plan. The Flylogs NEO interface shows maintenance sections to `user_group_id <= 170` (Flight Instructor and above), to `>= 250`, and to anyone who manages at least one aircraft |
+| Create / edit / sign CRS / duplicate / delete | `user_group_id` in **1, 100, 105, 110, 300** (Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics), **or the manager of that job's aircraft** — see [Aircraft manager](aircraft.md#aircraft-manager). Any other aircraft answers `404` |
+| Attach / detach aircraft reports (`link_reports`, `unlink_report`) | Same as create |
+| Inspect, change history (`inspect`, `history`, `forecasts`) | Staff groups only; the aircraft-manager exception does **not** apply, because these actions carry no per-aircraft check of their own |
 
 ## Next maintenance forecast
 

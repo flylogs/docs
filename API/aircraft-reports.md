@@ -6,6 +6,19 @@ Manage aircraft technical reports — defects, informational notes, maintenance 
 servicing entries, and **MEL** (Minimum Equipment List) / **CDL** (Configuration Deviation
 List) items. Requires **premium** or **unlimited** subscription plan.
 
+## Access control
+
+| Action | Allowed |
+|--------|---------|
+| List / view | Any authenticated company user on a premium/unlimited plan |
+| Create a `DEFECT`, `INFO`, `MAINTENANCE` or `SERVICE` report | Any authenticated company user |
+| Create a **MEL** / **CDL** item | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of that aircraft |
+| Edit a MEL/CDL report, `extend`, `delete` | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of the report's aircraft |
+
+"Manager of the aircraft" is `Aircraft.user_id` and is independent of the user group — see
+[Aircraft → Aircraft manager](aircraft.md#aircraft-manager). A report on any other aircraft
+answers `404`.
+
 {% hint style="info" %}
 The `type` values `OBSERVATION` and `RESTRICTION` were removed. Existing rows were
 reclassified once, automatically (`OBSERVATION` → `INFO`, `RESTRICTION` → `DEFECT`). A
