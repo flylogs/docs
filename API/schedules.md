@@ -565,11 +565,18 @@ Independently of the setting above, the [manager of an aircraft](aircraft.md#air
 else's booking is **not** included: `/schedules/delete.json` still narrows to the booking's own
 creator for anyone above the schedule manager limit.
 
-`GET /schedules/manager_index.json` (the master board) is likewise open to them: a caller above
-`user_group_id` 170, and not 300, is admitted when they manage at least one aircraft, and the
-fleet returned is narrowed to exactly those aircraft. A caller who manages none still gets
-`404 Not Found`. Flight Instructors without **ALLOW FI SCHEDULE MANAGEMENT** keep their existing
-read-only board narrowed the same way.
+`GET /schedules/get.json` — the feed the Schedule Manager board draws from — returns every booking
+made on an aircraft they manage, not only the ones they are crewed on, and leaves those bookings
+`editable`. Without this an aircraft manager above the limit would be handed a board with nothing on
+it, because `schedule_allow_see_master` narrows the feed to bookings where the caller is PIC, SIC or
+supervisor. Bookings on the rest of the fleet are unaffected: they appear only where the caller is
+crew, and stay read-only.
+
+`Schedules::manager_index` (the legacy fmc master board, HTML only — it has no JSON view) applies
+the same rule at the door: a caller above `user_group_id` 170, and not 300, is admitted when they
+manage at least one aircraft, and its fleet list is narrowed to exactly those aircraft. A caller who
+manages none still gets `404 Not Found`. Flight Instructors without **ALLOW FI SCHEDULE MANAGEMENT**
+keep their existing read-only board narrowed the same way.
 
 ## Self-booking role behaviour (`/schedules/edit.json`)
 
