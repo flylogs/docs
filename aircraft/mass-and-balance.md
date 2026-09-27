@@ -95,7 +95,7 @@ Once a loadsheet is saved **within limits**, the **PIC** (or the flight's **supe
 | Action | Who |
 |--------|-----|
 | View | Anyone who can view the flight. Captains, pilots, students and cabin crew (groups above Flight Instructor, below Auditor) only for flights they are on or aircraft they own |
-| Calculate, save or delete | The flight's creator, PIC, SIC or supervisor; the aircraft owner; Flylogs Administrator, Company Administrator, Operations Manager, Compliance & Safety Manager, Flight Dispatcher, Chief Pilot and Flight Instructor. Not on cancelled or deleted flights |
+| Calculate, save or delete | The flight's creator, PIC, SIC or supervisor; any of the aircraft's managers; Flylogs Administrator, Company Administrator, Operations Manager, Compliance & Safety Manager, Flight Dispatcher, Chief Pilot and Flight Instructor. Not on cancelled or deleted flights |
 | Sign | The PIC or the supervisor only (the creator if the flight has no PIC) |
 
 Auditors and cabin crew can read loadsheets but not change them.

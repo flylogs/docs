@@ -15,7 +15,7 @@ List) items. Requires **premium** or **unlimited** subscription plan.
 | Create a **MEL** / **CDL** item | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of that aircraft |
 | Edit a MEL/CDL report, `extend`, `delete` | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of the report's aircraft |
 
-"Manager of the aircraft" is `Aircraft.user_id` and is independent of the user group — see
+"Manager of the aircraft" is any user named in `Aircraft.ManagerIds` (a tail may have several) and is independent of the user group — see
 [Aircraft → Aircraft manager](aircraft.md#aircraft-manager). A report on any other aircraft
 answers `404`.
 
@@ -200,7 +200,7 @@ After a successful save, an in-app notification is sent to all active company st
 requires `user_group_id` in `(1, 100, 105, 110, 300)` — Flylogs Administrator, Company
 Administrator, Operations Manager, Compliance & Safety Manager, or Mechanic — **or** the
 requesting user must be the pilot the target aircraft is currently assigned to
-(`Aircraft.user_id`). Anyone else posting `type=MEL` or `type=CDL` gets a `404 Not Found`.
+(`Aircraft.ManagerIds`). Anyone else posting `type=MEL` or `type=CDL` gets a `404 Not Found`.
 All other `type` values have no such restriction.
 {% endhint %}
 
@@ -555,7 +555,7 @@ Company-wide open and expiring-soon MEL/CDL counts, for a dashboard tile.
 
 | Action | Endpoint | `user_group_id` allowed |
 |--------|----------|--------------------------|
-| Raise a MEL or CDL item | `POST create.json` with `type=MEL\|CDL` | `1, 100, 105, 110, 300`, **or** the aircraft's assigned pilot (`Aircraft.user_id`) |
+| Raise a MEL or CDL item | `POST create.json` with `type=MEL\|CDL` | `1, 100, 105, 110, 300`, **or** any manager of the aircraft (`Aircraft.ManagerIds`) |
 | Edit a MEL or CDL item | `POST edit/{id}.json` on a `MEL`/`CDL` report | `1, 100, 105, 110, 300` only — the assigned-pilot exception does **not** apply |
 | Extend a MEL or CDL item | `POST extend/{id}.json` | `1, 100, 105, 110, 300` only |
 | Close a MEL or CDL item | `POST edit/{id}.json` with `status=CLOSED` | `1, 100, 105, 110, 300` only (same gate as edit) |

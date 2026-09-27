@@ -4,17 +4,22 @@
 
 ## Aircraft manager
 
-`Aircraft.user_id` names the aircraft's **manager**: the one person responsible for that tail. The
-rule is per aircraft and **independent of `user_group_id`** — a Captain (180), a Pilot (190) or a
-Student Pilot (200) named on a tail gets the same authority over it as a Company Administrator, and
-none at all over any other aircraft.
+`Aircraft.ManagerIds` names the aircraft's **managers**: the people responsible for that tail. An
+aircraft may name **any number of them**, including none, and they are peers — there is no primary
+manager and no ordering. The rule is per aircraft and **independent of `user_group_id`** — a Captain
+(180), a Pilot (190) or a Student Pilot (200) named on a tail gets the same authority over it as a
+Company Administrator, and none at all over any other aircraft.
+
+> **Changed September 2026.** This used to be a single `Aircraft.user_id` column. That field is
+> **gone** from every aircraft payload; read `Aircraft.ManagerIds` (ids) or `Manager` (ids with
+> names) instead, and never assume there is exactly one.
 
 Two shared checks decide it (`AircraftManagerPolicy` server-side):
 
 | Check | Allowed for | Used by |
 |-------|-------------|---------|
-| `canEditAircraft` | `user_group_id` in **1, 100, 105, 110, 150, 300**, or the aircraft's manager | `aircraft/edit`, `aircraft/photo`, `aircraft/removePhoto`, [Mass & Balance](mass-balance.md) aircraft profile |
-| `canManageAircraft` | `user_group_id` in **1, 100, 105, 110, 300**, or the aircraft's manager | [Maintenance Jobs](maintenance-jobs.md) create / edit / sign / duplicate / delete / link, [Aircraft Reports](aircraft-reports.md) MEL/CDL create, edit, extend and delete |
+| `canEditAircraft` | `user_group_id` in **1, 100, 105, 110, 150, 300**, or any manager of the aircraft | `aircraft/edit`, `aircraft/photo`, `aircraft/removePhoto`, [Mass & Balance](mass-balance.md) aircraft profile |
+| `canManageAircraft` | `user_group_id` in **1, 100, 105, 110, 300**, or any manager of the aircraft | [Maintenance Jobs](maintenance-jobs.md) create / edit / sign / duplicate / delete / link, [Aircraft Reports](aircraft-reports.md) MEL/CDL create, edit, extend and delete |
 
 A call aimed at an aircraft the caller neither manages nor covers by group answers **`404`**, not
 `403` — the record is treated as not existing for that caller.
@@ -27,9 +32,25 @@ Two further endpoints follow the same rule:
   300) is admitted only when they manage at least one aircraft, and the board returned holds only
   those aircraft.
 
-Changing the manager is staff-only: `aircraft/edit` silently drops `Aircraft.user_id`,
-`Aircraft.company_id`, `Aircraft.active` and `Aircraft.deleted` from a request made by someone who
-is only there because they manage the tail.
+Changing the manager list is staff-only: `aircraft/edit` silently drops the whole `Manager` key, plus
+`Aircraft.company_id`, `Aircraft.active` and `Aircraft.deleted`, from a request made by someone who
+is only there because they manage the tail. Otherwise a manager could drop the other managers of
+their own aeroplane, or add themselves to one they do not manage.
+
+#### Reading and writing the list
+
+| | |
+|-|-|
+| Read (ids) | `Aircraft.ManagerIds` — e.g. `["17","204"]`. Sent to `user_group_id < 171` and to 300; omitted for everyone else. |
+| Read (with names) | `Manager` — an array of `{ id, UserDetail: { name, surname } }`. |
+| Write | `data[Manager][Manager][]=<user id>`, repeated once per manager. Staff only. |
+| Clear | post one empty value: `data[Manager][Manager][]=`. The aircraft then has no manager. |
+| Leave unchanged | omit the `Manager` key entirely. A client that knows nothing about managers cannot wipe the list. |
+
+Posted ids are intersected with the **active users of the caller's own company**, so an id from
+another company or a deactivated account is dropped silently rather than rejecting the save.
+Deliberately not restricted by `user_group_id`: the person running a tail may be of any rank,
+including a third-party owner who does not fly for the school.
 
 ## List Aircraft
 
@@ -99,8 +120,9 @@ Retrieve the fleet list. Pilots (`user_group_id > 170` — Captain and below) se
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/my_aircraft.json`
 
-Retrieve the aircraft the authenticated user is the [manager](#aircraft-manager) of
-(`Aircraft.user_id`), within the current company. Returns an empty list for a user who manages none.
+Retrieve the aircraft the authenticated user is a [manager](#aircraft-manager) of, within the current
+company. Returns an empty list for a user who manages none. Retired (`active: false`) aircraft are
+included — a manager keeps access to a parked aeroplane's history — deleted ones are not.
 
 #### Response
 
@@ -470,9 +492,9 @@ Add a new aircraft to the fleet. Admin access required.
 <mark style="color:green;">`POST`</mark> `/aircraft/edit.json`
 
 Update aircraft details. Requires `canEditAircraft`: `user_group_id` in 1, 100, 105, 110, 150, 300,
-or being the [aircraft's manager](#aircraft-manager). A manager's request has `Aircraft.user_id`,
-`Aircraft.company_id`, `Aircraft.active` and `Aircraft.deleted` stripped before the save, so those
-four columns can only be changed by staff.
+or being one of the [aircraft's managers](#aircraft-manager). A manager's request has the `Manager`
+key and `Aircraft.company_id`, `Aircraft.active` and `Aircraft.deleted` stripped before the save, so
+the manager list and those three columns can only be changed by staff.
 
 #### Clocks
 

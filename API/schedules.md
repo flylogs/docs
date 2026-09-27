@@ -543,7 +543,7 @@ The threshold is the *schedule manager limit*: `150` normally, raised to `170` w
 Users at or below the limit are not subject to any of the crew-level restrictions:
 
 * the record lookup is not narrowed to `Schedule.user_id = <me>`, so a booking created by another user resolves instead of returning `404 Not Found`;
-* the "you must be the aircraft owner or PIC/SIC/supervisor" check is skipped (`403 You cannot edit this booking.`);
+* the "you must be an aircraft manager or PIC/SIC/supervisor" check is skipped (`403 You cannot edit this booking.`);
 * the SIC anticipation window (`schedule_flight_cancellation_min_time`) is not enforced on edit;
 * on delete, neither the 12-hour anticipation rule nor the "PIC already confirmed" rule applies.
 
@@ -559,9 +559,10 @@ The setting only opens the schedule editor endpoints — `GET /schedules/get.jso
 
 ### Aircraft managers
 
-Independently of the setting above, the [manager of an aircraft](aircraft.md#aircraft-manager)
-(`Aircraft.user_id`) may edit any booking made **on that aircraft**, whatever their user group — the
-"you must be the aircraft owner or PIC/SIC/supervisor" check passes for them. Deleting somebody
+Independently of the setting above, a [manager of an aircraft](aircraft.md#aircraft-manager) may
+edit any booking made **on that aircraft**, whatever their user group — the "you must be an aircraft
+manager or PIC/SIC/supervisor" check passes for them. An aircraft can have several managers and each
+of them gets this. Deleting somebody
 else's booking is **not** included: `/schedules/delete.json` still narrows to the booking's own
 creator for anyone above the schedule manager limit.
 

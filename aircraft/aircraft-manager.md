@@ -1,14 +1,19 @@
 ---
 description: >-
-  Give one person full control of one aircraft — its record, maintenance,
-  documents and bookings — without opening up the rest of the fleet.
+  Give one person — or a few — full control of one aircraft: its record,
+  maintenance, documents and bookings, without opening up the rest of the fleet.
 ---
 
 # Aircraft manager
 
-Every aircraft can name one **aircraft manager**: the person responsible for that tail. It is set
-from the aircraft's edit page, in the **Aircraft Manager** card, and it is stored on the aircraft
-itself, not on the user.
+Every aircraft can name its **aircraft managers**: the people responsible for that tail. They are
+set from the aircraft's edit page, in the **Aircraft Managers** card, and they are stored on the
+aircraft itself, not on the user.
+
+An aircraft can have **as many managers as you need**, and they are equals — there is no primary
+manager and no ranking between them. Each of them can do everything on the list below, including
+work another one started. A tail with a deputy, a maintenance controller alongside the owner, or two
+partners sharing an aeroplane are all just several names in the same card.
 
 The function is deliberately **independent of the user group**. A Captain, a Flight Instructor, a
 line Pilot or even a Student Pilot who owns the aeroplane they train in gets the same authority
@@ -26,22 +31,28 @@ anybody else's.
 ## Setting the manager
 
 1. Open **Aircraft → (the aircraft) → Edit**.
-2. Scroll to the **Aircraft Manager** card and pick a pilot.
+2. Scroll to the **Aircraft Managers** card, search by name and pick as many people as you need.
+   Each one you pick is added as a chip below the selector; the **×** on a chip removes them.
 3. Save.
 
-Only company staff can change this field: groups **1, 100, 105, 110, 150 and 300** (Flylogs
+Removing everybody from the card leaves the aircraft with no manager.
+
+Only company staff can change this list: groups **1, 100, 105, 110, 150 and 300** (Flylogs
 Administrator, Company Administrator, Operations Manager, Compliance & Safety Manager, Chief Pilot,
-Mechanic). A manager editing their own aircraft sees the selector read-only — the server drops
-`user_id`, `company_id`, `active` and `deleted` from their save, so they cannot hand the aeroplane
-to somebody else, move it to another company or retire it.
+Mechanic). A manager editing their own aircraft sees the selector read-only — the server drops the
+manager list, `company_id`, `active` and `deleted` from their save, so they cannot hand the
+aeroplane to somebody else, drop a co-manager, move it to another company or retire it.
 
-Leaving the field empty means the aircraft has no manager; only staff act on it.
+Anybody with an **active account in your company** can be named, whatever their role — the owner of
+an aeroplane you operate does not have to be one of your pilots.
 
-<figure><img src="../.gitbook/assets/aircraft-manager-edit.png" alt="Aircraft edit form opened by the aircraft's manager: every field editable except the Aircraft Manager selector and the Operative checkbox, which are disabled"><figcaption><p>The same edit form seen by the manager: everything is theirs to change except who manages the aircraft and whether it is in service</p></figcaption></figure>
+Leaving the card empty means the aircraft has no manager; only staff act on it.
+
+<figure><img src="../.gitbook/assets/aircraft-manager-edit.png" alt="Aircraft edit form opened by the aircraft's manager: every field editable except the Aircraft Managers selector and the Operative checkbox, which are disabled"><figcaption><p>The same edit form seen by a manager: everything is theirs to change except who manages the aircraft and whether it is in service</p></figcaption></figure>
 
 ## What the manager can do
 
-On **the aircraft they are named on** — and only that one:
+On **the aircraft they are named on** — and only those:
 
 | Area | What they get |
 |------|---------------|
@@ -68,7 +79,7 @@ The manager function is an authority over one aeroplane, not a promotion. These 
 staff groups:
 
 * Adding, retiring (`active`) or deleting an aircraft, and reordering the fleet
-* Changing **who** manages an aircraft
+* Changing **who** manages an aircraft — including adding or removing a co-manager
 * Company-wide **maintenance plans** and the parts **inventory**
 * Deleting somebody else's booking (a manager edits and re-crews bookings on their aircraft, but
   deletion still follows the normal booking-owner rules)
@@ -80,9 +91,12 @@ Every check is made **on the server, per aircraft**, not merely hidden in the in
 rule lives in `AircraftManagerPolicy`:
 
 * `canManageAircraft()` — maintenance jobs and aircraft reports: groups 1, 100, 105, 110, 300, **or**
-  the aircraft's manager.
+  any manager of the aircraft.
 * `canEditAircraft()` — the aircraft record, its photo and its Mass & Balance profile: groups 1, 100,
-  105, 110, 150, 300, **or** the aircraft's manager.
+  105, 110, 150, 300, **or** any manager of the aircraft.
+
+Each check asks "is this tail one of the aircraft this person manages?", so adding a second or third
+manager changes nothing about how any of them is authorised.
 
 A request aimed at a tail the caller does not manage is answered with `404 Not Found`, exactly as if
 the record did not exist.

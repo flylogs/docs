@@ -17,9 +17,9 @@ The server always recalculates a loadsheet itself; results sent by a client are 
 | Endpoint | Allowed |
 |----------|---------|
 | `aircraft` (GET) | Any company user. ACL grants for groups 180, 240, 250 |
-| `aircraft_save`, `aircraft_delete` | Aircraft owner (`Aircraft.user_id`) or `user_group_id` in **1, 100, 105, 110, 150, 300** (Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots and Mechanics) → otherwise `403` |
-| `loadsheet` (GET) | Same rule as `GET /flights/view`: `user_group_id` 171–249 (Captains, Pilots, Student Pilots and Cabin Crew) only when creator, PIC, SIC, supervisor or aircraft owner → otherwise `403` |
-| `loadsheet_save`, `loadsheet_delete` | Creator, PIC, SIC, supervisor, aircraft owner, or `user_group_id` in **1, 100, 105, 110, 145, 150, 170** (Company Administrators, Operations Managers, Compliance & Safety Managers, Flight Dispatchers, Chief Pilots and Flight Instructors). Never on `CANCELED` / `DELETED` flights → `403` |
+| `aircraft_save`, `aircraft_delete` | Any manager of the aircraft (`Aircraft.ManagerIds`) or `user_group_id` in **1, 100, 105, 110, 150, 300** (Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots and Mechanics) → otherwise `403` |
+| `loadsheet` (GET) | Same rule as `GET /flights/view`: `user_group_id` 171–249 (Captains, Pilots, Student Pilots and Cabin Crew) only when creator, PIC, SIC, supervisor or a manager of the aircraft → otherwise `403` |
+| `loadsheet_save`, `loadsheet_delete` | Creator, PIC, SIC, supervisor, a manager of the aircraft, or `user_group_id` in **1, 100, 105, 110, 145, 150, 170** (Company Administrators, Operations Managers, Compliance & Safety Managers, Flight Dispatchers, Chief Pilots and Flight Instructors). Never on `CANCELED` / `DELETED` flights → `403` |
 | `loadsheet_sign` | PIC or supervisor (creator when the flight has no PIC). Requires the user's password |
 
 Groups 240 (Cabin Crew) and 250 (Auditor) have ACL access to the two read endpoints only.

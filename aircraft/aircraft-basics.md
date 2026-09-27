@@ -13,9 +13,9 @@ Adding aircraft to your account should be one of the first steps in the initial 
 
 The aircraft management can only be performed by the account administrator or a designated Operations Manager that the company administrator can create.
 
-On top of that, any single aircraft can name one [aircraft manager](aircraft-manager.md) — the person responsible for that tail. Whatever their user group, they get full control of that one aircraft (its record, maintenance, reports and bookings) and nothing else in the fleet. This is how operators hand an aeroplane they manage for a third-party owner to that owner or to its assigned crew member.
+On top of that, any single aircraft can name one or more [aircraft managers](aircraft-manager.md) — the people responsible for that tail. Whatever their user group, they get full control of that one aircraft (its record, maintenance, reports and bookings) and nothing else in the fleet. This is how operators hand an aeroplane they manage for a third-party owner to that owner, to its assigned crew member, or to a small team sharing the responsibility.
 
-Each aircraft's photo can be uploaded, replaced, or removed from its edit page — the same administrator, Operations Manager, or the aircraft's own assigned Aircraft Manager can do this. New aircraft get a photo looked up automatically from public aviation photo sources when they're first added; after that, the photo is entirely up to you to manage.
+Each aircraft's photo can be uploaded, replaced, or removed from its edit page — the same administrator, Operations Manager, or any of the aircraft's own assigned Aircraft Managers can do this. New aircraft get a photo looked up automatically from public aviation photo sources when they're first added; after that, the photo is entirely up to you to manage.
 
 Remember, you have no limits on the amount of users you create, but choose carefully the profile type, since each user group, has different access levels and permissions to edit and manage resources in your account.
 
