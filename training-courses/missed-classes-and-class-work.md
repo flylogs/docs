@@ -6,6 +6,8 @@ description: What happens when a student misses an onsite class — the email, c
 
 Onsite classes and exams track attendance as part of the training record, and follow up automatically when a student misses one. This page walks through the whole flow, from an unmarked register to a resolved, reported outcome. For where each of these actions lives on screen, see [Teacher tools](teacher-tools.md), [Student evaluation](student-evaluation.md) and [Student management](student-management.md).
 
+{% embed url="https://youtu.be/YHtGVNfsTOU" %}
+
 <figure><img src="../.gitbook/assets/trainingsAttendanceWorkflow.png" alt=""><figcaption><p>The full flow: class session, attendance, signature, class work and absence justification.</p></figcaption></figure>
 
 ### The four attendance statuses
@@ -49,7 +51,7 @@ Each student receives this email once per class — even if the register is late
 <figure><img src="../.gitbook/assets/trainingsMissedClassEmail.png" alt=""><figcaption><p>The missed-class email sent to an absent student.</p></figcaption></figure>
 ### Uploading class work
 
-A teacher can request class work (homework) from the class page's **Documents** tab — turned on there, not while scheduling the class. They set a deadline and write a description of what students need to do; students are notified and see a banner on the class page until they've dealt with it.
+A teacher can request class work (homework) from the class page's **Classroom** tab — turned on there, not while scheduling the class. They set a deadline and write a description of what students need to do; students are notified and see a banner on the class page until they've dealt with it.
 
 Once the register is signed, the request itself is frozen — it can't be turned on, changed or cancelled after that point. Students can still upload their work after signing, which is the point: class work is often finished after a missed class, not before it's caught up with. Each student only ever sees their own submissions; the teacher and any training manager see everyone's, to evaluate.
 
@@ -59,13 +61,13 @@ While a class work request is open, the student's class page shows a yellow bann
 
 A student who submitted **nothing** by the deadline can still upload afterwards — that's the whole point of the missed-class flow. Work that arrives after the deadline is accepted and marked **Late** wherever it's shown, to the student and to the teacher alike. Extending the deadline afterwards removes the mark from anything the new deadline covers.
 
-<figure><img src="../.gitbook/assets/trainingsClassworkRequest.png" alt=""><figcaption><p>Requesting class work from the Documents tab.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/trainingsClassworkRequest.png" alt=""><figcaption><p>Requesting class work from the Classroom tab.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/trainingsStudentsHomework.png" alt=""><figcaption><p>What the student sees: the brief, the deadline, and their own upload area. Students never see another student's file.</p></figcaption></figure>
 
 ### Grading class work
 
-The teacher — or the subject's teacher, or any training manager — grades from the same **Documents** tab. The class work box lists every student on the register: their file (with who uploaded it, when, and a **Late** mark if it applies), a score out of 10, and a comment for the student.
+The teacher — or the subject's teacher, or any training manager — grades from the same **Classroom** tab. The class work box lists every student on the register: their file (with who uploaded it, when, and a **Late** mark if it applies), a score out of 10, and a comment for the student.
 
 Students who handed nothing in still get a row, so a zero with an explanation is possible. Either the score or the comment is enough — an entirely empty grade isn't saved. Re-grading overwrites the previous mark rather than adding a second one.
 
@@ -82,7 +84,13 @@ A student marked **Absent** can submit a justification from the class page's **A
 -->
 ### How a justification is decided
 
-The class's teacher, or any training manager, reviews pending justifications from the same tab and either **approves** or **rejects** them, with an optional note. Approving sets the student to **Absent (justified)**. Each submission gets one decision — if the student wants to try again, they submit a new justification rather than reopening the old one.
+The class's teacher, or any training manager, reviews pending justifications from the same tab and either **approves** or **rejects** them, with an optional note. Approving sets the student to **Absent (justified)**. Each submission gets one decision — if the student wants to try again, they submit a new justification rather than reopening the old one. Decided justifications stay visible on the same tab — the student's explanation, the decision and the reviewer's note — for the teacher and managers under **Decided justifications**, and for the student on their own class page.
+
+### Justifying an absence on the student's behalf
+
+Evidence doesn't always come through the student — a medical note handed in at the office, or an email to the training department. The class's teacher, or any training manager, can add it themselves at any time after the class: in the **Attendance** tab, under **Justify an absence**, pick a student marked **Absent**, attach the document (and a note if useful) and select **Justify absence**. Because the teacher or manager is the one vouching for it, there's no review step — the student is set to **Absent (justified)** straight away.
+
+Only students still marked **Absent** appear in the list. If the student had already submitted a justification that is still pending, it stays in the review list and can be decided as usual; deciding it never undoes the justified absence.
 
 <!-- SCREENSHOT TODO — add trainingsJustificationReview.png to .gitbook/assets/, then uncomment:
 
@@ -90,7 +98,7 @@ The class's teacher, or any training manager, reviews pending justifications fro
 
 -->
 {% hint style="info" %}
-A class work file can be deleted by the student who uploaded it, but only until the deadline passes or a teacher grades it — after either, it's locked. Justification documents can never be deleted by the student who submitted them, deadline or not: they're the evidence behind an attendance decision, so the record stays intact. The class's teacher, the subject's teacher and training managers can remove either kind at any time, for the cases where something has to go — a corrupt file, or work posted to the wrong class. No file can ever be moved to a different record.
+A class work file can be deleted by the student who uploaded it, but only until the deadline passes or a teacher grades it — after either, it's locked. A student who uploads the wrong justification document can remove it themselves, until the justification deadline passes or the justification has been approved or rejected — after that the document is the evidence behind an attendance decision and stays. The class's teacher, the subject's teacher and training managers can remove either kind at any time, for the cases where something has to go — a corrupt file, or work posted to the wrong class. If the document removed was the student's last justification document for that class and they were **Absent (justified)**, they go back to **Absent**, and the approved justification is shown as **Withdrawn**, with who removed the document and when. No file can ever be moved to a different record.
 {% endhint %}
 
 ### Attended after the fact
@@ -117,3 +125,5 @@ Someone can be invited to a class without being enrolled in the training. They c
 ### How it's reported
 
 The student's training record, the training report and its PDF all split missed sessions into three outcomes: **justified**, **not justified**, and **credited after class**. See [Student management](student-management.md#attendance-breakdown) for where this appears.
+
+Graded class work is part of the record as well. Every class that requested homework from the student is listed with the submission (**On time**, **Late** or **Not submitted**), the score, the teacher's comment and who graded it, plus the average score. See [Student management](student-management.md#homework) for where this appears.

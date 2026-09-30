@@ -51,6 +51,16 @@ Leaving it off changes nothing for students: no request is sent, no signature is
 
 See [Teacher tools](teacher-tools.md) for what this looks like on the class page.
 
+### Showing all classes to enrolled students
+
+By default a student only sees, in their trainings calendar, the classes they have been invited to (individually or through one of their pilot groups). Being enrolled in the training does not put them on every class.
+
+Tick **Show all classes to enrolled students** when you want students to be able to attend any class of the training on their own initiative. With it on, every student with an **active** enrollment sees all the classes of this training, invited or not, and can open any of them. Students whose enrollment is completed, stopped, failed or expelled keep seeing only the classes they were invited to.
+
+It only changes what students can see. A student who turns up to a class they were not invited to still has to be added to that class by the teacher so their attendance can be recorded. Managers are not affected — they already see every class.
+
+The option is off by default and is only available on on-site trainings.
+
 ### Training availability and validity
 
 **Training availability** sets a timeframe when the training course will be open to students enrolled in the course. You can define either the start date or the end date or both.
@@ -85,3 +95,37 @@ Online exams draw from a **shared question bank**. The same question can be reus
 {% hint style="info" %}
 An online exam is available to students only when its bank holds at least as many questions as the exam's **required question count**. If you delete questions below that number the exam shows as *unavailable* until you add more questions or lower the required count.
 {% endhint %}
+
+### Course revisions: minor and major changes
+
+Courses change over time, and a change does not always apply to the students already training.
+
+{% embed url="https://youtu.be/ShxBbsEe5ew" %}
+
+* A **minor change** — a typo, a clarified briefing, a reordered lesson — is made directly on the course, as always. It goes through course approval and applies to every student on the course.
+* A **major change** — a new requirement, new missions, a new syllabus revision — starts a new **course revision**. Click "**Start new course revision**" in the **Course revisions** bar of the course page. Flylogs creates a draft copy of the course (subjects, lessons, exams, missions, stages, entry requirements and settings). Edit it freely: students keep training on the current course revision and new students keep enrolling in it while you work. Clicking twice, or two managers starting one at the same time, still creates a single draft.
+
+When the draft is ready, click "**Publish course revision**". If its changes are waiting for course approval, approving them publishes the course revision. From then on:
+
+* new students enrol in the new course revision by default — you can still choose an earlier one when enrolling (see [Enrolling new students](student-management.md#enrolling-new-students));
+* the previous course revision leaves the course catalog and closes to applications;
+* the course's open intakes and the applications still waiting on them move to the new course revision, so an approval enrols the student in the new one;
+* **nobody is moved automatically.** Students on the previous course revision stay there until you decide.
+
+#### Comparing course revisions
+
+Click "**Compare course revisions**" in the Course revisions bar and pick any two. Flylogs lists what was added, removed or changed:
+
+* ground subjects — added or removed, planned hours, and lessons and exams added or removed inside them;
+* flight missions — added or removed, and for the others any change of position, flight type, planned time, flight rules, mandatory or touch-and-go. A mission that changes position is not carried over when a student is moved between those two course revisions;
+* stages, and course settings such as validity, grading or automatic completion.
+
+Items are paired by name, so renaming a subject shows it as removed and added.
+
+#### Moving students to the new course revision
+
+Open the previous course revision (or follow the reminder on the new one) and click "**Move students**". Tick the students whose training is compatible with the new course revision; for each one you can also choose to credit hours flown on missions the new course revision does not have. What carries over follows the same rules as [moving a student to another course](student-management.md#moving-a-student-to-another-course). Students you leave unticked finish on the course revision they started.
+
+In **Trainings → Edit trainings** each course is listed once, with its course revisions (current, draft, previous — with how many students each has) underneath. A draft you no longer want can be thrown away with "**Discard draft**". Everywhere else a course revision is shown as *Course name · course revision 2*.
+
+**Who can do this:** only staff up to and including Trainings Manager (`user_group_id <= 135`) can start, publish, discard or approve a course revision, move students, or record previous experience. This includes approvals: the training manager named on a course no longer approves unless they are in one of those groups.

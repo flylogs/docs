@@ -19,6 +19,27 @@ Select the training in which you want to enroll the user(s). Additionally, you h
 Anyone who is already on the course is left alone: if a selected pilot group includes students who are training on that course right now, they keep the enrollment they have and the pop-up tells you how many were skipped. A student who appears in two selected groups is enrolled once, not twice. Students whose previous enrollment on the course is **closed** — completed, stopped, failed or expelled — are treated as re-takes and do get a new enrollment, with the old record kept alongside it, so take care when you re-add a group whose members have already finished the course.
 
 <figure><img src="../.gitbook/assets/trainingsEnrollUsers.png" alt=""><figcaption><p>Enroll new students pop up window.</p></figcaption></figure>
+
+#### Choosing the course revision
+
+When a course has more than one course revision, the pop-up shows a **Course revision** field under the training. It is set to the current course revision; pick an earlier one when a student must train on the previous syllabus — a warning reminds you that it is not the current one. Draft course revisions are never offered. See [Course revisions](edit-a-training.md#course-revisions-minor-and-major-changes).
+
+#### Recording previous experience
+
+Students often start a course with experience already: a PPL holder beginning ATPL training, or a student coming from the same course at another school. When you enroll **one individual student** (not a pilot group), tick "**Record previous experience**" and click "**Next**" to enter it:
+
+* **Flight hours per flight type** — one field for each flight type the course's missions use, next to the hours the course plans for it.
+* **Ground school** — per subject, the hours already done and/or "**completed**", which marks every lesson and exam of the subject as done.
+* **Flight missions already done** — tick the missions the student does not need to fly again. A ticked mission counts as completed but adds no hours: enter the hours in the flight type fields, so they are never counted twice.
+* **Reason** — required as soon as anything is credited, for example "PPL holder, 120 h logged; ground school completed at another ATO".
+
+Times can be typed as `1:20` or `1.5` and are stored to the minute exactly as typed — `1:20` stays 1 hour 20 minutes.
+
+The reason and a summary of what was credited are shown in a highlighted box at the top of the student's training progress page, so anyone opening the record sees it at first glance. Credited hours appear as their own band in the "Flight hours by type" chart and next to each ground subject; credited missions are marked "**Credited**". Credited items count towards progress and course completion like any other.
+
+To add or correct it later, use "**Previous experience**" in the student management panel, or "**Edit**" on the highlighted box. Saving replaces what was recorded before; a lesson the student has worked on since is never removed.
+
+**Who can do this:** staff up to and including Trainings Manager (`user_group_id <= 135`), while the enrollment is in progress.
 #### Students report page
 
 Once you've enrolled at least one student, the current page will show a report detailing the progress of students enrolled in the selected training. This report, similar to the one in the screenshot below, provides essential information for tracking student progress. It includes details such as progress in theory learning lessons, flight training mission progress, attendance records, and the date of the last flight, if applicable.
@@ -47,11 +68,24 @@ For onsite trainings, the attendance ring on the student's progress page breaks 
 
 The same split carries through to the training report and its PDF. See [Missed classes and class work](missed-classes-and-class-work.md) for how a student gets from "Absent" to one of these outcomes.
 
-<!-- SCREENSHOT TODO — add trainingsAttendanceBreakdown.png to .gitbook/assets/, then uncomment:
-
 <figure><img src="../.gitbook/assets/trainingsAttendanceBreakdown.png" alt=""><figcaption><p>Missed sessions split into justified, not justified and credited after class.</p></figcaption></figure>
 
--->
+#### Homework
+
+For onsite trainings, the student's progress page gets a **Homework** tab as soon as a class has requested class work from them. It shows:
+
+* **Requested**, **Submitted** and **Graded** counts, and the **average score** out of 10. The average only counts graded work with a score: ungraded work is not treated as a zero.
+* One row per class: the date (click it to open the class), the lesson, the teacher's brief, the deadline, and whether the file came in **On time**, **Late** or **Not submitted**.
+* The teacher's score and comment, with who graded it and when, or **Not graded yet**.
+
+<figure><img src="../.gitbook/assets/trainingsHomeworkRecord.png" alt=""><figcaption><p>The Homework tab on the student's progress page.</p></figcaption></figure>
+
+The same list is printed in the training report and its PDF, in a **Homework** section after Ground School.
+
+<figure><img src="../.gitbook/assets/trainingsReportHomework.png" alt=""><figcaption><p>Homework in the training report.</p></figcaption></figure>
+
+**Who can see this:** the same people who can open the student's training record and report (training managers, operations managers and above, auditors, and instructors read-only). See [Grading class work](missed-classes-and-class-work.md#grading-class-work) for how teachers grade it.
+
 #### Students invited but not enrolled
 
 Someone can be invited to an individual class without being enrolled in the training itself — useful for a one-off visitor or a student you haven't formally enrolled yet. They can open the class page, but no attendance or evaluation can ever be recorded for them: on the class register they show up read-only with a **Not enrolled** label, and they're left out of the attendance ratio, the missed-class email and the class work notification.
@@ -188,3 +222,24 @@ In **Trainings → Audit → Analytics** you get a Stopped card, a pie chart spl
 > Stopping is not the same as "**Remove student**". Removing (unrolling) deletes the enrollment together with all of the student's lessons, exams and flight missions, and cannot be undone. Stopping keeps everything.
 
 **Who can do this:** the same staff who can mark a training as completed or reset it — company managers. Instructors, students and external auditors cannot change an enrollment's status.
+
+#### Moving a student to another course
+
+A student can move from one course to another — for example from LAPL to PPL — or to a new course revision of the same course, keeping every piece of progress that also exists in the new course. Open the student's training progress page and click "**Move to another course**" in the student management panel. The wizard has four steps:
+
+1. **Choose the course.** Students are moved to the current course revision of the course you choose.
+2. **What carries over.** Flylogs compares both courses:
+   * a **ground subject** matches when it has the same name and the same planned hours; inside a matched subject, lessons and exams match in the same position with the same name;
+   * a **flight mission** matches when it is in the **same position** in the course, with the same flight type and the same planned hours. A mission added in the middle of the new course shifts every later mission, so they no longer match.
+
+   Completed lessons, exams and missions that match are carried over, with the flights logged against them. Everything else starts fresh in the new course.
+3. **Unmatched flight hours.** Hours flown on missions that have no counterpart in the new course are listed by flight type. Tick a flight type to credit those hours in the new enrollment; nothing is credited unless you tick it. Flight types the new course does not use cannot be credited.
+4. **Confirm** with a reason.
+
+The current enrollment is closed with the status **Moved** and a new enrollment opens in the new course. Both records link to each other from their headers, and both show the move in the Activity timeline. The enrollment notes and the previous-experience reason move with the student, and hours credited as previous experience follow when the new course has the same flight type or subject. A student who completed any course revision of a course meets an entry requirement that names that course.
+
+A **Moved** enrollment is frozen: it cannot be reopened, reset or completed, it does not issue a certificate, it does not count as a completed course for another course's entry requirements, and it frees its seat in a dated intake. It is not counted as a drop-out in the audit analytics. Use the **Moved** status filter in the students list to see these records.
+
+Only enrollments in progress can be moved, and not to a course where the student already has an enrollment in progress.
+
+**Who can do this:** staff up to and including Trainings Manager (`user_group_id <= 135`).

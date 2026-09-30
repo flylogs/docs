@@ -1394,6 +1394,33 @@ Approve or reject a pending justification.
 { "saved": true, "newStatus": "absent_justified" }
 ```
 
+### Record Justification
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/record_justification.json`
+
+A teacher or training manager files an absence justification on a student's behalf, after the fact — e.g. a medical note handed in at the office. The reviewer is the one vouching for the evidence, so the justification is stored already `approved` and the student's attendance becomes `absent_justified` immediately.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| session_id | string | Yes | `sessions.id` |
+| user_id | int | Yes | The absent student (must be on the session roster) |
+| upload_id | string | No* | An active `SessionJustification` upload on the same session and company — upload it first (see **Session Uploads**). Anything else → `400 Invalid justification document` |
+| text | string | No* | Free-text note |
+
+\* At least one of `upload_id` / `text` is required, else `400 A justification needs a document or a note`.
+
+**Access.** Same reviewer rule as **Review Justification**: a manager (`user_group_id <= 140` — Crew Scheduling and above) or the session's/subject's teacher, else `404 Not authorized to justify this absence`. Company-scoped via the session (`404 Training Session not found`). A `user_id` with no roster row → `404 Student is not on this session roster`.
+
+**Guards.** The student's `attendance_status` must be exactly `absent`, else `400 Only an unjustified absence can be justified` (read under a `SELECT ... FOR UPDATE` lock on the `session_students` row). A pending student submission does not block it and is left pending — deciding it later never downgrades `absent_justified`.
+
+**Effect.** Inserts a `session_justifications` row with `status = approved`, `reviewed_by` = caller, `reviewed_at` = now, then applies the same attendance write as an approval in **Review Justification** (`session_students` + `activity_progress` recompute for LESSON activities), all in one transaction.
+
+#### Response
+
+```json
+{ "saved": true, "newStatus": "absent_justified" }
+```
+
 ### Session Uploads
 
 Classwork submissions and absence-justification evidence go through the generic upload endpoints (see [uploads.md](uploads.md)), tagged with one of two reserved `Upload.model` values: `SessionClasswork` and `SessionJustification`. Both are keyed on `Upload.foreign_key = sessions.id` — not the student — with the uploader identified separately via `Upload.user_id`.
@@ -1405,12 +1432,16 @@ Classwork submissions and absence-justification evidence go through the generic 
 | Caller | `SessionClasswork` | `SessionJustification` |
 |--------|--------------------|------------------------|
 | Reviewer — session teacher, subject teacher, or manager (`user_group_id <= 140` — Crew Scheduling and above) | Always | Always |
-| The student who submitted the row | Until `sessions.classwork_deadline` passes **or** the work is graded, whichever is first | Never |
+| The student who submitted the row | Until `sessions.classwork_deadline` passes **or** the work is graded, whichever is first | Until `sessions.justification_deadline` passes **or** an approved/rejected justification covers the file (`reviewed_at >= Upload.created`), whichever is first |
 | Anyone else | Never | Never |
 
-A student replaces their homework by deleting it and uploading again. Two independent locks close that window, either one being enough: the deadline passing, and a grade existing for that student on that session (any row in `session_classwork_grades` for their roster row). A grade locks the file even inside the window — replacing it afterwards would leave the teacher's mark attached to work nobody graded. A reviewer can still delete a graded file; redoing the grade is theirs to do. Absence evidence keeps the older rule — a student may add to it but never withdraw it. The reviewer lookup ignores the ownership narrowing that normally restricts `user_group_id > 170` (Captain and below) to their own rows, so a session teacher who is themselves a line-pilot account can delete a student's submission rather than silently getting `{"result": false}` with HTTP 200.
+A student replaces their homework by deleting it and uploading again. Two independent locks close that window, either one being enough: the deadline passing, and a grade existing for that student on that session (any row in `session_classwork_grades` for their roster row). A grade locks the file even inside the window — replacing it afterwards would leave the teacher's mark attached to work nobody graded. A reviewer can still delete a graded file; redoing the grade is theirs to do. Absence evidence follows the same shape so a student can take back a file uploaded by mistake: locked by the justification deadline, or by any decided justification made after the file was uploaded.
 
-**Write gate.** The uploader must be on the session roster (`session_students.user_id`), else `403 Uploads are not enabled for this session`. `SessionJustification` has no further condition — several pieces of evidence for one missed class are ordinary. `SessionClasswork` additionally requires:
+`GET /uploads/index/SessionJustification/{sessionId}.json` adds `can_delete` (bool) to every row — whether `delete` would accept it for the caller.
+
+**Justified absence follows its evidence.** When a `SessionJustification` file is deleted and it was the student's last one on the session (files linked to them via `session_justifications.upload_id`, or uploaded by them and linked to nobody else), a `session_students.attendance_status` of `absent_justified` goes back to `absent`; any other status is left alone. The delete response carries `attendance_reverted` (bool). Any `session_justifications.upload_id` pointing at the deleted file is set to `NULL`. When the attendance is reverted, the student's `approved` justification rows on the session become `status = withdrawn` with `withdrawn_by` / `withdrawn_at` (migration `2026-09-29-session-justification-withdrawn.sql`); `GET /trainings/onsite/justifications/{sessionId}.json` returns `withdrawn_at` and `withdrawn_by_name` on each row. The reviewer lookup ignores the ownership narrowing that normally restricts `user_group_id > 170` (Captain and below) to their own rows, so a session teacher who is themselves a line-pilot account can delete a student's submission rather than silently getting `{"result": false}` with HTTP 200.
+
+**Write gate.** The uploader must be on the session roster (`session_students.user_id`), else `403 Uploads are not enabled for this session`. `SessionJustification` has no further condition — several pieces of evidence for one missed class are ordinary — and is also open to reviewers (the session's/subject's teacher, or `user_group_id <= 140`), who upload evidence on a student's behalf and link it with **Record Justification**. `SessionClasswork` additionally requires:
 
 - `sessions.allow_classwork_upload = true` for that session, and
 - **no active `SessionClasswork` upload of their own on that session** — homework is one file. A student holding a submission must delete it first (subject to the deadline above); a second upload is `403 Uploads are not enabled for this session`.
@@ -1418,6 +1449,28 @@ A student replaces their homework by deleting it and uploading again. Two indepe
 The deadline does **not** gate uploading: a student who submitted nothing may still submit after it, and that submission arrives flagged late (see **Late submissions** below) rather than refused.
 
 Enforced on every path that can attach one of these tags: `POST /uploads/sign.json` (before the presigned S3 PUT is issued — gating at `complete()` would be too late, the object is already in S3 by then), `POST /uploads/create.json`, and `POST /uploads/confirm/{id}.json`. `POST /uploads/complete/{id}.json` re-runs the same gate at activation: the one-file limit counts active rows, so two `sign()` calls made before either completed would both have seen zero. A row refused there is deleted along with its S3 object.
+
+**Staff-only class files (`SessionStaff`).** A third session-keyed tag, `Upload.model = SessionStaff`, `Upload.foreign_key = sessions.id`, for files only the class's staff may see. Staff = reviewer, same definition as above: the session's teacher, the subject's teacher, or `user_group_id <= 140`.
+
+| Action | Reviewer | Anyone else (students included) |
+|--------|----------|----------------------------------|
+| Upload (`sign` / `create` / `confirm` / `complete`) | Yes | `403 Uploads are not enabled for this session` |
+| List (`GET /uploads/index/SessionStaff/{sessionId}.json`) | Every row | Own rows only — in practice none, since they can't upload |
+| Open (`download` / `proxy`) | Yes | `404` |
+| Delete / rename / expiration | Yes, any row, whatever their group | `403` (delete) / `404` (rename, expiration) |
+
+Unlike the two submission tags, `SessionStaff` rows are ordinary files: not immutable, and may be re-tagged by whoever may confirm them. The legacy `LessonClass` tag (alias of `Session`) remains the class's student-visible attachments.
+
+**Exam result evidence (`ExamAttempt`).** `Upload.model = ExamAttempt`, `Upload.foreign_key = exam_attempts.id` — files attached to a manually recorded onsite exam result (scanned answer sheet, examiner's report). Management only: managers (`user_group_id <= 135`, Trainings Manager and above) and the Chief Pilot (`user_group_id = 150`). Instructors, the student and every other group are refused, and so is an attempt whose enrolment belongs to another company.
+
+| Action | Managers / Chief Pilot, same company | Anyone else |
+|--------|--------------------------------------|-------------|
+| Upload (`sign` / `create` / `confirm` / `complete`) | Yes | `403 Uploads are not enabled for this session` |
+| List (`GET /uploads/index/ExamAttempt/{attemptId}.json`) | Every row | `404` |
+| Open (`download` / `proxy`) | Yes | `404` |
+| Delete / rename / expiration | Yes | `403` (delete) / `404` (rename, expiration) |
+
+`POST /manager/trainings/onsite/store_exam_result.json` returns `exam_attempt_id` alongside the `ActivityProgress` fields — the attempt it created or edited (`null` for a legacy pre-history grade), which is the `foreign_key` to attach files to. `GET /manager/trainings/students/view/{enrollmentId}.json` adds `files` (active upload count) to every subject-level `Exam[].ExamAttempt[]` row, for managers and the Chief Pilot only; other callers get no `files` key.
 
 **Late submissions.** `GET /uploads/index/{model}/{foreignKey}.json` adds two fields to every row carrying one of these tags: `deadline` (the governing `classwork_deadline` / `justification_deadline`, or `null`) and `late` (`true` when the row's `created` second is after it). Both are derived per request, never stored — a teacher who extends the deadline afterwards un-flags the submissions the extension now covers. Nothing about `late` refuses or restricts anything; it is a label.
 
@@ -1796,6 +1849,42 @@ Counts only sessions under a non-deleted `training_activities` row (`training_ac
 **`DISTANCE` trainings.** `training.AttendanceStatus` is omitted from this response entirely when `Training.type = 'DISTANCE'` (attendance-by-session doesn't apply — distance trainings track `getProgress` instead).
 
 **Same object, student report endpoint.** <mark style="color:blue;">`GET`</mark> `/trainings/students/report/{enrollmentId}.json` returns the identical breakdown nested at `training.Training.AttendanceStatus` — explicitly `null` (rather than omitted) for a `DISTANCE` training. Access is decided by `ReportVisibility::level()` (see [Training Certificate](#training-certificate) below): the student, their supervisor and same-company staff (`user_group_id <= 170` — Flight Instructor and above) receive the full report with `training.verification: false`; **anyone else — including an anonymous caller, the endpoint is public — receives the verification subset** with `training.verification: true`.
+
+#### Homework record
+
+For a non-`DISTANCE` training, the response also includes `training.Homework`: every class that requested class work (`sessions.allow_classwork_upload = 1`, not canceled) with this student on its roster, oldest first. It comes from `Training::getHomeworkRecord($trainingId, $userId)` and, like `AttendanceStatus`, is keyed by `users.id`.
+
+```json
+"Homework": {
+  "items": [
+    {
+      "session_id": "12c2d835-…",
+      "datetime": 1790064000,
+      "subject_code": "1",
+      "subject_name": "AIR LAW AND ATC PROCEDURES",
+      "lesson": "Airspace and ATC services",
+      "description": "Summarise the airspace classes A to G.",
+      "deadline": 1790359200,
+      "attendance_status": "attended",
+      "submitted": true,
+      "submitted_at": 1790770531,
+      "late": true,
+      "graded": true,
+      "score": 7.0,
+      "feedback": "Good summary. Handed in late.",
+      "graded_at": 1790770543,
+      "graded_by": "Laura Bennett"
+    }
+  ],
+  "summary": { "requested": 1, "submitted": 1, "late": 1, "graded": 1, "average": 7.0 }
+}
+```
+
+* `submitted` / `submitted_at`: the student's earliest active `SessionClasswork` upload for that class. `late` compares it to `deadline` (`null` deadline = never late).
+* `score` is `null` when the work is ungraded or was graded with a comment only. `summary.average` averages the numeric scores only, and is `null` when there are none.
+* `graded_by` is the grader's display name.
+
+The report endpoint returns the same object at `training.Training.Homework`, explicitly `null` for a `DISTANCE` training, under the same `ReportVisibility` rules (the verification subset has no `Homework`).
 
 #### Reset attempts in the response
 
@@ -3040,6 +3129,8 @@ Open applications also appear on the existing approvals endpoint, as a third que
 >
 > These tables are separate from the internal `exams` table. `exams.caa_exam` is unchanged, and official results **never** write `activity_progress`. None of the tables has a fee or price column.
 >
+> **2026-09-29:** new table `exam_sitting_requirements` (`flylogs/migrations/2026-09-29-exam-sitting-requirements.sql`) — entry requirements per sitting, same columns and kinds as `training_requirements` but keyed on `sitting_id`. No new actions, so no `aco_sync`. See *Entry requirements* below.
+>
 > **2026-09-16 (task #959):** `exam_registration_subjects.result` gained the value `ABSENT` (`flylogs/migrations/2026-09-16-exam-sittings-absent.sql`, ENUM change only), and `manager_student` was added (needs `aco_sync`).
 
 A sitting is `type` `AUTHORITY` (the authority's exam; Flylogs only manages registration and results) or `SCHOOL`. `datetime` is a unix timestamp. `registration_opens` / `registration_deadline` are `Y-m-d` dates, and the deadline day is the last day to register **or cancel**. `seats` and `max_subjects` `NULL` mean unlimited / no cap.
@@ -3105,6 +3196,16 @@ A student may register for a subject when their enrolment on the subject's cours
 
 A registration holds a seat while it is `PENDING`, `CONFIRMED`, `SAT` or `ABSENT`. Counts are derived on every read. A sitting flips `PUBLISHED` → `FULL` when its last seat is taken and back again when one frees up; `FULL` is never set by hand.
 
+### Entry requirements
+
+A sitting can carry the same checkable entry requirements as a course (see *Entry requirements* under open trainings): `kind` `CERTIFICATE` (`certificate_type`, exact match), `HOURS` (`hours_function` + `hours_min` in hours), `COURSE` (`required_training_id`, completed) or `AGE` (`min_age`, on the day the student registers). Rows live in `exam_sitting_requirements` and are judged by the same `EnrollmentPrerequisites` evaluator, so a rule means the same thing on a course and on a sitting. A sitting with no rows checks nothing.
+
+Requirements are about the **student**, not a subject:
+
+* **Student registration** (`exam_registrations/register`) is refused with `PREREQUISITES_NOT_MET` when any rule is unmet — there is no override on this path.
+* **Manager registration** (`exam_sittings/register`) is never refused for it; it comes back as a warning with no subject (see below).
+* Requirements are managed by `user_group_id` **≤ 150** (Chief Pilot and above), through `exam_sittings/save.json`.
+
 ### Student: open sittings
 
 <mark style="color:blue;">`GET`</mark> `/trainings/exam_registrations/index.json` (named param `page`)
@@ -3117,11 +3218,14 @@ This returns sittings in `PUBLISHED` or `FULL` that haven't taken place yet and 
     "ExamSitting": { "id": "…", "name": "October theory", "type": "AUTHORITY", "status": "PUBLISHED", "datetime": 1792400000, "registration_deadline": "2026-10-01", "seats": 20, "max_subjects": 4, "seats_taken": 3, "seats_left": 17, "rule_name": "EASA", "location_name": "Madrid" },
     "Subjects": [{ "id": "…", "training_subject_id": "…", "code": "010", "name": "Air Law", "training_name": "ATPL(A)", "seats": null, "taken": 2, "seats_left": null, "eligible": true, "eligibility_reason": null, "attempt": { "verdict": "OK", "attempt_no": 1 } }],
     "Registration": null,
-    "can_register": { "allowed": true, "reason": null }
+    "Prerequisites": { "met": false, "rules": [{ "kind": "CERTIFICATE", "key": "medical_class_1", "required": "medical_class_1", "actual": null, "met": false, "reason": "CERTIFICATE_MISSING", "label": "Medical Class 1" }] },
+    "can_register": { "allowed": false, "reason": "PREREQUISITES_NOT_MET" }
   }],
   "paging": { "page": 1, "pageCount": 1 }
 }
 ```
+
+`Prerequisites` is the caller's verdict against the sitting's entry requirements, in the same shape as the catalog's `Me.prerequisites`, or `null` when the sitting has none (which is not the same as "all met"). Unmet reasons: `CERTIFICATE_MISSING`, `CERTIFICATE_EXPIRED`, `HOURS_SHORT`, `COURSE_NOT_COMPLETED`, `TOO_YOUNG`, `BIRTHDATE_UNKNOWN`. Unmet requirements do not hide a sitting; they show in `can_register`.
 
 ### Student: register
 
@@ -3133,7 +3237,9 @@ This returns sittings in `PUBLISHED` or `FULL` that haven't taken place yet and 
 
 The server validates the request under a row lock on the sitting, so two students racing for the last seat get one registration and one refusal. A refusal is `{ "result": false, "reason": "…", "subject_id": "…" }`. The reasons, in the order they are checked:
 
-`SITTING_FULL`, `SITTING_NOT_OPEN`, `SITTING_PAST`, `REGISTRATION_NOT_OPEN_YET`, `REGISTRATION_DEADLINE_PASSED`, `ALREADY_REGISTERED`, `NO_SUBJECTS`, `TOO_MANY_SUBJECTS`, `SUBJECT_NOT_OFFERED`, `SUBJECT_NOT_ELIGIBLE`, `ATTEMPT_BLOCKED`, `SUBJECT_FULL`, `SITTING_FULL`.
+`SITTING_FULL`, `SITTING_NOT_OPEN`, `SITTING_PAST`, `REGISTRATION_NOT_OPEN_YET`, `REGISTRATION_DEADLINE_PASSED`, `ALREADY_REGISTERED`, `PREREQUISITES_NOT_MET`, `NO_SUBJECTS`, `TOO_MANY_SUBJECTS`, `SUBJECT_NOT_OFFERED`, `SUBJECT_NOT_ELIGIBLE`, `ATTEMPT_BLOCKED`, `SUBJECT_FULL`, `SITTING_FULL`.
+
+A `PREREQUISITES_NOT_MET` refusal carries the verdict instead of a subject: `{ "result": false, "reason": "PREREQUISITES_NOT_MET", "prerequisites_verdict": { "met": false, "rules": [...] } }`.
 
 A new registration is `PENDING`. A subject whose verdict is `WARN` is accepted, and the warning comes back in the response:
 
@@ -3165,14 +3271,16 @@ Same payload as `mine` (`registrations`, `standing`, `paging`) for the given stu
 
 | Method | Path | Notes |
 |--------|------|-------|
-| `GET` | `/manager/trainings/exam_sittings/index.json` | Named params `status`, `page`. Rows carry `seats_taken`, `rule_name`, `Subjects` and `Registrations` (count by status). `limit` 50. |
-| `GET` | `/manager/trainings/exam_sittings/view/{id}.json` | One sitting with `Subjects` and `Rule`. |
+| `GET` | `/manager/trainings/exam_sittings/index.json` | Named params `status`, `page`. Rows carry `seats_taken`, `rule_name`, `Subjects`, `Requirements` and `Registrations` (count by status). `limit` 50. |
+| `GET` | `/manager/trainings/exam_sittings/view/{id}.json` | One sitting with `Subjects`, `Requirements` and `Rule`. |
 | `GET` | `/manager/trainings/exam_sittings/options.json` | `trainings` (with `Subjects`), `rules`, `locations` for the form. |
 | `POST` | `/manager/trainings/exam_sittings/save.json` | Create or update. Ignores `status`, `company_id` and `deleted`. |
 | `POST` | `/manager/trainings/exam_sittings/status/{id}/{status}.json` | `DRAFT`, `PUBLISHED`, `CLOSED` or `CANCELED`. Publishing a sitting with no seats left lands on `FULL`. |
 | `POST` | `/manager/trainings/exam_sittings/delete/{id}.json` | Soft delete. Refused while any registration is `PENDING`, `CONFIRMED`, `ABSENT` or `SAT`; the response carries `registered`. |
 
 `save.json` takes an optional `subjects` array, `[{ "training_subject_id": "…", "seats": null }]`. When it is present, the offered subjects are reconciled to match it row by row: new subjects are added, seat changes are updated, and subjects left out are soft-deleted. Removing a subject that someone holds a seat for rolls the whole save back with `{ "result": false, "reason": "SUBJECT_HAS_REGISTRATIONS", "subject_id": "…", "registered": 2 }`. Every subject must belong to one of the company's courses (otherwise `404`), and so must the rule, course and location.
+
+It also takes an optional `requirements` array, `[{ "id": "…optional", "kind": "HOURS", "hours_function": "pic", "hours_min": 100 }]`. When it is present, the sitting's entry requirements are reconciled to match it in the same transaction: a row whose `id` already belongs to this sitting is updated, any other row is created, and existing rows left out are **deleted** (a rule is configuration, not history). Values not read by the row's `kind` are blanked. A rule that fails validation rolls the whole save back with `validationErrors` (same messages as a course requirement). A `required_training_id` outside the company answers `404`. The saved sitting comes back with `Requirements`. Omitting `requirements` leaves them untouched.
 
 ### Manager: registrations and results
 
@@ -3217,7 +3325,7 @@ This returns every live user of the company (`users.deleted = 0`, `active = 1`) 
 
 The request is checked by `ExamRegistrationRules::decideForManager()` under the same row lock as a student's registration. A manager is **not** bound by the registration window, the sitting's date (so past sittings can be recorded), `DRAFT`/`CLOSED` status, or eligibility. A manager **is** bound by a `CANCELED` sitting, one live registration per student, `max_subjects`, the offered subjects, seats and the attempt rules (`ATTEMPT_BLOCKED`).
 
-The user must belong to the session company and be live; otherwise the call answers `404`. The registration is created `CONFIRMED` and the student is notified. Subjects the student isn't ready for, and attempt warnings, come back as `warnings`:
+The user must belong to the session company and be live; otherwise the call answers `404`. The registration is created `CONFIRMED` and the student is notified. Subjects the student isn't ready for, attempt warnings and unmet entry requirements come back as `warnings`. Entry requirements are about the student, so that warning has `subject_id` `null` and the number of unmet rules in `detail`:
 
 ```json
 {
@@ -3225,7 +3333,8 @@ The user must belong to the session company and be live; otherwise the call answ
   "registration": { "id": "…", "status": "CONFIRMED", "subjects": ["…"] },
   "warnings": [
     { "subject_id": "…", "reason": "NOT_ELIGIBLE", "detail": "EXAMS_NOT_PASSED" },
-    { "subject_id": "…", "reason": "LAST_ATTEMPT" }
+    { "subject_id": "…", "reason": "LAST_ATTEMPT" },
+    { "subject_id": null, "reason": "PREREQUISITES_NOT_MET", "detail": 2 }
   ]
 }
 ```
@@ -3402,3 +3511,93 @@ person, never as an assessment.
 
 Two cases answer `200` with `result: false` rather than failing: nothing has been
 graded yet, and no AI provider is configured on the installation.
+
+---
+
+## Course revisions, student moves and prior experience
+
+Task #1050. All endpoints below are manager endpoints limited to staff up to and including Trainings Manager (`user_group_id <= 135`); anyone else gets `404` (`403` for `prior_experience` on enroll). Approving anything in `/manager/trainings/approvals` also requires `user_group_id <= 135` — the course's own `manager_id` no longer grants it. Refusals are answered with HTTP 200 and `{"result": false, "code": "..."}` — the codes are listed per endpoint.
+
+All times on these endpoints are **whole seconds**; nothing is sent or stored as decimal hours.
+
+### Enrollment status `MIGRATED`
+
+`TrainingsUser.status` gained `MIGRATED`: the student moved to another course or course revision and carries on in the enrollment named by `TrainingsUser.migrated_to_id`. The new enrollment points back through `migrated_from_id` and inherits `notes` and `prior_experience_reason`. A `MIGRATED` enrollment cannot be changed through `/manager/trainings/students/status`, `reset`, `finish` or the student `restart` (`400 ENROLLMENT_MIGRATED`); `MIGRATED` itself cannot be set through `status`. It does not satisfy a course prerequisite, issue a certificate or hold an intake seat. A prerequisite naming a course is met by completing any course revision of it.
+
+Progress rows carry a `source`: `NORMAL`, `MIGRATED` (copied from the previous enrollment) or `CREDIT` (prior experience, kept as `CREDIT` when carried over). Any ordinary write to an `activity_progress` row turns it back to `NORMAL`.
+
+### Course revisions
+
+A course revision is a `Training` row. The fields keep their database names: `version` (course revision number 1, 2, …), `version_root_id` (id of revision 1; `null` on revision 1) and `version_status`: `CURRENT` (the default for new students), `DRAFT` (being prepared; never enrollable, never in the catalog) or `SUPERSEDED` (an earlier revision; managers may still enrol into it, students cannot apply). `GET /manager/trainings/trainings/index.json` returns the three fields on every row.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/new_version/{trainingId}.json` — copies the CURRENT revision into a new DRAFT (subjects, lessons, exams, missions, stages, entry requirements, settings; `published = 0`, `enrollment_mode = CLOSED`). The course row is locked for the duration, so concurrent calls create one draft and the others answer `DRAFT_EXISTS`. Answer: `{result, code, id}` where `id` is the draft. Codes: `NOT_CURRENT`, `DRAFT_EXISTS`, `SAVE_FAILED`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/publish_version/{draftId}.json` — the draft becomes CURRENT and takes over `active`, `published` and `enrollment_mode`; the previous revision becomes SUPERSEDED, unpublished and closed to applications. Its open intakes (`DRAFT`, `PUBLISHED`, `FULL`) and `PENDING` / `WAITLIST` applications move to the new revision; no enrollment is moved. Answer: `{result, code, previous_id, students_on_previous}`. Codes: `NOT_DRAFT`, `REVISION_PENDING` (the draft has unapproved changes; approving them through `/manager/trainings/approvals/decide/{id}.json` publishes it and that answer then carries `published_version` with the same fields), `SAVE_FAILED`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/discard_version/{draftId}.json` — deletes a draft. Code: `NOT_DRAFT`.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/revision_diff/{fromId}.json?to={toId}` — what changed between two course revisions (any two courses of the company). Subjects, activities, missions and stages are paired by normalised name; missions also report `position` changes.
+
+```json
+{
+  "result": true, "code": null,
+  "from": { "id": "…", "name": "EASA PPL", "version": 1, "version_status": "CURRENT" },
+  "to":   { "id": "…", "name": "EASA PPL", "version": 2, "version_status": "DRAFT" },
+  "diff": {
+    "subjects": { "added": ["Navigation"], "removed": [], "changed": [{ "name": "Air Law", "hours": [10, 12], "activities_added": ["Airspace"], "activities_removed": [] }] },
+    "missions": { "added": [{ "position": 1, "name": "Familiarisation" }], "removed": [], "changed": [{ "name": "First solo", "fields": { "position": [2, 3], "hours": [0.5, 0.75] } }] },
+    "stages": { "added": [], "removed": [] },
+    "settings": { "validity": [365, 730] }
+  },
+  "flight_types": { "3": "DUAL", "4": "SOLO" }
+}
+```
+
+Mission `fields` may hold `position`, `flight_type_id`, `hours`, `rules`, `mandatory`, `tg`; settings compared are `type`, `theory`, `flights`, `stage_checks`, `evaluation_method`, `auto_finish`, `validity`, `duration`, `show_certificate`, `regulatory_basis`, `requirements`. Planned hours are the course's own values (stored in hours by the course).
+
+`POST /manager/trainings/students/enroll.json` accepts any CURRENT or SUPERSEDED revision as `training_id` and refuses a DRAFT with `code: REVISION_IS_DRAFT`. The catalog, `submit` and the approval of an application only accept the CURRENT revision (`NOT_PUBLISHED`).
+
+### Moving a student to another course
+
+Compatibility: a subject matches on normalised name (case and spacing ignored) and equal planned `hours`; inside a matched subject, activity *i* matches activity *i* when kind and name are equal; course-level activities match the same way. Mission *i* matches mission *i* (course order, ties by id) when `flight_type_id` and `hours` are equal — an inserted mission shifts every later position. Students are always moved to a CURRENT revision.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/migrate_preview/{enrollmentId}.json?target={trainingId}` — writes nothing. Answer `{ "preview": { refusal, source, target, map, carried: {activities, missions, credits}, unmatched_hours: [{ flight_type_id, name, seconds, in_target }] } }`; `map` pairs old ids with new ids (`null` = not carried).
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/students/migrate/{enrollmentId}.json` — body `{ "target": "<trainingId>", "carry_flight_types": [4], "reason": "…" }`. Opens an ACTIVE enrollment on the target with the matched `activity_progress` and `user_training_flights` rows copied (same flights), credits the unmatched flown time of the listed flight types (only types the target flies; a flight already carried with a matched mission is not credited again), carries existing credits whose flight type / subject exists in the target, and closes the old enrollment as `MIGRATED` — all in one transaction. Answer: `{result, code, trainings_user_id}`. Codes: `REASON_REQUIRED`, `NOT_ACTIVE`, `SAME_COURSE`, `ALREADY_ON_TARGET`, `VERSION_NOT_CURRENT`, `SAVE_FAILED`.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/version_candidates/{trainingId}.json?target={trainingId}` — every ACTIVE enrollment of the course with `{enrollment_id, user_id, name, refusal, carried, unmatched_hours}` for moving it to the target.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/students/migrate_bulk.json` — body `{ "target": "…", "reason": "…", "students": [{ "enrollment_id": "…", "carry_flight_types": [] }] }`. Each student is moved in its own transaction; answer `{ "results": [{ "enrollment_id", "result", "code", "trainings_user_id" }] }`.
+
+### Prior experience
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/course_outline/{trainingId}.json` — `{ "outline": { "subjects", "course_activities", "missions", "flight_types": [{ "id", "name", "color", "seconds" }] } }`: what the prior-experience form offers (flight types are those the course's missions use; `seconds` is the course's planned time for that type).
+
+Prior experience payload — **whole seconds**:
+
+```json
+{
+  "reason": "PPL holder, 120 h logged",
+  "flight_type_seconds": { "3": 4800 },
+  "subjects": { "<subjectId>": { "seconds": 10800, "completed": true } },
+  "missions": ["<trainingFlightId>"]
+}
+```
+
+* Flight-type and subject time is stored in `enrollment_credits` (`kind` `FLIGHT_TYPE_HOURS` / `SUBJECT_HOURS`, `seconds`, `origin` `PRIOR`) exactly as sent.
+* A completed subject writes `activity_progress` rows (`value = 1`, `source = CREDIT`) for every activity of the subject that has no progress yet.
+* A completed mission writes a `user_training_flights` row with `flight_id = null`, `completed = 1`, `time = 0`, `source = CREDIT`. It counts for mission progress and course completion; its time comes only from the flight type credit.
+* `TrainingsUser.prior_experience_reason` holds the reason.
+
+Send it as `prior_experience` in `POST /manager/trainings/students/enroll.json` (one individual student only), or on its own:
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/students/prior/{enrollmentId}.json` — replaces the enrollment's prior experience (removes `origin = PRIOR` credits, credited missions and activity rows still tagged `CREDIT`, then writes the new ones). Answer `{result, code}`.
+
+Codes (both paths): `REASON_REQUIRED`, `INVALID_TIME` (not a whole number of seconds), `UNKNOWN_FLIGHT_TYPE`, `UNKNOWN_SUBJECT`, `UNKNOWN_MISSION`, `NEGATIVE_HOURS`, `PRIOR_SINGLE_STUDENT` (enroll with more than one student or a pilot group), `ENROLLMENT_CLOSED` (`prior` on an enrollment not in progress), `SAVE_FAILED`. When the enrollment is created but its prior experience could not be saved, `enroll.json` answers normally with `code: PRIOR_NOT_SAVED`.
+
+`GET /manager/trainings/students/view/{enrollmentId}.json` adds:
+
+* `HoursByFlightType`: `[{ flight_type_id, planned, done, credited }]` in **seconds** — planned = the course's mission time of that type, done = time the enrollment's confirmed flights gave its missions, credited = `enrollment_credits`.
+* `HoursBySubject`: `[{ training_subject_id, planned, done, credited }]` in **seconds** — planned = `training_subjects.hours`, done = sum of `activity_progress.time`.
+* `EnrollmentCredit`: the raw credit rows. `PriorCredit`: `{ subjects_completed: [ids], missions: [ids] }`.
+* `TrainingsUser.prior_experience_reason`, `migrated_from_id`, `migrated_to_id`; `Training.version` (course revision number), `Training.version_status`.

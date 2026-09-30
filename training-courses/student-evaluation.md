@@ -74,6 +74,12 @@ Once teachers introduce exam results, these are stored in the student syllabus a
 
 <figure><img src="../.gitbook/assets/Screenshot 2025-04-03 at 09.48.10.png" alt=""><figcaption><p>Exam results as stored by the teacher on the student record page.</p></figcaption></figure>
 
+**Attaching files to an exam result**
+
+When you add or edit an onsite exam result from the student record page (**Exams → Add result**), you can attach files to it — a scanned answer sheet, the examiner's report or any other evidence. Click **Attach files** in the result window, pick one or more files and save. To add or remove files later, click the paperclip next to the result; the number beside it shows how many files are attached.
+
+These files are private to training management: only managers (Trainings Manager and above) and the Chief Pilot can see, add or remove them. Instructors and the student do not see them, not even on their own training record.
+
 ### Flight debriefing
 
 Additionally, you can require SIC pilots or students to sign the flight mission results as well as any debriefing remarks written by the PIC. You may activate this option as as an email sumary to be sent to all crew members upon flight confirmation.

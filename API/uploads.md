@@ -75,6 +75,8 @@ List active uploads for a given model record. Scoped to the authenticated user's
 
 Rows tagged `SessionClasswork` or `SessionJustification` additionally carry `deadline` (unix, or `null`) and `late` (boolean) — see [trainings.md](trainings.md) § Session Uploads.
 
+Rows tagged `SessionJustification` also carry `student_id` and `student_name` — the student the evidence is for. Taken from the justification row that links the file (`session_justifications.upload_id`, so a file a teacher filed on a student's behalf names the student, not the teacher), otherwise the uploader when they are on the session roster, otherwise `null`.
+
 ---
 
 ## View Upload

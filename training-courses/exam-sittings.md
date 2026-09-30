@@ -16,7 +16,7 @@ Students register by choosing subjects. Flylogs counts every attempt and checks 
 | Action | Who |
 | ------ | --- |
 | See open sittings, register, cancel your own registration, see your own results | Every user in the company |
-| Create, edit, publish and delete sittings | **Chief Pilot and above** |
+| Create, edit, publish and delete sittings, including their entry requirements | **Chief Pilot and above** |
 | Confirm, reject or mark registrations absent, and enter results | **Chief Pilot and above** |
 | Register a student yourself | **Chief Pilot and above** |
 | Reset a student's attempt history | **Chief Pilot and above** |
@@ -74,11 +74,36 @@ Open the **Sittings** tab and click **New sitting**.
 * **Seats**. Leave it **empty** for unlimited seats.
 * **Max subjects per student**. Leave it empty for no cap.
 * **Instructions**: what students should know or bring.
-* **Subjects**: tick the course subjects this sitting offers. You can give a subject its own seat limit; if you leave it empty, only the sitting's seat limit applies.
+* **Subjects**: tick the course subjects this sitting offers. **Select all** next to a course's name ticks every subject of that course at once; when they are all ticked it reads **Clear** and unticks them. You can give a subject its own seat limit; if you leave it empty, only the sitting's seat limit applies.
+* **Entry requirements**: conditions Flylogs checks before a student can register. See [Entry requirements](#entry-requirements) below.
 
 A new sitting is saved as a **Draft**, which students never see. Click **Publish** on its row to open it.
 
 You can remove a subject from a sitting as long as nobody is registered for it. If students are registered, cancel their registrations first.
+
+### Courses with several course revisions
+
+When a course has more than one [course revision](edit-a-training.md#course-revisions-minor-and-major-changes), its revisions are shown together under the course name, one block per course revision (*Course revision 1 · previous*, *Course revision 2 · current*), joined by a line on the left so it is clear they are the same course. Each course revision keeps its own subjects and its own **Select all**: a newer revision may add, remove or rename subjects, so pick the subjects of each revision you want to offer. Draft course revisions are not listed.
+
+The same grouping appears when you register a student and in the registrations list, and students see which course revision a subject belongs to.
+
+### Entry requirements
+
+A sitting can check the same conditions a course checks before a student joins it (see [Entry requirements](open-trainings.md#entry-requirements) for courses):
+
+| Rule | What is checked |
+| ---- | --------------- |
+| **Holds a certificate** | The student has a valid certificate of that exact type. A Class 2 does not satisfy a Class 1 rule, and neither does a certificate filed under the generic **Medical** type. |
+| **Minimum flight hours** | Total, PIC, SIC, dual, instructor, night, IFR, cross-country or multi-engine. |
+| **Has completed another course** | An enrolment on that course with status *Completed*. |
+| **Minimum age** | Their age on the day they register. |
+
+Add them with **Add requirement** at the bottom of the sitting form. They are saved together with the sitting when you click **Save**. A sitting with no entry requirements checks nothing, and registers exactly as before.
+
+Entry requirements are about the student, not about a subject. They work alongside the subject checks below; they don't replace them.
+
+* **A student who doesn't meet them can't register.** The sitting still appears for them, with the checklist of what they need (a green tick per rule met, and for each one unmet what to do about it), and the **Register** button is replaced by an explanation.
+* **When you register a student yourself, they don't stop you.** Flylogs registers the student and warns you how many requirements they don't meet. The decision is yours, for example when a medical is booked for next week.
 
 ### Sitting statuses
 
@@ -92,7 +117,7 @@ A sitting with registrations cannot be deleted. Cancel it instead, so the studen
 
 ## What students see
 
-A published sitting appears for a student only when it offers **at least one subject they are ready for**, and it lists only those subjects. A student is ready for a subject when:
+A published sitting appears for a student only when it offers **at least one subject they are ready for**, and it lists only those subjects. If the sitting has [entry requirements](#entry-requirements), the student also sees the checklist of what they need, above the subjects. A student is ready for a subject when:
 
 * they have an **active** enrolment on the subject's course, and every mandatory exam of that subject is passed; or, if the subject has no mandatory exam, every mandatory lesson is complete;
 * **or** they have **completed** the course.
@@ -134,6 +159,7 @@ A registration you make yourself:
 * is **Confirmed** straight away, and the student is notified;
 * can be made after the registration deadline, on a draft or closed sitting, or for a sitting that has already taken place, which is how you record exams sat before the school used Flylogs;
 * can include a subject the student isn't ready for yet. Flylogs shows a warning, and the decision is yours;
+* can be made for a student who doesn't meet the sitting's entry requirements. Flylogs warns you how many they miss;
 * **still follows the attempt rules**, the seat limits and the subject cap. A subject with no attempts left, or too soon after the last attempt, can't be registered. If a rule is wrong for your school, change the rule.
 
 A cancelled sitting can't take new registrations.

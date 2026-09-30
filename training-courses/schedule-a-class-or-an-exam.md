@@ -15,5 +15,5 @@ This records are stored in the student's academic profile as part of the trainin
 {% embed url="https://youtu.be/fgaZIQFwvnw" %}
 
 {% hint style="info" %}
-Class work (homework) isn't requested when scheduling a class — it's requested afterwards, from the class page's **Documents** tab. See [Missed classes and class work](missed-classes-and-class-work.md).
+Class work (homework) isn't requested when scheduling a class — it's requested afterwards, from the class page's **Classroom** tab. See [Missed classes and class work](missed-classes-and-class-work.md).
 {% endhint %}

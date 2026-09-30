@@ -131,22 +131,31 @@ A class that hasn't been signed can still be exported, but the report is marked 
 
 ### Requesting class work
 
-From the class page's **Documents** tab, a teacher can request class work (homework) from students: turn it on, set a deadline and write a description of what's expected. Students are notified and see a banner on the class page until they've dealt with it.
+From the class page's **Classroom** tab (which also holds the class discussion), a teacher can request class work (homework) from students: turn it on, set a deadline and write a description of what's expected. Students are notified and see a banner on the class page until they've dealt with it.
 
 Once attendance is signed, the request is frozen — it can no longer be enabled, changed or cancelled. Students can still upload their work after signing, and the teacher and any training manager can review everyone's submissions from the same tab; each student only ever sees their own.
 
 Class work is one file per student. Students can replace theirs — delete, upload again — until the deadline passes or you grade it, whichever comes first; after either, it locks. Grading early is therefore a way to freeze a submission. Anything submitted after the deadline is still accepted and shown to you marked **Late**.
 
+### Staff documents
+
+The class page's **Documents** tab has two boxes you can upload to:
+
+* **Class documents · visible to students** — handouts and material for everyone on the register.
+* **Staff documents** (amber, with a lock) — files only training managers and the class's teacher can see: lesson plans, marking notes, answer keys. Students never see this box or its files, and can't open them even with a direct link.
+
+Who counts as the class's teacher: the teacher assigned to the class, or the subject's teacher. Training managers (Crew Scheduling and above) see the staff documents on every class. Exam sittings have the same two boxes.
+
 ### Grading class work
 
-The same **Documents** tab lists every student on the register with their submission — who uploaded it, when, and whether it was late — plus a score out of 10 and a comment for the student. Students who submitted nothing still get a row, so you can record a zero with an explanation. A score, a comment, or both: an empty grade isn't saved. Re-grading replaces the previous mark.
+The same **Classroom** tab lists every student on the register with their submission — who uploaded it, when, and whether it was late — plus a score out of 10 and a comment for the student. Students who submitted nothing still get a row, so you can record a zero with an explanation. A score, a comment, or both: an empty grade isn't saved. Re-grading replaces the previous mark.
 
 Saving sends the student an in-app message with their score and your comment, linking back to the class. No email, no phone notification. Students see only their own grade.
 
 The subject's teacher and training managers can grade too — the same people who can see the whole roster's submissions.
 
 {% hint style="info" %}
-Class work is requested from the Documents tab, not while scheduling the class — see [Schedule a class or an exam](schedule-a-class-or-an-exam.md).
+Class work is requested from the Classroom tab, not while scheduling the class — see [Schedule a class or an exam](schedule-a-class-or-an-exam.md).
 {% endhint %}
 
 ### Reviewing absence justifications
