@@ -27,7 +27,7 @@ A profile contains:
 | **Limits** | Max take-off mass (required), max landing, max zero fuel and max ramp mass (optional). |
 | **Loading stations** | One row per seat row, baggage area or fuel tank, each with its arm from the AFM loading table. Seats and baggage can have a maximum mass. Fuel tanks have a fuel unit (litres, US or imperial gallons), a **density**, and an optional usable capacity. The **AVGAS** and **Jet A-1** buttons fill a typical density; check it against your AFM. |
 | **CG envelope** | The forward and aft limits as *mass / arm* points, exactly as the AFM or type certificate gives them. Between points the limit is a straight line. Below the first point and above the last it stays constant. |
-| **Landing envelope** | Optional, for aircraft whose landing CG limits differ from take-off. |
+| **Landing envelope** | Optional, for aircraft whose landing CG limits differ from take-off. It only adds limits: the landing CG is checked against the landing envelope **and** the normal envelope, so you can enter it as a simple box without copying the normal envelope's sloped lines. |
 
 The preview chart updates as you type. Before saving you must tick the box confirming you checked every value against the flight manual and weighing report.
 
@@ -61,9 +61,10 @@ On a flight with an aircraft that has a profile, the **Loadsheet** card appears 
 <figure><img src="../.gitbook/assets/mass-balance-flight-card.png" alt="Loadsheet card on the flight page showing a Within limits badge, take-off and landing mass and CG, and an Open loadsheet button"><figcaption><p>The Loadsheet card on the flight page</p></figcaption></figure>
 
 1. For each seat and baggage station, enter the **mass** and optionally who or what is there. For a new loadsheet Flylogs fills in the names of the crew and of the passengers from the passenger manifest. Masses are always left for you to enter.
+   * A station named **Oil** (or Aceite, Öl, Huile, Olio, Óleo, Olej) is treated as engine oil: a new loadsheet fills it with the station's maximum mass, and it has no occupant/content field. You can still change the mass.
 2. For each fuel tank enter volumes:
-   * **Take-off**: fuel on board at take-off.
-   * **Taxi**: fuel burnt before take-off (adds to the ramp mass).
+   * **Ramp**: fuel on board at engine start.
+   * **Taxi**: fuel burnt before take-off. Take-off fuel is ramp minus taxi.
    * **Trip**: fuel burnt before landing.
 3. The **Result** panel shows the zero fuel, ramp, take-off and landing mass and CG against the maximums, a list of every limit exceeded, and the points on the envelope chart.
 4. Click **Save**. The server recalculates the loadsheet with the aircraft's current profile and stores it with the flight, including a copy of the profile used.
@@ -73,9 +74,9 @@ On a flight with an aircraft that has a profile, the **Loadsheet** card appears 
 The loadsheet checks:
 
 * each station's maximum mass and each tank's usable capacity,
-* trip fuel not greater than take-off fuel,
+* taxi fuel not greater than ramp fuel, and trip fuel not greater than take-off fuel,
 * max zero fuel, ramp, take-off and landing mass,
-* CG inside the envelope at zero fuel, take-off and landing (landing uses the landing envelope when there is one).
+* CG inside the envelope at zero fuel, take-off and landing. When there is a landing envelope, the landing CG must be inside **both** the landing envelope and the normal envelope. The chart draws the landing envelope clipped to the normal one, so the dashed line never goes outside it.
 
 ### Signing
 

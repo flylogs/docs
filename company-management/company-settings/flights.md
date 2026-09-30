@@ -49,7 +49,7 @@ These two switches add mandatory safety steps to the [flight dispatch function](
 
 Flylogs splits flight handling into three independent permissions. For each one, you tick which user types in your company are allowed to perform the action:
 
-* **Who can create flights** — draft a new flight from the Flights page or dispatch a scheduled flight into a draft.
+* **Who can create flights** — draft a new flight from the Flights page, dispatch a scheduled flight into a draft, or edit a draft.
 * **Who can confirm flights** — turn a completed draft into a confirmed entry in the logbooks.
 * **Who can edit flights** — change values on a confirmed flight or mark it as deleted.
 
@@ -69,7 +69,8 @@ Each permission is granted per user type (Pilot, Captain, Flight Instructor, Chi
 #### Rules that always apply
 
 * **Company Administrators, Operations Managers, and Compliance & Safety Managers** can create, confirm, edit, delete and cancel any flight regardless of how the permissions are configured. These staff roles are never restricted by flight permission settings, so they do not appear in the permission lists.
-* **Creator and PIC self-edit window** — the user who created the flight, or the pilot listed as PIC, can always edit a confirmed flight for **24 hours** after it was last modified, even if their user type is not in the edit list.
+* **Creator and PIC self-edit window** — the user who created the flight, or the pilot listed as PIC, can edit a confirmed flight for **12 hours** after its off-block time, even if their user type is not in the edit list.
+* **Editing drafts needs "create"** — changing a draft flight counts as drafting it, so it needs the **Who can create flights** permission, also for the draft's own PIC or creator. Users without it (for example students, if you have not ticked them) do not see the Edit button on drafts.
 * **Active pilots only** — to create a flight you must be marked as a pilot in your profile and your account must be active. A staff-only user (no pilot flag) above the Crew Scheduling level cannot create flights even if their user type is allowed.
 * **Historical and deleted flights** are locked for everybody — no edits, no deletes, no confirmations.
 

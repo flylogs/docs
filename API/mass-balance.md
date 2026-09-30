@@ -142,7 +142,7 @@ Loadsheets already saved keep their own profile copy.
 
 ### Issue codes
 
-`STATION_OVER_MAX`, `FUEL_OVER_CAPACITY`, `BURN_EXCEEDS_FUEL`, `NEGATIVE_INPUT`, `UNKNOWN_STATION`, `ZERO_FUEL_OVER_MAX`, `RAMP_OVER_MAX`, `TAKEOFF_OVER_MAX`, `LANDING_OVER_MAX`, `CG_FORWARD`, `CG_AFT`, `PROFILE_INCOMPLETE`. Issues carry `station`, `condition` (`zero_fuel` | `takeoff` | `landing`), `value` and `limit` where relevant.
+`STATION_OVER_MAX`, `FUEL_OVER_CAPACITY`, `BURN_EXCEEDS_FUEL`, `NEGATIVE_INPUT`, `UNKNOWN_STATION`, `ZERO_FUEL_OVER_MAX`, `RAMP_OVER_MAX`, `TAKEOFF_OVER_MAX`, `LANDING_OVER_MAX`, `CG_FORWARD`, `CG_AFT`, `PROFILE_INCOMPLETE`. Issues carry `station`, `condition` (`zero_fuel` | `takeoff` | `landing`), `value` and `limit` where relevant. The `landing` CG limits are the landing envelope clipped to the normal envelope (the most restrictive of the two at that mass).
 
 ## Save flight loadsheet
 

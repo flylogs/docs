@@ -68,8 +68,10 @@ Flights can be completely deleted when they are a DRAFT. Once a flight has been 
 
 Only the user profiles that you set up in your company settings are allowed to delete flights. Company Administrators, Operations Managers, and Compliance & Safety Managers can always edit and delete any flight regardless of these settings. For all other roles, the **Edit & delete flights** permission controls both the edit and the delete buttons. Even without this permission:
 
-* If the flight is still a **Draft**, the assigned PIC or the user who created the flight can always edit it.
-* If the flight has been **Confirmed**, the assigned PIC or the user who created the flight can still edit it for **24 hours** after it was last modified.
+* If the flight is still a **Draft**, the assigned PIC or the user who created the flight can edit it, as long as their role has the **Create flights** permission.
+* If the flight has been **Confirmed**, the assigned PIC or the user who created the flight can still edit it for **12 hours** after its off-block time.
+
+The **Edit** button is only shown to users who are allowed to save the changes.
 
 _To learn more about company permissions, read the_ [_Flight permissions section in Company Settings_](../company-management/company-settings/flights.md#flight-permissions)_._<br>
 

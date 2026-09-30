@@ -26,6 +26,8 @@ When a course has more than one course revision, the pop-up shows a **Course rev
 
 #### Recording previous experience
 
+{% embed url="https://youtu.be/Dr6D-ArjdsE" %}
+
 Students often start a course with experience already: a PPL holder beginning ATPL training, or a student coming from the same course at another school. When you enroll **one individual student** (not a pilot group), tick "**Record previous experience**" and click "**Next**" to enter it:
 
 * **Flight hours per flight type** — one field for each flight type the course's missions use, next to the hours the course plans for it.
@@ -225,7 +227,7 @@ In **Trainings → Audit → Analytics** you get a Stopped card, a pie chart spl
 
 #### Moving a student to another course
 
-A student can move from one course to another — for example from LAPL to PPL — or to a new course revision of the same course, keeping every piece of progress that also exists in the new course. Open the student's training progress page and click "**Move to another course**" in the student management panel. The wizard has four steps:
+A student can move from one course to another — for example from LAPL to PPL — or to a new course revision of the same course, keeping every piece of progress that also exists in the new course. Open the student's training progress page and click "**Move to another course**" in the student management panel. The wizard has four steps (the video in [Recording previous experience](#recording-previous-experience) walks through one move, from PPL to ATPL):
 
 1. **Choose the course.** Students are moved to the current course revision of the course you choose.
 2. **What carries over.** Flylogs compares both courses:
