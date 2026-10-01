@@ -60,8 +60,7 @@ On a flight with an aircraft that has a profile, the **Loadsheet** card appears 
 
 <figure><img src="../.gitbook/assets/mass-balance-flight-card.png" alt="Loadsheet card on the flight page showing a Within limits badge, take-off and landing mass and CG, and an Open loadsheet button"><figcaption><p>The Loadsheet card on the flight page</p></figcaption></figure>
 
-1. For each seat and baggage station, enter the **mass** and optionally who or what is there. For a new loadsheet Flylogs fills in the names of the crew and of the passengers from the passenger manifest. Masses are always left for you to enter.
-   * A station named **Oil** (or Aceite, Öl, Huile, Olio, Óleo, Olej) is treated as engine oil: a new loadsheet fills it with the station's maximum mass, and it has no occupant/content field. You can still change the mass.
+1. For each seat and baggage station, enter the **mass**. For seats, pick who sits there from a searchable list of the flight's crew, the passengers on the manifest and the company's users; a seat row can hold several people. For baggage, optionally type what is loaded. A new loadsheet puts the PIC (CM1) and the SIC (CM2, or the supervisor when there is no SIC) on the first seat row and spreads the manifest passengers over the other seats. Masses are always left for you to enter.
 2. For each fuel tank enter volumes:
    * **Ramp**: fuel on board at engine start.
    * **Taxi**: fuel burnt before take-off. Take-off fuel is ramp minus taxi.
