@@ -29,6 +29,8 @@ Every flight the pilot is on the crew of counts — **all three seats**, CM1, CM
 
 This is independent of the flight type's time classification: a seat set to log **no** hours still produces duty. An instructor who supervises a student's solo flight from the ground gets the duty for it and none of the flight time.
 
+The exception is **Flight Schools** and **SPO Operators**: there, a supervision or a simulator session only counts as duty when a flight the pilot operates (CM1 or CM2 on a real aircraft) follows it the same day. One after the last operated flight — or on a day with none — widens the pilot's **work times** instead of the duty period. See [Supervision and simulator sessions](../schedules/ftl-compliance-forecast.md#supervision-and-simulator-sessions).
+
 Flight duty period (FDP) is counted more narrowly than duty — see [FTL Compliance & Forecast](../schedules/ftl-compliance-forecast.md#duty-is-not-fdp).
 
 The pilots can have the option to enter/modify these times if the company allows them to do so.

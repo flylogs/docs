@@ -75,3 +75,26 @@ All other fields are optional. Note that additional fields may appear dynamicall
 > You can directly choose to publish the new record as you create it if select in the status box "**SCHEDULED**".
 
 <figure><img src="../.gitbook/assets/Screenshot 2026-03-03 at 15.43.52.png" alt="Flight Schedule Record editing form"><figcaption></figcaption></figure>
+
+### Multi-leg flights
+
+When you create a new booking you can plan a route with intermediate stops. Fill in the takeoff and landing airfields, then click the **+** button next to **Landing** and enter the next stop. You can add up to **3 extra airfields** (4 legs in total).
+
+The route is shown under the airport fields with one line per leg. Flylogs splits the offblocks–onblocks time equally between the legs; you can change the time at each intermediate stop. Use the **×** next to a leg to remove that stop.
+
+When you save, Flylogs creates **one booking per leg**, back to back, with the same aircraft, callsign, flight type, crew, status and notes. Each leg is then an ordinary booking: it is dispatched, logged, edited and cancelled on its own, so every sector appears in the logbook.
+
+### Repeating flights
+
+When you create a new booking, tick **Repeat weekly** to repeat it on the days of the week you choose:
+
+1. Tick the weekdays the flight repeats on. The day of the booking itself is always included.
+2. Choose the **Until** date (inclusive). The form shows how many bookings will be created.
+
+A repeating flight can also be multi-leg: the whole route is repeated on every selected day. One save creates at most **100 bookings**.
+
+Before creating anything, Flylogs checks every date against the schedule. A date where the aircraft or one of the crew members is already booked is skipped, and the confirmation lists the skipped dates. If the server refuses a leg (for example because of maintenance), the remaining legs of that day are not created and you get a summary of what was not created.
+
+{% hint style="info" %}
+Multi-leg and repeat options are available in the **Schedule Manager** only, and only when creating a booking. Once saved, the bookings are independent of each other: there is no "edit the whole series", so change or cancel each one individually. When **Notify crew** is ticked, the crew is notified once, for the first booking; a training mission selected in the form is assigned to the first booking only.
+{% endhint %}

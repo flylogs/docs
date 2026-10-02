@@ -2607,6 +2607,16 @@ Readable by the enrolled student for their own enrollment, and by anyone who may
 
 **This endpoint reports; it does not enforce.** The refusal that actually stops a flight happens when the mission is written, and a blocked mission returns 400 with *"This mission is blocked: an earlier stage check has not been passed."*
 
+## Mission flags
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/missions/edit.json`
+
+`data[TrainingFlight][tg]` and `data[TrainingFlight][crosscountry]` (`1`/`true` or anything else) mark a mission as touch-and-go practice and as cross-country. Both are returned as booleans on every `TrainingFlight` (`/trainings/missions/view/{id}.json`, the manager course view, `PicTrainingFlight` / `SicTrainingFlight` on schedules) and are copied with the course and into new course revisions. Calendar events from `/schedules/get.json` carry `crosscountry: true|false` when either seat's mission is cross-country.
+
+**Send every flag on each edit.** The action stores a flag that is absent from the post as `false`, so a partial update clears `mandatory`, `tg` and `crosscountry`. Use `/manager/trainings/stages/assign/{missionId}.json` to move a mission between stages.
+
+The flag is informational on the server: it does not set `flights.crosscountry`. NEO's flight form ticks the flight's cross-country box when a cross-country mission is added or changed (never unticks it, never on opening an existing flight).
+
 ## Mission Authorizations
 
 A signed release for one student to fly one mission. Single-use: the flight that uses it consumes it. Inert unless the training has `stage_checks = 1` and the mission has a `require_authorization` level.
@@ -3553,7 +3563,7 @@ A course revision is a `Training` row. The fields keep their database names: `ve
 }
 ```
 
-Mission `fields` may hold `position`, `flight_type_id`, `hours`, `rules`, `mandatory`, `tg`; settings compared are `type`, `theory`, `flights`, `stage_checks`, `evaluation_method`, `auto_finish`, `validity`, `duration`, `show_certificate`, `regulatory_basis`, `requirements`. Planned hours are the course's own values (stored in hours by the course).
+Mission `fields` may hold `position`, `flight_type_id`, `hours`, `rules`, `mandatory`, `tg`, `crosscountry`; settings compared are `type`, `theory`, `flights`, `stage_checks`, `evaluation_method`, `auto_finish`, `validity`, `duration`, `show_certificate`, `regulatory_basis`, `requirements`. Planned hours are the course's own values (stored in hours by the course).
 
 `POST /manager/trainings/students/enroll.json` accepts any CURRENT or SUPERSEDED revision as `training_id` and refuses a DRAFT with `code: REVISION_IS_DRAFT`. The catalog, `submit` and the approval of an application only accept the CURRENT revision (`NOT_PUBLISHED`).
 

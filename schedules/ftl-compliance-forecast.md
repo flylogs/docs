@@ -75,17 +75,54 @@ When a duty record is saved, Flylogs:
 
 ### Duty is not FDP
 
-The two are counted differently, and supervision is where they part company.
+The two are counted differently, and supervision and simulator sessions are where they part company.
 
-**Duty** covers everything the operator asks of the crew member. Occupying any of the three crew seats on a flight — including the Supervisor seat, from the ground — puts that flight inside their duty period, and therefore into the daily, weekly and monthly duty totals (ORO.FTL.210 cumulative limits).
+**Duty** covers what the operator asks of the crew member. Operating a flight (PIC or SIC seat) always puts it inside their duty period. Supervising a flight from the ground, or a simulator session, is also work — whether it counts as **duty** depends on the company type (see [Supervision and simulator sessions](#supervision-and-simulator-sessions) below).
 
-**FDP** is narrower. It ends at the last landing of a flight the person actually operated, and a flight they only supervised is not a **sector**: ORO.FTL.105(23) defines a sector as a segment of an FDP, from the aircraft first moving for take-off until it comes to rest. So supervised flights never shorten their maximum FDP the way extra sectors do.
+**FDP** is narrower. It ends at the last landing of a flight the person actually operated, and a flight they only supervised is not a **sector**: ORO.FTL.105(23) defines a sector as a segment of an FDP, from the aircraft first moving for take-off until it comes to rest. So supervised flights and simulator sessions never shorten the maximum FDP the way extra sectors do.
 
-Supervision does reach the FDP in one case: when it happens **before** a flight the person operates that day. It has already opened their duty period, so the FDP is measured from there — which is the conservative and correct reading.
+They reach the FDP in one case: when they happen **before** a flight the person operates that day. They have already opened the duty period, so the FDP is measured from there — the conservative reading.
 
-* Supervises 07:00–08:00, then flies 09:00–11:00 → one FDP from 07:00 (less commute) to 11:00, **one** sector.
-* Flies 09:00–11:00, then supervises 15:00–17:00 → FDP still ends at 11:00; duty runs to 17:00.
-* Supervises three solo flights and flies none → duty for the whole period, **no FDP** at all.
+### Supervision and simulator sessions
+
+Two kinds of session are work but never flight time, never the end of an FDP and never a sector:
+
+* **Supervision** — the person sits in the **Supervisor** seat of a flight on a real aircraft.
+* **Simulator sessions** — any flight logged on an aircraft marked as a **simulator**, in any seat (PIC, SIC or Supervisor).
+
+Neither ever counts towards the **flight time** limits (28 days, year, monthly), which only add up block time on real aircraft. How they count towards **duty** depends on the company type set in the company preferences:
+
+| Company type | Session before or between operated flights | Session after the last operated flight, or on a day with no operated flight |
+| --- | --- | --- |
+| **AOC Operator**, **General Aviation** | Duty | Duty |
+| **Flight School**, **SPO Operator** | Duty | **Work time** only — not duty |
+
+**AOC Operator and General Aviation — duty wherever it falls.** ORO.FTL.105(10) defines duty as *"any task that a crew member performs for the operator, including flight duty, administrative work, giving or receiving training and checking, positioning, and some elements of standby"*. Supervision and simulator training are such tasks, so they are duty before, between or after flights:
+
+* They count towards the daily, weekly and monthly duty totals — the ORO.FTL.210 cumulative limits (60 h / 7 days, 110 h / 14 days, 190 h / 28 days). A day with only supervision or simulator sessions still produces a duty record.
+* They extend the duty period, so the rest period (ORO.FTL.235) is counted from the end of the last session.
+
+**Flight School and SPO Operator — duty only when a flight follows.** ORO.FTL applies to commercial air transport, not to training organisations or specialised operations, so Flylogs follows the narrower reading: a supervision or simulator session is duty only when a flight the person operates follows it before their rest. A session after the last operated flight of the day — or on a day with no operated flight at all — does not extend the duty period. It is added to the pilot's **work times** instead: the work start and end are widened to cover it (never narrowed, so times a pilot entered by hand are kept).
+
+Examples (commute times ignored):
+
+| Day | AOC / General Aviation | Flight School / SPO |
+| --- | --- | --- |
+| Simulator 07:00–09:00, then flies 11:00–12:00 | Duty and FDP 07:00–12:00, one sector, 1 h flight time | Same |
+| Flies 08:00–10:00, then simulator 14:00–16:00 | Duty 08:00–16:00, FDP 08:00–10:00, 2 h flight time | Duty and FDP 08:00–10:00; work time to 16:00 |
+| Flies 09:00–11:00, then supervises 15:00–17:00 | Duty 09:00–17:00, FDP 09:00–11:00 | Duty and FDP 09:00–11:00; work time to 17:00 |
+| Supervises 07:00–08:00, then flies 09:00–11:00 | Duty and FDP 07:00–11:00, one sector | Same |
+| Simulator or supervision only | Duty for the sessions, no FDP | No duty; work time covers the sessions |
+
+FAA Part 117 reads the same way for the FDP: training before a flight segment is part of the FDP (117.3), training after the last segment is not.
+
+{% hint style="info" %}
+**Max duty per day is a company limit, not an EASA one.** ORO.FTL caps the FDP and the cumulative duty totals, but sets no single-day duty maximum. Set your *Max duty per day* from your own operations manual — for a flight school or SPO operator, from your national rules and the limits your manual defines.
+{% endhint %}
+
+{% hint style="warning" %}
+Duty records are calculated when a flight on that day is saved. Records created before this rule was introduced keep their old figures until a flight on that day is saved again or the day is recalculated.
+{% endhint %}
 
 ---
 

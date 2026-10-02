@@ -33,6 +33,16 @@ This additional box, allows you to select the exercise grading scale, require st
 
 <figure><img src="../.gitbook/assets/trainingsEvaluationSettings.png" alt=""><figcaption></figcaption></figure>
 
+#### Mission flags
+
+Each mission can be marked as:
+
+* **Mandatory mission** — the student must fly it to complete the course.
+* **Touch and go practice mission** — circuits flown without a full stop between landings. Shown with a road icon and a **TG** badge.
+* **Cross-country mission** — a navigation flight to another aerodrome. Shown with a route icon and an **XC** badge in the course mission list, the mission details, the booking calendar and booking details, the flight view, and the booking reminder email ("Training: <mission> · Cross-country").
+
+When a cross-country mission is added to a flight in the flight form, Flylogs ticks the flight's **Cross country** box for you. It only ever ticks it, never unticks it, and the box stays ticked even when the flight departs and lands at the same aerodrome (a round trip). You can still untick it by hand. Opening an existing flight never changes its saved value; the box is only ticked when you add a mission or change one.
+
 ### Requiring student attendance signatures
 
 **Require students to sign assistance** asks every student recorded as present to countersign their own attendance for each class. The teacher's signature certifies who was in the room; the student's confirms they were there — the classroom equivalent of signing a flight debrief.
@@ -117,7 +127,7 @@ When the draft is ready, click "**Publish course revision**". If its changes are
 Click "**Compare course revisions**" in the Course revisions bar and pick any two. Flylogs lists what was added, removed or changed:
 
 * ground subjects — added or removed, planned hours, and lessons and exams added or removed inside them;
-* flight missions — added or removed, and for the others any change of position, flight type, planned time, flight rules, mandatory or touch-and-go. A mission that changes position is not carried over when a student is moved between those two course revisions;
+* flight missions — added or removed, and for the others any change of position, flight type, planned time, flight rules, mandatory, touch-and-go or cross-country. A mission that changes position is not carried over when a student is moved between those two course revisions;
 * stages, and course settings such as validity, grading or automatic completion.
 
 Items are paired by name, so renaming a subject shows it as removed and added.

@@ -24,7 +24,7 @@ _Noted with an \* are required fields._
 * SIC (Second in command or student) — shown as **CM2** in the form
 * \* Departure Aerodrome
 * \* Landing Aerodrome
-* Cross country&#x20;
+* Cross country — ticked automatically when the departure and landing aerodromes differ, or when you add a [cross-country training mission](../training-courses/edit-a-training.md#mission-flags). With the same aerodrome at both ends it is only unticked automatically when no cross-country mission is on the flight. Opening an existing flight keeps its saved value.
 
 <br>
 

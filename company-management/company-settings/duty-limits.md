@@ -17,7 +17,7 @@ Leave any field empty to disable that particular limit.
 
 ### Duty time limits
 
-* **Max duty per day / week / month** — maximum accumulated duty time in each period.
+* **Max duty per day / week / month** — maximum accumulated duty time in each period. Supervision and simulator sessions count as duty for AOC and General Aviation companies wherever they fall; for Flight Schools and SPO Operators only when a flight the pilot operates follows them — otherwise they count as work time (see [Supervision and simulator sessions](../../schedules/ftl-compliance-forecast.md#supervision-and-simulator-sessions)). The daily figure is your own company limit — EASA ORO.FTL sets no single-day duty maximum.
 * **Max single flight** — the longest single flight allowed.
 * **Commute before / after duty** — a fixed commute time automatically added before the first flight and after the last flight of the day when Flylogs calculates a pilot's duty period.
 * **Min rest between flights** — minimum rest required between two consecutive flights.
@@ -26,6 +26,8 @@ Leave any field empty to disable that particular limit.
 ### Flight time limits
 
 Maximum accumulated **block time** per rolling period: per day, 7 days, 14 days, 28 days, 90 days and 365 days. These mirror the usual EASA/FAA flight time limitation tables — enter the figures from your own operations manual.
+
+Sessions on aircraft marked as a **simulator** are not flight time and are left out of these totals. How they count towards duty depends on the company type — see [Supervision and simulator sessions](../../schedules/ftl-compliance-forecast.md#supervision-and-simulator-sessions).
 
 ### Duty records
 
