@@ -686,3 +686,53 @@ the schedule's aircraft has no expired MEL/CDL item, including when the request 
 `aircraft_id` at all. Note that this is purely advisory: the same expired item is a **hard
 block** the moment someone actually tries to dispatch this schedule into a flight — see the
 MEL/CDL hard block note under [Dispatch Schedule](#dispatch-schedule) above.
+
+---
+
+## Pilot Schedule Summary
+
+<mark style="color:green;">`POST`</mark> `/manager/schedules/pilot_schedule.json`
+
+Returns a pilot's duty/flight-time totals for the requested day and month, used by the
+Schedule Manager to warn before a booking is saved. When the company has FTL enabled, the
+response also carries an `ftl` block with the limits for that pilot's day.
+
+#### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| user_id | int | Yes | Pilot the summary is for (must belong to the caller's company) |
+| date | string/int | No | Day to evaluate (datetime string or unix timestamp); defaults to now |
+| excluded | int | No | A schedule id to exclude from the totals (e.g. the booking currently being edited) |
+| end | int | No | Unix timestamp end of the booking being proposed. When posted together with FTL being enabled, the response includes `ftl.fdp`: the projected Flight Duty Period for the day, as if this booking were added. Older clients that don't post it simply don't get `ftl.fdp`. |
+| aircraft_id | int | No | Aircraft of the proposed booking. When posted, the response includes `proposed_is_sim` (`true` if this aircraft is a simulator). |
+
+#### Response
+
+```json
+{
+  "data": {
+    "today_total": 14400,
+    "month_total": 54000,
+    "proposed_is_sim": false,
+    "ftl": {
+      "enabled": true,
+      "profile_name": "EASA FTL",
+      "fdp": {
+        "fdp_start": 1759640400,
+        "fdp_end": 1759692600,
+        "fdp_sec": 52200,
+        "sectors": 4,
+        "max_fdp": 46800,
+        "wocl": false,
+        "exceeded": true
+      }
+    }
+  },
+  "excluded": ""
+}
+```
+
+`ftl.fdp` is `null` when the day (including the proposed booking) has no operated — i.e.
+non-simulator — session. It is omitted entirely when FTL is not enabled for the company, or
+when the request did not post `end`.

@@ -130,9 +130,17 @@ Duty records are calculated when a flight on that day is saved. Records created 
 
 Once FTL is enabled, FDP data appears in three places:
 
+### Schedule Manager (while booking)
+
+When you create, edit, drag or resize a booking, Flylogs projects the pilot's FDP for that day — from the report time of the first booking (less the commute before) to the end of the last booking on a real aircraft, with the number of those bookings as sectors — and compares it with the limit from your FTL profile. If it would be exceeded you get an **FDP limit exceeded** warning alongside the duty and rest warnings. With **Block overtime scheduling** on, the booking cannot be saved.
+
+Simulator bookings follow the same rules as flown simulator sessions: one before the first flight opens the FDP, one after the last flight does not extend it, and they never count as sectors or flight time.
+
 ### Pilot duty times grid (Pilots → Duty Times)
 
 The monthly grid shows each pilot's daily FDP alongside their total duty time. Days with a violation are highlighted in red. A **W** badge indicates WOCL overlap.
+
+The **FDP (FTL)** view shows each day's FDP (report → last on-blocks). The **Flight period** view is different: first off-blocks to last on-blocks of the flights the pilot operated, with no report or commute time. When any pilot exceeded their FDP limit during the month, an **FDP exceeded** tile shows the number of days and a warning lists the pilots.
 
 ### Pilot view page
 

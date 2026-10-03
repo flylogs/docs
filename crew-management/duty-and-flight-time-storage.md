@@ -33,6 +33,31 @@ The exception is **Flight Schools** and **SPO Operators**: there, a supervision 
 
 Flight duty period (FDP) is counted more narrowly than duty — see [FTL Compliance & Forecast](../schedules/ftl-compliance-forecast.md#duty-is-not-fdp).
 
+#### Duty, flight period and work
+
+The Duty Times page can show three different measures. This is what each one includes:
+
+| | **Duty** | **Flight period** | **Work** |
+| --- | --- | --- | --- |
+| **Flight the pilot operates** (CM1/CM2, real aircraft) | Yes | Yes | Only if the work times cover it (for Flight Schools and SPO Operators an automatically widened work window starts at the duty start, so it does) |
+| **Supervising a real flight**, before or between operated flights | Yes | No | Not added automatically |
+| **Supervising a real flight**, after the last operated flight | AOC / General Aviation: yes · Flight School / SPO: **no** | No | AOC / General Aviation: no · Flight School / SPO: **yes, automatically** |
+| **Simulator session** (any seat), before or between operated flights | Yes | No | Not added automatically |
+| **Simulator session** (any seat), after the last operated flight | AOC / General Aviation: yes · Flight School / SPO: **no** | No | AOC / General Aviation: no · Flight School / SPO: **yes, automatically** |
+| **Day with only simulator and/or supervision sessions** | AOC / General Aviation: yes · Flight School / SPO: **no duty** | No | AOC / General Aviation: no · Flight School / SPO: **yes, automatically** |
+| **Commute before / after duty** | Yes, both | No | No |
+| **Who sets it** | Calculated from flights; pilots may edit it if the company allows | Calculated | The pilot, when *Require duty records* is on; Flight Schools and SPO Operators also get the automatic additions above |
+| **Checked against** | *Max duty per day* and the weekly limit (red cells, *Duty time exceeded* message) | Nothing | Nothing on its own; with FTL compliance on it counts towards the 7- and 28-day cumulative duty |
+
+* **Duty** runs from the first counted session (less the commute before) to the last counted session (plus the commute after).
+* **Flight period** runs from the first off-blocks to the last on-blocks of the flights the pilot operated.
+* **Work** runs from the start to the end the pilot entered. Automatic additions only ever widen it, so times entered by hand are kept.
+* The **FDP** (FTL compliance, shown as *FDP (FTL)* when enabled) runs from the duty start — including the commute before and any simulator or supervision session before the first flight — to the last on-blocks of an operated flight. See [FTL Compliance & Forecast](../schedules/ftl-compliance-forecast.md#duty-is-not-fdp).
+
+{% hint style="warning" %}
+Duty is recalculated every time a flight on that day is saved, which overwrites a pilot's manual edit of the duty times. An automatic widening of the work times stays even if the simulator or supervision session is later deleted.
+{% endhint %}
+
 The pilots can have the option to enter/modify these times if the company allows them to do so.
 
 In that case, the pilot will see this panel in his/her welcome and profile pages:

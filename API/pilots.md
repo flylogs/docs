@@ -857,7 +857,7 @@ Per-pilot daily breakdown of duty / FDP / work time for a single month. **Premiu
 | month | 1–12 (default current month) |
 | year | YYYY (default current year) |
 | group | `user_group_id` (`150` for `<= 150`, i.e. Chief Pilot and above) |
-| data | `duty` (default), `flight`, or `work` — selects which `in_*`/`out_*` columns drive the totals |
+| data | `duty` (default), `flight` (flight period: first off-blocks → last on-blocks), `fdp` (FTL FDP: report → last on-blocks), or `work` |
 
 ```json
 {
@@ -871,7 +871,8 @@ Per-pilot daily breakdown of duty / FDP / work time for a single month. **Premiu
       "Flight": { "block_time": 54000 }
     }
   ],
-  "type": "Duty"
+  "type": "Duty",
+  "ftl_enabled": true
 }
 ```
 

@@ -32,7 +32,7 @@ Sessions on aircraft marked as a **simulator** are not flight time and are left 
 ### Duty records
 
 * **Auto complete duty** — Flylogs automatically calculates each pilot's flight duty period (FDP) from their logged flights and activities, applying the commute times configured above. If the calculated duty time exceeds *Max duty per day*, the pilot automatically receives a warning message asking them to review and correct the record.
-* **Block overtime scheduling** — turns scheduling warnings into hard stops: managers cannot publish schedule slots that would cause a pilot to exceed any duty or flight time limit. With the switch off, the same situations only produce warnings.
+* **Block overtime scheduling** — turns scheduling warnings into hard stops: managers cannot publish schedule slots that would cause a pilot to exceed any duty or flight time limit. With FTL compliance enabled, this also covers the FDP limit from your FTL profile. With the switch off, the same situations only produce warnings.
 * **Require duty records** — asks every crew member to enter their work start/end times each day. Pilots get a duty times widget on their dashboard where they fill in the records; see [Duty and Flight time storage](../../crew-management/duty-and-flight-time-storage.md).
   * **Days allowed to edit duty** — how far back (1 to 7 days) a pilot can still enter or correct their own duty records. Older records can only be changed by managers.
 

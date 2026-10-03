@@ -39,9 +39,21 @@ Each mission can be marked as:
 
 * **Mandatory mission** — the student must fly it to complete the course.
 * **Touch and go practice mission** — circuits flown without a full stop between landings. Shown with a road icon and a **TG** badge.
-* **Cross-country mission** — a navigation flight to another aerodrome. Shown with a route icon and an **XC** badge in the course mission list, the mission details, the booking calendar and booking details, the flight view, and the booking reminder email ("Training: <mission> · Cross-country").
+* **Cross-country mission** — a navigation flight to another aerodrome. Shown with a route icon and an **XC** badge.
 
-When a cross-country mission is added to a flight in the flight form, Flylogs ticks the flight's **Cross country** box for you. It only ever ticks it, never unticks it, and the box stays ticked even when the flight departs and lands at the same aerodrome (a round trip). You can still untick it by hand. Opening an existing flight never changes its saved value; the box is only ticked when you add a mission or change one.
+<figure><img src="../.gitbook/assets/trainingsMissionCrossCountry.png" alt="Flight mission editor with the Cross-country mission checkbox ticked"><figcaption><p>Tick "Cross-country mission" in the flight mission editor.</p></figcaption></figure>
+
+The **XC** badge appears in the course's mission list, in the mission details students and instructors open, in the booking details, on the booking in the schedule calendar (route icon, explained in the calendar legend), on the mission card of the flight, and in the booking reminder email ("Training: _mission name_ · Cross-country").
+
+<figure><img src="../.gitbook/assets/trainingsMissionCrossCountryList.png" alt="Mission list row with an XC badge"><figcaption><p>A cross-country mission in the course's mission list.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/scheduleCalendarCrossCountry.png" alt="Booking in the schedule calendar with the route icon"><figcaption><p>The route icon marks a booking for a cross-country mission in the schedule calendar.</p></figcaption></figure>
+
+**On the flight form.** When you add a cross-country mission to a flight, or change a mission to one, Flylogs ticks the flight's **Cross-country** box for you. It only ever ticks it, never unticks it. The box also stays ticked when the flight departs and lands at the same aerodrome (a round trip), which would otherwise untick it automatically. You can still untick it by hand. Opening an existing flight never changes its saved value: the box is only ticked when you add a mission or change one.
+
+<figure><img src="../.gitbook/assets/flightFormCrossCountryMission.png" alt="Flight form with a round trip LEBB to LEBB, Cross-country ticked and a cross-country mission selected"><figcaption><p>A round trip with a cross-country mission keeps the flight's Cross-country box ticked.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flightViewCrossCountryMission.png" alt="Mission card on a flight with an XC badge"><figcaption><p>The mission card on the flight page.</p></figcaption></figure>
 
 ### Requiring student attendance signatures
 
