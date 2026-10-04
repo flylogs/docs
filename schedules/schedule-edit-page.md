@@ -102,20 +102,34 @@ The right column carries:
 
 ### Validation and warnings
 
-Before saving, the form runs duty and safety checks and shows warnings for:
+The form checks the booking as you fill it in and lists any problems above the **Save** button. **Red** messages block saving and say why; **yellow** ones are advisory and you can still save.
+
+**Duty and flight-time limits.** Before saving, the form runs duty and safety checks and shows warnings for:
 
 * Flight duration over the maximum.
 * Daily / monthly flight‑time limits exceeded.
 * Daily duty time exceeded and minimum rest (between days and between flights) not met.
 
-If your company has **block overtime scheduling** enabled, these violations **block saving** until resolved; otherwise they are advisory. A separate, always‑blocking check stops you assigning a pilot to an **aircraft or flight type they are not entitled to** fly.
+If your company has **block overtime scheduling** enabled, these violations **block saving** until resolved; otherwise they are advisory.
 
-If the flight type is [restricted to specific aircraft](../flights/flight-types.md#aircraft) and the booked aircraft is not one of them, a yellow caution names the allowed aircraft — for example *"ME can only be flown with FL-YLS, FL-DHG, FL-INS, FL-YME."* It is advisory: you can still save. **Auto‑pilot** applies the same rule and never places a mission on an aircraft its flight type is not allowed on.
+<figure><img src="../.gitbook/assets/schedule-warning-duty.png" alt="A New Flight booking from 12:00 to 23:00 with a red message: Flight duration exceeds maximum (8:00 hrs), saving is blocked"><figcaption><p>An 11-hour booking against an 8-hour maximum, with block overtime scheduling on. The PIC's missing documents are flagged in the same list.</p></figcaption></figure>
 
-Crew availability is re‑checked whenever you change the date, the times or the crew:
+**Pilot attributions.** A separate, always‑blocking check stops you assigning a pilot to an **aircraft or flight type they are not entitled to** fly.
+
+<figure><img src="../.gitbook/assets/schedule-warning-attribution.png" alt="A New Flight booking on FL-172 with PIC Martha Smith and a red message: PIC is not entitled to fly aircraft FL-172, saving is blocked"><figcaption><p>Martha Smith is attributed to other aircraft, not FL-172, so the booking cannot be saved with her as PIC.</p></figcaption></figure>
+
+**Required documents.** If a pilot is missing a required document, or one expires before the flight ends, it is listed under their name and as a message below. For the PIC this blocks saving when your company requires PIC documents and blocks pilots without them; for the SIC it is always advisory.
+
+**Flight type restricted to other aircraft.** If the flight type is [restricted to specific aircraft](../flights/flight-types.md#aircraft) and the booked aircraft is not one of them, a yellow caution names the allowed aircraft — for example *"ME can only be flown with FL-YLS, FL-DHG, FL-INS, FL-YME."* It is advisory: you can still save. **Auto‑pilot** applies the same rule and never places a mission on an aircraft its flight type is not allowed on.
+
+<figure><img src="../.gitbook/assets/schedule-flight-type-aircraft-warning.png" alt="A New Flight booking of ME on FL-172 with a yellow caution that ME can only be flown with FL-YLS, FL-DHG, FL-INS, FL-YME"><figcaption><p>A booking of <em>ME</em> on a single-engine aircraft. The caution does not block saving.</p></figcaption></figure>
+
+**Crew availability.** Re‑checked whenever you change the date, the times or the crew:
 
 * If an assigned PIC or SIC is **unavailable** for the new time window, a red message names the pilot and **saving is blocked** until you pick another pilot or time.
 * If they are merely **busy** (another booking, base‑schedule OFF/REST, or a scheduled class), an amber warning is shown but you may still save.
+
+<figure><img src="../.gitbook/assets/schedule-warning-crew-availability.png" alt="A New Flight booking where the SIC Jan Noval is marked UNAVAILABLE with a red blocking message and the PIC Ralph Klein is marked BUSY with a yellow warning"><figcaption><p>The times were moved to 14:00–16:00. Jan Noval is marked unavailable at that time (blocks saving); Ralph Klein already has another booking (warning only). The status also shows next to each pilot's name.</p></figcaption></figure>
 
 ## Actions menu
 
