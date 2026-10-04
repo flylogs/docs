@@ -132,9 +132,11 @@ Once FTL is enabled, FDP data appears in three places:
 
 ### Schedule Manager (while booking)
 
-When you create, edit, drag or resize a booking, Flylogs projects the pilot's FDP for that day — from the report time of the first booking (less the commute before) to the end of the last booking on a real aircraft, with the number of those bookings as sectors — and compares it with the limit from your FTL profile. If it would be exceeded you get an **FDP limit exceeded** warning alongside the duty and rest warnings. With **Block overtime scheduling** on, the booking cannot be saved.
+When you create, edit, drag or resize a booking, Flylogs projects the pilot's FDP for that day — from the start of the first booking, less the commute before, to the end of the last booking on a real aircraft, with the number of those bookings as sectors — and compares it with the limit from your FTL profile. If it would be exceeded you get an **FDP limit exceeded** warning alongside the duty and rest warnings. With **Block overtime scheduling** on, the booking cannot be saved.
 
 Simulator bookings follow the same rules as flown simulator sessions: one before the first flight opens the FDP, one after the last flight does not extend it, and they never count as sectors or flight time.
+
+Draft and cancelled bookings are not counted. A booking where the pilot is the Supervisor opens the FDP when it comes before a flight they operate, but is never a sector. A multi-leg booking counts one sector per leg.
 
 ### Pilot duty times grid (Pilots → Duty Times)
 

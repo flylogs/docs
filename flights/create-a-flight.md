@@ -17,7 +17,7 @@ Our flight create form has been designed to be clear, easy to use, avoid mistake
 _Noted with an \* are required fields._
 
 * \* Date of flight
-* \* Aircraft
+* \* Aircraft — if the flight type is [restricted to specific aircraft](flight-types.md#aircraft), the others are greyed out, and a warning appears if the chosen aircraft is not on the type's list
 * \* Flight Callsign<br>
 * \* Flight rules
 * \* PIC (Pilot in command) — shown as **CM1** in the form

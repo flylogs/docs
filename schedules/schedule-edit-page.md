@@ -110,6 +110,8 @@ Before saving, the form runs duty and safety checks and shows warnings for:
 
 If your company has **block overtime scheduling** enabled, these violations **block saving** until resolved; otherwise they are advisory. A separate, always‑blocking check stops you assigning a pilot to an **aircraft or flight type they are not entitled to** fly.
 
+If the flight type is [restricted to specific aircraft](../flights/flight-types.md#aircraft) and the booked aircraft is not one of them, a yellow caution names the allowed aircraft — for example *"ME can only be flown with FL-YLS, FL-DHG, FL-INS, FL-YME."* It is advisory: you can still save. **Auto‑pilot** applies the same rule and never places a mission on an aircraft its flight type is not allowed on.
+
 Crew availability is re‑checked whenever you change the date, the times or the crew:
 
 * If an assigned PIC or SIC is **unavailable** for the new time window, a red message names the pilot and **saving is blocked** until you pick another pilot or time.

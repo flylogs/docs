@@ -12,7 +12,7 @@ Each flight type belongs to your company. A starter set is created automatically
 
 **Flights → Flight types.** Click **New Flight Type** to add one, or the pencil on a row to edit it — both open a **full page**, not a pop-up, so there is room for every setting and you can link straight to a type. Drag rows by the handle at the left to change their order.
 
-<figure><img src="../.gitbook/assets/flight-types-list.png" alt="The flight types list, with one row per type and its three time-classification columns"><figcaption><p>Each row shows the three seats' time classification, whether the type is offered on scheduling, and — in the grey strip below it — the certificates required per seat and the aircraft the type is restricted to. Here <em>SIM</em> reads <strong>ONLY ON B200, A320</strong> and <em>ME</em> <strong>ONLY ON EC-HYP, EC-IPB</strong>; every other type carries no aircraft tag, so it flies with the whole fleet.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-types-list.png" alt="The flight types list, with one row per type and its three time-classification columns"><figcaption><p>Each row shows the three seats' time classification, whether the type is offered on scheduling, and — in the grey strip below it — the certificates required per seat and the aircraft the type is restricted to. Here <em>ME</em> reads <strong>ONLY ON FL-YLS, FL-DHG, FL-INS, FL-YME</strong>, the four twins; every other type carries no aircraft tag, so it flies with the whole fleet.</p></figcaption></figure>
 
 Flight types live in the manager area, so pilots and students never see this page; which of your staff roles can open it is decided by your company's role permissions. Reordering is stricter than the rest: only **Company Administrators, Operations Managers and Compliance & Safety Managers** can do it, so a manager who can create and edit types may still be unable to drag them into a new order.
 
@@ -110,7 +110,7 @@ Optionally set **VFR** or **IFR** as the type's default. When a crew member pick
 
 Some flight types only make sense on part of the fleet. A simulator type belongs on the simulators, a multi-engine type on the twins, a glider-tow type on the tug. The **Aircraft** card is where you say so.
 
-<figure><img src="../.gitbook/assets/flight-type-aircraft.png" alt="The Aircraft card on a flight type, with the limit switch on and two simulators ticked"><figcaption><p>The <em>SIM</em> flight type restricted to the two simulators. Aircraft in grey (EC-HOU, EC-IOC, EC-IRE here) are inactive — they can still be ticked, and stay ticked while they are parked.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-type-aircraft.png" alt="The Aircraft card on a flight type, with the limit switch on and the four twins ticked"><figcaption><p>The <em>ME</em> flight type restricted to the four multi-engine aircraft. Inactive aircraft are listed in grey at the top of the list — they can still be ticked, and stay ticked while they are parked.</p></figcaption></figure>
 
 The rule has exactly two states:
 
@@ -132,7 +132,27 @@ Restricted aircraft show as green tags under the type in the flight types list, 
 
 The same links can be edited from the other end, on the aircraft's own page — see [Which flight types an aircraft can fly](../aircraft/create-your-aircraft.md#which-flight-types-an-aircraft-can-fly). It is one relationship seen from two sides, so a change made there shows up here and vice versa.
 
-> **Advisory, not a hard stop.** The flight form and the schedule editor **warn** when the chosen aircraft is not on the type's list — "SIM can only be flown with B200, A320", shown under the aircraft field — but they do not block the save, and the pickers still offer the whole fleet. That is deliberate: a flight logged after the fact may legitimately predate the restriction. Tell us if you would rather it refused the save outright.
+#### Where the restriction is applied
+
+{% file src="../.gitbook/assets/flight-type-aircraft-restriction.mp4" %}
+Video walkthrough (1 min): restricting *ME* to the twins, then what the flight form and the Schedule Manager show.
+{% endfile %}
+
+**Flight form.** Once a restricted flight type is chosen, the aircraft picker greys out every aircraft that is not on the type's list, so they can no longer be picked. If the aircraft was chosen first — or an older flight is opened whose aircraft predates the restriction — both fields are outlined in red and a warning under the aircraft names the allowed aircraft: *"ME can only be flown with FL-YLS, FL-DHG, FL-INS, FL-YME."*
+
+<figure><img src="../.gitbook/assets/flight-form-aircraft-warning.png" alt="The flight form with flight type ME and aircraft FL-172, both outlined in red, and a warning listing the four allowed twins"><figcaption><p>FL-172 was picked before the flight type. The warning names the aircraft <em>ME</em> may be flown with.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flight-form-aircraft-greyed.png" alt="The aircraft picker on the flight form with only the twins selectable and the single-engine aircraft greyed out"><figcaption><p>With <em>ME</em> selected, only the twins can be picked; the rest of the fleet stays visible but greyed out.</p></figcaption></figure>
+
+The warning never blocks the save and never clears the aircraft: a flight logged after the fact may legitimately predate the restriction.
+
+**Schedule Manager.** When a booking's aircraft is not on its flight type's list, the booking form shows a caution above the buttons. It does not block the save, unlike the pilot attribution checks. See [Schedule Manager](../schedules/schedule-edit-page.md#validation-and-warnings).
+
+<figure><img src="../.gitbook/assets/schedule-flight-type-aircraft-warning.png" alt="The New Flight booking form in the Schedule Manager with FL-172 and flight type ME, showing a yellow caution that ME can only be flown with the twins"><figcaption><p>A booking of <em>ME</em> on FL-172 — the caution names the allowed aircraft.</p></figcaption></figure>
+
+**Auto Pilot.** When Auto Pilot fills the schedule, it never places a training mission on an aircraft its flight type is not allowed on — no simulator sessions on real aircraft, and no flight lessons on a simulator.
+
+**API.** The restriction is not enforced by the API; see [Flight types API](../API/flight-types.md#aircraft-restriction-optional).
 
 ### Visibility — visible on self-booking
 

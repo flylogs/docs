@@ -87,7 +87,7 @@ A live counter under the dropdown shows how many pilots would have self-schedule
 
 Under **Scheduling** on the aircraft edit page there is a **Flight types** card. It is the aircraft's side of the aircraft restriction that lives on the [flight type](../flights/flight-types.md#aircraft) — the same setting, edited from whichever end is more convenient. Restricting one simulator type to two simulators is quicker from the flight type; setting up a newly delivered twin for the three types it may fly is quicker from here.
 
-<figure><img src="../.gitbook/assets/aircraft-flight-types.png" alt="The Flight types card on the aircraft edit page, with the limit switch on and the SIM flight type ticked"><figcaption><p>The B200 simulator, attributed to the <em>SIM</em> flight type. Every flight type in the company is listed; tick the ones this aircraft should be attributed to.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/aircraft-flight-types.png" alt="The Flight types card on the aircraft edit page, with the limit switch on and the ME flight type ticked"><figcaption><p>FL-YME, a Seneca, attributed to the <em>ME</em> flight type. Every flight type in the company is listed; tick the ones this aircraft should be attributed to.</p></figcaption></figure>
 
 The important part is what an **empty** selection means, because it is not what it first looks like:
 

@@ -706,6 +706,7 @@ response also carries an `ftl` block with the limits for that pilot's day.
 | excluded | int | No | A schedule id to exclude from the totals (e.g. the booking currently being edited) |
 | end | int | No | Unix timestamp end of the booking being proposed. When posted together with FTL being enabled, the response includes `ftl.fdp`: the projected Flight Duty Period for the day, as if this booking were added. Older clients that don't post it simply don't get `ftl.fdp`. |
 | aircraft_id | int | No | Aircraft of the proposed booking. When posted, the response includes `proposed_is_sim` (`true` if this aircraft is a simulator). |
+| sectors | int | No | Number of legs of the proposed booking (multi-leg series), minimum 1, default 1. Each leg counts as one sector in `ftl.fdp.sectors` and therefore in `ftl.fdp.max_fdp`. |
 
 #### Response
 
@@ -736,3 +737,12 @@ response also carries an `ftl` block with the limits for that pilot's day.
 `ftl.fdp` is `null` when the day (including the proposed booking) has no operated — i.e.
 non-simulator — session. It is omitted entirely when FTL is not enabled for the company, or
 when the request did not post `end`.
+
+`ftl.fdp` counts the pilot's bookings that **depart** on the requested day (a leg past midnight
+belongs to the day it departs), excluding `DRAFT` and `CANCELED` ones. Bookings where the pilot
+is the Supervisor open the FDP when they come before a flight the pilot operates, but are never a
+sector and never the FDP end.
+
+{% hint style="info" %}
+The older top-level estimates `ftl.sectors_today`, `ftl.max_fdp`, `ftl.wocl` and `ftl.fdp_start` are no longer returned. They counted simulator sessions as sectors and always used the EASA ORO WOCL window. Use `ftl.fdp` instead.
+{% endhint %}

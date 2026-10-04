@@ -18,7 +18,7 @@ Flight types drive logbook credit, scheduling and crew requirements, but until n
 
 Open **Flights → Flight types** and edit a type. The new **Aircraft** card has one switch and a list.
 
-<figure><img src="../.gitbook/assets/flight-type-aircraft.png" alt="The Aircraft card on a flight type, with the limit switch on and two simulators ticked"><figcaption><p>The <em>SIM</em> type restricted to the two simulators.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-type-aircraft.png" alt="The Aircraft card on a flight type, with the limit switch on and the four twins ticked"><figcaption><p>The <em>ME</em> type restricted to the four twins.</p></figcaption></figure>
 
 * **Switch off (the default).** No aircraft attached — the type can be flown with **any** aircraft in your fleet. Every flight type you already have is in this state and stays there; nothing changed for them.
 * **Switch on, aircraft ticked.** The type can **only** be flown with the aircraft you ticked.
@@ -30,7 +30,7 @@ An empty list is "no restriction", never "no aircraft allowed" — the same conv
 
 Restricted aircraft show as green tags under the type in the flight types list, so the fleet mapping is readable without opening every type.
 
-<figure><img src="../.gitbook/assets/flight-types-list.png" alt="The flight types list, with ONLY ON aircraft tags under the restricted types"><figcaption><p><em>SIM</em> and <em>ME</em> carry an <strong>ONLY ON</strong> tag; the rest have none and fly with the whole fleet.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-types-list.png" alt="The flight types list, with ONLY ON aircraft tags under the restricted types"><figcaption><p><em>ME</em> carries an <strong>ONLY ON</strong> tag; the rest have none and fly with the whole fleet.</p></figcaption></figure>
 
 ***
 
@@ -38,7 +38,7 @@ Restricted aircraft show as green tags under the type in the flight types list, 
 
 The aircraft edit page gained a matching **Flight types** card, so you can approach it from whichever end is quicker — one type across two simulators, or one newly delivered aircraft across the three types it may fly.
 
-<figure><img src="../.gitbook/assets/aircraft-flight-types.png" alt="The Flight types card on the aircraft edit page"><figcaption><p>The B200 simulator, attributed to the <em>SIM</em> type.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/aircraft-flight-types.png" alt="The Flight types card on the aircraft edit page"><figcaption><p>FL-YME, a Seneca, attributed to the <em>ME</em> type.</p></figcaption></figure>
 
 It is one relationship seen from two sides, so a change in either place shows up in the other. The empty state keeps the flight type's meaning rather than the aircraft's: an aircraft with nothing ticked is **not** grounded — it flies every flight type that has no aircraft attributed at all, which is the normal state for most of a fleet.
 
@@ -56,8 +56,16 @@ Practically: more room as flight types keep gaining settings, a link you can sen
 
 ### Where you'll see it
 
-Pick an aircraft the type isn't allowed on and both the flight form and the schedule editor say so — *"SIM can only be flown with B200, A320"*, under the aircraft field.
+{% file src="../.gitbook/assets/flight-type-aircraft-restriction.mp4" %}
+Video walkthrough (1 min).
+{% endfile %}
 
-It is a **warning, not a block**: the save still goes through, and the pickers still list the whole fleet. A flight logged after the fact may legitimately predate the restriction, so we would rather flag it than refuse it. If your operation wants it to refuse, tell us.
+* **Flight form.** With a restricted type chosen, aircraft outside its list are greyed out in the picker. If the aircraft was picked first, or an older flight predates the restriction, a warning under the aircraft field names the allowed ones — *"ME can only be flown with FL-YLS, FL-DHG, FL-INS, FL-YME"*.
+* **Schedule Manager.** A booking whose aircraft is not on the type's list shows a caution in the booking form.
+* **Auto Pilot.** Never proposes a mission on an aircraft its flight type is not allowed on — no simulator sessions on real aircraft, no flight lessons on a simulator.
+
+<figure><img src="../.gitbook/assets/flight-form-aircraft-greyed.png" alt="The aircraft picker on the flight form with only the twins selectable"><figcaption><p>With <em>ME</em> chosen, only the twins can be picked.</p></figcaption></figure>
+
+None of these block a save: a flight logged after the fact may legitimately predate the restriction, so we would rather flag it than refuse it. If your operation wants it to refuse, tell us.
 
 See [Flight Types → Aircraft](../flights/flight-types.md#aircraft) for the full reference.
