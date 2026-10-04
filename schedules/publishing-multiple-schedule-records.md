@@ -24,5 +24,5 @@ Once clicked on the button the following window will pop:
 
 On this window, you can simply select the date range to publish and the flight schedule records you want to notify.
 
-Once published, the pilots will be notified withing the Flylogs messaging system and they will receive a browser push notification.\
+Once published, the pilots will be notified within the Flylogs messaging system and they will receive a push notification on the Flylogs app or their browser (WhatsApp if push is not turned on on any of their devices — see [Notifications](../first-steps/notifications.md)).\
 If after no more than 2 hours, the notifications remain unread, an email alert will be sent to the pilot. Read more about these notifications in [schedule-notifications.md](schedule-notifications.md "mention")

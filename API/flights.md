@@ -305,7 +305,7 @@ Cancel (soft-delete) a flight record. The flight moves to `CANCELED` if it was s
 | id | string | Yes | Flight ID to cancel |
 | reason | string | Yes | Reason for cancellation |
 | text | string | No | Free-text note stored with the cancellation |
-| notify | string | No | `"true"` to notify the other crew (in-app message + WhatsApp where available) |
+| notify | string | No | `"true"` to notify the other crew: an in-app message (email if urgent alerts are on) for PIC/SIC, plus a push notification to PIC, SIC and supervisor except the caller. WhatsApp (`flightchange` template) is sent only to crew with `User.whatsapp` on whom the push reached on no device. |
 
 #### Authorization
 

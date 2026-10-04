@@ -60,6 +60,8 @@ Management accounts (Chief Pilot and above) can review and change a pilot's noti
 
 WhatsApp notifications can only be **switched off** from here. Enabling them requires a verification code sent to the pilot's phone, so only the pilot can turn them on, from their own account page.
 
+WhatsApp is a backup channel: crew alerts go out as push notifications first, and a WhatsApp message is only sent when the push reached none of the pilot's devices. See [Notifications: push, WhatsApp and email](../first-steps/notifications.md).
+
 #### Account creation date
 
 Next to the calendar colour, in the **Account** tab of the pilot edit page, management accounts of **Chief Pilot level or above** can correct the date the account was created. Flight instructors, pilots and students never see this field.

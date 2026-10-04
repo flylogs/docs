@@ -22,6 +22,14 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ***
 
+## October 2026
+
+**[Crew alerts arrive as push notifications first](push-first-notifications.md)** · Notifications\
+Booking, cancellation and logbook alerts go out as detailed push notifications; WhatsApp is only sent when no device got the push.\
+[Manual →](../first-steps/notifications.md)
+
+***
+
 ## September 2026
 
 **[Flylogs reads your flight remarks](flight-remark-findings.md)** · Safety\

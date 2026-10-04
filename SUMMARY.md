@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Push-first notifications](whats-new/push-first-notifications.md)
   * [Flight remark findings](whats-new/flight-remark-findings.md)
   * [Draft a mission comment](whats-new/draft-mission-comment.md)
   * [Student attendance signatures](whats-new/student-attendance-signatures.md)
@@ -24,6 +25,7 @@
 * [FAQ pilots and students](first-steps/faq-pilots-and-students.md)
 * [FAQ company managers](first-steps/faq-company-managers.md)
 * [Account security](first-steps/account-security.md)
+* [Notifications](first-steps/notifications.md)
 * [Quick start guide](first-steps/quick-start-guide.md)
 * [Usage requirements and tips](first-steps/usage-tips.md)
 * [Contacting Support](first-steps/contacting-support.md)
