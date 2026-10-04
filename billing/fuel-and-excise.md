@@ -6,6 +6,8 @@ description: Track what you pay for fuel and work out how much excise duty you c
 
 Fuel is usually an operator's largest variable cost, and a large slice of what you pay at the pump is excise duty — the government tax on mineral oil. Operators can normally reclaim that duty on fuel used for qualifying commercial and training flights. Flylogs records every uplift, splits what it cost into net, VAT and excise, and works out how much of the duty is recoverable.
 
+{% embed url="https://youtu.be/cwASq6hJSWI" %}
+
 **Who can see this page:** Financial Manager and above. It lives under **Billing → Fuel & Excise**, and like the rest of the billing module it needs a paid company plan. Pilots never see it.
 
 <figure><img src="../.gitbook/assets/fuel-excise-refuellings.png" alt="The Fuel &#x26; Excise page listing refuellings, with period totals across the top"><figcaption><p>Every uplift in the period, with the totals above it</p></figcaption></figure>
