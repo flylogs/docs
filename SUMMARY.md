@@ -5,7 +5,17 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Sign in with a passkey](whats-new/passkeys-and-two-factor.md)
+  * [Multi-leg and repeating bookings](whats-new/multi-leg-and-repeating-bookings.md)
   * [Push-first notifications](whats-new/push-first-notifications.md)
+  * [Class work and homework](whats-new/class-work-and-homework.md)
+  * [Course revisions and approvals](whats-new/course-revisions-and-approvals.md)
+  * [Exam sitting entry requirements](whats-new/exam-sitting-entry-requirements.md)
+  * [Aircraft managers](whats-new/aircraft-managers.md)
+  * [Hobbs and tach readings](whats-new/airframe-meter-readings.md)
+  * [Fuel and excise tracking](whats-new/fuel-and-excise-tracking.md)
+  * [Track your support reports](whats-new/support-report-tracking.md)
+  * [Mass & Balance loadsheets](whats-new/mass-and-balance-loadsheets.md)
   * [Flight remark findings](whats-new/flight-remark-findings.md)
   * [Draft a mission comment](whats-new/draft-mission-comment.md)
   * [Student attendance signatures](whats-new/student-attendance-signatures.md)
