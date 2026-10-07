@@ -20,7 +20,8 @@
 | 180 | Captain |
 | 190 | Pilot |
 | 200 | Student Pilot |
-| 240 | Cabin Crew |
+| 240 | Cabin Crew (companies other than SPO) |
+| 245 | Specialist (SPO companies only; same level and permissions as 240) |
 | 250 | Auditor |
 | 300 | Mechanic |
 

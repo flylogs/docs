@@ -6,7 +6,7 @@ Every time you create a new Flylogs user within your account, you need to carefu
 
 * **STAFF MEMBERS**, which can also have PILOT privileges.
 * **Pilots** with no company management privileges.
-* **Cabin Crew** members.
+* **Cabin Crew** members (or **Specialists** in Specialised Operations companies).
 * **Mechanics**.
 * **Auditors** with external read-only access.
 
@@ -64,6 +64,26 @@ Cabin Crew members can be added to flights as part of the crew, alongside pilots
 
 Like pilots, cabin crew members can be created without an email address if login access is not required.
 
+Specialised Operations (SPO) companies use the **Specialist** account type instead. It has the same permissions. See [Specialists](#specialists) below.
+
+### Specialists
+
+Specialist is the crew account type for **Specialised Operations (SPO)** companies. It does the same job as Cabin Crew and has the same permissions, with no company management privileges.
+
+**Which one you see:** the account type list depends on your company type. SPO companies see **Specialist** when creating crew members. Every other company type sees **Cabin Crew**. Each company only sees the one that matches its type, so you never have to choose between them yourself.
+
+**What a Specialist can do:**
+
+* Be added to flights as crew, alongside pilots, and be assigned to schedule entries.
+* See their own assigned flights, schedules and documents, and manage their own documents where your company allows it.
+* Sign their own attendance in trainings classes they are enrolled in.
+* Read mass-and-balance results and loadsheets for flights they are on, and aircraft loadsheets they are allowed to see.
+* Open the crew home dashboard. It is the same dashboard as Cabin Crew.
+
+**What a Specialist cannot do:** manage other users, billing, company settings, or any company-wide management area. Everything else is limited the same way as for Cabin Crew.
+
+**Moving between types:** if your company was SPO and had Cabin Crew accounts, those accounts were moved to Specialist. If your company type changes later, existing accounts keep their current type. Only the list offered when creating new accounts changes.
+
 ### Mechanics
 
 Mechanics have access to all aircraft details. They can manage maintenance jobs and work orders, and view and download all aircraft flight and logbook information.
@@ -105,7 +125,7 @@ Roles are listed from **most** to **least** privileged. Where the rest of this m
 | Captain | — | — | Own | — | — | Own | Own |
 | Pilot | — | — | Own | — | — | Own | Own |
 | Student Pilot | — | — | Own (read) | — | Enrolled | Own | Own (read) |
-| Cabin Crew | — | — | Assigned | — | — | Own | Assigned |
+| Cabin Crew / Specialist | — | — | Assigned | — | — | Own | Assigned |
 | Auditor | — | View | View | View | View | View | View |
 | Mechanic | — | — | View | ✅ | — | — | — |
 

@@ -27,7 +27,7 @@ The bypass lets a crew member or staff user edit a flight even when they do not 
 
 It applies when **both** conditions hold:
 
-- **Who:** the viewer is the **PIC** of the flight, **or** the viewer is **Pilot or above** (any pilot, instructor or manager role — Student Pilots, Cabin Crew, Auditors and Mechanics excluded).
+- **Who:** the viewer is the **PIC** of the flight, **or** the viewer is **Pilot or above** (any pilot, instructor or manager role — Student Pilots, Cabin Crew, Specialists, Auditors and Mechanics excluded).
 - **When:**
   - the flight is a **DRAFT**, **or**
   - the flight is **CONFIRMED** and the current time is within the **`flights_block_days`** window measured from `Flight.landing_time`.

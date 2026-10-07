@@ -144,7 +144,13 @@ Retrieve full user details including login history and company context.
 
 <mark style="color:green;">`POST`</mark> `/manager/users/create.json`
 
-Create a new user account.
+Create a new user account. This is also how pilot and student accounts are created (the NEO **Add Pilot** form and **Import** both post here).
+
+#### Permissions
+
+* Restricted to `user_group_id` ∈ {1, 100, 105, 110, 120} (Company Administrators, Operations Managers, Compliance & Safety Managers and Human Resources Managers). Every other group, including Chief Pilots (`150`), gets `403` `"You are not allowed to create users"`.
+* `User.user_group_id` is required and must be between `100` and `300`; it can never be more senior (lower) than the caller's own group.
+* On the `free` plan, creating a pilot (`user_group_id` 151–299) is refused with `400` once the company has more than 100 pilots.
 
 #### Request Body
 

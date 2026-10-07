@@ -1245,7 +1245,7 @@ Eligibility is checked **before** the password, so a caller is never asked for a
 
 **Repeat calls are a no-op**, not an error: an already-signed row returns its existing `{time}` with `200`.
 
-**Access.** The caller must have a `session_students` row for the session (`404 You are not on the roster of this class`), and the session's `Training.company_id` must match theirs (`404 Training Session not found`). Beyond that, this action is ACL-gated per role on `acos.alias = 'sign_attendance'`: `UserGroup` 180 (Captain), 200 (Student Pilot) and 240 (Cabin Crew) are granted — the roles that sit in a classroom as students and therefore sign their own row. 250 (Auditor) is denied: an auditor observes a class, they do not attest to attending it. Every other role inherits access from the root `controllers` ALLOW. A denied role gets `403 ACL_DENIED` no matter how valid the request is.
+**Access.** The caller must have a `session_students` row for the session (`404 You are not on the roster of this class`), and the session's `Training.company_id` must match theirs (`404 Training Session not found`). Beyond that, this action is ACL-gated per role on `acos.alias = 'sign_attendance'`: `UserGroup` 180 (Captain), 200 (Student Pilot), 240 (Cabin Crew) and 245 (Specialist) are granted — the roles that sit in a classroom as students and therefore sign their own row. 250 (Auditor) is denied: an auditor observes a class, they do not attest to attending it. Every other role inherits access from the root `controllers` ALLOW. A denied role gets `403 ACL_DENIED` no matter how valid the request is.
 
 #### Response
 
@@ -2782,7 +2782,7 @@ The plugin's inherited gate only covers `manager_`-prefixed actions, so the thre
 | `catalog/*`, `enrollment_requests/submit`, `enrollment_requests/withdraw` | Any user in the company |
 | `intakes/*`, `requirements/*`, `enrollment_requests/decide` | `user_group_id` **≤ 150** (Chief Pilot and above) |
 
-New actions need an ACL entry. `aco_sync` creates the ACOs, but the `controllers` root grants read to every group **except 180, 240 and 250** — so the three student-facing actions also need explicit `aros_acos` rows, copied from `Trainings/Students/index`. Without them students get `403 ACL_DENIED`.
+New actions need an ACL entry. `aco_sync` creates the ACOs, but the `controllers` root grants read to every group **except 180, 240, 245 and 250** — so the three student-facing actions also need explicit `aros_acos` rows, copied from `Trainings/Students/index`. Without them students get `403 ACL_DENIED`.
 
 ### Catalog
 

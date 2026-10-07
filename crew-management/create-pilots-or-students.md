@@ -6,6 +6,10 @@ description: Manage your flight crew in 2 easy steps
 
 In your Manager account, navigate to the pilots management area and click the blue **Add Pilot** button.
 
+{% hint style="info" %}
+Only **Company Administrators**, **Operations Managers**, **Compliance & Safety Managers** and **Human Resources Managers** can create users. Other roles, including **Chief Pilot**, do not see the **Add Pilot** and **Import** buttons. If a Chief Pilot needs to add users, ask your Company Administrator to change their User Group to Operations Manager.
+{% endhint %}
+
 The create form is organized into three tabs — **Personal**, **Account**, and **Attributions**.
 
 ### Personal tab

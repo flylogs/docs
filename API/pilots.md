@@ -116,47 +116,7 @@ All filter parameters are optional — use empty string to skip.
 
 ## Create Pilot
 
-<mark style="color:green;">`POST`</mark> `/pilots/create.json`
-
-Create a new pilot account. Restricted to `user_group_id` ∈ {1, 100, 105, 110, 120, 150} (Company Administrators, Operations Managers, Compliance & Safety Managers, Human Resources Managers and Chief Pilots).
-
-The free plan is capped at 100 pilots — additional pilots return `400`.
-
-#### Request Body
-
-```json
-{
-  "User": {
-    "user_group_id": "190",
-    "email": "newpilot@example.com",
-    "active": true,
-    "created": "1600000000",
-    "send_email": true
-  },
-  "UserDetail": {
-    "name": "Alex",
-    "surname": "Rivera"
-  }
-}
-```
-
-- `User.user_group_id` defaults to `190` (Pilot) if omitted; values below `150` (more senior than Chief Pilot) are rejected.
-- `User.company_id` is forced from the session; do not send.
-- `UserDetail.timezone_id` defaults to the requesting user's timezone.
-- If `User.email` is provided, `email_status` is computed via `User.checkConfirmedEmail`. When the email is set, the user is `active`, and `send_email` is true, a `newstaff` confirmation mail is sent.
-- `UserDetail.name` and `UserDetail.surname` are required.
-
-#### Response
-
-```json
-{
-  "id": "456",
-  "result": true,
-  "validation": null
-}
-```
-
-On failure: `result = false`, `validation` contains `User.invalidFields()`.
+There is no `/pilots/create.json` endpoint. Pilot, student and staff accounts are all created with [`POST /manager/users/create.json`](manager-users.md#create-user), which is restricted to `user_group_id` ∈ {1, 100, 105, 110, 120} (Company Administrators, Operations Managers, Compliance & Safety Managers and Human Resources Managers). Chief Pilots and every other group get `403`.
 
 ---
 
@@ -692,7 +652,7 @@ UserCertificate[expiration]=2025-06-01
 UserCertificate[photo]=@/path/to/scan.pdf
 ```
 
-- **Ownership.** On an update (`id` sent) the owner is always the one stored on the certificate: the posted `user_id` is ignored, so a certificate can never be moved between users. On a create, callers with `user_group_id > 170` (Captain, Pilot, Student Pilot, Cabin Crew, Auditor, Mechanic) always file on their own profile — the posted `user_id` is replaced with the authenticated user.
+- **Ownership.** On an update (`id` sent) the owner is always the one stored on the certificate: the posted `user_id` is ignored, so a certificate can never be moved between users. On a create, callers with `user_group_id > 170` (Captain, Pilot, Student Pilot, Cabin Crew, Specialist, Auditor, Mechanic) always file on their own profile — the posted `user_id` is replaced with the authenticated user.
 - Managers, Chief Pilots and Flight Instructors (`user_group_id <= 170` — Flight Instructor and above) can file and edit certificates for any user in their own company. Everyone else gets `403` when editing a certificate that is not theirs, and `404` when the certificate belongs to another company.
 - `issue` and `expiration` must parse as `Y-m-d` or they are silently dropped. `issue` may be left empty for document types that do not require one.
 - `name` (the free-text description) is optional — `type` already identifies the document. When omitted it stores as an empty string, and the apps show the certificate type instead.
