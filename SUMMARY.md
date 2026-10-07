@@ -130,6 +130,7 @@
 * [Edit a training](training-courses/edit-a-training.md)
 * [Open trainings](training-courses/open-trainings.md)
 * [Exam sittings](training-courses/exam-sittings.md)
+* [Question bank and recovery exams](training-courses/question-bank-and-recovery-exams.md)
 * [Flight Training](training-courses/flight-training.md)
 * [Stage Checks](training-courses/stage-checks.md)
 * [Mission Authorizations](training-courses/mission-authorizations.md)

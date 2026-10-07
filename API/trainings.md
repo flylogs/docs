@@ -3611,3 +3611,49 @@ Codes (both paths): `REASON_REQUIRED`, `INVALID_TIME` (not a whole number of sec
 * `HoursBySubject`: `[{ training_subject_id, planned, done, credited }]` in **seconds** — planned = `training_subjects.hours`, done = sum of `activity_progress.time`.
 * `EnrollmentCredit`: the raw credit rows. `PriorCredit`: `{ subjects_completed: [ids], missions: [ids] }`.
 * `TrainingsUser.prior_experience_reason`, `migrated_from_id`, `migrated_to_id`; `Training.version` (course revision number), `Training.version_status`.
+
+## Question bank and recovery exams
+
+Lesson codes, subject question bank and extraordinary (recovery) exams. All `manager` endpoints require a training manager (user group ≤ 135) or, for groups above 135, the **teacher of the subject**; other groups get `403`. Subject, exam and enrollment ids are always checked against the caller's company. Errors answer `{message}` with the HTTP status (`400` bad input, `403`, `404`).
+
+**Lesson code.** `Lesson.code` (≤ 30 chars, unique per subject, case-insensitive) is accepted by `POST /manager/trainings/lessons/add|edit` as `data[Lesson][code]` and returned by lesson list/edit. A duplicate fails validation.
+
+**Question tag.** `training_questions.lesson_code` is the lesson code a question is tagged with (nullable). Matching is case-insensitive.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/question_bank/bank/{subjectId}.json` — querystring `code`, `untagged=1`, `q`, `page`, `limit` (≤ 100). `{ questions: [{ TrainingQuestion: {id,name,lesson_code,required}, TrainingQuestionOption: [{id,name,value}] }], lessons: [{id,name,code,questions}], untagged, orphans: [{code,questions}], total, page, limit, pages }`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/tag.json` — `{ subject_id, question_ids[], lesson_code }` (`""` clears). The code must belong to a lesson of the subject. `{ result, updated }`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/import.json` — `{ subject_id, rows: [{ name, lesson_code?, options?: [{name, value}] }], exam_id? }`, max 5000 rows. A question with the same text (case/space-insensitive) in the subject only gets its tag updated. `{ result, created, updated, skipped: [{row, name, reason, lesson_code?}] }`, `reason` ∈ `unknown_lesson_code`, `no_correct_option`, `invalid`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/preview.json` — `{ subject_id, lesson_codes[], any_course, include_untagged }` → `{ counts: [{code, questions}], total }` (`code ""` = untagged).
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/generate.json` — `{ subject_id, lesson_codes[] (empty = whole subject), questions, minutes, score, attempts (default 1), name?, any_course (default true), include_untagged, show_answers }`. Creates an exam with `extraordinary = 1` (type ONLINE, no training activity, `mandatory = 0`) linked to the whole matching pool; each attempt draws `questions` of them **balanced across lesson codes**. `{ result, exam_id, pool, untagged, warnings }`, or `{ result: false, message, available }` when the pool is too small. `any_course` also pools questions of subjects of the same company with the same `code` or `template_subject_id`.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/question_bank/exams/{subjectId}.json` — recovery exams of the subject (`Exam.assigned`, `Exam.pool` added).
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/assign.json` — `{ exam_id, trainings_user_ids[] and/or session_id, mode: ONLINE|PAPER, available_from?, available_until? (unix), missed_session_ids?: {trainingsUserId: sessionId} }`. Default window: now → `access_window_days`. Re-assigning the same mode updates the existing row. `{ result, created, updated }`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/open_to_session.json` — `{ session_id, exam_id }`: opens the session lesson's own exam (or a recovery exam of the subject) online to every active student rostered on the session. `{ result, opened, available_until }`.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/question_bank/assignments/{examId}.json`, `/manager/trainings/question_bank/enrollment/{trainingsUserId}.json` — assignment rows: `{ id, exam_id, trainings_user_id, user_id, session_id, missed_session_id, mode, available_from, available_until, paper_version, paper_score, paper_passed, paper_graded_at, exam, best_attempt, attempts_count, passed, score_value }`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/grade_paper.json` — `{ assignment_id, score (0–100), passed }` for PAPER assignments.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/set_attendance.json` — `{ assignment_id, attendance: "attended_post_class" | "keep" }`. Only when the assignment has a `missed_session_id` and is passed; sets `attended_post_class` on a missed (`absent` / `absent_justified`) register row. Never automatic.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/paper.json` — `{ exam_id, assignment_ids[], versions (1–4) }` → `{ meta, sheets: [{ assignment_id, version, questions: [{ id, name, lesson_code, options: [{id,name,correct}] }] }] }`. The draw is stored per assignment (`paper_questions`), so repeating the call returns the same questions; versions B–D reorder questions and options.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/question_bank/session/{sessionId}.json` — exams opened/assigned from a class: `{ exams: [{ exam, assignments: [A + in_progress, user_name] }] }`. Used by the class page to show the window, who has not started / is in progress / finished, and the scores.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/close_opening.json` — `{ session_id, exam_id }`: ends the availability window of the exam's online assignments for that class (`available_until` = now). Results are kept. `{ result, closed }`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/question_bank/delete_opening.json` — `{ session_id, exam_id }`: soft-deletes the class's assignments of that exam; `400` when any student already has an attempt or a graded paper. A recovery exam left with no assignments and no attempts is deleted too (`examDeleted`). The `session/{id}` listing returns `results` and `can_delete` per exam.
+
+Only one online exam can be open per class: `assign` (online, with `session_id`) and `open_to_session` answer `400` "Another exam is already open for this class." while another exam's window is open.
+
+<mark style="color:blue;">`GET`</mark> `/trainings/question_bank/my_exams/{trainingsUserId}.json` — student: own ONLINE assignments with `open` (window currently open). Taking the exam uses the normal exam flow (`/trainings/exams/start/{enrollmentId}/{examId}`); starting a **new attempt** of an `extraordinary` exam requires an open assignment, otherwise `403`.
+
+**Viewing an attempt.** `GET /trainings/exams/view/{attemptId}.json` is allowed for the student, for managers (user group ≤ 150) **of the exam's company** and for the teacher of the exam's subject; anyone else gets `404`. Staff always receive the answers (`show_answers = true`).
+
+**Balanced draw for every exam.** `exams/start` now draws attempt questions grouped by `lesson_code` (round-robin, shuffled); untagged questions form one more group. With a single group it is a plain random draw, as before.
