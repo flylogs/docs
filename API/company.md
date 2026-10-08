@@ -135,13 +135,15 @@ Kept out of `/companies/settings.json` on purpose: overrides accumulate indefini
 ```json
 {
   "rows": [
-    { "id": "…", "base_id": null, "weekday": "0", "override_date": null, "closed": false, "start_minute": "480", "end_minute": "720" },
+    { "id": "…", "base_id": null, "weekday": "0", "override_date": null, "closed": false, "start_kind": "FIXED", "end_kind": "FIXED", "start_minute": "480", "end_minute": "720" },
+    { "id": "…", "base_id": null, "weekday": "5", "override_date": null, "closed": false, "start_kind": "SUNRISE", "end_kind": "SUNSET", "start_minute": "0", "end_minute": "0" },
     { "id": "…", "base_id": null, "weekday": "0", "override_date": null, "closed": false, "start_minute": "840", "end_minute": "1140" },
     { "id": "…", "base_id": null, "weekday": "6", "override_date": null, "closed": true,  "start_minute": "0",   "end_minute": "0" },
     { "id": "…", "base_id": "17", "weekday": null, "override_date": "2026-12-25", "closed": true, "start_minute": "0", "end_minute": "0" }
   ],
   "bases": [{ "id": "17", "name": "Valencia Airport", "default": "1" }],
-  "range": { "from": "2026-08-06", "to": "2027-08-13" }
+  "range": { "from": "2026-08-06", "to": "2027-08-13" },
+  "sun": { "17": { "2026-08-03": [405, 1275], "2026-08-10": [412, 1268] } }
 }
 ```
 
@@ -153,9 +155,14 @@ Kept out of `/companies/settings.json` on purpose: overrides accumulate indefini
 | weekday | `0` = Monday … `6` = Sunday on a recurring row; `null` on a date override |
 | override_date | `YYYY-MM-DD` on a date override; `null` on a recurring row |
 | closed | `true` = shut that day; the minute fields carry no meaning |
-| start_minute / end_minute | Minutes from midnight in company-timezone wall clock, `0`–`1440`, always multiples of 15. `1440` is midnight at end of day |
+| start_kind / end_kind | `FIXED` (default), `SUNRISE` or `SUNSET`. What decides that edge of the window. A sun edge ignores its minute field (stored as `0`) |
+| start_minute / end_minute | Minutes from midnight in company-timezone wall clock, `0`–`1440`, always multiples of 15. `1440` is midnight at end of day. Not used by a `SUNRISE`/`SUNSET` edge |
 
 A window never crosses midnight: an overnight operation is two rows (`1320–1440` on one day, `0–120` on the next).
+
+#### Sunrise and sunset (`sun`)
+
+`sun` is the lookup for rows with a `SUNRISE`/`SUNSET` edge: base id → the Monday of a week (`YYYY-MM-DD`) → `[sunrise, sunset]` in minutes from midnight in company-timezone wall clock. Sunrise is civil twilight begin and sunset is civil twilight end (sun 6° below the horizon) at the airport of the base; the key `""` is the company's default base, used when no base applies. The Monday's pair is used for the whole week. A base or week that is missing has no usable sun data (no airport, or polar day/night): a window that needs it is **open all day**. A resolved window that would close before it opens is treated the same way.
 
 #### How rows resolve
 
@@ -185,8 +192,10 @@ The whole set is validated before anything is deleted, and the replacement runs 
 | data[rows][n][weekday] | int | Either this or `override_date` | `0` = Monday … `6` = Sunday |
 | data[rows][n][override_date] | string | Either this or `weekday` | `YYYY-MM-DD` |
 | data[rows][n][closed] | int | Yes | `1` shuts the day, `0` opens it |
-| data[rows][n][start_minute] | int | Yes when not closed | `0`–`1440`, multiple of 15 |
-| data[rows][n][end_minute] | int | Yes when not closed | `0`–`1440`, multiple of 15, greater than `start_minute` |
+| data[rows][n][start_kind] | string | No | `FIXED` (default), `SUNRISE` or `SUNSET` |
+| data[rows][n][end_kind] | string | No | `FIXED` (default), `SUNRISE` or `SUNSET` |
+| data[rows][n][start_minute] | int | Yes when not closed and `start_kind` is `FIXED` | `0`–`1440`, multiple of 15 |
+| data[rows][n][end_minute] | int | Yes when not closed and `end_kind` is `FIXED` | `0`–`1440`, multiple of 15, greater than `start_minute` |
 
 #### Response
 
@@ -200,7 +209,7 @@ On rejection:
 { "result": false, "errors": { "start_minute": ["Times must fall on a 15-minute step"] } }
 ```
 
-Rejections cover a row that sets both `weekday` and `override_date` (or neither), a closing time at or before its opening time, times off the 15-minute grid, and two windows overlapping on the same day (`{"rows": ["Overlapping windows on 0"]}`).
+Rejections cover a row that sets both `weekday` and `override_date` (or neither), a closing time at or before its opening time, times off the 15-minute grid, and two windows overlapping on the same day (`{"rows": ["Overlapping windows on 0"]}`). A set using `SUNRISE`/`SUNSET` is also resolved against every week of the coming year for the bases it applies to and rejected if a window would close before it opens or overlap another one in some week (`{"rows": ["The sunrise/sunset times make a window close before it opens or overlap another one in the week of 2026-06-08."]}`).
 
 > **Replaced settings.** These endpoints supersede the old `schedule_self_block_start` / `schedule_self_block_end` fields on company settings, which have been removed. A single start/end pair could not express several windows a day, different hours per weekday, per-base hours or holidays.
 

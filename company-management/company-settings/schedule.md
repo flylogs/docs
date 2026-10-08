@@ -38,6 +38,11 @@ Your opening times. They decide which slots self-service booking offers, which f
 * **Closed days** — press **Close** on a day the field does not operate. Self-booking then answers "Closed on this date" for that day instead of "no slots available", and AutoPilot skips it.
 * **Copy to all days** — the copy icon applies one day's windows to the whole week, which is the fastest way to start from a uniform week and then adjust the exceptions.
 * Times are set in 15-minute steps, in your company timezone.
+* **Sunrise and sunset** — each opening and closing time can be a clock time, **Sunrise** or **Sunset** instead. Use this when your operation follows daylight: for example a window from **Sunrise** to **Sunset**, or from `08:00` to **Sunset**.
+  * Sunrise means the start of civil twilight and sunset means its end (the sun 6° below the horizon), at the **airport of the base** the hours apply to, shown in your company timezone.
+  * The times of the **Monday** of each week are used for the whole week, so a window does not shift from one day to the next.
+  * Flylogs will not save a combination that would, at any time of the year, close a window before it opens or make two windows overlap. The editor tells you the day and the week where it breaks; change one of the times.
+  * If the base has **no airport** set, or the sun never reaches that angle (polar day or night), a window using Sunrise or Sunset stays **open all day** rather than closing the operation. The editor warns you when a base has no airport position.
 
 **Per base.** The **Applies to** selector at the top chooses whose hours you are editing: the **company default**, or one base.
 
