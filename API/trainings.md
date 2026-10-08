@@ -728,6 +728,147 @@ Legacy fields `subject.Lesson[]` and `subject.Exam[]` are no longer emitted by t
 
 ---
 
+## Subject Bank (linked subjects)
+
+A subject can be linked across courses of the same company. Every course keeps its own concrete copy (own ids, own progress); a **family** (`training_subjects.subject_family_id`) joins the copies and one member is flagged the **source** (`family_source`). Changes are pushed from the source after a preview; nothing syncs automatically.
+
+Authorization (all endpoints below): manager prefix, **`user_group_id` ≤ 135** (teachers and flight instructors get `404`). Everything is scoped to the caller's company; superseded course revisions (`version_status = SUPERSEDED`) are never listed, targeted or changed. `TrainingSubject` payloads (training view, subject view) carry `subject_family_id` and `family_source`.
+
+All bodies are JSON (`application/json`); `4xx` errors carry the usual `{ "name", "message" }`.
+
+### List Families
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/subjects/families.json`
+
+Families of the company with their live members. With `?candidates=1` it also returns `candidates`: live, not-yet-linked subjects of the company (used by the "add from bank" and "link" pickers).
+
+```json
+{
+  "families": [
+    {
+      "id": "5f0c…",
+      "name": "Air Law",
+      "members": [
+        { "subject_id": "…", "name": "Air Law", "code": "010", "hours": "20.00", "source": true,
+          "training_id": "…", "training_name": "PPL(A)", "training_version": "1" }
+      ]
+    }
+  ],
+  "candidates": [ { "subject_id": "…", "name": "Meteorology", "code": "MET", "hours": "8.00", "training_id": "…", "training_name": "SPL", "training_version": "1" } ]
+}
+```
+
+### Import Subject
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/subjects/import.json`
+
+Copies a subject into a course as a linked family member (the family is created, with the copied subject as source, when it had none). The copy is appended after the course's existing subjects and brings lessons (in curriculum order), slides (rows + stored html), learning objectives, exams with their question links, lesson-gate exams and uploaded files. Uploaded file copies are named `name 2.ext`, `name 3.ext`, … The import is recorded as a `SUBJECT CREATED` change of the destination course (revision/approval for a live course).
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| subject_id | string | Yes | Subject to copy (same company) |
+| training_id | string | Yes | Destination course (same company, not superseded) |
+
+```json
+{ "result": true, "subject": { "id": "…", "name": "Air Law", "training_id": "…", "subject_family_id": "…", "family_source": false } }
+```
+
+### Link Subjects
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/subjects/link.json`
+
+Links two **existing** subjects of different courses. `target_id` joins `source_id`'s family (created when needed). Without `confirm` it only returns the match preview.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| source_id | string | Yes | Subject to follow |
+| target_id | string | Yes | Subject that will follow (must not be linked already) |
+| confirm | int | No | `1` writes the links; omitted/`0` previews |
+
+Matching: lessons by code, then name, then same position; slides by position within a matched lesson; objectives, lesson-gate and subject exams by name (then position); uploads by name. Unpaired rows are reported, never deleted.
+
+```json
+{
+  "confirmed": false,
+  "match": {
+    "pairs": { "LESSON": [["l-src", "l-tgt"]], "SLIDE": [[12, 40]] },
+    "added":   [ { "entity": "LESSON", "id": "l-extra" } ],
+    "removed": [ { "entity": "EXAM",   "id": "e-local" } ]
+  },
+  "source": { "id": "…", "name": "…" }, "target": { "id": "…", "name": "…" }
+}
+```
+
+With `confirm=1` the response is `{ "confirmed": true, "family_id": "…", "match": {…} }`. Errors (`400`): same course, already linked target, superseded course. `404`: subject outside the company.
+
+### Unlink / Make Source
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/subjects/unlink.json` — body `{ "subject_id" }`. The subject keeps its content and leaves the family. If it was the source, the oldest remaining member becomes source; a family left with one subject dissolves. Deleting a subject (`subjects/delete`) does the same.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/subjects/set_source.json` — body `{ "subject_id" }`. Makes that member the single source of its family (`400` for a superseded course).
+
+Both return `{ "result": true }`.
+
+### Sync Preview
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/subjects/sync_preview.json`
+
+Read-only. What pushing the source's content would do to each other live member.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| source_id | string | Yes | Must be the family **source** (`400` otherwise) |
+| target_ids | string[] | No | Subset of members; default all |
+| sync_hours | int | No | `1` also syncs the subject `hours` (local by default) |
+| sync_code | int | No | `1` also syncs the subject `code` (local by default) |
+| quick | int | No | `1` skips the slide-html comparison (cheap; for "needs review" badges — slide html edits are not seen) |
+
+```json
+{
+  "source": { "subject_id": "…", "name": "Air Law", "training_name": "PPL(A)" },
+  "targets": [
+    {
+      "subject_id": "…", "training_id": "…", "training_name": "SPL", "training_status": "CURRENT",
+      "counts": { "update": 2, "add": 1, "conflict": 1, "removed_in_source": 0 },
+      "ops": [
+        { "op": "update", "entity": "LESSON", "fid": "…", "label": "Privileges",
+          "source_row_id": "…", "target_row_id": "…", "parent_fid": null,
+          "changes": [ { "field": "minutes", "from": "60", "to": "90" } ] }
+      ]
+    }
+  ]
+}
+```
+
+`op` is `update` (source changed, course untouched since the last sync, or never synced and different), `conflict` (both changed since the last sync), `add` (source row the course lacks and has not excluded) or `removed_in_source` (never applied; `has_progress` tells whether students have progress on it). A course that changed locally while the source stayed put produces no op. `entity` is one of `SUBJECT`, `LESSON`, `SLIDE`, `OBJECTIVE`, `EXAM`, `UPLOAD`; ops are ordered parents first, removals last. Fields that never sync: `teacher_id`, subject/activity order, and (unless opted in) `hours` and `code`.
+
+### Apply Sync
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/subjects/sync.json`
+
+Applies the push, **one transaction per target**, in place (ids and student progress are preserved). New lessons/exams are appended after the subject's last lesson (lesson-gate exams right after their lesson, subject exams last). Exam question sets are written as explicit link inserts/deletes. Removals are never applied. For a `CURRENT` course the sync opens a revision (`Subject "…" synced from "…"`, plus a `SUBJECT UPDATED` change when subject fields changed) and queues approval like a manual edit; `DRAFT` courses are changed without a revision.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| source_id | string | Yes | The family source |
+| sync_hours / sync_code | int | No | As in the preview |
+| targets | object[] | Yes | `{ "subject_id", "resolutions": { "<fid>": "source" \| "course" }, "exclusions": ["<fid>"] }` |
+
+`resolutions` answers `conflict` ops (`source` overwrites the course item, `course` keeps it and records it as reviewed); a conflict with no resolution is skipped and returned in `unresolved`. `exclusions` lists `add` ops the course declines — they are remembered and not proposed again. A target that is not a live member of the source's family is rejected per target.
+
+```json
+{
+  "results": [
+    { "subject_id": "…", "result": true,
+      "applied": { "update:LESSON": 2, "add:LESSON": 1, "kept": 1 },
+      "unresolved": [], "removed_in_source": [] },
+    { "subject_id": "…", "result": false, "error": "Not a syncable member of this family" }
+  ]
+}
+```
+
+---
+
 ## Lessons
 
 ### View Lesson

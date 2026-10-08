@@ -108,6 +108,10 @@ Both fields only affect certificates issued from the moment you save. A certific
 If a training has no training manager, Flylogs falls back to any Company Administrator or Operations Manager with a signature on file so the certificate always carries a signatory. Pick a manager explicitly for courses you issue as an approved organisation.
 {% endhint %}
 
+### Sharing a subject between courses
+
+If the same subject is taught in several courses, use the **Subject Bank**: **Add from bank** on the course's *Subjects* tab copies a subject from another course and keeps it linked, so later changes can be reviewed and pushed to every course. See [Subject Bank (linked subjects)](subject-bank.md).
+
 ### Managing online exam questions
 
 Online exams draw from a **shared question bank**. The same question can be reused across several exams — for example a subject-level test and the lesson exams that feed it. Because the question is shared, editing its text or answers updates it **everywhere it appears**.

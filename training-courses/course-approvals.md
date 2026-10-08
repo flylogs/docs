@@ -31,6 +31,8 @@ Approving stores a fingerprint of the content as it stood at that moment, so the
 
 An edit that changes nothing records nothing: re-saving a stage without touching a field does not open a revision or ask anyone to approve it.
 
+Pushing changes from a linked subject to a live course (see [Subject Bank](subject-bank.md)) counts as an edit of that course: it opens a revision like any manual change, summarised as *Subject "…" synced from "…"*.
+
 This never blocks anything. Students always run the live content; the revision is a record of what was approved and when, not a draft that has to be published.
 
 ### Undoing a change
