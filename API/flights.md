@@ -292,6 +292,134 @@ Users with `user_group_id > 170` (Captain and below) may only view flights they 
 
 ---
 
+## Create or Update Flight
+
+<mark style="color:green;">`POST`</mark> `/flights/create.json`
+
+Create a flight record, or update an existing one. A new flight is **always saved as `DRAFT`**, whatever `status` you send. To make it count towards the logbook, aircraft hours, duty records and billing, [confirm it](#confirm-flight) afterwards. Creating and confirming are two separate calls, so a reviewed flight can be entered first and approved afterwards.
+
+The flight is created in the company of the API key, and its creator (`user_id`) is the user the key is bound to.
+
+#### Request Body
+
+Send a JSON body with a top-level `Flight` object:
+
+```json
+{
+  "Flight": {
+    "aircraft_id": 45,
+    "flight_type_id": 1,
+    "date": "2026-10-07",
+    "callsign": "EC-ABC",
+    "rules": "VFR",
+    "departure_airport": "LEMD",
+    "landing_airport": "LEBL",
+    "offblocks_time": 1791360000,
+    "takeoff_time": 1791360900,
+    "landing_time": 1791364500,
+    "onblocks_time": 1791365100,
+    "landings": 1,
+    "pic_id": 123,
+    "comments": "Created from approved post-flight sheet"
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| aircraft_id | integer | Yes | Aircraft ID. Without it the request is rejected with `400 Missing aircraft`. |
+| flight_type_id | integer | Yes (create) | Flight type ID, from [`/flight_types.json`](#flight-types). |
+| date | string | Yes | Flight date, `YYYY-MM-DD`. |
+| callsign | string | Yes | Callsign. Must not be empty. |
+| rules | string | Yes (create) | `VFR` or `IFR`. |
+| departure_airport | string | Yes | Departure airport, as returned in `Flight.departure_airport` by [View Flight](#view-flight). |
+| landing_airport | string | Yes | Landing airport, same format. |
+| offblocks_time | integer | No | Off-blocks time, unix seconds. |
+| takeoff_time | integer | No | Take-off time, unix seconds. |
+| landing_time | integer | No | Landing time, unix seconds. |
+| onblocks_time | integer | No | On-blocks time, unix seconds. |
+| night_flight_time | integer \| string | No | Night time, in seconds or `HH:MM`. Capped to the block time. Defaults to `0`. |
+| ifr_flight_time | integer \| string | No | IFR time, in seconds or `HH:MM`. Capped to the block time. Defaults to `0`. |
+| landings | integer | No | Number of landings (cycles). Defaults to `0`. |
+| engine_starts | integer | No | Number of engine starts. Non-numeric values are stored as `null`. |
+| pic_id | integer | No at creation, **required to confirm** | Pilot in command. |
+| sic_id | integer | No | Second in command. |
+| supervisor_id | integer | No | Supervisor. |
+| tach_start, tach_end | number | Conditional | Tach readings. Required to confirm when the aircraft counts its airframe hours on the tach. |
+| hobbs_start, hobbs_end | number | Conditional | Hobbs readings. Required to confirm when the aircraft counts its airframe hours on the Hobbs meter. |
+| comments | string | No | Free-text change note, stored in the flight's change history. |
+| id | string | No | Include the ID of an existing flight to **update** it instead of creating one. |
+
+Fields you send as `HH:MM` strings (`night_flight_time`, `ifr_flight_time`, `flight_time`, `block_time`) are converted to seconds. For the four event times, send unix seconds: this is the form the API returns, and it avoids any time-zone ambiguity. As a convenience the API also accepts the strings `start`, `takeoff`, `landing` and `end` (`HH:MM`), combined with `date` into the off-blocks, take-off, landing and on-blocks times.
+
+#### Calculated fields
+
+When all four event times are present, the API calculates `block_time` (on-blocks minus off-blocks) and `flight_time` (landing minus take-off) unless you send them. If a time falls before the previous event (for example a flight across midnight), it is moved forward one day. When any of the four times is missing, `block_time` and `flight_time` are left empty and the flight cannot be confirmed.
+
+#### Authorization
+
+* To **create** a flight, the caller must hold the **Flight.create** company permission; otherwise the API returns `403 Forbidden` ("not authorized to create a flight draft").
+* Users above Company Administrator (`user_group_id > 110`) cannot create flights dated before today minus the company's **logbook block window** (`flights_block_days`), when one is set.
+* To **update** an existing flight, the caller needs the **Flight.edit** permission. A crew member or the creator without it can no longer edit a **confirmed** flight once more than 12 hours have passed since its off-blocks time (`400`, "not authorized to edit a flight"). Unconfirmed flights stay editable.
+* Only flights in the caller's own company can be updated. Cancelled or deleted flights cannot.
+
+#### Response
+
+On success the API returns the saved flight with its aircraft and crew:
+
+```json
+{
+  "Flight": {
+    "id": "9a1b2c3d-...",
+    "status": "DRAFT",
+    "date": "2026-10-07",
+    "callsign": "EC-ABC",
+    "block_time": 5100,
+    "flight_time": 3600
+  },
+  "Aircraft": { "id": "45", "registration": "EC-ABC" },
+  "Pic": { "id": "123" },
+  "Sic": null,
+  "premium_process": true
+}
+```
+
+Keep `Flight.id`: you need it to confirm, view, update or cancel the flight.
+
+If validation fails the HTTP status is still `200`, but the body is an error object. Always check for `error`:
+
+```json
+{
+  "error": true,
+  "validation": {
+    "callsign": ["Callsign can not be empty"],
+    "landing_time": ["Landing time can not be after OBT."]
+  }
+}
+```
+
+| Message | Cause |
+|---------|-------|
+| `Missing aircraft` | `aircraft_id` missing (`400`). |
+| `Missing flight type` | `flight_type_id` missing on a new flight. |
+| `Invalid flight rules` | `rules` is not `VFR` or `IFR`. |
+| `Missing a valid date` | `date` missing or not `YYYY-MM-DD`. |
+| `Landing time can not be after OBT.` | Landing time later than on-blocks time. |
+| `Flight date is outside the allowed logbook window (N days).` | Date older than the company's logbook block window (`400`). |
+| `Flight not found` | The `id` does not belong to a live flight in your company (`404`). |
+
+#### Recommended flow for an integration
+
+1. `POST /flights/create.json` with the flight data. Check the response for `error`.
+2. Let a person review the saved draft (for example with [View Flight](#view-flight)).
+3. `POST /flights/confirm/{id}.json` when approved. Confirmation needs a block time, an aircraft and a PIC. It also needs the flight to have landed already and the tach or Hobbs readings, where the aircraft requires them. It is blocked if the flight overlaps another confirmed flight on the same aircraft.
+
+{% hint style="info" %}
+Creating a flight through the API follows the same rules as the NEO flight form. Premium and Unlimited companies also get the training-mission, duty-time and schedule updates described for the NEO app, because the same endpoint serves both.
+{% endhint %}
+
+---
+
 ## Cancel Flight
 
 <mark style="color:green;">`POST`</mark> `/flights/cancel.json`
