@@ -3616,7 +3616,7 @@ Codes (both paths): `REASON_REQUIRED`, `INVALID_TIME` (not a whole number of sec
 
 Lesson codes, subject question bank and extraordinary (recovery) exams. All `manager` endpoints require a training manager (user group ≤ 135) or, for groups above 135, the **teacher of the subject**; other groups get `403`. Subject, exam and enrollment ids are always checked against the caller's company. Errors answer `{message}` with the HTTP status (`400` bad input, `403`, `404`).
 
-**Lesson code.** `Lesson.code` (≤ 30 chars, unique per subject, case-insensitive) is accepted by `POST /manager/trainings/lessons/add|edit` as `data[Lesson][code]` and returned by lesson list/edit. A duplicate fails validation.
+**Lesson code.** `Lesson.code` (≤ 30 chars, unique per subject, case-insensitive) is accepted by `POST /manager/trainings/lessons/add|edit` as `data[Lesson][code]` and returned by lesson list/edit. A duplicate fails validation. When a **new** lesson is created without a code and its subject has a `code`, the code defaults to `<subject code>-<NN>` (NN = the lesson's order, two digits, moved on while that code is taken in the subject); it is never recomputed on edit or reorder.
 
 **Question tag.** `training_questions.lesson_code` is the lesson code a question is tagged with (nullable). Matching is case-insensitive.
 

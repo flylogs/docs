@@ -17,6 +17,7 @@ A student who missed some classes can sit an **extraordinary (recovery) exam** t
 Every lesson can have a short **Code** (for example `010-02`, or an EASA learning objective such as `010.02.01`). Open the lesson, type the code and save.
 
 * The code is free text, up to 30 characters.
+* **New lessons get a code automatically**: the subject code and the lesson's number in the order of the subject's lessons (for example `010-03`, or `1-02` when the subject code is `1`). You can change it on the lesson page. Existing codes are never renamed afterwards — not even when you reorder the lessons — because questions are tagged with them. A subject without a code gets no automatic code.
 * It must be **unique inside the subject** (upper/lower case is ignored). Saving a code already used by another lesson of the subject is refused.
 * Codes are optional, but only tagged questions can be picked "by lesson".
 
