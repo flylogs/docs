@@ -657,6 +657,16 @@ HTTP 400 Bad Request
 
 Clients should mirror this rule rather than blocking on certificate state alone: warn the pilot whenever documents are invalid, but keep the booking action available unless `require_pic_docs = 1` and `schedule_self_allow_nodocs = 0`. The same applies to the per-seat flight-type requirements returned by `GET /flight_types/compliance/{id}.json` — a non-compliant seat is a warning, and only that setting combination makes it a hard stop.
 
+### Confirmed-availability gate on crew assignment
+
+Company setting `schedule_require_availability` (boolean, default `0`, under *Company settings > Schedule*, returned by `GET /companies/settings.json`).
+
+* **Off (default):** historic behaviour. Only a crew member with an overlapping `UNAVAILABLE` availability row is flagged by `available_pilots`; nothing is enforced on save.
+* **On:** `POST /schedules/edit.json` returns `403 Forbidden` when `pic_id`, `sic_id` or `supervisor_id` is not confirmed available for `[start, end]`. Confirmed means an `AVAILABLE` or `ALWAYS` availability row covering the whole slot, or a base-roster `DUTY` / `STANDBY` entry. `MAYBE`, `UNAVAILABLE` (without a roster `DUTY`/`STANDBY` entry) and no record at all are refused.
+* **Scope:** managers and schedule editors assigning crew. Self-bookings (`self_schedule = 1`, students, and group 170 without `schedule_allow_fi_management`) are exempt. On edit, only seats whose pilot changed, or all seats when `start` / `end` moved, are checked.
+
+Clients should treat any pilot not in `availableUsers` and not in `busyUsers` from `POST /schedules/available_pilots.json` as non-selectable when the setting is on.
+
 ### MEL and CDL warnings on save
 
 Saving a schedule (create or edit, via `/schedules/edit.json`) never fails because of a MEL
