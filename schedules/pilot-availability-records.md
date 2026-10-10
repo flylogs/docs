@@ -55,12 +55,18 @@ By default, when a manager assigns crew to a booking, Flylogs only blocks a pilo
 
 If your pilots have changing rosters and should only be scheduled when they have said they are free, turn on **Require confirmed availability** under **Company settings > Schedule**. The option is off by default, so nothing changes until you enable it.
 
+![](../.gitbook/assets/require-availability-setting.png)
+
 When it is on, a pilot or instructor can only be assigned to a booking if at least one of these is true for the whole time frame:
 
 * They marked the time as **Available**, or they have **I am always available** switched on.
 * They are on **Duty** or **Standby** in the base roster.
 
 Pilots who marked **Maybe**, **Not available**, or who submitted nothing appear greyed out in the crew selector and cannot be chosen. The restriction is also enforced when the booking is saved, so it cannot be bypassed.
+
+![](../.gitbook/assets/require-availability-crew-selector.png)
+
+> Pilots with a red dot have not confirmed their availability for the selected time frame and cannot be chosen. The green dot marks a pilot who is available.
 
 {% hint style="info" %}
 Pilots booking themselves (self-booking) are not affected. When editing an existing booking, only crew who are newly added, or whose time frame changed, are checked.
