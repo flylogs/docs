@@ -44,6 +44,8 @@ Your opening times. They decide which slots self-service booking offers, which f
   * Flylogs will not save a combination that would, at any time of the year, close a window before it opens or make two windows overlap. The editor tells you the day and the week where it breaks; change one of the times.
   * If the base has **no airport** set, or the sun never reaches that angle (polar day or night), a window using Sunrise or Sunset stays **open all day** rather than closing the operation. The editor warns you when a base has no airport position.
 
+<figure><img src="../../.gitbook/assets/operating-hours-sunrise-sunset.png" alt="The Operating Hours editor with Monday to Friday set from Sunrise to Sunset, Saturday from 08:00 to Sunset and Sunday closed"><figcaption>Company Settings → Schedule → Operating Hours. Monday to Friday follow the daylight (Sunrise to Sunset), Saturday opens at 08:00 and closes at Sunset, and Sunday is closed.</figcaption></figure>
+
 **Per base.** The **Applies to** selector at the top chooses whose hours you are editing: the **company default**, or one base.
 
 * A base with no hours of its own follows the company default, and says so.

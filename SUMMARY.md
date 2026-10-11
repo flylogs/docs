@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Sunrise and sunset operating hours](whats-new/operating-hours-sunrise-sunset.md)
   * [Sign in with a passkey](whats-new/passkeys-and-two-factor.md)
   * [Multi-leg and repeating bookings](whats-new/multi-leg-and-repeating-bookings.md)
   * [Push-first notifications](whats-new/push-first-notifications.md)

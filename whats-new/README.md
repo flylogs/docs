@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## October 2026
 
+**[Sunrise and sunset operating hours](operating-hours-sunrise-sunset.md)** · Company settings\
+Set opening and closing times to Sunrise or Sunset at the base's airport, so daylight operations keep the right hours all year.\
+[Manual →](../company-management/company-settings/schedule.md#operating-hours)
+
 **[Sign in with a passkey](passkeys-and-two-factor.md)** · Account & security\
 Sign in or unlock with your fingerprint, Face ID or screen lock, and get guided through two-factor setup.\
 [Manual →](../first-steps/account-security.md#passkeys)
