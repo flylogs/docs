@@ -441,10 +441,13 @@ Cancel (soft-delete) a flight record. The flight moves to `CANCELED` if it was s
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| id | string | Yes | Flight ID to cancel |
+| id | string | Yes* | Flight ID to cancel |
+| client_id | string | No | Instead of `id`: the `client_id` the flight was created with (see [Safe retries](#safe-retries-with-client_id)). Use it when you can't know whether your create reached the server. Unknown `client_id` returns `404`. |
 | reason | string | Yes | Reason for cancellation |
 | text | string | No | Free-text note stored with the cancellation |
 | notify | string | No | `"true"` to notify the other crew: an in-app message (email if urgent alerts are on) for PIC/SIC, plus a push notification to PIC, SIC and supervisor except the caller. WhatsApp (`flightchange` template) is sent only to crew with `User.whatsapp` on whom the push reached on no device. |
+
+\* Send either `id` or `client_id`.
 
 #### Authorization
 
