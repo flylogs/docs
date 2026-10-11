@@ -386,6 +386,17 @@ On success the API returns the saved flight with its aircraft and crew:
 
 Keep `Flight.id`: you need it to confirm, view, update or cancel the flight.
 
+#### Safe retries with `client_id`
+
+If your integration may send the same new flight more than once (it queues requests while offline, or retries after a timeout), add a `client_id` to the `Flight` object: your own id for that flight, up to 64 characters of letters, digits, `_` and `-`, unique within your company.
+
+* The first request creates the flight and stores the `client_id`.
+* Any later request with the same `client_id` and **no** `Flight.id` updates that flight instead of creating another one, with the same rules as an update by `Flight.id`.
+* If that update is refused because your company doesn't allow editing confirmed flights after 12 hours, the request still succeeds: the response is the stored flight, unchanged, with `"warning": "edit_not_allowed"`.
+* If the flight has since been cancelled or deleted, the response is that flight, unchanged, with `"warning": "flight_removed"`. It is never restored.
+
+`client_id` is set once, on create; an update never changes it.
+
 If validation fails the HTTP status is still `200`, but the body is an error object. Always check for `error`:
 
 ```json
@@ -444,6 +455,12 @@ The caller must satisfy **at least one** of the following, otherwise the request
 * Is the user who created the flight (`user_id`).
 
 Company Administrators, Operations Managers, and Compliance & Safety Managers hold these permissions by default. Note that the front-end only surfaces the Cancel action for unconfirmed flights; the endpoint itself does not restrict by status.
+
+Only flights of the API key's company can be cancelled; any other id returns `404 Flight not found`.
+
+#### Repeating a cancel
+
+Cancelling a flight that is already `CANCELED` or `DELETED` is not an error: the response is `{"result": true, "warning": "already_removed"}`, nothing changes and nobody is notified. A client that queues cancellations while offline can therefore safely send one twice.
 
 ---
 
