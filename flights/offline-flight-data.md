@@ -55,6 +55,26 @@ A flight that has been saved offline but has not yet been synced can be edited j
 - If you edit it **offline**, your changes overwrite the local copy and remain queued for sync.
 - If you edit it **online**, Flylogs first persists your changes locally, then attempts to send them to the server immediately. On success the locally stored copy is discarded and you are taken to the real flight record. On failure (server rejection, network drop mid-request) the flight stays in the pending queue and the orange banner remains in place.
 
+## Confirming a flight offline
+
+You can press **Confirm** on a draft while offline, or on a flight you logged offline that hasn't synced yet. The same conditions as online apply (all four times filled in and the landing in the past, block time, aircraft and PIC, and the **Confirm flights** permission).
+
+Flylogs then:
+
+1. Queues the confirmation on your device and shows a **Confirmation queued** banner on the flight.
+2. Sends it once you are online — always **after** the flight itself has synced, so the server confirms the latest version of the flight.
+3. Re-checks everything on the server at that moment, exactly as an online confirmation does.
+
+Some checks can only be made by the server, so a queued confirmation can still be refused when it syncs — for example when another confirmed flight on the same aircraft overlaps it, the aircraft needs a Hobbs or tach reading the flight doesn't have, or your permissions changed. The flight then stays a **draft**, and Flylogs shows a notice with the reason and a link to the flight so you can fix it and confirm again.
+
+> **Companies that require a password to confirm.** If your company asks for your password to confirm flights, the Confirm button stays disabled offline (and on a flight that hasn't synced yet): your password is never stored on the device. Confirm the flight once you are online and it has synced.
+
+## The Flylogs NEO app on iPhone and iPad
+
+In the iOS app, flights, confirmations and cancellations saved offline are also sent **in the background**: as soon as the device has a connection, they are uploaded even if the app is closed. You don't need to reopen the app.
+
+If you close the app by swiping it away in the app switcher, iOS pauses these background uploads. Nothing is lost: they are sent the next time you open the app while online.
+
 ## Where to find pending-sync flights
 
 On the **Flights** list page, locally-stored flights that have not yet been synced are grouped under a **Pending Sync** section at the top of the list. The count next to the section header tells you how many flights are waiting to be uploaded.
@@ -70,10 +90,10 @@ Each row links to the flight view page, where you can review the data and, if ne
 ## Frequently asked questions
 
 **Will the sync happen if I close the browser tab?**
-The sync runs in the background while the Flylogs tab is open. If you close the tab, sync will resume the next time you open Flylogs while online, as long as the 48-hour window has not expired.
+In a browser, the sync runs while the Flylogs tab is open. If you close the tab, sync will resume the next time you open Flylogs while online, as long as the 48-hour window has not expired. In the iOS app, the sync also runs with the app closed (see [The Flylogs NEO app on iPhone and iPad](#the-flylogs-neo-app-on-iphone-and-ipad)).
 
 **Can I log a flight offline before I have ever logged into Flylogs on this device?**
 No. The first login must happen online so your profile, company settings, aircraft list and pilot list are cached locally. Once you have logged in at least once on a device, that device can create flights offline.
 
-**Does offline saving affect confirmed flights?**
-No. Confirmation, delete, and confirm-with-password require a live connection. Cancelling a draft is the exception: if you cancel while offline the cancellation is queued and applied automatically when you reconnect. While offline you can keep working on drafts and they will sync as drafts when you reconnect — confirmation happens after sync, online, as usual.
+**Can I confirm or cancel a flight offline?**
+Yes. Confirming and cancelling are queued and applied automatically when you reconnect — confirmation after the flight itself has synced (see [Confirming a flight offline](#confirming-a-flight-offline)). Deleting a flight and confirming when your company requires the password still need a live connection.

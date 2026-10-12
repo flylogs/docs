@@ -54,6 +54,8 @@ When pressed a confirmation dialog will ask to please check the data before proc
 
 Also, depending on the company settings, you may be required to enter your password to sign the action.<br>
 
+You can confirm a flight **without a connection**, or before a flight you logged offline has synced: the confirmation is queued and sent automatically afterwards. The exception is companies that require the password to confirm — the password is never stored on the device, so those flights are confirmed online, once synced. See [Confirming a flight offline](offline-flight-data.md#confirming-a-flight-offline).
+
 ![](../.gitbook/assets/flight-confirm-dialog.png)
 
 **Forgot to dispatch?** If the confirmed flight was created directly instead of dispatched from a schedule, Flylogs automatically looks for the schedule it belongs to (same PIC, aircraft, and an overlapping time window) and links it for you. See [Automatic schedule matching on confirm](audit-trails.md#automatic-schedule-matching-on-confirm) for details. Available on the Club, Premium, and Unlimited plans.
