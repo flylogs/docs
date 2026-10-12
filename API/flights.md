@@ -473,6 +473,16 @@ Cancelling a flight that is already `CANCELED` or `DELETED` is not an error: the
 
 Confirm an unconfirmed flight (moves it to `status = LANDED`, updates aircraft books, billing, and duty records). The flight must already have a block time, aircraft, and PIC. Requires the **Flight.confirm** company permission; when `require_flight_password` is enabled on the company, a `pass` field with the caller's password is also required.
 
+#### Confirming by `client_id`
+
+If you created the flight with a [`client_id`](#safe-retries-with-client_id) and don't have its `Flight.id` yet (for example, the create was queued offline), confirm it with <mark style="color:green;">`POST`</mark> `/flights/confirm.json` and a JSON body `{"client_id": "<your id>"}` (plus `pass` when required). An unknown `client_id` returns `404`.
+
+#### Repeating a confirm
+
+Confirming a flight that is already confirmed is not an error: the response is the flight's `result` with `status: "LANDED"` and `change: false`, and nothing changes. A cancelled or deleted flight returns `400` with `"This flight was cancelled or deleted, so it cannot be confirmed."`.
+
+Some refusals come back as HTTP `200`: when the aircraft needs a Hobbs or tach reading that the flight is missing, `result` carries a `message` and an `errors` object instead of `status: "LANDED"`. Treat a confirm as successful only when `result.status` is `LANDED`.
+
 #### Overlap check
 
 Confirmation is blocked when the flight's block times overlap another **confirmed** (`status = LANDED`) flight on the **same aircraft**. The response is `400` with the usual `message`, plus a **`conflicts`** array naming the blocking flight(s) so a client can link to them:
