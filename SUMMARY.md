@@ -123,6 +123,7 @@
 * [Flight Dispatch Function](schedules/flight-dispatch-function.md)
 * [Flight Risk Assessment (FRAT)](schedules/flight-risk-assessment-frat.md)
 * [FTL Compliance & Forecast](schedules/ftl-compliance-forecast.md)
+* [Duty & FTL limits](schedules/duty-and-ftl-limits.md)
 
 ## Training courses
 

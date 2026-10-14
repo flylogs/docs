@@ -87,3 +87,7 @@ Each pilot row has a **download** icon that generates a PDF version of the same 
 
 
 
+
+### Duty & FTL limits per crew member
+
+With [FTL Compliance](../schedules/ftl-compliance-forecast.md) active, every crew member can open **Duty & FTL limits** from the **Duty & Rest** widget on their profile: cumulative duty and flight time, FDP, rest and weekly rest on any day, with the roster ahead. Managers open it for any crew member. See [Duty & FTL limits](../schedules/duty-and-ftl-limits.md).

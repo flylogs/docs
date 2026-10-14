@@ -224,3 +224,6 @@ Only as a suggestion. The authority set in company details pre-selects the schem
 
 **Does the FTL Forecast block scheduling?**
 No. The forecast is read-only. To block schedule creation that would cause violations, use the **Block overtime scheduling** setting in the Duty Limits tab.
+
+**Can a pilot check their own limits?**
+Yes. The **Duty & Rest** widget on the crew profile opens the [Duty & FTL limits](duty-and-ftl-limits.md) page, where each crew member sees every limit on any day — past, today, or ahead with their roster — and managers see the same page for any crew member.

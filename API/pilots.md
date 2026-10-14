@@ -452,6 +452,94 @@ Flight totals are in **hours** (formatted strings). Duty `totals` come from `Pil
 
 ---
 
+## Duty and FTL limits
+
+<mark style="color:blue;">`GET`</mark> `/pilots/ftl_status/{user}.json?from=YYYY-MM-DD&to=YYYY-MM-DD`
+
+Day-by-day FTL legality of one crew member against the company's active FTL profile: cumulative duty (7/14/28 days), flight time (28/365 days), FDP against its maximum, rest before each duty, time since the last weekly rest and consecutive duty days. Every day row is evaluated **as of the end of that day**, and keeps the **recorded** share (`a`) apart from the **scheduled, not flown yet** share (`s`). Backs NEO's *Duty & FTL limits* page and the *Duty & Rest* widget.
+
+#### Access
+
+| Caller | Result |
+|---|---|
+| Crew (`user_group_id` ≥ 170) | Always their **own** figures — `{user}` is ignored. Check `pilot.id` in the response. |
+| Managers (`user_group_id` < 170) | Any user of their own company. Another company's user → `404`. |
+
+Plan gate: **Premium / Unlimited** with FTL compliance enabled (`company_ftl_settings.enabled`) and an active FTL profile. Otherwise the response is `200` with `"enabled": false` and no `limits`/`days`.
+
+#### Query parameters
+
+| Param | Default | Description |
+|---|---|---|
+| from | today − 60 days | First day reported (`YYYY-MM-DD`, company timezone) |
+| to | today + 30 days | Last day reported. Spans longer than 400 days are cut from the start |
+
+Windows that reach before `from` are filled from the database (up to 365 days earlier for flight time), so the first day's totals are complete.
+
+#### Response
+
+```json
+{
+  "enabled": true,
+  "pilot": { "id": 18149, "name": "James", "surname": "Whitfield" },
+  "today": "2026-10-14",
+  "now": 1792000000,
+  "timezone": "Europe/Madrid",
+  "from": "2026-10-01",
+  "to": "2026-10-31",
+  "profile": { "name": "EASA ORO.FTL", "scheme": "oro_ftl" },
+  "limits": {
+    "duty_7d": 216000, "duty_14d": 396000, "duty_28d": 684000,
+    "flight_28d": 360000, "flight_365d": 3240000,
+    "rest_home_min": 43200, "weekly_rest": 129600, "weekly_rest_max_gap": 604800,
+    "max_consecutive_duty_days": 0, "standby_fraction": 0.25
+  },
+  "days": [
+    {
+      "date": "2026-10-15",
+      "source": "scheduled",
+      "start": 1792044900,
+      "end": 1792088100,
+      "duty":    { "a": 0, "s": 43200 },
+      "standby": { "a": 0, "s": 0 },
+      "flight":  { "a": 0, "s": 27900 },
+      "fdp": { "start": 1792044900, "end": 1792086300, "sec": 41400, "limit": 43200, "sectors": 4, "wocl": false },
+      "rest_before": 135000,
+      "rest_required": 43200,
+      "since_weekly_rest": 0,
+      "consecutive_days": 1,
+      "totals": {
+        "duty_7d":     { "a": 180000, "s": 43200 },
+        "duty_14d":    { "a": 258600, "s": 43200 },
+        "duty_28d":    { "a": 481380, "s": 43200 },
+        "flight_28d":  { "a": 262080, "s": 27900 },
+        "flight_365d": { "a": 970680, "s": 27900 }
+      },
+      "violations": [ { "key": "duty_7d", "projected": true } ]
+    }
+  ]
+}
+```
+
+All durations are **whole seconds**; `start`/`end`/`now` are Unix timestamps. `limits` of `0` mean the profile does not set that limit, and no violation is raised for it.
+
+| Field | Description |
+|---|---|
+| `source` | `actual` (duty record / logged flights), `scheduled` (bookings, rostered duty or standby still ahead), `mixed` (both on the same day), or `null` (no activity) |
+| `duty` | Duty of the day: the duty period joined with the record's work times, overlaps counted once |
+| `standby` | Standby counted towards duty: `standby_fraction` of the standby not covered by duty |
+| `flight` | Block time of flights operated as PIC/SIC on non-simulator aircraft |
+| `fdp` | `null` when no flight was operated. Recorded days use the values stored on the duty record; scheduled days are projected from the bookings (commute before duty included); `mixed` days are recomputed with all sectors |
+| `rest_before` / `rest_required` | Gap since the previous duty (looked up to 14 days back) and the rest required after it: the profile minimum, or the preceding duty when longer. `null` when there is no duty this day or no previous duty in 14 days |
+| `since_weekly_rest` | Time since the last qualifying weekly rest ended (14-day look-back), `null` without duty |
+| `totals.<window>` | Rolling total of the window **ending on this day** |
+| `violations[].key` | `duty_7d`, `duty_14d`, `duty_28d`, `flight_28d`, `flight_365d`, `fdp`, `rest`, `weekly_rest`, `consecutive_days` |
+| `violations[].projected` | `true` when only scheduled activity takes the limit over; `false` when the recorded figures alone already break it |
+
+Bookings count when their status is `PENDING`, `SCHEDULED`, `DISPATCHED`, `DEPARTED` or `DELAYED`, they have no logged flight yet, they end today or later, and the crew member has not declined the seat. Rostered `DUTY` blocks count from today; `STANDBY` blocks count in the past and the future.
+
+---
+
 ## Duty Records
 
 <mark style="color:blue;">`GET`</mark> `/pilots/duty/{days}/{user}.json`
