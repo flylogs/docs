@@ -3830,6 +3830,8 @@ Answer `{ pathway, source, target, map, overrides, flightTypes }`: `pathway` = `
 | Field | Type | Meaning |
 | ----- | ---- | ------- |
 | `min_instruction`, `min_dual`, `min_solo`, `min_solo_xc` | seconds | minimums |
+| `instructor_certificate_types` | string[] | task #1115: `user_certificates` types that qualify an instructor for this course (catalogue keys, e.g. `fi_rating`); holding any one, valid on the day of the flight, qualifies. Returned as an array, stored as a comma list |
+| `min_dual_qualified`, `min_solo_qualified` | seconds | minimum dual / supervised solo flown with a qualified instructor. Require `instructor_certificate_types` (`400` otherwise) |
 | `max_fstd` | seconds | FSTD time counted towards instruction at most |
 | `xc_min_km`, `xc_min_landings` | int | one qualifying solo cross-country trip |
 | `alt_certificate_type` | string | exact `user_certificates.type` that qualifies for the alternative minimums |
@@ -3844,15 +3846,20 @@ Requirements are copied with the course (course copy and new course revisions).
 
 ```json
 { "alternative": true,
-  "lines": [{ "key": "instruction|dual|solo|solo_xc", "required": 144000, "done": 63000, "credited": 0, "met": false }],
+  "lines": [{ "key": "instruction|dual|solo|solo_xc|dual_qualified|solo_qualified", "required": 144000, "done": 63000, "credited": 0, "met": false }],
   "fstd": { "done": 0, "counted": 0, "limit": 18000 },
   "xc": { "required_km": 270, "required_landings": 2, "met": false,
           "best": { "date": "2026-08-16", "origin": "LECU", "km": 317, "landings_away": 1,
                     "legs": [{ "from": "LECU", "to": "LESA", "km": 158 }], "incomplete": false } },
+  "instructor": { "flagged": [{ "flight_id": "…", "date": "2026-08-10", "role": "DUAL", "seconds": 3600,
+                                "instructor_id": 42, "instructor_name": "Jane Doe" }],
+                  "unrecorded_seconds": 7200 },
   "met": false }
 ```
 
 Counting rules: the enrollment **chain** (the enrollment plus every enrollment it was moved or credited from, recursively); confirmed flights logged on missions, each flight once (largest per-enrollment allocation, capped at block time); role from the student's seat and the flight type's seat classification (`dual` → dual; `pic`/`picus` with no other pilot → solo; `picus` with another pilot → dual; else instruction only); FSTD = aircraft with `simulator = 1`; only the head enrollment's `PRIOR` flight-type credits (classified by the flight type's seats; never cross-country). A trip chains solo legs of one day in one aircraft where each leg departs from the previous landing; distance uses `airports.lat/lon`.
+
+**Instructor qualification (task #1115, FCL.210.A(b)(2)).** When a mission flight is saved (`flights/add|edit`), each student's `user_training_flights` row records `instructor_id` — the other pilot on board (dual), else `supervisor_id` (supervised solo) — and `instructor_snapshot`, a JSON list of that person's licences, ratings and training certificates at that moment (`type`, `name`, `issue`, `expiration`, `comments` up to 500 chars; medicals, IDs and revoked certificates are left out). Re-saving the flight keeps the snapshot while the instructor is unchanged, so later certificate edits never rewrite history. Moves and credits copy both columns. Whether a flight qualifies is decided on read against the **current** `instructor_certificate_types` of the course and the certificate validity on the flight date. `dual_qualified` / `solo_qualified` lines count only flights that qualify (previous-experience credits never do). `instructor` is `null` unless the course sets instructor types or a qualified minimum; `flagged` lists dual/solo flights whose instructor did not qualify, `unrecorded_seconds` the dual/solo time with no snapshot (logged before this existed), which is neither counted nor flagged. Flagging alone does not block completion: only a failed `*_qualified` minimum does, with `enforce`.
 
 **Completion gate.** With `enforce`, `StageGateEnforcer::mayComplete()` refuses (no auto-finish), and `POST /manager/trainings/students/finish` / `status` to `COMPLETED` answer `400` "This course cannot be completed yet: the experience requirements are not met."
 
@@ -3860,7 +3867,7 @@ Counting rules: the enrollment **chain** (the enrollment plus every enrollment i
 
 `GET /manager/trainings/students/view/{enrollmentId}.json` adds `CreditedFrom` (`{ id, name, version }` or `null`), `CreditedInto` (`[{ id, status, training_id, name, version }]`) and `TrainingsUser.credited_from_id`.
 
-**Deploy:** `migrations/2026-10-15-course-pathways.sql` (adds `trainings_users.credited_from_id`, `training_pathways`, `training_pathway_items`, `training_experience_requirements`) before the backend; `aco_sync` for `Trainings/manager_pathways`, `manager_pathway`, `manager_pathway_save`, `manager_pathway_delete`, `manager_experience`.
+**Deploy:** `migrations/2026-10-16-instructor-qualification.sql` (task #1115: `user_training_flights.instructor_id` / `instructor_snapshot`, `training_experience_requirements.instructor_certificate_types` / `min_dual_qualified` / `min_solo_qualified`) before the backend; no new endpoint or ACL. `migrations/2026-10-15-course-pathways.sql` (adds `trainings_users.credited_from_id`, `training_pathways`, `training_pathway_items`, `training_experience_requirements`) before the backend; `aco_sync` for `Trainings/manager_pathways`, `manager_pathway`, `manager_pathway_save`, `manager_pathway_delete`, `manager_experience`.
 
 ## Question bank and recovery exams
 

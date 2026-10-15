@@ -32,6 +32,8 @@ Open the course (for example your PPL(A)), go to the new **Pathways** tab and sc
 | **Dual instruction (min)** | Flights where the student's seat counts as dual instruction. |
 | **Supervised solo (min)** | Flights where the student was PIC with nobody else on board. |
 | **Solo cross-country (min)** | Supervised solo flights marked as cross-country. |
+| **Instructor certificates** | Which certificates qualify an instructor for this course, for example the instructor rating needed to teach the PPL. Holding any one of them, valid on the day of the flight, is enough. |
+| **Dual, qualified instructor (min)** / **Supervised solo, qualified instructor (min)** | Like dual and supervised solo above, but only flights where the instructor qualified count. Needs at least one instructor certificate ticked. |
 | **FSTD counted (max)** | The most simulator time that counts towards flight instruction. Time flown above it is shown but not counted. |
 | **Distance (km)** / **Full-stop landings away** | One qualifying solo cross-country trip: solo legs flown on the same day in the same aircraft, each departing from where the previous one landed. The distance is the sum of the legs. Landings away count the aerodromes landed at other than the one the trip started from. |
 
@@ -55,7 +57,17 @@ As an example only, the values a school might type for a PPL(A) under FCL.210.A 
 | Distance / landings away | 270 km / 2 |
 | Reduced minimums | LAPL(A) course completed · total 45:00 → instruction 40:00, dual 21:00 |
 
-FCL.210.A(b)(2) also requires 5 hours of dual and the full solo requirement to be flown with an instructor qualified for the PPL(A). Flylogs does not check that yet (ticket #1115).
+FCL.210.A(b)(2) also requires 5 hours of dual and the full solo requirement to be flown with an instructor qualified for the PPL(A). Tick the certificates that qualify an instructor for your PPL(A) course and type those two minimums (for example 5:00 and 10:00 in the fields marked *qualified instructor*); the experience card then shows them as their own gauges.
+
+### Instructor qualification
+
+When a mission flight is saved, Flylogs records who the instructor was (the other pilot on board for dual flights, the supervisor for supervised solo) and keeps a **snapshot of their licences, ratings and training certificates at that moment**. Editing or renewing a certificate later does not change flights already logged. If the flight is edited and the instructor stays the same, the snapshot is kept.
+
+* A flight counts as flown with a qualified instructor when the snapshot holds one of the course's instructor certificates, valid on the day of the flight. The check uses the course's **current** list, so changing the list re-judges past flights.
+* Dual and supervised solo flights where the instructor did **not** qualify are listed on the experience card ("Flown with an instructor who did not hold a qualifying certificate that day"), with the date, time and instructor.
+* Flights logged before this was recorded have no snapshot. They are not counted towards the qualified minimums and are not flagged; the card shows how much time is affected.
+* Previous-experience credits have no instructor and never count towards the qualified minimums.
+* The flags are information only. The course is blocked from completing, with **Block completion** ticked, only while a qualified-instructor minimum is not met.
 
 ### How the experience is counted
 
