@@ -151,6 +151,19 @@ The new record opens straight away, showing where it came from and the experienc
 * Only into a course's **current course revision**, and not into a course where the student already has an enrolment in progress.
 * Into another course revision of the same course: allowed (for example a stopped student restarting on the new revision). Into the very same course revision: no. Use **Reopen enrollment** instead.
 
+### The credited training page of the certificate
+
+When a student whose record carries credit completes the course, the [completion certificate](student-management.md#the-course-completion-certificate) gets a second page, **Credited training**, as evidence for the authority that the combined training meets the requirements (for example FCL.210.A(b) for LAPL(A) followed by PPL(A)). It shows:
+
+* **Earlier training credited**: each source course with its revision, school and dates, and whether the student was *moved* or *credited from the completed course*.
+* **Previous experience**: the reason and, if recorded, the pre-entry flight assessment.
+* **Flight hours**: flight instruction (aircraft), dual, supervised solo, solo cross-country and FSTD, each as *this course*, *credited* and *total*. *This course* counts flights logged on the course itself; everything carried over by a move or credit, and previous-experience hours, count as credited. Flights are counted once.
+* **Qualifying solo cross-country flight**: the qualifying trip of the experience check (date, route, distance, landings away) or, when the course has no requirement for it, the longest solo trip.
+* **Theory credited**: subjects and exams carried over or credited. The exam pass date is that of the original pass in the earlier course; hours credited as previous experience have no date.
+* **Experience requirements**: each line with the hours reached and the minimum, met or not met, and the overall result.
+
+The page is stored with the certificate when it is issued (or when a preview is created) and printed in the company language. Certificates already issued are not changed.
+
 ## 3. Course pathways and the pathway map
 
 The top of the **Pathways** tab draws the course in the middle, the courses its students came from on the left and the courses they went to on the right.
