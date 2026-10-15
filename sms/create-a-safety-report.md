@@ -67,6 +67,8 @@ See [Safety Reports](safety-reports.md) for the full classification reference, i
 
 #### Classification suggestion
 
+{% embed url="https://youtu.be/sIfQXztiwG0" %}
+
 Once you have written a few sentences in **Description of events**, Flylogs reads them and, where your description points somewhere other than what is selected, shows hints under the text box — one per field, each with an **Apply** button:
 
 * **Classification** — for example *"This description reads like Safety Information — Hazard."*

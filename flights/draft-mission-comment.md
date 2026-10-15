@@ -67,6 +67,8 @@ mission was passed.
 
 ## Grade and comment check
 
+{% embed url="https://youtu.be/dyBGkOsEoZE" %}
+
 When you grade a single exercise and add a comment to it, Flylogs reads the comment against the grade you picked. If they tell different stories — *"lost altitude by 300 ft twice"* next to **STD +**, say — a warning appears in the grading window: *Your comment reads lower than this grade (more like STD -)*.
 
 <figure><img src="../.gitbook/assets/ai-grade-check.png" alt=""><figcaption><p>A comment that reads like an unsatisfactory exercise next to "4 Very Good".</p></figcaption></figure>

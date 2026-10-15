@@ -18,6 +18,8 @@ This information is stored and displayed in the Schedule cancellation analytics 
 
 ### "Other reasons", read from the note
 
+{% embed url="https://youtu.be/TkW9ONAMvJY" %}
+
 **Others** used to be one big grey slice, even though the note people write usually says exactly why: *"runway closed"*, *"instructor not available"*, *"I have a work trip"*, *"booked twice by mistake"*. Flylogs now reads those notes and shows them in the charts as their real reason, marked **(from notes)** — for example *Weather (from notes)* or *Instructor unavailable (from notes)*. In the cancellation log, an *Others* row shows the reason its note points to next to it.
 
 Three reasons appear only this way, because nobody can choose them in the cancel dialog: **Personal**, **Instructor unavailable** and **Booking admin / error**.

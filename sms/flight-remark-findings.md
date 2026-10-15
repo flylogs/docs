@@ -28,6 +28,8 @@ This is the important part.
 
 ## Hints on the flight page
 
+{% embed url="https://youtu.be/QTB4NRahn8Y" %}
+
 The same reading also happens **right after a flight is logged**, so the crew can act while they still remember the details. When a flight's remark looks like a defect or a safety event, the flight page shows a hint under the remarks with a button to open the matching form — **File aircraft report** (pre-filled with the remark, while the aircraft-report window is open after confirmation) or **File safety report** (the remark becomes the starting description).
 
 <figure><img src="../.gitbook/assets/ai-remark-hint.png" alt=""><figcaption><p>A remark that reads like both a defect and a safety event offers both forms.</p></figcaption></figure>

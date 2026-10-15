@@ -8,7 +8,7 @@ Students do not always finish where they started. An LAPL(A) holder comes back f
 
 The case that prompted this is Commission Implementing Regulation (EU) 2024/2076, which amended FCL.210.A. Applicants for a PPL(A) now **receive credit for the LAPL(A) training they have already done**, provided that the LAPL(A) and PPL(A) training together meet the PPL(A) experience requirements.
 
-<!-- VIDEO: YouTube link for "Course pathways: LAPL to PPL" goes here (task #464) -->
+{% embed url="https://youtu.be/BYCrnGC0tWQ" %}
 
 This page covers three things that work together:
 

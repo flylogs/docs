@@ -20,6 +20,8 @@ Filing a report notifies the company's managers and maintenance staff by message
 
 ## Hints while you write a defect
 
+{% embed url="https://youtu.be/QTB4NRahn8Y" %}
+
 Once the title and description say enough, the report form may show:
 
 * **ATA chapter** — the chapter the defect reads like, with an **Apply** button. Nothing is filled in until you click it.

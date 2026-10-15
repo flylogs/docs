@@ -90,6 +90,8 @@ Two optional safety gates can be required before a flight is dispatched. Both ar
 
 ### **NOTAMs ranked for your flight**
 
+{% embed url="https://youtu.be/RE_KnFwOtMI" %}
+
 The booking's briefing and the flight page list the NOTAMs for the departure and arrival aerodromes. When you are online, Flylogs reads each one against the planned flight (aircraft, flight type, aerodromes and times) and orders the list so the ones that matter come first:
 
 * **Affects flight** — e.g. a runway or aerodrome closure, an obstacle on the approach, no touch-and-goes during your slot.

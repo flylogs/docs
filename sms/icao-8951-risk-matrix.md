@@ -27,6 +27,8 @@ Once saved, a visual risk matrix will be automatically generated and attached to
 
 ### How to Use the Risk Matrix
 
+{% embed url="https://youtu.be/sIfQXztiwG0" %}
+
 1. **Navigate to a safety report**\
    Open any report from the Safety menu that is ready to be closed or published.
 2. **Select risk values**\
