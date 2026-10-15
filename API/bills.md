@@ -118,6 +118,8 @@ Full detail for a single bill including client info, company billing settings, a
 }
 ```
 
+`UserBill.n_id` is the bill number: one consecutive sequence per company, shared by flight bills and manual transactions and never reset by year. Bills created before October 2026 keep their old number, which may repeat across years, and older bills without a number (`null`) are numbered the first time they are edited.
+
 ---
 
 ## Create Manual Bill
@@ -134,7 +136,7 @@ Create a manual wallet transaction for one or more pilots. If `id` is provided, 
 | price | number | Yes (new) | Amount (negative = charge, positive = credit) |
 | name | string | Yes | Transaction description |
 | created | string | No | Transaction date (defaults to now) |
-| receipt | boolean | No | Mark as a receipt |
+| receipt | boolean | No | Send the receipt notification to the user. It no longer controls numbering: every bill gets an `n_id`. Without it the transaction is recorded and numbered but the user is not notified |
 | id | UUID | No | Existing bill ID to update |
 
 #### Response

@@ -47,3 +47,19 @@ The process takes into consideration all billing rates, company settings and ava
    2. Otherwise, default user/aircraft billing rates will be used combined with company extra expenses and taxes.
 3. Last, if the company settings require user notification, a quick email notification will be delivered to the user confirmed email address.
 
+
+
+### Bill numbers and receipts
+
+Every bill, whether it comes from a flight or from a manual transaction, receives a **bill number**. Numbers are consecutive within your company, shared by flight bills and transactions, and **never restart** at the beginning of a new year.
+
+* Bills created before this change keep the number they already had. Some older numbers repeat across different years, because the old numbering restarted every January 1st.
+* Older bills that never had a number receive one the first time they are edited.
+* Bills are numbered in the order they are saved, not by their date. A bill saved today with a past date gets today's next number.
+
+When you create or edit a manual transaction, the checkbox **Send this receipt to the user** controls the notification only:
+
+* **Checked:** the user is notified (if your company billing settings have notifications enabled) and receives a link to the receipt.
+* **Unchecked:** the transaction is recorded and numbered, but the user is not notified.
+
+Automatic flight billing is not affected by this checkbox; it follows your company notification setting.

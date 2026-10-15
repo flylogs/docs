@@ -37,7 +37,7 @@ If you click on an existing bill, Flylogs will show you the following warning me
 When a new bill is created, an automatic invoice is generated.\
 Flylogs generates an invoice that includes your company details and logo, as well as the customers information.
 
-The receipt will have a consecutive number starting from 1 on every January 1st.
+The receipt carries a bill number. Numbers are consecutive within your company and never restart: flight bills and manual transactions share the same sequence, and the sequence continues across years. See [Bill numbers and receipts](billing-setup.md#bill-numbers-and-receipts).
 
 On the bottom part of the receipt, you will find the tax included if any, and the usage of the Prepaid packages.
 

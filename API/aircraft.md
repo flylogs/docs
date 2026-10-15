@@ -479,6 +479,66 @@ Search aircraft models by manufacturer.
 
 ---
 
+## Pilot Aircraft Prices
+
+<mark style="color:green;">`GET`</mark> `/manager/aircraft/pilot_prices/{pilotId}.json`
+
+<mark style="color:orange;">`POST`</mark> `/manager/aircraft/pilot_prices/{pilotId}.json`
+
+Custom hourly price a pilot is billed for each aircraft. When one exists it replaces the aircraft's default rate and any rate chosen on the flight when a flight is billed to that pilot. Restricted to `user_group_id ≤ 130` (Financial Manager and above); any other caller gets `404`. The pilot must belong to the caller's company and have billing enabled, otherwise `404`.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| pilotId | string | Pilot user ID |
+
+#### GET response
+
+```json
+{
+  "aircraft": [
+    {
+      "Aircraft": { "id": "12", "registration": "EC-KHZ" },
+      "AircraftModel": { "name": "C172", "AircraftManufacturer": { "name": "Cessna" } },
+      "DefaultRate": { "hourly_price": "275.00" },
+      "PilotAircraftPrice": [{ "id": "2558", "hourly_price": "225.00" }]
+    }
+  ],
+  "history": [
+    {
+      "id": "41",
+      "registration": "EC-KHZ",
+      "old_price": "215.00",
+      "new_price": "225.00",
+      "changed_by": "Amparo Moreno",
+      "created": "1792055597"
+    }
+  ]
+}
+```
+
+`history` lists the latest 100 changes to this pilot's custom prices, newest first. `old_price` is `null` when a custom price was added and `new_price` is `null` when it was removed. `changed_by` is the manager's name, or `null` if the user no longer exists. `created` is a Unix timestamp. Changes made before October 2026 were not recorded, so the history starts empty.
+
+#### POST request body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| prices[{aircraftId}] | number \| string | Yes | Custom hourly price for that aircraft. An empty string leaves the aircraft without custom price |
+
+The submitted list **replaces** all of the pilot's custom prices: aircraft not sent, or sent empty, lose their custom price. Each added, changed or removed price is recorded in the history with the caller as author; resubmitting identical values records nothing.
+
+#### POST response
+
+```json
+{
+  "result": true,
+  "prices": [{ "PilotAircraftPrice": { "id": "2559", "aircraft_id": "12", "user_id": "8226", "hourly_price": "225.00" } }]
+}
+```
+
+---
+
 ## Create Aircraft
 
 <mark style="color:green;">`POST`</mark> `/aircraft/add.json`
