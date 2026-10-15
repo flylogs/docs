@@ -3757,7 +3757,13 @@ Send it as `prior_experience` in `POST /manager/trainings/students/enroll.json` 
 
 <mark style="color:green;">`POST`</mark> `/manager/trainings/students/prior/{enrollmentId}.json` — replaces the enrollment's prior experience (removes `origin = PRIOR` credits, credited missions and activity rows still tagged `CREDIT`, then writes the new ones). Answer `{result, code}`.
 
-Codes (both paths): `REASON_REQUIRED`, `INVALID_TIME` (not a whole number of seconds), `UNKNOWN_FLIGHT_TYPE`, `UNKNOWN_SUBJECT`, `UNKNOWN_MISSION`, `NEGATIVE_HOURS`, `PRIOR_SINGLE_STUDENT` (enroll with more than one student or a pilot group), `ENROLLMENT_CLOSED` (`prior` on an enrollment not in progress), `SAVE_FAILED`. When the enrollment is created but its prior experience could not be saved, `enroll.json` answers normally with `code: PRIOR_NOT_SAVED`.
+Optional `assessment` (task #1116): `{ "by": "A. Instructor", "date": "2026-10-01", "note": "result or reference" }` (`date` is `Y-m-d`, `by` up to 120 chars, `note` up to 255). Stored in `trainings_users.prior_assessment_by` / `prior_assessment_date` / `prior_assessment_note`. When omitted on `prior/{id}`, the stored assessment is kept. It travels with the student on a move or credit.
+
+**Credit limits (task #1116).** When the course has limits (below), the flight-type hours of the payload are checked after validation, and the call is refused with `code: "CREDIT_LIMIT"` and `violations: [...]` (enroll: nothing is created). Each violation is `{ "code": ... }` with `BLOCKED_TYPE` (`flight_type_id`, `credited`), `OVER_PERCENT` (`limit`, `allowed`, `credited`), `OVER_MAX` (`allowed`, `credited`), `OVER_PIC` (`allowed`, `credited`) or `ASSESSMENT_REQUIRED`. All times in seconds. Only `FLIGHT_TYPE_HOURS` are limited. `INVALID_ASSESSMENT_DATE` is a plain refusal.
+
+Codes (both paths): `CREDIT_LIMIT`, `INVALID_ASSESSMENT_DATE`, `REASON_REQUIRED`, `INVALID_TIME` (not a whole number of seconds), `UNKNOWN_FLIGHT_TYPE`, `UNKNOWN_SUBJECT`, `UNKNOWN_MISSION`, `NEGATIVE_HOURS`, `PRIOR_SINGLE_STUDENT` (enroll with more than one student or a pilot group), `ENROLLMENT_CLOSED` (`prior` on an enrollment not in progress), `SAVE_FAILED`. When the enrollment is created but its prior experience could not be saved, `enroll.json` answers normally with `code: PRIOR_NOT_SAVED`.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/credit_context/{trainingId}.json?user_id={userId}` (task #1116, staff ≤ 135; the pilot must belong to the company) → `{ "credit": { "limits": {…} | null, "planned_seconds", "pic_seconds", "pic_by_category": { "L": 223200 }, "suggestions": { "L": 22320 } } }`. `planned_seconds` is the sum of the course's mission hours (the base of `max_percent`); `pic_seconds` the pilot's logged PIC block time in this company, simulators excluded, rolled up like the pilot card (`pic`, `fi`, `picus`, instructor and examiner classes); `pic_by_category` splits it by the first letter of `aircraft_models.type` (`L` landplane, `S` seaplane, `A` amphibian, `H` helicopter, `G` gyroplane, `T` tiltrotor, `?` unknown); `suggestions` applies `other_percent` and `other_max_seconds` per category (empty when no percentage is set). `limits` is `null` when the course has none.
 
 `GET /manager/trainings/students/view/{enrollmentId}.json` adds:
 
@@ -3862,6 +3868,26 @@ Counting rules: the enrollment **chain** (the enrollment plus every enrollment i
 **Instructor qualification (task #1115, FCL.210.A(b)(2)).** When a mission flight is saved (`flights/add|edit`), each student's `user_training_flights` row records `instructor_id` — the other pilot on board (dual), else `supervisor_id` (supervised solo) — and `instructor_snapshot`, a JSON list of that person's licences, ratings and training certificates at that moment (`type`, `name`, `issue`, `expiration`, `comments` up to 500 chars; medicals, IDs and revoked certificates are left out). Re-saving the flight keeps the snapshot while the instructor is unchanged, so later certificate edits never rewrite history. Moves and credits copy both columns. Whether a flight qualifies is decided on read against the **current** `instructor_certificate_types` of the course and the certificate validity on the flight date. `dual_qualified` / `solo_qualified` lines count only flights that qualify (previous-experience credits never do). `instructor` is `null` unless the course sets instructor types or a qualified minimum; `flagged` lists dual/solo flights whose instructor did not qualify, `unrecorded_seconds` the dual/solo time with no snapshot (logged before this existed), which is neither counted nor flagged. Flagging alone does not block completion: only a failed `*_qualified` minimum does, with `enforce`.
 
 **Completion gate.** With `enforce`, `StageGateEnforcer::mayComplete()` refuses (no auto-finish), and `POST /manager/trainings/students/finish` / `status` to `COMPLETED` answer `400` "This course cannot be completed yet: the experience requirements are not met."
+
+### Credit limits
+
+Task #1116. Limits on previous-experience credit (FCL.110.A(c), FCL.210.A(d) as examples; every value is typed by the school).
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/credit_limits/{trainingId}.json` → `{ "limits": {…} | null }`<br>
+<mark style="color:green;">`POST`</mark> same URL, JSON body below → saves and answers the same. Empty / `null` = no rule; nothing set at all removes the limits. Staff ≤ 135; invalid values answer `400`.
+
+| Field | Type | Meaning |
+| ----- | ---- | ------- |
+| `max_percent` | int 1–100 | max share of the course's planned flight hours (sum of mission hours) |
+| `max_seconds` | seconds | max credited flight seconds |
+| `blocked_flight_types` | int[] | flight type ids (of this company) that can never be credited |
+| `cap_pic` | bool | credit may not exceed the student's logged PIC seconds |
+| `require_assessment` | bool | `assessment.by` and `assessment.date` must be on record before credit is saved |
+| `other_percent`, `other_max_seconds` | int, seconds | calculator: share of PIC time in one aircraft category, and its cap |
+
+Limits are copied with the course (course copy and new course revisions). The move preview (`migrate_preview`) adds `credit_warnings`: the same violations for the `PRIOR` credit the move would carry (never refused; `MIGRATION` credit is not limited; `BLOCKED_TYPE` adds `flight_type_name`).
+
+**Deploy:** `migrations/2026-10-17-credit-limits.sql` (`training_credit_limits`, `trainings_users.prior_assessment_*`) before the backend; `aco_sync` for `Trainings/manager_credit_limits` and `Students/manager_credit_context`.
 
 ### Other payload additions
 

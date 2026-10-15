@@ -78,6 +78,27 @@ When a mission flight is saved, Flylogs records who the instructor was (the othe
 * **Previous experience** credited by flight type adds to flight instruction, and to dual or solo according to the flight type's seats. It never counts towards cross-country, because there is no flight to measure.
 * An aerodrome without coordinates counts 0 km for its legs, and the trip is marked as incomplete.
 
+### Limits on previous-experience credit
+
+Below the experience requirements, the **Previous-experience credit limits** card controls how many hours can be credited as previous experience on this course (the form described in [Recording previous experience](student-management.md#recording-previous-experience)). Leave a field empty for no rule. As with the requirements, **every value is yours to set**; Flylogs does not encode FCL.110.A(c) or FCL.210.A(d).
+
+| Setting | What it does |
+| ------- | ------------ |
+| **Max share of the course's planned flight hours (%)** | Credit may not exceed this share of the hours planned on the course's missions. 50 % of a 45 h course allows 22:30. |
+| **Max credited hours** | An absolute cap on the credited flight hours. |
+| **Flight types that can never be credited** | For example supervised solo. Hours entered for these are refused. |
+| **Credit may not exceed the student's logged PIC time** | The form shows the PIC total from the pilot's logbook (this company's confirmed flights, simulators excluded) and refuses more. Earlier flights must be in the logbook to count; declared career hours are not PIC time. |
+| **Require a pre-entry flight assessment** | The credit cannot be saved until the form records who assessed the student and when (and optionally a result or reference). |
+| **Share of PIC time in another category (%)** and its **cap** | Feeds the calculator below. |
+
+The limits apply to **flight hours by flight type**, summed. Ground-subject hours and credited missions are not flying time and are not limited. When a limit is broken the form lists each one (for example "Credit is limited to 50 % of the planned flight hours (22:30); 23:00 entered") and the save is refused, both when enrolling a student and when editing later.
+
+**Pre-entry assessment.** Fill in *Assessed by*, the date and optionally the result or reference. It is stored on the student's record and travels with them if they are moved to another course. Because a stage check belongs to a stage of an enrolment, which does not exist before the student is enrolled, the assessment is recorded on the enrolment itself rather than linked to a stage check.
+
+**Credit from another aircraft category (calculator).** When the course has a share and cap set, the form shows the student's PIC time per aircraft category (landplanes, seaplanes, amphibians, helicopters, gyroplanes, tiltrotors, from the aircraft model type). Choose a category and the flight type to credit into: the calculator offers the share of that category's PIC time, up to the cap (for example 10 % of 62:00 = 6:12; a cap of 10:00 limits large totals), and **Use** fills it into the hours field. It is a suggestion you can edit; the limits above still apply.
+
+**Moving a student.** In step 3 of the move wizard, previous-experience hours the move would carry that break the new course's limits are shown as a warning. The move can still go ahead. Hours credited for the school's own flights (matched or credited by flight type from the old course) are not previous experience and are not limited.
+
 ## 2. Credit a student from a closed course
 
 Open the student's record on the course they finished (for example their LAPL(A)). If the record is **Completed**, **Stopped** or **Not passed**, the management panel shows **Credit into another course**.

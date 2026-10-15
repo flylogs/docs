@@ -37,6 +37,8 @@ Students often start a course with experience already: a PPL holder beginning AT
 
 Times can be typed as `1:20` or `1.5` and are stored to the minute exactly as typed — `1:20` stays 1 hour 20 minutes.
 
+If the course sets **credit limits**, the form shows the student's logged PIC time and the limits next to the hours, warns while you type, and the save is refused when a limit is broken. See [Limits on previous-experience credit](course-pathways.md#limits-on-previous-experience-credit).
+
 The reason and a summary of what was credited are shown in a highlighted box at the top of the student's training progress page, so anyone opening the record sees it at first glance. Credited hours appear as their own band in the "Flight hours by type" chart and next to each ground subject; credited missions are marked "**Credited**". Credited items count towards progress and course completion like any other.
 
 To add or correct it later, use "**Previous experience**" in the student management panel, or "**Edit**" on the highlighted box. Saving replaces what was recorded before; a lesson the student has worked on since is never removed.
