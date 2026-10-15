@@ -3671,6 +3671,19 @@ Task #1050. All endpoints below are manager endpoints limited to staff up to and
 
 All times on these endpoints are **whole seconds**; nothing is sent or stored as decimal hours.
 
+
+### Check a grade against its comment
+
+<mark style="color:green;">`POST`</mark> `/trainings/missions/grade_check.json`
+
+Does the comment on ONE graded exercise contradict its grade? **Reads nothing and writes nothing.**
+
+Body: `{ "method": "STD|NICE|NUM", "rating": "+", "comment": "...", "exercise": "Steep turns" }` — `method` is the training's `evaluation_method`, `rating` one of that scale's values (`-`/`STD`/`+`, `N`/`I`/`C`/`E`, `1`–`5`).
+
+Response: `{ "check": { "reads_as": "-", "confidence": 1, "mismatch": true, "direction": "lower" } }`, or `{ "check": null }` when the comment is under 12 characters, the rating is not on the scale, or the feature is disabled. `mismatch` needs ≥ 0.6 confidence and a gap of 1 level on STD, 2 on NICE and NUM.
+
+Access: `user_group_id` **170 or below**; students get `403`.
+
 ### Enrollment status `MIGRATED`
 
 `TrainingsUser.status` gained `MIGRATED`: the student moved to another course or course revision and carries on in the enrollment named by `TrainingsUser.migrated_to_id`. The new enrollment points back through `migrated_from_id` and inherits `notes` and `prior_experience_reason`. A `MIGRATED` enrollment cannot be changed through `/manager/trainings/students/status`, `reset`, `finish` or the student `restart` (`400 ENROLLMENT_MIGRATED`); `MIGRATED` itself cannot be set through `status`. It does not satisfy a course prerequisite, issue a certificate or hold an intake seat. A prerequisite naming a course is met by completing any course revision of it.
@@ -3752,6 +3765,102 @@ Codes (both paths): `REASON_REQUIRED`, `INVALID_TIME` (not a whole number of sec
 * `HoursBySubject`: `[{ training_subject_id, planned, done, credited }]` in **seconds** — planned = `training_subjects.hours`, done = sum of `activity_progress.time`.
 * `EnrollmentCredit`: the raw credit rows. `PriorCredit`: `{ subjects_completed: [ids], missions: [ids] }`.
 * `TrainingsUser.prior_experience_reason`, `migrated_from_id`, `migrated_to_id`; `Training.version` (course revision number), `Training.version_status`.
+
+## Course pathways and experience requirements
+
+Task #464. Credit a closed enrollment into another course (e.g. LAPL(A) towards PPL(A), FCL.210.A(b)), pair two courses by hand and keep the pairings as a **course pathway**, and check a student's flight experience against the course's own minimums. Every endpoint is a manager endpoint limited to staff up to and including Trainings Manager (`user_group_id <= 135`), scoped to the caller's company; anyone else gets `404`. All times are whole **seconds**. Flylogs supplies no regulatory values: every minimum is typed by the school.
+
+### Credit mode and hand pairings on the move endpoints
+
+The move endpoints of the previous section gained three things:
+
+* `mode`: `move` (default; ACTIVE enrollment closes as `MIGRATED`) or `credit` — a `COMPLETED`, `STOPPED` or `FAILED` enrollment is **left unchanged** (status, certificate, progress, notes) and a new ACTIVE enrollment opens on the target with copies of the matched rows (`source = MIGRATED`, same flights). The new enrollment has `credited_from_id` set; `migrated_from_id` stays `NULL`. New refusal code: `NOT_CREDITABLE` (credit mode, status not COMPLETED / STOPPED / FAILED). `NOT_ACTIVE` now applies to move mode only.
+* `overrides`: hand pairings `{ "subjects": { "<srcId>": "<tgtId>"|null }, "activities": { … }, "missions": { … } }` — `null` = explicitly not carried. Ids that are not items of the two courses, lesson↔exam pairs, and a second claim on a subject or activity target are dropped silently; missions may share a target. **Absent** `overrides` = the saved pathway for this source course revision and target course applies (unless stale); an empty object = no hand pairings at all.
+* Matching order: hand pairing → Subject Bank family (`training_subjects.subject_family_id`, `subject_family_items`) → the name / position rules.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/students/migrate_preview/{enrollmentId}.json?target={trainingId}&mode=move|credit`<br>
+<mark style="color:green;">`POST`</mark> same URL, JSON `{ "target", "mode", "overrides" }` — still writes nothing.
+
+The preview also answers:
+
+| Key | Content |
+| --- | ------- |
+| `mode` | `move` / `credit` |
+| `map.how` | `{ subjects, activities, missions }`: source id → `OVERRIDE` \| `FAMILY` \| `AUTO` for every paired (or explicitly excluded) item |
+| `progress` | `{ activities_done: [ids], missions_done: [ids] }` — source items the student completed |
+| `overrides` | the hand pairings that were applied |
+| `pathway` | `{ id, label, stale, carry_flight_types: [ids], pairings }` of the saved pathway, or `null` |
+| `experience` | how the student would stand against the target's experience requirements after the move (shape below), or `null` when the target has none |
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/students/migrate/{enrollmentId}.json` — additionally accepts `mode`, `overrides`, `save_pathway` (bool) and `pathway_label`. With `save_pathway` the pairings used are saved as the pathway **after** the move commits (a failed save never undoes the move).
+
+`migrate_bulk` and `version_candidates` apply saved pathways automatically (no `overrides` parameter).
+
+### Pathways
+
+A pathway belongs to an exact **source course revision** and to the target **course** (its root, `COALESCE(version_root_id, id)`). It records the target course revision it was saved against; once the target's current revision differs, it is `stale` and is not applied until saved again. Only hand pairings are stored.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/pathways/{trainingId}.json` — the pathway map around a course:
+
+```json
+{ "graph": {
+  "nodes": [{ "root_id", "training_id", "name", "version", "active", "focus", "revision_moves" }],
+  "edges": [{ "from": "<rootId>", "to": "<rootId>", "moved": 0, "credited": 1,
+              "pathways": [{ "id", "source_training_id", "label", "stale",
+                             "coverage": { "missions": [12, 13], "subjects": [9, 9] } }] }]
+} }
+```
+
+Edges come from enrollments moved (`migrated_from_id`) or credited (`credited_from_id`) and from saved pathways; only edges touching the course are returned. `coverage` is `[matched, total]` of the source course against the target's current revision (`null` when stale). Moves between revisions of one course are counted in `revision_moves`, not drawn as edges.
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/pathway.json?source={trainingId}&target={trainingId}`<br>
+<mark style="color:green;">`POST`</mark> same URL, JSON `{ "source", "target", "overrides" }` — recompute the match with unsaved edits; writes nothing.
+
+Answer `{ pathway, source, target, map, overrides, flightTypes }`: `pathway` = `{ id, source_training_id, target_root_id, target_training_id, label, carry_flight_types, overrides, stale, modified }` or `null`; `source` / `target` = `{ id, name, version, version_status, course }` (course outline as in the move preview); `flightTypes` = `[{ id, name }]` the target flies. `400` when source and target are the same course revision.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/pathway_save.json` — body `{ "source", "target", "overrides", "label", "carry_flight_types": [ids] }`. Creates or replaces the pathway from `source` into the course of `target`. Answer `{ result, id, code }`; codes `TARGET_NOT_CURRENT` (target is not a CURRENT course revision), `SAVE_FAILED`.
+
+<mark style="color:green;">`POST`</mark> `/manager/trainings/trainings/pathway_delete/{pathwayId}.json` — `{ result: true }`; `404` when it is not the company's. Enrollments already moved or credited are not touched.
+
+### Experience requirements
+
+<mark style="color:blue;">`GET`</mark> `/manager/trainings/trainings/experience/{trainingId}.json` → `{ "requirements": { … } | null }`<br>
+<mark style="color:green;">`POST`</mark> same URL, JSON body below → saves and answers the same. Empty / `null` = no rule; when no rule is set at all the requirements are removed (`requirements: null`). Invalid values answer `400`.
+
+| Field | Type | Meaning |
+| ----- | ---- | ------- |
+| `min_instruction`, `min_dual`, `min_solo`, `min_solo_xc` | seconds | minimums |
+| `max_fstd` | seconds | FSTD time counted towards instruction at most |
+| `xc_min_km`, `xc_min_landings` | int | one qualifying solo cross-country trip |
+| `alt_certificate_type` | string | exact `user_certificates.type` that qualifies for the alternative minimums |
+| `alt_training_id` | id | or: completed any course revision of this company course |
+| `alt_min_total` | seconds | and at least this total aircraft flight time (logged, sims excluded, plus declared `user_details.flight_hours`) |
+| `alt_min_instruction`, `alt_min_dual` | seconds | replace `min_instruction` / `min_dual` when the alternative applies |
+| `enforce` | bool | block completion (automatic and manual) while not met |
+
+Requirements are copied with the course (course copy and new course revisions).
+
+**Evaluation** (`ExperienceEvaluation`), returned as `Experience: { enforce, evaluation }` by `GET /manager/trainings/students/view/{enrollmentId}.json` (`null` when the course has none) and as `experience` by the move preview:
+
+```json
+{ "alternative": true,
+  "lines": [{ "key": "instruction|dual|solo|solo_xc", "required": 144000, "done": 63000, "credited": 0, "met": false }],
+  "fstd": { "done": 0, "counted": 0, "limit": 18000 },
+  "xc": { "required_km": 270, "required_landings": 2, "met": false,
+          "best": { "date": "2026-08-16", "origin": "LECU", "km": 317, "landings_away": 1,
+                    "legs": [{ "from": "LECU", "to": "LESA", "km": 158 }], "incomplete": false } },
+  "met": false }
+```
+
+Counting rules: the enrollment **chain** (the enrollment plus every enrollment it was moved or credited from, recursively); confirmed flights logged on missions, each flight once (largest per-enrollment allocation, capped at block time); role from the student's seat and the flight type's seat classification (`dual` → dual; `pic`/`picus` with no other pilot → solo; `picus` with another pilot → dual; else instruction only); FSTD = aircraft with `simulator = 1`; only the head enrollment's `PRIOR` flight-type credits (classified by the flight type's seats; never cross-country). A trip chains solo legs of one day in one aircraft where each leg departs from the previous landing; distance uses `airports.lat/lon`.
+
+**Completion gate.** With `enforce`, `StageGateEnforcer::mayComplete()` refuses (no auto-finish), and `POST /manager/trainings/students/finish` / `status` to `COMPLETED` answer `400` "This course cannot be completed yet: the experience requirements are not met."
+
+### Other payload additions
+
+`GET /manager/trainings/students/view/{enrollmentId}.json` adds `CreditedFrom` (`{ id, name, version }` or `null`), `CreditedInto` (`[{ id, status, training_id, name, version }]`) and `TrainingsUser.credited_from_id`.
+
+**Deploy:** `migrations/2026-10-15-course-pathways.sql` (adds `trainings_users.credited_from_id`, `training_pathways`, `training_pathway_items`, `training_experience_requirements`) before the backend; `aco_sync` for `Trainings/manager_pathways`, `manager_pathway`, `manager_pathway_save`, `manager_pathway_delete`, `manager_experience`.
 
 ## Question bank and recovery exams
 

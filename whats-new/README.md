@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## October 2026
 
+**[Suggestions while you work](flylogs-assistant.md)** · Safety, Maintenance, Schedules, Trainings\
+Flylogs suggests how to classify a safety report, which report a flight remark needs, the ATA chapter of a defect, which NOTAMs matter, and more — nothing changes until you click.\
+[Manual →](../sms/create-a-safety-report.md#classification-suggestion)
+
 **[Sunrise and sunset operating hours](operating-hours-sunrise-sunset.md)** · Company settings\
 Set opening and closing times to Sunrise or Sunset at the base's airport, so daylight operations keep the right hours all year.\
 [Manual →](../company-management/company-settings/schedule.md#operating-hours)

@@ -26,6 +26,14 @@ This is the important part.
 
 **No assessment is made.** It will not tell you how serious something is, what caused it, or what to do about it. It points at a sentence a pilot wrote.
 
+## Hints on the flight page
+
+The same reading also happens **right after a flight is logged**, so the crew can act while they still remember the details. When a flight's remark looks like a defect or a safety event, the flight page shows a hint under the remarks with a button to open the matching form — **File aircraft report** (pre-filled with the remark, while the aircraft-report window is open after confirmation) or **File safety report** (the remark becomes the starting description).
+
+<figure><img src="../.gitbook/assets/ai-remark-hint.png" alt=""><figcaption><p>A remark that reads like both a defect and a safety event offers both forms.</p></figcaption></figure>
+
+As with the daily list, nothing is filed automatically, and once a report of that kind exists for the flight it is no longer offered — file the defect, and the hint keeps only the safety report. It can be dismissed per flight. It is shown only to the **crew of that flight** (PIC, SIC, supervisor) and to **managers (user group 110 and below)**, only for flights logged in the last 7 days, and only while online.
+
 ## Reading the list
 
 Each day shows a badge with how many findings it has, and on the right, how many remarks were actually read:

@@ -9,11 +9,11 @@ Book a whole route, or the same flight on several days of the week, in a single 
 ### What changed
 
 * **Multi-leg flights**: add more than one leg to a booking. The whole route is saved together.
-* **Repeat weekly**: tick the weekdays the flight repeats on. The day of the booking itself is always included.
+* **Repeat weekly**: tick the weekdays the flight repeats on and choose the **Until** date (required). The day of the booking itself is always included.
 * A repeating flight can also be multi-leg. The whole route is repeated on every selected day.
 * One save creates at most **100 bookings**.
 
-Each booking is independent once saved. There is no "edit the whole series", so change or cancel them one at a time. When **Notify crew** is ticked, the crew is notified once, for the first booking.
+The bookings of a repeat are linked: when you edit, cancel or delete one, choose **This booking only** or **This and following**. A multi-leg repeat is linked per leg, so each leg can change on its own. The **Until** date is required, with no default. When **Notify crew** is ticked, the crew is notified once, for the first booking.
 
 These options are available in the **Schedule Manager**, when creating a booking.
 

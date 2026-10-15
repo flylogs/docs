@@ -362,7 +362,9 @@ Aggregate counts of `ScheduleHistory.reason` for a given action within a month, 
 }
 ```
 
-Rows with `null` reason are omitted. `totals` is always a zero-indexed JSON array. For `action = CANCELED`, the `NOT_FLOWN` ("Not flown") reason appears for bookings the system auto-cancelled as no-shows, attributed to the PIC.
+Rows with `null` reason are omitted. `totals` is always a zero-indexed JSON array.
+
+**`?inferred=1`** — splits `OTHERS` ("Other reasons") by what each row's free text says. An hourly job reads that text and stores `ScheduleHistory.inferred_reason` / `inferred_confidence`; the reason the person chose is never changed. Rows read with confidence ≥ 0.6 come back as extra entries with `"inferred": true` and a `name` from `MET`, `MAINT`, `AIRCRAFT`, `ATC`, `PERSONAL`, `INSTRUCTOR`, `ADMIN` (the last three exist only as inferences), and the `OTHERS` total is reduced by the same amount. Without the parameter the totals are exactly as before. `inferred_reason` and `inferred_confidence` also appear on each row of `/manager/schedules/cancellations.json`. For `action = CANCELED`, the `NOT_FLOWN` ("Not flown") reason appears for bookings the system auto-cancelled as no-shows, attributed to the PIC.
 
 ---
 
@@ -756,3 +758,11 @@ sector and never the FDP end.
 {% hint style="info" %}
 The older top-level estimates `ftl.sectors_today`, `ftl.max_fdp`, `ftl.wocl` and `ftl.fdp_start` are no longer returned. They counted simulator sessions as sectors and always used the EASA ORO WOCL window. Use `ftl.fdp` instead.
 {% endhint %}
+
+## Repeating series (`series_id`)
+
+Bookings created by a repeat share a `series_id` (UUID). There is no series endpoint: the id is a plain field on the booking.
+
+* `POST /schedules/edit.json` — on **create**, a schedule manager may post `data[Schedule][series_id]` (UUID, client-generated, one per leg of a multi-leg repeat). Any other value, or the field from a non-manager, is ignored. On **edit** the field cannot join a series: posting it **empty** detaches the booking ("this booking only"); any other value is ignored.
+* `GET /schedules/get.json` returns `series_id` on every booking (null when unlinked).
+* `GET /schedules/view/{id}.json` returns `Schedule.series_id` and, for schedule managers, `SeriesSiblings`: every booking of the same series in the caller's company (`id`, `start`, `end`, `status`, `flight_id`), oldest first. "This and following" is done by the client: it edits or deletes the later siblings one by one with the normal `edit.json` / `delete.json` calls, so every row is checked and notified exactly like a single booking.

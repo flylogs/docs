@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Suggestions while you work](whats-new/flylogs-assistant.md)
   * [Sunrise and sunset operating hours](whats-new/operating-hours-sunrise-sunset.md)
   * [Sign in with a passkey](whats-new/passkeys-and-two-factor.md)
   * [Multi-leg and repeating bookings](whats-new/multi-leg-and-repeating-bookings.md)
@@ -134,6 +135,7 @@
 * [Exam sittings](training-courses/exam-sittings.md)
 * [Question bank and recovery exams](training-courses/question-bank-and-recovery-exams.md)
 * [Subject Bank (linked subjects)](training-courses/subject-bank.md)
+* [Course pathways (LAPL to PPL)](training-courses/course-pathways.md)
 * [Flight Training](training-courses/flight-training.md)
 * [Stage Checks](training-courses/stage-checks.md)
 * [Mission Authorizations](training-courses/mission-authorizations.md)

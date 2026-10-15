@@ -18,6 +18,18 @@ reports became **Defect** reports, automatically and once only.
 
 Filing a report notifies the company's managers and maintenance staff by message.
 
+## Hints while you write a defect
+
+Once the title and description say enough, the report form may show:
+
+* **ATA chapter** — the chapter the defect reads like, with an **Apply** button. Nothing is filled in until you click it.
+* **Already reported?** — when an open report on the same aircraft looks like the same defect, with a link to it. You can still file yours; it may add something the first one missed.
+* **Maintenance may already be on it** — when an open maintenance job on the same aircraft looks like it covers the defect.
+
+<figure><img src="../../.gitbook/assets/ai-aircraft-report-hints.png" alt=""><figcaption><p>An open report already describes the same light, and the ATA chapter is ready to apply.</p></figcaption></figure>
+
+These are automated suggestions. They never link your report to a job (that stays a maintenance decision, see below) and they appear only while you are online. Anyone who can file an aircraft report sees them.
+
 ## Reports and maintenance jobs
 
 Not every defect grounds the aircraft. A blown navigation light is not required for

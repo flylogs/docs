@@ -33,6 +33,9 @@ Once saved, a visual risk matrix will be automatically generated and attached to
    Under the "Risk Assessment" section, choose:
    * **Risk Severity**: A Catastrophic, B Hazardous, C Major, D Minor, E Negligible
    * **Risk Probability**: 5 Frequent, 4 Occasional, 3 Remote, 2 Improbable, 1 Extremely Improbable (per ICAO Doc 9859: 5 = most likely, 1 = least likely)
+   You can click **Suggest initial risk** to have Flylogs propose both values from the report's description, damage and injuries, and from how many reports in the same category your organisation filed in the last 12 months. It fills the two selectors and shows how sure it is — for example *Severity: B Hazardous (35%, or A Catastrophic 33%)* when the reading is split. Nothing is saved until you save the form, and the assessment remains yours. The button is available to managers (user group 110 and below) and to the report's assigned reviewer.
+
+   <figure><img src="../.gitbook/assets/ai-safety-suggest-risk.png" alt=""><figcaption><p>Suggest initial risk fills both selectors and shows how sure it is, including a close second.</p></figcaption></figure>
 3. **Enter corrective actions**\
    Clearly describe any actions taken to mitigate the risk.
 4. **(Optional) Define mitigated risk**\

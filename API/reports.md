@@ -334,6 +334,33 @@ If no TAF is available:
 
 ---
 
+## NOTAM relevance
+
+<mark style="color:green;">`POST`</mark> `/reports/notam_relevance.json`
+
+Ranks the NOTAMs of a briefing by relevance to one planned flight. The client sends the NOTAMs it already loaded; nothing company-specific is read and **nothing is stored**. The ranking only orders and labels — clients must still show every NOTAM.
+
+#### Request Body
+
+```json
+{
+  "context": { "rules": "VFR", "aircraft": "Cessna 172", "flight_type": "Dual", "departure": "LEVC", "arrival": "LEVC", "start": "2026-10-15 07:00Z", "end": "2026-10-15 09:15Z" },
+  "notams": [ { "key": "LEVC:A1234/26", "icao": "LEVC", "text": "RWY 12/30 CLSD", "start": null, "end": null } ]
+}
+```
+
+Every `context` field is optional. Up to 40 NOTAMs per request; `key` (letters, digits and `_.:/-`, max 64) is echoed back.
+
+#### Response
+
+```json
+{ "relevance": { "LEVC:A1234/26": { "level": "critical", "confidence": 0.95, "fold": false } } }
+```
+
+`level` is `none`, `info`, `check` or `critical`. `fold` is `true` only when the model is ≥ 0.75 sure the NOTAM is not relevant. NOTAMs the model could not judge are missing from the map; with the feature disabled `relevance` is `{}`.
+
+---
+
 ## FMC Version
 
 <mark style="color:blue;">`GET`</mark> `/home/version.json`

@@ -230,18 +230,21 @@ In **Trainings → Audit → Analytics** you get a Stopped card, a pie chart spl
 A student can move from one course to another — for example from LAPL to PPL — or to a new course revision of the same course, keeping every piece of progress that also exists in the new course. Open the student's training progress page and click "**Move to another course**" in the student management panel. The wizard has four steps (the video in [Recording previous experience](#recording-previous-experience) walks through one move, from PPL to ATPL):
 
 1. **Choose the course.** Students are moved to the current course revision of the course you choose.
-2. **What carries over.** Flylogs compares both courses:
-   * a **ground subject** matches when it has the same name and the same planned hours; inside a matched subject, lessons and exams match in the same position with the same name;
+2. **What carries over.** Flylogs draws both courses side by side on a [pathway diagram](course-pathways.md#step-2-the-pathway-diagram), one line per item that carries over:
+   * a **ground subject** matches when it has the same name and the same planned hours, or when both are linked through the [Subject Bank](subject-bank.md); inside a matched subject, lessons and exams match in the same position with the same name;
    * a **flight mission** matches when it is in the **same position** in the course, with the same flight type and the same planned hours. A mission added in the middle of the new course shifts every later mission, so they no longer match.
 
-   Completed lessons, exams and missions that match are carried over, with the flights logged against them. Everything else starts fresh in the new course.
+   Click an item on the left and then its counterpart on the right to **pair it by hand**, or choose **Don't carry**. If a [course pathway](course-pathways.md#3-course-pathways-and-the-pathway-map) is saved for these two courses, its pairings are applied first. Completed lessons, exams and missions that match are carried over, with the flights logged against them. Everything else starts fresh in the new course.
 3. **Unmatched flight hours.** Hours flown on missions that have no counterpart in the new course are listed by flight type. Tick a flight type to credit those hours in the new enrollment; nothing is credited unless you tick it. Flight types the new course does not use cannot be credited.
-4. **Confirm** with a reason.
+   If the new course has [experience requirements](course-pathways.md#1-set-the-courses-experience-requirements), this step also shows how the student would stand against them after the move.
+4. **Confirm** with a reason. When you paired anything by hand you can keep the pairings as the course pathway, so the next student moved between these courses gets the same.
 
 The current enrollment is closed with the status **Moved** and a new enrollment opens in the new course. Both records link to each other from their headers, and both show the move in the Activity timeline. The enrollment notes and the previous-experience reason move with the student, and hours credited as previous experience follow when the new course has the same flight type or subject. A student who completed any course revision of a course meets an entry requirement that names that course.
 
 A **Moved** enrollment is frozen: it cannot be reopened, reset or completed, it does not issue a certificate, it does not count as a completed course for another course's entry requirements, and it frees its seat in a dated intake. It is not counted as a drop-out in the audit analytics. Use the **Moved** status filter in the students list to see these records.
 
 Only enrollments in progress can be moved, and not to a course where the student already has an enrollment in progress.
+
+**A record that is already closed** (completed, stopped or not passed), for example an LAPL(A) holder coming back for the PPL(A), is not moved but **credited**: the management panel shows **Credit into another course**, the same wizard opens, and the closed record stays exactly as it is. See [Course pathways (LAPL to PPL)](course-pathways.md#2-credit-a-student-from-a-closed-course).
 
 **Who can do this:** staff up to and including Trainings Manager (`user_group_id <= 135`).

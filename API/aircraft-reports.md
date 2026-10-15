@@ -687,6 +687,44 @@ POST /maintenance/aircraft_reports/index.json
 
 ---
 
+## Suggestions
+
+<mark style="color:green;">`POST`</mark> `/maintenance/aircraft_reports/suggest.json`
+
+Hints while a report is being written. **Nothing is saved or linked.**
+
+#### Request Body
+
+```json
+{ "AircraftReport": { "aircraft_id": 12, "title": "Low volts light", "description": "On during taxi, off above 1500 RPM" } }
+```
+
+#### Response
+
+```json
+{
+  "suggestion": {
+    "ata": { "value": "24", "confidence": 0.91 },
+    "report": { "value": "3f2c…", "confidence": 0.98, "title": "Low voltage light flickers on taxi", "created": "1791800000" },
+    "job": null
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| ata | Likely [ATA chapter](#ata-chapters) key (≥ 0.6), or `null` |
+| report | An `OPEN`/`DEFERRED` report on the same aircraft that reads like the same defect (≥ 0.8), or `null` |
+| job | An open maintenance job on the same aircraft that already covers it (≥ 0.8), or `null`. Information only — linking stays [Jobs link_reports](maintenance-jobs.md) |
+
+Fewer than 10 characters of title + description, or the feature not enabled on the installation, returns all `null`.
+
+#### Authorization
+
+Same audience as [Create Report](#create-report). The aircraft must belong to the caller's company (`404` otherwise); only that aircraft's open reports and jobs are considered (newest 20 of each).
+
+---
+
 ## ATA Chapters
 
 <mark style="color:blue;">`GET`</mark> `/maintenance/aircraft_reports/ata_chapters.json`

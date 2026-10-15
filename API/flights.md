@@ -587,6 +587,37 @@ Checked in order, each returning `result: false` with its own message when it fa
 
 ---
 
+## Remark Check
+
+<mark style="color:blue;">`GET`</mark> `/flights/remark_check/{id}.json`
+
+Advisory reading of one flight's `remarks`: does it look like an aircraft defect, or a safety-relevant event? Used by the flight page to offer the aircraft/safety report forms. **Nothing is created or stored.**
+
+#### Response
+
+```json
+{
+  "check": {
+    "defect": 0.91,
+    "safety": 0.15,
+    "suggest": ["defect"]
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| check | object \| null | `null` when there is nothing to read: empty or label-only remark (`5T`, `NIL`…), flight logged more than 7 days ago, `CANCELED`/`DELETED` flight, or the feature is not enabled on the installation |
+| check.defect | number \| null | Probability (0–1) that the remark reports an aircraft fault or damage |
+| check.safety | number \| null | Probability (0–1) that it describes a safety-relevant event |
+| check.suggest | string[] | `defect` and/or `safety` — kinds above 0.7 for which the flight has **no** aircraft/safety report yet |
+
+#### Authorization
+
+Company-scoped (`404 Flight not found` otherwise). The caller must be the flight's **PIC**, **SIC** or **Supervisor**, or a manager (`user_group_id < 111`); anyone else gets `403`.
+
+---
+
 ## Export Flights (XLS)
 
 The server-side `xls:1` export has been removed. The logbook Excel file is now generated client-side by the NEO web app: it pulls the flights from the **List Flights** endpoint above (using the `limit` parameter to fetch all matching rows) and builds the XLSX in the browser.

@@ -88,6 +88,18 @@ Two optional safety gates can be required before a flight is dispatched. Both ar
 
 ***
 
+### **NOTAMs ranked for your flight**
+
+The booking's briefing and the flight page list the NOTAMs for the departure and arrival aerodromes. When you are online, Flylogs reads each one against the planned flight (aircraft, flight type, aerodromes and times) and orders the list so the ones that matter come first:
+
+* **Affects flight** — e.g. a runway or aerodrome closure, an obstacle on the approach, no touch-and-goes during your slot.
+* **Check** — worth a look before departure.
+* NOTAMs it is very sure are irrelevant (an office-hours change, say) are folded behind **Show N likely not relevant** — never removed.
+
+<figure><img src="../.gitbook/assets/ai-notam-ranking.png" alt=""><figcaption><p>Departure and arrival NOTAMs in the booking briefing, most relevant first.</p></figcaption></figure>
+
+This is an automated reading to help you brief, not a replacement for it: **read every NOTAM before flight.**
+
 ### **Remarks**
 
 1. If a schedule record is **published** and **dispatched** and the PIC is changed, the record will automatically be switched back to SCHEDULED and the associated flight will be unlinked.

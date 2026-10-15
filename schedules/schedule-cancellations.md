@@ -15,3 +15,20 @@ The PIC, SIC or supervisor can cancel their own booking manually, right up until
 This information is stored and displayed in the Schedule cancellation analytics page so you can have a better understanding of why your flights are being cancelled.
 
 ![](../.gitbook/assets/cancellations-analytics.png)
+
+### "Other reasons", read from the note
+
+**Others** used to be one big grey slice, even though the note people write usually says exactly why: *"runway closed"*, *"instructor not available"*, *"I have a work trip"*, *"booked twice by mistake"*. Flylogs now reads those notes and shows them in the charts as their real reason, marked **(from notes)** — for example *Weather (from notes)* or *Instructor unavailable (from notes)*. In the cancellation log, an *Others* row shows the reason its note points to next to it.
+
+Three reasons appear only this way, because nobody can choose them in the cancel dialog: **Personal**, **Instructor unavailable** and **Booking admin / error**.
+
+<figure><img src="../.gitbook/assets/ai-cancellations-chart.png" alt=""><figcaption><p>"Others" split into the reasons its notes point to.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/ai-cancellations-log.png" alt=""><figcaption><p>In the log, each Others row shows the reason read from its note.</p></figcaption></figure>
+
+This is an automated reading: the reason the person chose is never changed, and a note that does not clearly say why stays under *Others*.
+
+
+### Repeating bookings
+
+Bookings created with **Repeat weekly** are linked. Cancelling one from the Schedule Manager (status *Canceled*) or deleting it asks whether to apply it to **this booking only** or **this and following**. See [Repeating flights](flight-schedule-records.md#repeating-flights).

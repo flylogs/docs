@@ -563,6 +563,37 @@ the other two never move on an edit.
 
 ---
 
+## Suggestions
+
+<mark style="color:green;">`POST`</mark> `/safety_reports/suggest.json`
+
+Automated suggestions for the two judgements a report asks for. **Nothing is saved** — the caller decides whether to use them. Requires a `premium` or `unlimited` plan, like create.
+
+Two modes, chosen by the body:
+
+| Body (`data[SafetyReport]` or `{"SafetyReport": {...}}`) | Returns | Who may call |
+|---|---|---|
+| `name`, `events` (no `id`); optional `type` and `safety_report_department_id` (the form's current values) | `type` (Annex 19); for `INFORMATION`, `subtype` (`hazard`/`information`); `department` (id, only among the departments the company is offered — see [Form Options](#form-options-bulk)); `category` (id, with its `department_id`: within the suggested department, else the posted one); for occurrences, `phase` ([Flight Phase](#flight-phase) token) | anyone who may create a report |
+| `id` of a saved report | `probability` and `severity` (ICAO initial risk), read from the stored report plus the company's count of reports in the same category over the last 12 months | managers (`user_group_id < 111`) and the report's assigned reviewer; others get `403` |
+
+#### Response
+
+```json
+{
+  "suggestion": {
+    "type": null,
+    "subtype": null,
+    "probability": { "value": "possible", "confidence": 0.77, "alternative": null },
+    "severity": { "value": "hazardous", "confidence": 0.35,
+                  "alternative": { "value": "catastrophic", "confidence": 0.33 } }
+  }
+}
+```
+
+Each field is `null` when there is nothing to suggest (description under 40 characters, low confidence, feature disabled). In the classification mode `department`, `category` and `phase` are also returned when they match the form; the client shows only the ones that differ. Floors: department 0.8, category 0.5, phase 0.6. `value` uses the stored enumerations ([Type](#type-icao-annex-19-classification), [Risk Probability](#risk-probability), [Risk Severity](#risk-severity)). `confidence` is the probability placed on that value; `alternative` is a close second (≥ 0.25) for risk levels, when the reading is split. Floors: type 0.8, subtype 0.85, risk levels 0.3.
+
+---
+
 ## Delete Safety Report
 
 <mark style="color:red;">`GET`</mark> `/safety_reports/delete/{id}.json`

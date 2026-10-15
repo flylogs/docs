@@ -89,12 +89,25 @@ When you save, Flylogs creates **one booking per leg**, back to back, with the s
 When you create a new booking, tick **Repeat weekly** to repeat it on the days of the week you choose:
 
 1. Tick the weekdays the flight repeats on. The day of the booking itself is always included.
-2. Choose the **Until** date (inclusive). The form shows how many bookings will be created.
+2. Choose the **Until** date (inclusive). It is **required and has no default**: saving without it is refused and the field is highlighted. The form shows how many bookings will be created, and the confirmation lists every date before anything is created.
 
 A repeating flight can also be multi-leg: the whole route is repeated on every selected day. One save creates at most **100 bookings**.
+
+#### Editing or cancelling a repeating series
+
+The bookings created by one repeat are **linked**. A multi-leg repeat creates one series **per leg** (leg 1 on every date, leg 2 on every date…), so a single leg can be changed without touching the others.
+
+Open any booking of a series in the Schedule Manager: the form shows that it is part of a repeating series. When you save, cancel (set the status to *Canceled*) or delete it, Flylogs asks:
+
+* **This booking only** — only this booking changes. On save it is detached from the series.
+* **This and following** — the same change is applied to the later bookings of the series.
+
+"Following" only reaches bookings that are later than this one, still in the future, not yet dispatched or flown, and not already canceled. Each keeps its own date; the times you set are applied in the company time zone, so 16:00 stays 16:00 across a daylight-saving change. Aircraft, crew, flight type, airfields, notes and (if you changed it) status are carried over. Crew notifications and training missions are not repeated. A booking that the server refuses (for example an aircraft clash) is listed afterwards and left as it was.
+
+Bookings created before this feature are not linked and are still edited one by one.
 
 Before creating anything, Flylogs checks every date against the schedule. A date where the aircraft or one of the crew members is already booked is skipped, and the confirmation lists the skipped dates. If the server refuses a leg (for example because of maintenance), the remaining legs of that day are not created and you get a summary of what was not created.
 
 {% hint style="info" %}
-Multi-leg and repeat options are available in the **Schedule Manager** only, and only when creating a booking. Once saved, the bookings are independent of each other: there is no "edit the whole series", so change or cancel each one individually. When **Notify crew** is ticked, the crew is notified once, for the first booking; a training mission selected in the form is assigned to the first booking only.
+Multi-leg and repeat options are available in the **Schedule Manager** only, and only when creating a booking. Bookings of a repeat are linked: editing, cancelling or deleting one offers "this booking only" or "this and following" (see above). When **Notify crew** is ticked, the crew is notified once, for the first booking; a training mission selected in the form is assigned to the first booking only.
 {% endhint %}

@@ -65,6 +65,14 @@ mission was passed.
 
 **It will not soften the weak areas.** A low rating is described as a low rating. This is a training record.
 
+## Grade and comment check
+
+When you grade a single exercise and add a comment to it, Flylogs reads the comment against the grade you picked. If they tell different stories — *"lost altitude by 300 ft twice"* next to **STD +**, say — a warning appears in the grading window: *Your comment reads lower than this grade (more like STD -)*.
+
+<figure><img src="../.gitbook/assets/ai-grade-check.png" alt=""><figcaption><p>A comment that reads like an unsatisfactory exercise next to "4 Very Good".</p></figcaption></figure>
+
+It only warns. It does not change the grade, and **Save** still saves; you decide which half of the record is right. On the 3-level STD scale any disagreement is flagged; on the 4- and 5-level scales only a gap of two levels or more, so ordinary nuance does not nag. Same audience as the draft (Flight Instructors and above), online only.
+
 ## Who can use it
 
 Instructors and managers — user groups **170 and below**. Students cannot generate a draft.

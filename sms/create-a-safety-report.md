@@ -65,6 +65,23 @@ Your classification decides which **severity** you pick next:
 
 See [Safety Reports](safety-reports.md) for the full classification reference, including how it changes what a manager sees when reviewing the report.
 
+#### Classification suggestion
+
+Once you have written a few sentences in **Description of events**, Flylogs reads them and, where your description points somewhere other than what is selected, shows hints under the text box — one per field, each with an **Apply** button:
+
+* **Classification** — for example *"This description reads like Safety Information — Hazard."*
+* **Department** — for example *"This reads like a report for Maintenance & Engineering - CAMO › System/Component Failure."* Applying it switches the department and fills the category in one go, without asking you to confirm the department again.
+* **Category** — the ICAO occurrence category within your department.
+* **Phase of flight** — occurrences only.
+
+Only the departments your organisation is offered are ever suggested (a flight school is never told a report belongs to AOC, SPO or Cabin Crew). Close the box to keep your choices.
+
+<figure><img src="../.gitbook/assets/ai-safety-suggestions.png" alt=""><figcaption><p>Suggestions under the description: the classification, then the department and category, each applied with one click.</p></figcaption></figure>
+
+When you open the form from a flight's remark hint (see [Flight remark findings](flight-remark-findings.md)), the description is already written before you have picked a department. If it clearly points to one, the department suggestion appears right in the **Department** card, where you make that choice.
+
+The hints never change anything on their own and nothing is sent to anyone: you decide how the report is classified. It only appears while you are online, on new reports and on your own drafts. Anyone who can create a safety report sees it.
+
 ### Department
 
 A **Department** selector appears near the top of the report form. Choose the department that owns the activity where the event happened.
