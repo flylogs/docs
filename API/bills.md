@@ -136,7 +136,8 @@ Create a manual wallet transaction for one or more pilots. If `id` is provided, 
 | price | number | Yes (new) | Amount (negative = charge, positive = credit) |
 | name | string | Yes | Transaction description |
 | created | string | No | Transaction date (defaults to now) |
-| receipt | boolean | No | Send the receipt notification to the user. It no longer controls numbering: every bill gets an `n_id`. Without it the transaction is recorded and numbered but the user is not notified |
+| receipt | boolean | No | Send the receipt notification to the user. It does not control numbering |
+| assign_number | boolean | No | Give the bill a bill number (`n_id`). `false`/`0` stores it without number and removes an existing one. When omitted, the company billing settings decide |
 | id | UUID | No | Existing bill ID to update |
 
 #### Response

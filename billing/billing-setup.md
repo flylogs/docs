@@ -54,12 +54,14 @@ The process takes into consideration all billing rates, company settings and ava
 Every bill, whether it comes from a flight or from a manual transaction, receives a **bill number**. Numbers are consecutive within your company, shared by flight bills and transactions, and **never restart** at the beginning of a new year.
 
 * Bills created before this change keep the number they already had. Some older numbers repeat across different years, because the old numbering restarted every January 1st.
-* Older bills that never had a number receive one the first time they are edited.
+* Older bills that never had a number can be numbered by editing them and ticking **Assign a bill number**.
 * Bills are numbered in the order they are saved, not by their date. A bill saved today with a past date gets today's next number.
 
-When you create or edit a manual transaction, the checkbox **Send this receipt to the user** controls the notification only:
+When you create or edit a manual transaction there are two independent checkboxes:
 
-* **Checked:** the user is notified (if your company billing settings have notifications enabled) and receives a link to the receipt.
-* **Unchecked:** the transaction is recorded and numbered, but the user is not notified.
+* **Assign a bill number** (checked by default): the transaction receives the next bill number. Unchecked, the transaction is recorded without a number; if the bill already had one, the number is removed. The checkbox shows the current state when you edit a bill, so an older bill without a number appears unchecked: tick it and save to number it.
+* **Send this receipt to the user** (unchecked by default): the user is notified (if your company billing settings have notifications enabled) and receives a link to the receipt. Unchecked, the transaction is recorded but the user is not notified.
+
+One does not depend on the other: you can number a bill without notifying the user, or notify the user of a bill without number.
 
 Automatic flight billing is not affected by this checkbox; it follows your company notification setting.
