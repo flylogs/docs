@@ -61,6 +61,8 @@ FCL.210.A(b)(2) also requires 5 hours of dual and the full solo requirement to b
 
 ### Instructor qualification
 
+{% embed url="https://youtu.be/WI-fUEPYiCQ" %}
+
 When a mission flight is saved, Flylogs records who the instructor was (the other pilot on board for dual flights, the supervisor for supervised solo) and keeps a **snapshot of their licences, ratings and training certificates at that moment**. Editing or renewing a certificate later does not change flights already logged. If the flight is edited and the instructor stays the same, the snapshot is kept.
 
 * A flight counts as flown with a qualified instructor when the snapshot holds one of the course's instructor certificates, valid on the day of the flight. The check uses the course's **current** list, so changing the list re-judges past flights.
