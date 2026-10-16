@@ -51,17 +51,27 @@ The process takes into consideration all billing rates, company settings and ava
 
 ### Bill numbers and receipts
 
-Every bill, whether it comes from a flight or from a manual transaction, receives a **bill number**. Numbers are consecutive within your company, shared by flight bills and transactions, and **never restart** at the beginning of a new year.
+Every bill, whether it comes from a flight or from a manual transaction, receives a **bill number**. Numbers are consecutive within your company and shared by flight bills and transactions. By default they never restart; if your company enables **Restart bill numbers every year** in its billing settings, numbering starts again at 1 every 1 January and bills show the year first, for example `2026/1`.
 
 * Bills created before this change keep the number they already had. Some older numbers repeat across different years, because the old numbering restarted every January 1st.
-* Older bills that never had a number can be numbered by editing them and ticking **Assign a bill number**.
+* Older bills that never had a number can be numbered by editing them and ticking **Create bill and assign correlative number**.
 * Bills are numbered in the order they are saved, not by their date. A bill saved today with a past date gets today's next number.
 
 When you create or edit a manual transaction there are two independent checkboxes:
 
-* **Assign a bill number** (checked by default): the transaction receives the next bill number. Unchecked, the transaction is recorded without a number; if the bill already had one, the number is removed. The checkbox shows the current state when you edit a bill, so an older bill without a number appears unchecked: tick it and save to number it.
+* **Create bill and assign correlative number** (checked by default): the label shows the number the bill will receive, for example `505`, or `2026/505` when numbering restarts every year. The transaction receives that number when it is saved. Unchecked, the transaction is recorded without a number; if the bill already had one, the number is removed. The checkbox shows the current state when you edit a bill, so an older bill without a number appears unchecked: tick it and save to give it the next number.
 * **Send this receipt to the user** (unchecked by default): the user is notified (if your company billing settings have notifications enabled) and receives a link to the receipt. Unchecked, the transaction is recorded but the user is not notified.
 
 One does not depend on the other: you can number a bill without notifying the user, or notify the user of a bill without number.
 
 Automatic flight billing is not affected by this checkbox; it follows your company notification setting.
+
+### Transactions, bills and flights lists
+
+In the manager **Bills** page, the filter at the top separates your records into three lists:
+
+* **Transactions:** manual transactions saved **without** a bill number.
+* **Bills:** manual transactions that **have** a bill number.
+* **Flights:** bills generated from flights. These always have a bill number.
+
+Moving a transaction between **Transactions** and **Bills** is done by editing it and ticking or unticking **Create bill and assign correlative number**. The date filter covers the current year by default (1 January to 31 December), and each list is sorted by creation date, newest first.

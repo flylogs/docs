@@ -118,7 +118,21 @@ Full detail for a single bill including client info, company billing settings, a
 }
 ```
 
-`UserBill.n_id` is the bill number: one consecutive sequence per company, shared by flight bills and manual transactions and never reset by year. Bills created before October 2026 keep their old number, which may repeat across years, and older bills without a number (`null`) are numbered the first time they are edited.
+`UserBill.n_id` is the bill number. By default it is one consecutive sequence per company, shared by flight bills and manual transactions. Companies that enable yearly reset restart it every 1 January and store the year in `UserBill.n_year` (shown as `2026/1`). `n_id` is `null` for transactions saved without a number. Bills created before October 2026 keep their old number, which may repeat across years; older bills without a number can be numbered by editing them with `assign_number`.
+
+---
+
+## Next Bill Number
+
+<mark style="color:green;">`GET`</mark> `/bills/next_number.json?created={unix}`
+
+The bill number the next bill would receive, so a form can show it before saving. `created` (Unix timestamp, optional) is the bill date; it decides the year when the company restarts numbering yearly. Restricted to `user_group_id ≤ 145`. The value is informational: the number is assigned when the bill is saved, so another bill saved in between takes it.
+
+```json
+{ "next": { "n_id": 505, "n_year": null } }
+```
+
+`n_year` is `null` unless the company restarts numbering every year.
 
 ---
 
@@ -137,7 +151,7 @@ Create a manual wallet transaction for one or more pilots. If `id` is provided, 
 | name | string | Yes | Transaction description |
 | created | string | No | Transaction date (defaults to now) |
 | receipt | boolean | No | Send the receipt notification to the user. It does not control numbering |
-| assign_number | boolean | No | Give the bill a bill number (`n_id`). `false`/`0` stores it without number and removes an existing one. When omitted, the company billing settings decide |
+| assign_number | boolean | No | Give the bill a bill number (`n_id`). `false`/`0` stores it without number and removes an existing one. When omitted, the bill is numbered |
 | id | UUID | No | Existing bill ID to update |
 
 #### Response
@@ -469,7 +483,7 @@ Delete a package and its associated bill (if any). Recalculates the pilot's bala
 
 <mark style="color:blue;">`GET`</mark> `/bills/manager_index/{type}.json`
 
-Paginated list of all company bills. `type` is `transactions` (default, non-flight bills) or `flights` (flight-linked bills).
+Paginated list of all company bills. `type` is `transactions` (default, every non-flight bill), `unnumbered` (non-flight bills without a bill number), `numbered` (non-flight bills with a bill number) or `flights` (flight-linked bills). The manager Bills page uses its tabs **Transactions** = `unnumbered`, **Bills** = `numbered` and **Flights** = `flights`.
 
 #### Named Parameters / POST Filters
 
@@ -490,7 +504,7 @@ Paginated list of all company bills. `type` is `transactions` (default, non-flig
 
 Aggregated stats over the **full** filtered set (not paginated). Same `type` and filters as `manager_index` — `from`, `to`, `pilot`. Filters can be sent as POST body or query string. Designed to be fetched in parallel with the first page of `manager_index` and refetched on every filter change. Charts read from this response, not from the paginated bill list.
 
-`type`: `transactions` (default, `flight_id = ''`) or `flights` (`flight_id <> ''`).
+`type`: `transactions` (default, `flight_id = ''`), `unnumbered` (`flight_id = ''` and no `n_id`), `numbered` (`flight_id = ''` and `n_id > 0`) or `flights` (`flight_id <> ''`).
 
 `totalSeconds` is `SUM(billed_time) * 3600` (billed_time stored as hours). `topClients` returns up to 10 entries ordered by `ABS(SUM(total))` desc.
 
