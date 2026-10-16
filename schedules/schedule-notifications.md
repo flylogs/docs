@@ -4,6 +4,10 @@ Every time the flight schedule is published by your Roster Manager, Flylogs will
 
 Each pilot also gets an instant push notification for every booking published, changed or cancelled — with the callsign, aircraft, date and time — on the Flylogs app and on any browser where push is turned on. Pilots without push who switched on WhatsApp notifications receive the alert on WhatsApp instead. See [Notifications: push, WhatsApp and email](../first-steps/notifications.md).
 
+## Receiving every booking as a manager
+
+By default only the crew of a booking (PIC, SIC and supervisor) are notified. Company managers (Chief Pilot and above) can also receive the notification for **every** booking, change and cancellation in the company, even when they are not on the flight: open your profile, go to **Notifications** and switch on **All schedule changes**. The option is per company account and is off by default.
+
 If you require your pilots to confirm, they will have the option to do so — the flight appears under **Upcoming Flights** on their Schedule page, awaiting **Accept** or **Reject**.
 
 ![](../.gitbook/assets/martha-upcoming.png)
