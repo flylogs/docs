@@ -43,3 +43,26 @@ This means the audit totals always match the pilot's logbook. To review flights 
 The results display a summary of flight time, landing, aircraft and crew. Then, a complete list of all the flights is displayed alogn with some summary charts for better understanding of the search results:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-03-31 at 18.36.37.png" alt=""><figcaption></figcaption></figure>
+
+#### Edits after confirmation
+
+Every edit of a confirmed flight is logged with the reason the editor typed (see [Audit trails](audit-trails.md)). The **Edits** column shows what each edit was about, read from that reason and from the fields that changed:
+
+| Badge | The edit changed |
+|---|---|
+| Times | Block, take-off or landing times, Hobbs, night or IFR time |
+| Crew | PIC, SIC, student, instructor or supervisor |
+| Aircraft | The aircraft |
+| Route | Departure or arrival airfield, route, landings, fuel |
+| Training | The training mission, exercises, grades or debriefing |
+| Flight type | The flight type, flight rules, or how the time is classified |
+| Billing | Bill-to, rate or price |
+| Notes | Only remarks, comments or attachments |
+
+Hover over a badge to see each edit's date and the reason exactly as typed. An edit whose reason says too little to sort shows as **Edited**.
+
+Use the selector next to the results count to show only the flights **edited after confirmation**, or only those edited for one reason, for example every flight whose crew was changed after it was confirmed.
+
+<figure><img src="../.gitbook/assets/ai-audit-edit-reasons.png" alt=""><figcaption><p>Flights edited after confirmation, with what each edit was about.</p></figcaption></figure>
+
+The sorting is automated and runs in the background, so a very recent edit can take up to an hour to get its badge. The logged edit itself, including who made it, when, and the reason typed, is never changed. You can turn the column on or off from **Columns**.

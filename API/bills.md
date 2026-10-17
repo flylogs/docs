@@ -118,7 +118,7 @@ Full detail for a single bill including client info, company billing settings, a
 }
 ```
 
-`UserBill.n_id` is the bill number. By default it is one consecutive sequence per company, shared by flight bills and manual transactions. Companies that enable yearly reset restart it every 1 January and store the year in `UserBill.n_year` (shown as `2026/1`). `n_id` is `null` for transactions saved without a number. Bills created before October 2026 keep their old number, which may repeat across years; older bills without a number can be numbered by editing them with `assign_number`.
+`UserBill.n_id` is the bill number. Flight bills and manual bills (`flight_id` empty) each have their own sequence per company. By default a sequence is consecutive and continues after the most recently created bill of its kind. Companies that enable yearly reset restart it every 1 January and store the year in `UserBill.n_year` (shown as `2026/1`). `n_id` is `null` for transactions saved without a number. Bills created before October 2026 keep their old number, which may repeat across years; older bills without a number can be numbered by editing them with `assign_number`.
 
 ---
 

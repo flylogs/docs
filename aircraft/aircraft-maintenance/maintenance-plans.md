@@ -28,6 +28,8 @@ Maintenance plans follow the same access rules as maintenance jobs:
 
 Open **Aircraft → Maintenance Plan** and press **New plan action**. Choose the **programme** the action belongs to (required — pick an existing one or create a new one), set the title, description and recurrence, and add the custom work orders for this action. Assigning the **aircraft** covered by the action is optional: you can leave it unassigned and link aircraft later.
 
+Under each work order's ATA chapter, Flylogs suggests a chapter from the work order's name and description, with an **Apply** button. Nothing is selected until you click it. See [Workorders](workorders.md#ata-chapter-suggestion).
+
 The list of plan actions is **reorderable by drag and drop**. The order matters: it is the sequence of your maintenance cycle, and it is what Flylogs uses to know which action comes next.
 
 ### Grouping actions under a named programme

@@ -723,6 +723,55 @@ Retrieve a single certificate with up to 5 attached uploads.
 }
 ```
 
+### Read Certificate Document
+
+<mark style="color:green;">`POST`</mark> `/pilots/read_certificate.json`
+
+Reads an uploaded certificate (PDF or photo) and suggests what to put in the [Add Certificate](#add-certificate) form. **Nothing is saved**: the file is not stored and no certificate is created. Send it with `multipart/form-data`.
+
+#### Request Body
+
+```
+data[file]=@/path/to/medical.pdf
+data[user_id]=123            (optional, defaults to the caller)
+data[type]=medical_class_2   (optional: the type already chosen; for a licence listing several ratings, the matching one is read)
+```
+
+Accepted: `application/pdf`, `image/jpeg`, `image/png`, `image/webp`, up to 10 MB. The type is detected from the file content, not from the name or the client's MIME type.
+
+#### Response
+
+```json
+{
+  "reading": {
+    "type": "medical_class_2",
+    "name": "Class 2 medical",
+    "issue": "2026-09-02",
+    "expiration": "2031-09-02",
+    "holder": "ORTEGA, Daniel",
+    "specimen": false,
+    "confidence": 0.92,
+    "holder_matches": true,
+    "model": "gpt-6-luna"
+  },
+  "reason": null
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| reading.type | A certificate type key, or `null` when unsure (below 0.6) |
+| reading.issue / expiration | `Y-m-d`, or `null` when not printed or not a valid date. An expiry before the issue date is dropped |
+| reading.specimen | The document is marked as a specimen, sample, void or not valid |
+| reading.holder_matches | Whether the name on the document is the pilot's (`null` when either is unknown) |
+| reason | When `reading` is `null`: `type` (file type not accepted), `size` (empty or over 10 MB), `disabled` (feature not enabled on the installation) or `unreadable` |
+
+#### Authorization
+
+Same audience as [Add Certificate](#add-certificate): anyone for their own profile; Flight Instructors and above (`user_group_id <= 170`) for any user of their company. Others get `403`, and a user outside the caller's company `404`. One read every 3 seconds per session (`400` otherwise).
+
+The document is sent to the installation's AI provider (OpenCode Zen, an OpenAI model) with `store: false`. Setting `documentModel` to `''` in `app/Config/ai.php` turns the endpoint off (`reason: "disabled"`).
+
 ### Add Certificate
 
 <mark style="color:green;">`POST`</mark> `/pilots/add_certificate.json`

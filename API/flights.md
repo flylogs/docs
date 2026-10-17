@@ -618,6 +618,34 @@ Company-scoped (`404 Flight not found` otherwise). The caller must be the flight
 
 ---
 
+## Audit: Edits After Confirmation
+
+<mark style="color:green;">`POST`</mark> `/manager/flights/audit.json`
+
+Besides `flights` and `totals`, the audit response carries `edits`: for every returned flight that was edited after confirmation, its edits, oldest first.
+
+```json
+{
+  "edits": {
+    "7d2326f8-2074-46bf-98b3-a7f39d7ff4df": [
+      { "id": "831880", "created": "1792183239", "user_id": "18196",
+        "comments": "Landing time was wrong, corrected from the tech log",
+        "reason": "TIMES", "confidence": 1 }
+    ]
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| comments | The reason typed by the editor, unchanged |
+| reason | What the edit was about: `TIMES`, `CREW`, `AIRCRAFT`, `ROUTE`, `TRAINING`, `TYPE`, `BILLING` or `NOTES`. `null` when it has not been read yet (an hourly job reads new edits) or the reading is unsure (below 0.6) |
+| confidence | The stored reading's confidence (0–1), or `null` |
+
+`edits` is `{}` when no returned flight was edited. The reading is stored apart from the logged edit, which is never modified.
+
+---
+
 ## Export Flights (XLS)
 
 The server-side `xls:1` export has been removed. The logbook Excel file is now generated client-side by the NEO web app: it pulls the flights from the **List Flights** endpoint above (using the `limit` parameter to fetch all matching rows) and builds the XLSX in the browser.

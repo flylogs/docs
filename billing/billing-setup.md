@@ -51,7 +51,7 @@ The process takes into consideration all billing rates, company settings and ava
 
 ### Bill numbers and receipts
 
-Every bill, whether it comes from a flight or from a manual transaction, receives a **bill number**. Numbers are consecutive within your company and shared by flight bills and transactions. By default they never restart; if your company enables **Restart bill numbers every year** in its billing settings, numbering starts again at 1 every 1 January and bills show the year first, for example `2026/1`.
+Every bill, whether it comes from a flight or from a manual transaction, receives a **bill number**. Flight bills and manual bills each have their own consecutive sequence within your company. By default the sequence never restarts; if your company enables **Restart bill numbers every year** in its billing settings, numbering starts again at 1 every 1 January and bills show the year first, for example `2026/1`.
 
 * Bills created before this change keep the number they already had. Some older numbers repeat across different years, because the old numbering restarted every January 1st.
 * Older bills that never had a number can be numbered by editing them and ticking **Create bill and assign correlative number**.
@@ -75,3 +75,7 @@ In the manager **Bills** page, the filter at the top separates your records into
 * **Flights:** bills generated from flights. These always have a bill number.
 
 Moving a transaction between **Transactions** and **Bills** is done by editing it and ticking or unticking **Create bill and assign correlative number**. The date filter covers the current year by default (1 January to 31 December), and each list is sorted by creation date, newest first.
+
+### How the number is shown on the bill
+
+The bill page and its PDF show the number with a prefix and the year of the bill: **R2026/505** for a manual receipt (no flight) and **F2026/1509** for a bill of a flight. The year is the one stored with the number when your company restarts numbering every year, otherwise the year of the bill date. A bill without a number shows no number.

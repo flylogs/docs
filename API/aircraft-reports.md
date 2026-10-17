@@ -725,6 +725,32 @@ Same audience as [Create Report](#create-report). The aircraft must belong to th
 
 ---
 
+## ATA Suggestion for Work Orders
+
+<mark style="color:green;">`POST`</mark> `/maintenance/aircraft_reports/suggest_ata.json`
+
+The ATA chapter alone, for a maintenance task rather than a defect: used by the work-order forms of maintenance jobs and maintenance plans. **Nothing is saved.**
+
+#### Request Body
+
+```json
+{ "title": "Propeller spinner cracked", "description": "Crack at the attachment screw, replace spinner and back plate" }
+```
+
+#### Response
+
+```json
+{ "ata": { "value": "61", "confidence": 0.95 } }
+```
+
+`ata` is `null` below 0.6 confidence, with fewer than 10 characters of title + description, or when the feature is not enabled on the installation.
+
+#### Authorization
+
+Same audience as [ATA Chapters](#ata-chapters).
+
+---
+
 ## ATA Chapters
 
 <mark style="color:blue;">`GET`</mark> `/maintenance/aircraft_reports/ata_chapters.json`
@@ -759,6 +785,7 @@ Retrieve the full list of ATA chapter codes and their descriptions, for use when
     "51": "Standard Practices – Structures",
     "52": "Doors",
     "53": "Fuselage",
+    "61": "Propellers",
     "71": "Powerplant",
     "72": "Engine",
     "73": "Engine Fuel / Control",

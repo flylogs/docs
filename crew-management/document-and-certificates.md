@@ -14,6 +14,24 @@ Using "My Certificates", users can create various types of documents, attach fil
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-04-18 at 19.50.45.png" alt=""><figcaption><p>Quick view of My certificates available to any Flylogs user.</p></figcaption></figure>
 
+### Reading the document for you
+
+{% embed url="https://youtu.be/yil5qknKvIU" %}
+
+When you attach a PDF or a photo of the certificate (JPEG, PNG or WebP, up to 10 MB), press **Read the document**. Flylogs reads it and shows what it found: the certificate type, a short description, the issue date and the expiration date. Press **Apply to the form** to copy them into the form, check them against the document, and save as usual.
+
+<figure><img src="../.gitbook/assets/ai-certificate-reading.png" alt=""><figcaption><p>A Class 2 medical read from its PDF, ready to apply.</p></figcaption></figure>
+
+* **Nothing is saved until you press Save.** The reading only fills in the form, and you can change every field before saving.
+* If you already picked a certificate type, Flylogs reads the matching entry. This helps with licences, which list several ratings, each with its own dates.
+* A pilot licence usually has no expiry date of its own. The validity dates printed next to its ratings belong to the ratings, so add each rating as its own certificate.
+* Flylogs warns you when the document is marked as a **specimen** or not valid, and when the name on it does not match the person whose profile you are filing it on.
+* The button appears only while you are online, and anyone who can add the certificate can use it.
+
+{% hint style="warning" %}
+To be read, the document is sent to our AI provider, and Flylogs asks the provider not to store it. Medical certificates contain health data: if you would rather not send them, type the dates by hand as before. The file is only sent when you press **Read the document**.
+{% endhint %}
+
 ### Automatic Alerting
 
 Flylogs will mark highlight documents in orange and will start sending automatic alerts to the user's email address when the document's expiration date approaches. The alert threshold is different depending on the type of doc:
