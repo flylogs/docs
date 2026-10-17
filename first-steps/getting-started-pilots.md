@@ -42,7 +42,7 @@ To do so, open the **Qualifications** tab and click **Add** on the **Pilot Certi
 
 Flylogs will remind you (via email) to renew your certificates 90 days before they expire. Once a certificate is renewed, do not forget to upload the new version as otherwise you may not be able to fly.
 
-From the **Personal Information** tab of your own profile, you will also find a **Calendar Subscription** card — a private feed URL you can add to Google Calendar, Apple Calendar or Outlook, showing your scheduled flights, recorded flights, events and training sessions. It's read-only: you still need to log in to Flylogs to confirm or reject a flight.
+On **My Account** (**Edit My Details**), you will also find a **Calendar Subscription** card — a private feed URL you can add to Google Calendar, Apple Calendar or Outlook, showing your scheduled flights, recorded flights, events and training sessions. It's read-only: you still need to log in to Flylogs to confirm or reject a flight.
 
 ![](../.gitbook/assets/calendar-subscription.png)
 

@@ -12,7 +12,7 @@ If you require your pilots to confirm, they will have the option to do so — th
 
 ![](../.gitbook/assets/martha-upcoming.png)
 
-Each pilot can subscribe to their Flylogs activity — scheduled flights, recorded flights, events and training sessions — from a private calendar feed URL, addable to Google Calendar, Apple Calendar or Outlook. It's found on the **Calendar Subscription** card on their own profile page.
+Each pilot can subscribe to their Flylogs activity — scheduled flights, recorded flights, events and training sessions — from a private calendar feed URL, addable to Google Calendar, Apple Calendar or Outlook. It's found on the **Calendar Subscription** card on the **My Account** page (**Edit My Details**).
 
 ![](../.gitbook/assets/calendar-subscription.png)
 
