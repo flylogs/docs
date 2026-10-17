@@ -630,7 +630,7 @@ Returns the canonical certificate type catalogue used across the app.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| type | string | Category — one of `licence`, `rating`, `medical`, `training`, `document` |
+| type | string | Category — one of `licence`, `rating`, `medical`, `training`, `document`, `language` (the `language_proficiency` type) |
 | validity | number \| null | Default validity window in **months**. `null` = no expiry. |
 | name | string | Display name |
 | abbr | string | Short code for compact tables |
@@ -806,10 +806,22 @@ Accepted: `application/pdf`, `image/jpeg`, `image/png`, `image/webp`, up to 10 M
     "specimen": false,
     "confidence": 0.92,
     "holder_matches": true,
+    "limitations": [ { "code": "VML", "detail": null } ],
+    "identity": { "document_number": null, "nationality": null, "dob": "1978-05-12" },
+    "ratings": [],
     "model": "gpt-6-luna"
   },
   "reason": null
 }
+```
+
+On a licence, `ratings` lists what it endorses, each one a certificate the form can create or update:
+
+```json
+"ratings": [
+  { "type": "sep_land_rating", "name": "SEP(land)", "issue": "2026-11-20", "expiration": "2028-11-30" },
+  { "type": "language_proficiency", "name": "English — Level 4", "issue": "2025-03-15", "expiration": "2029-03-15" }
+]
 ```
 
 | Field | Description |
@@ -818,7 +830,10 @@ Accepted: `application/pdf`, `image/jpeg`, `image/png`, `image/webp`, up to 10 M
 | reading.issue / expiration | `Y-m-d`, or `null` when not printed or not a valid date. An expiry before the issue date is dropped |
 | reading.specimen | The document is marked as a specimen, sample, void or not valid |
 | reading.holder_matches | Whether the name on the document is the pilot's (`null` when either is unknown) |
-| reason | When `reading` is `null`: `type` (file type not accepted), `size` (empty or over 10 MB), `disabled` (feature not enabled on the installation) or `unreadable` |
+| reading.limitations | On a medical: its limitation codes (see [Medical Limitations](#medical-limitations-dispatch)); `[]` otherwise |
+| reading.identity | `document_number` (passport/ID number, or the licence number on a licence), `nationality` (ISO 3166-1 alpha-3) and `dob` (`Y-m-d`), each `null` when not printed or implausible. For [Update Identity](#update-identity) |
+| reading.ratings | On a licence: up to 20 `{type, name, issue, expiration}`, known types only (never `licence`, `id`, `passport`, `logbook`, `other`), each type and name once |
+| reason | When `reading` is `null`: `type` (file type not accepted), `size` (empty or over 10 MB), `disabled` (feature not enabled on the installation), `unavailable` (the AI provider did not answer, e.g. an expired key) or `unreadable` |
 
 #### Authorization
 
@@ -826,7 +841,44 @@ Same audience as [Add Certificate](#add-certificate): anyone for their own profi
 
 The document is sent to the installation's AI provider (OpenCode Zen, an OpenAI model) with `store: false`. Setting `documentModel` to `''` in `app/Config/ai.php` turns the endpoint off (`reason: "disabled"`).
 
-### Add Certificate
+### Update Identity
+
+<mark style="color:green;">`POST`</mark> `/pilots/update_identity.json`
+
+Writes the identity fields the GenDec crew table prints, usually after a passport, ID or licence was read. Only the fields sent are written.
+
+```json
+{ "user_id": 123, "passport": "XDA482913", "nationality": "ESP", "dob": "1978-05-12", "licence_number": "SKY.FCL.0042" }
+```
+
+```json
+{ "result": true, "UserDetail": { "passport": "XDA482913", "nationality": "ESP", "dob": "1978-05-12", "licence_number": "SKY.FCL.0042" } }
+```
+
+- **Access:**
+  - On your own profile: `nationality`, `dob` and `licence_number`, plus `passport` for `user_group_id <= 150`.
+  - On another user of your company: `user_group_id <= 150` only.
+  - Sending a field you may not write is a `403` (never silently dropped). A user outside your company gives `404`.
+- **Validation:** `dob` must be a real past `Y-m-d` from 1900 on (empty clears it). `passport` and `licence_number` take up to 64 characters, `nationality` up to 128. Anything else is a `400`.
+
+### Read Logbook Page
+
+<mark style="color:green;">`POST`</mark> `/pilots/read_logbook.json` (multipart)
+
+```
+data[file]=@/path/to/logbook-page.pdf
+data[user_id]=123            (optional, defaults to the caller)
+```
+
+Reads the running totals at the bottom of a logbook page, to suggest the profile's previous flight time (`UserDetail.flight_hours`). **Nothing is saved.**
+
+```json
+{ "reading": { "total": 1485300, "pic": 1144800, "night": 74700, "ifr": 154800, "last_date": "2026-09-27", "holder": "ORTEGA, Daniel", "confidence": 0.9 }, "reason": null }
+```
+
+- Times are whole seconds. `total` is the grand total including previous pages. A column total above `total` is dropped.
+- `reason` takes the same values as in [Read Certificate Document](#read-certificate-document).
+- **Access:** `user_group_id <= 150` (the only users who can write previous flight time), for themselves or a user of their company. Others get `403`.
 
 <mark style="color:green;">`POST`</mark> `/pilots/add_certificate.json`
 

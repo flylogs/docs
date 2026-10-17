@@ -86,6 +86,28 @@ The codes are the ones in EASA AMC2 MED.B.001:
 
 **Who can change them:** the same people who can edit the certificate.
 
+### Licences: ratings and language proficiency
+
+A pilot licence lists several ratings and endorsements, each with its own validity: class or type ratings, instrument, instructor and night ratings, and language proficiency. When you read a licence with **Read the document**, Flylogs lists them under **Ratings on this licence**:
+
+* a rating you already have on file is **updated** with the new validity (useful after a revalidation, when the examiner has signed a new entry on the licence);
+* a rating you don't have yet is added as a **new certificate**.
+
+Untick any line you don't want, then press **Add or update certificates**. They are saved straight away, one certificate each. The licence itself is still filed with the form's **Save**.
+
+<figure><img src="../.gitbook/assets/ai-licence-ratings.png" alt=""><figcaption><p>A licence read: profile details to update, and its five ratings, one already on file.</p></figcaption></figure>
+
+**Language proficiency** is a certificate type of its own. Its name holds the language and level (for example *English — Level 4*) and its expiry is the one on the licence. Under EASA FCL.055, level 4 is valid for 4 years and level 5 for 6 years, and level 6 does not expire. It doesn't count towards the licence, rating and medical checks, but a flight type can require it like any other certificate.
+
+### Passport, ID and licence details for the GenDec
+
+When the document read is a passport, an ID card or a licence, Flylogs also offers to **update the profile** with what the [General Declaration (GenDec)](../flights/flight-records.md#gendec-export) prints for the crew: the passport or ID number, the licence number, the nationality (as the three-letter code passports use, such as ESP or GBR) and the date of birth. Only the fields that differ from the profile are listed, each with its current value. Untick what you don't want and press **Update profile**.
+
+Who can update what is the same as in the profile forms:
+
+* on **your own profile**: nationality, date of birth and licence number. The passport number only for user group 150 and below (managers and the Chief Pilot);
+* on **someone else's profile**: user groups 150 and below.
+
 ### Automatic Alerting
 
 Flylogs will mark highlight documents in orange and will start sending automatic alerts to the user's email address when the document's expiration date approaches. The alert threshold is different depending on the type of doc:

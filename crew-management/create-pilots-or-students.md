@@ -16,6 +16,14 @@ The create form is organized into three tabs — **Personal**, **Account**, and 
 
 Only **First Name** and **Family Name** are mandatory. Everything else — contact details, address, emergency contact, and previous flight time experience for crosschecking against an existing logbook — is optional.
 
+#### Previous flight time from a logbook page
+
+Under *Previous flight time experience*, **Read a logbook page** reads the running total at the bottom of a logbook page: the total time including previous pages, plus PIC, night and IFR when they are printed. **Use … as previous flight time** fills in the field. Upload the **last** page of the paper logbook, because its total includes all the earlier pages. Check the figure against the logbook before saving.
+
+<figure><img src="../.gitbook/assets/ai-logbook-previous-hours.png" alt=""><figcaption><p>The total read from the last page of a paper logbook.</p></figcaption></figure>
+
+Previous flight time can only be changed by managers: on the pilot form by user groups below 150, and on their own profile by user groups 150 and below. Only they see this button.
+
 If you do not have the email address of the pilot this is not a limitation, you can still create the pilot account so you and other pilots will be able to log flights for this new pilot.
 
 **If the pilot does not have an email address, he or she will not have the ability to login to Flylogs to check flights, schedules or attend training courses.**

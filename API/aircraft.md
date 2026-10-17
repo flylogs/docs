@@ -290,6 +290,51 @@ All `*_exp` fields use `YYYY-MM-DD` format. `null` means no expiration set.
 
 ---
 
+## Read Aircraft Document
+
+<mark style="color:green;">`POST`</mark> `/aircraft/read_document.json` (multipart)
+
+```
+data[file]=@/path/to/insurance.pdf
+data[aircraft_id]=2576
+```
+
+Reads an aircraft document and suggests the [expiry field](#expiration-date-fields) it belongs in, and for a weighing report the basic empty mass and arm. **Nothing is saved:** the aircraft form and the mass & balance profile apply and save as usual.
+
+```json
+{
+  "reading": {
+    "kind": "insurance",
+    "field": "insurance_exp",
+    "registration": "EC-SKA",
+    "registration_matches": true,
+    "serial": null,
+    "issue": "2026-10-01",
+    "expiration": "2027-09-30",
+    "weighing": null,
+    "confidence": 0.93
+  },
+  "reason": null
+}
+```
+
+| `kind` | `field` |
+|---|---|
+| `registration` | `registration_exp` |
+| `arc`, `airworthiness` | `airworthiness_exp` |
+| `insurance` | `insurance_exp` |
+| `radio` | `radio_exp` |
+| `weighing` | `weight_exp` |
+| `avionics` | `avionics_exp` |
+| `other` | `null` |
+
+- `registration_matches` is `false` when the registration printed is not this aircraft's (hyphens and case ignored), and `null` when either is unknown.
+- `weighing` is filled for a weighing report only: `{mass, mass_unit (kg|lb), arm, arm_unit (m|cm|mm|in), weighed_on, reference}`. A value without a known unit is `null`. The profile's units are never changed; NEO converts.
+- `reason` takes the same values as in Pilots → Read Certificate Document.
+- **Access:** same as editing the aircraft (`AircraftManagerPolicy::canEditAircraft`: staff editors and the aircraft's managers), company-scoped (`404`). One read every 3 seconds per session.
+
+---
+
 ## Aircraft Logbook
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/logbook/{aircraftId}/limit:{limit}/page:{page}.json`

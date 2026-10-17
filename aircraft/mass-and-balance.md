@@ -33,6 +33,14 @@ The preview chart updates as you type. Before saving you must tick the box confi
 
 <figure><img src="../.gitbook/assets/mass-balance-profile-editor.png" alt="Mass &#x26; Balance profile editor with the template panel, weighing and limits, loading stations and the CG envelope points"><figcaption><p>The profile editor: template, weighing and limits, loading stations and CG envelope</p></figcaption></figure>
 
+### Reading a weighing report
+
+Under *Weighing and limits*, **Read a weighing report** reads the basic empty mass, its arm, the weighing date and the report reference from a scan or PDF of the report. **Apply to the profile** fills them in.
+
+The profile's units never change: if the report uses other units (pounds and inches, say), the values are **converted** to the profile's units, with the report's own figures shown next to them. Check them against the report, then save the profile as usual. A new empty mass changes every future loadsheet.
+
+<figure><img src="../.gitbook/assets/ai-weighing-report.png" alt=""><figcaption><p>A weighing report in pounds and inches, converted to a metric profile.</p></figcaption></figure>
+
 ### Type templates
 
 To save typing, choose a **type template**. Templates for your aircraft model are listed first. A template fills in the units, maximum masses, envelope and whatever loading stations the public data gives. It never fills in the basic empty mass or arm.

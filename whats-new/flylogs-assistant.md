@@ -92,6 +92,19 @@ When a medical is read, Flylogs also picks up its limitations (VDL, OPL, OSL…)
 
 [Medical limitations →](../crew-management/document-and-certificates.md#medical-limitations) · [Flight dispatch →](../schedules/flight-dispatch-function.md#crew-medical-limitations)
 
+### More documents read for you
+
+The same **Read the document** now works on more documents:
+
+* **Licences:** each rating and endorsement on the licence, including language proficiency (now a certificate type of its own), is added as a certificate or updates the one on file.
+* **Passports, IDs and licences:** the number, nationality and date of birth can update the profile, which is what the GenDec prints for the crew. The GenDec now prints the licence **number**.
+* **Aircraft documents:** registration, ARC, insurance and radio licence dates go into the aircraft's expiry dates, and a weighing report's empty mass and arm into the Mass & Balance profile, converted to its units.
+* **Logbook pages:** the total from the last page of a paper logbook becomes the pilot's previous flight time.
+
+<figure><img src="../.gitbook/assets/ai-licence-ratings.png" alt=""><figcaption><p>A licence read: profile details and its ratings.</p></figcaption></figure>
+
+[Documents & certificates →](../crew-management/document-and-certificates.md#licences-ratings-and-language-proficiency) · [Aircraft documents →](../aircraft/create-your-aircraft.md#reading-an-aircraft-document) · [Weighing report →](../aircraft/mass-and-balance.md#reading-a-weighing-report) · [Previous flight time →](../crew-management/create-pilots-or-students.md#previous-flight-time-from-a-logbook-page)
+
 ### ATA chapters for work orders
 
 Work orders, both in maintenance jobs and in maintenance plan actions, now get the same ATA chapter suggestion as aircraft reports.
@@ -122,6 +135,10 @@ The Flights audit shows what each edit of a confirmed flight was about (times, c
 | Grade and comment check | Flight Instructors and above |
 | Cancellation reasons from notes | Whoever can open the Cancellations page |
 | Help before you report | Everyone |
+| Licence ratings → certificates | Anyone who can add the certificate |
+| Update the profile from a passport, ID or licence | Own profile: nationality, date of birth, licence number (passport number: user group 150 and below). Others: user group 150 and below |
+| Aircraft documents and weighing reports | Whoever can edit the aircraft: staff editors and the aircraft's managers |
+| Previous flight time from a logbook page | Managers: user group 150 and below |
 | Medical limitations at dispatch | The flight's crew and staff who can dispatch any flight (user group 150 and below) |
 | Read the document (certificates) | Anyone who can add the certificate: the holder, or Flight Instructors and above for anyone in the company |
 | ATA chapter on work orders | Anyone who can create or edit work orders and maintenance plans |
