@@ -481,6 +481,8 @@ If you created the flight with a [`client_id`](#safe-retries-with-client_id) and
 
 Confirming a flight that is already confirmed is not an error: the response is the flight's `result` with `status: "LANDED"` and `change: false`, and nothing changes. A cancelled or deleted flight returns `400` with `"This flight was cancelled or deleted, so it cannot be confirmed."`.
 
+On paid plans the response's `adsb` field is the flight's ADS-B lookup (`status` `pending`, or `found` straight away when positions were already stored, e.g. from an [ADS-B Preview](#ads-b-preview)). Confirming never waits for an ADS-B provider; follow the result with [Flight ADS-B Track](#flight-ads-b-track).
+
 Some refusals come back as HTTP `200`: when the aircraft needs a Hobbs or tach reading that the flight is missing, `result` carries a `message` and an `errors` object instead of `status: "LANDED"`. Treat a confirm as successful only when `result.status` is `LANDED`.
 
 #### Overlap check
@@ -584,6 +586,73 @@ Checked in order, each returning `result: false` with its own message when it fa
   "flight": { "Flight": { "id": "...", "status": "DISPATCHED" } }
 }
 ```
+
+---
+
+## Flight ADS-B Track
+
+<mark style="color:blue;">`GET`</mark> `/flights/adsb/{id}.json`
+
+The flight's ADS-B track and where its lookup stands. Not available on the Free plan (`400`).
+
+Track lookups for confirmed flights run in the background on the server, usually within 15 minutes of on-blocks: Flylogs first uses positions it already has (live OpenSky feed, Spidertracks/Airbly imports, an earlier preview), then asks Flightradar24. This endpoint never calls a provider itself, so it is safe to poll while `status` is `pending`.
+
+#### Response
+
+```json
+{
+  "status": "found",
+  "source": "fr24",
+  "misses": 0,
+  "next_attempt": null,
+  "checked": 1791632400,
+  "legs": [
+    {
+      "fr24_id": "3a1b2c3d",
+      "orig_icao": "LELL",
+      "dest_icao": "LELL",
+      "takeoff": 1791628500,
+      "landed": 1791631620,
+      "first_seen": 1791628380,
+      "last_seen": 1791631740,
+      "ended": true,
+      "track": "stored"
+    }
+  ],
+  "positions": [
+    { "lat": "41.52080", "lon": "2.10510", "alt": "1500", "speed": "95", "vspeed": "0", "track": "090", "ground": false, "source": "fr24", "created": "1791628500" }
+  ]
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| status | string | `found` · `pending` (lookup queued or a leg still being closed by the provider) · `not_found` (looked up, nothing recorded — final after the retries) · `no_data` (before the provider's history, 2024-04-07) · `invalid` (simulator, missing/implausible block times, unsearchable registration) · `untracked` (plan without ADS-B) · `unconfirmed` (draft/dispatched flight: `positions` are whatever the live feed stored in the block window) |
+| source | string \| null | Where the track came from: `fr24`, `opensky`, `spidertracks`, `airbly` |
+| misses | int | Lookups that found nothing so far. A miss is retried after 1 h and 6 h, then becomes `not_found`. Aircraft without any track in their last 5 resolved flights get one attempt only |
+| next_attempt | int \| null | Unix time of the next lookup while `pending` |
+| legs | array | Flightradar24 flights matched to this flight (several for circuits with full-stop landings). Unix times in UTC |
+| positions | array | Track points, oldest first. `alt` in feet, `speed` in knots, `vspeed` in ft/min, `created` Unix time |
+
+Company-scoped (`404 Flight not found` otherwise).
+
+---
+
+## ADS-B Preview
+
+<mark style="color:blue;">`GET`</mark> `/flights/adsb_preview.json?aircraft_id={id}&start={unix}&end={unix}[&tracks=1]`
+
+What ADS-B recorded for an aircraft in a block window, **before** the flight is saved or confirmed — used by the flight form's "Find on ADS-B". Not available on the Free plan (`400`).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| aircraft_id | int | Aircraft of the caller's company (`404` otherwise) |
+| start, end | int | Entered off-blocks / on-blocks, Unix seconds. At most 24 h apart (`400` otherwise) |
+| tracks | 0/1 | Also return the track positions. Only send it when the user asks to see the track: it is the expensive provider call |
+
+Response: `status` (`found`, `not_found`, `unavailable` — provider not reachable or pausing after a rate limit, try again in a few minutes — `no_data`, `invalid`, `future` — window has not started), `legs` and `positions` with the same shape as above. When no leg is found, `positions` carries any live-feed points in the window.
+
+Results are stored and reused: the same window is never searched twice, and a track fetched here is linked to the flight with no further lookup when it is confirmed.
 
 ---
 

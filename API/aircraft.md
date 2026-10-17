@@ -253,9 +253,19 @@ Retrieve full details for a single aircraft, including maintenance, rates, logbo
       "due_hours": 12600,
       "projected": { "hours": 12600, "landings": 10062 }
     }
+  },
+  "AdsbHealth": {
+    "flights": { "found": 18, "not_found": 2, "pending": 1 },
+    "never_seen": false,
+    "last_seen": 1791631740,
+    "last_source": "fr24"
   }
 }
 ```
+
+#### `AdsbHealth`
+
+Paid plans, not simulators. Outcome of the ADS-B track lookups of the aircraft's last 30 confirmed flights (see [Flight ADS-B Track](flights.md#flight-ads-b-track)), and when any position of it was last stored. `never_seen` is `true` when its last 5 or more resolved lookups found nothing and none found a track: the aircraft probably does not transmit ADS-B positions, and its flights get a single lookup instead of three.
 
 #### `Maintenance.next`
 
@@ -452,8 +462,10 @@ Retrieve ADSB position history for a specific aircraft within a date range.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | aircraftId | string | Aircraft ID |
-| start | string | Start date (YYYY-MM-DD) |
-| end | string | End date (YYYY-MM-DD) |
+| start | int | Window start, Unix seconds |
+| end | int | Window end, Unix seconds |
+
+For a flight, prefer [Flight ADS-B Track](flights.md#flight-ads-b-track), which also returns the lookup status and the matched legs.
 
 ---
 

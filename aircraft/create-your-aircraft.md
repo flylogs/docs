@@ -45,9 +45,9 @@ Simulator time will be separated in pilot logbooks but management is unified in 
 
 ### Aircraft ADSB location tracking
 
-If you provide a ADSB-out hex code, Flylogs will gather location data of your aircraft every 5 minutes and will attach this data to each flight of the aircraft. This could be useful for flight tracking and debriefing purposes.
+On paid plans, Flylogs looks up the ADS-B track of every confirmed flight of the aircraft, using its registration. You can also check what ADS-B recorded from the flight form before you save the flight. If you also enter the ADS-B-out hex code, Premium and Unlimited accounts show the aircraft on the live fleet map. Tracks are useful for flight tracking and debriefing.
 
-_- This feature only works on Premium accounts._
+See [ADSB surveillance](adsb-surveillance.md) for the details.
 
 
 
