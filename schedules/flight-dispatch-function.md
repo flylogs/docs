@@ -79,6 +79,28 @@ This ensures pilots can review all important details immediately, without needin
 
 ***
 
+### **Crew medical limitations**
+
+When anyone on the crew (PIC, SIC or supervisor) has limitations on a medical that is valid on the day of the flight, the dispatch box lists them first, with their meaning. For example, VDL means "valid only with correction for defective distant vision" and OPL means "valid only without passengers". See [Medical limitations](../crew-management/document-and-certificates.md#medical-limitations).
+
+<figure><img src="../.gitbook/assets/medical-limitations-dispatch.png" alt=""><figcaption><p>The PIC's medical is valid only without passengers, and the flight carries two.</p></figcaption></figure>
+
+Flylogs also warns, in red, when the flight as entered goes against a limitation:
+
+| Code | Warning when |
+|---|---|
+| OPL — valid only without passengers | PAX or the passenger list is above 0 |
+| ORL — safety pilot if passengers are carried | passengers are carried and there is no second pilot on board |
+| OCL — valid only as a qualified co-pilot | the pilot is the PIC |
+| OML — valid only as, or with, a qualified co-pilot | the pilot is the PIC and the flight has no SIC |
+| OSL — valid only with a safety pilot | there is no second pilot on board |
+
+"On board" means the PIC and the SIC. A supervisor (for example, of a student solo) is not counted as on board.
+
+Limitations **never block dispatch**. They make sure the person dispatching knows about them; the decision stays with them. RXO and SIC (follow-up examinations) are not shown here. Only limitations stored in Flylogs are shown, so keep the crew's medicals up to date.
+
+***
+
 ### **Pre-dispatch gates: checklist & FRAT**
 
 Two optional safety gates can be required before a flight is dispatched. Both are **off by default** and are enabled per company under **Company Settings → Flights → Pre-dispatch gates**. The feature is available on **Club, Premium and Unlimited** plans.

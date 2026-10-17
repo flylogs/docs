@@ -665,6 +665,10 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
       "expiration": "2025-06-01",
       "Uploads": [
         { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678", "url": "https://cdn.../signed..." }
+      ],
+      "PilotLimitation": [
+        { "id": "8c1a…", "code": "VML", "detail": null },
+        { "id": "f575…", "code": "SSL", "detail": "Not valid for aerobatic flight" }
       ]
     }
   ],
@@ -710,7 +714,7 @@ Special cases:
 
 <mark style="color:blue;">`GET`</mark> `/pilots/certificate/{certId}.json`
 
-Retrieve a single certificate with up to 5 attached uploads.
+Retrieve a single certificate with up to 5 attached uploads and its medical limitations. The certificate must belong to a user of the caller's company (`404` otherwise).
 
 ```json
 {
@@ -718,10 +722,57 @@ Retrieve a single certificate with up to 5 attached uploads.
     "UserCertificate": { "id": "300", "name": "Class 1 Medical", "...": "..." },
     "Uploads": [
       { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678" }
-    ]
+    ],
+    "PilotLimitation": [ { "id": "8c1a…", "code": "VML", "detail": null } ]
   }
 }
 ```
+
+### Medical Limitations (dispatch)
+
+<mark style="color:blue;">`GET`</mark> `/pilots/limitations.json?users=12,34&date=2026-10-18`
+
+The medical limitations that apply to these pilots on `date` (`Y-m-d`; defaults to today), meaning those stored on a medical-type certificate that has not expired on that date. Up to 10 user ids. Used by the dispatch box. Read-only.
+
+```json
+{
+  "limitations": {
+    "12": [
+      { "id": "8c1a…", "code": "OPL", "detail": null,
+        "certificate": { "id": "923a…", "type": "medical_class_2", "name": "Class 2 medical", "expiration": "2028-10-02" } }
+    ]
+  },
+  "pilots": { "12": "Daniel Ortega" },
+  "date": "2026-10-18"
+}
+```
+
+- `RXO` and `SIC` (follow-up examinations) are left out.
+- Users outside the caller's company, or with no limitations, are simply absent. `limitations` and `pilots` are `{}` when there is nothing.
+- Same audience as [List Certificates](#list-certificates).
+
+**Limitation codes** (EASA AMC2 MED.B.001), stored one row per code per certificate:
+
+| Code | Limitation |
+|---|---|
+| TML | Limited period of validity of the medical certificate |
+| VDL | Valid only with correction for defective distant vision |
+| VML | Valid only with correction for defective distant, intermediate and near vision |
+| VNL | Valid only with correction for defective near vision |
+| CCL | Correction by means of contact lenses |
+| VCL | Valid by day only |
+| RXO | Specialist ophthalmological examination(s) |
+| SIC | Specific medical examination(s) |
+| HAL | Valid only when hearing aids are worn |
+| APL | Valid only with approved prosthesis |
+| AHL | Valid only with approved hand controls |
+| OML | Valid only as, or with, a qualified co-pilot |
+| OCL | Valid only as a qualified co-pilot |
+| OSL | Valid only with a safety pilot and in aircraft with dual controls |
+| OPL | Valid only without passengers |
+| ORL | Valid only with a safety pilot if passengers are carried |
+| OAL | Restricted to demonstrated aircraft type |
+| SSL | Special restriction(s) as specified |
 
 ### Read Certificate Document
 
@@ -787,7 +838,10 @@ UserCertificate[name]=Class 1 Medical
 UserCertificate[issue]=2024-06-01
 UserCertificate[expiration]=2025-06-01
 UserCertificate[photo]=@/path/to/scan.pdf
+UserCertificate[limitations]=[{"code":"VML","detail":null},{"code":"SSL","detail":"Not valid for aerobatic flight"}]
 ```
+
+- **Limitations** (`UserCertificate[limitations]`, a JSON array): the medical's limitation codes, which replace the stored set for this certificate. Unknown codes and duplicates are dropped, and `detail` is cut to 255 characters. When the field is **omitted**, the stored limitations are left as they are. They are **always cleared** when the certificate type is not a medical. Rows that stay keep their `id`. The response's `result.PilotLimitation` holds the stored set.
 
 - **Ownership.** On an update (`id` sent) the owner is always the one stored on the certificate: the posted `user_id` is ignored, so a certificate can never be moved between users. On a create, callers with `user_group_id > 170` (Captain, Pilot, Student Pilot, Cabin Crew, Specialist, Auditor, Mechanic) always file on their own profile — the posted `user_id` is replaced with the authenticated user.
 - Managers, Chief Pilots and Flight Instructors (`user_group_id <= 170` — Flight Instructor and above) can file and edit certificates for any user in their own company. Everyone else gets `403` when editing a certificate that is not theirs, and `404` when the certificate belongs to another company.

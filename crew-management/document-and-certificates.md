@@ -32,6 +32,47 @@ When you attach a PDF or a photo of the certificate (JPEG, PNG or WebP, up to 10
 To be read, the document is sent to our AI provider, and Flylogs asks the provider not to store it. Medical certificates contain health data: if you would rather not send them, type the dates by hand as before. The file is only sent when you press **Read the document**.
 {% endhint %}
 
+### Medical limitations
+
+A medical certificate can carry one or more **limitations**: correction for vision, valid by day only, valid only without passengers, and so on. Flylogs records them with the medical, so whoever dispatches the pilot's flights can see them.
+
+When you add or edit a medical, the **Limitations** section lists the ones on file. Add another with **Add a limitation…**, or remove one with its ×. Limitations whose wording matters (SSL, TML, OAL) get a field for the text written on the certificate.
+
+If you use **Read the document**, Flylogs also reads the limitations printed on the medical, written as codes or in words, and **Apply to the form** adds them to the form. As always, nothing is saved until you press **Save**.
+
+<figure><img src="../.gitbook/assets/medical-limitations-read.png" alt=""><figcaption><p>Three limitations read from a Class 2 medical: VDL, OPL and SSL with its wording.</p></figcaption></figure>
+
+Saved limitations appear under the medical in the certificate list. Hover over a code to see its meaning.
+
+<figure><img src="../.gitbook/assets/medical-limitations-list.png" alt=""><figcaption><p>The limitation codes under the medical in the certificate list.</p></figcaption></figure>
+
+Limitations belong to the medical they are printed on. When the pilot files a renewed medical and the old one expires, the old limitations stop applying, and the new medical brings its own. Deleting a medical deletes its limitations.
+
+The codes are the ones in EASA AMC2 MED.B.001:
+
+| Code | Limitation |
+|---|---|
+| TML | Limited period of validity of the medical certificate |
+| VDL | Valid only with correction for defective distant vision |
+| VML | Valid only with correction for defective distant, intermediate and near vision |
+| VNL | Valid only with correction for defective near vision |
+| CCL | Correction by means of contact lenses |
+| VCL | Valid by day only |
+| RXO | Specialist ophthalmological examination(s) |
+| SIC | Specific medical examination(s) |
+| HAL | Valid only when hearing aids are worn |
+| APL | Valid only with approved prosthesis |
+| AHL | Valid only with approved hand controls |
+| OML | Valid only as, or with, a qualified co-pilot |
+| OCL | Valid only as a qualified co-pilot |
+| OSL | Valid only with a safety pilot and in aircraft with dual controls |
+| OPL | Valid only without passengers |
+| ORL | Valid only with a safety pilot if passengers are carried |
+| OAL | Restricted to demonstrated aircraft type |
+| SSL | Special restriction(s) as specified |
+
+**Who sees them:** the same people who can see the pilot's certificates (the pilot, and colleagues in the same company), and anyone dispatching a flight the pilot crews. See [Flight Dispatch Function](../schedules/flight-dispatch-function.md#crew-medical-limitations). RXO and SIC are follow-up examinations, so they are not shown at dispatch. **Who can change them:** the same people who can edit the certificate.
+
 ### Automatic Alerting
 
 Flylogs will mark highlight documents in orange and will start sending automatic alerts to the user's email address when the document's expiration date approaches. The alert threshold is different depending on the type of doc:
