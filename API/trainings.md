@@ -1069,6 +1069,10 @@ Company-scoped: the session's `Training.company_id` must match the caller's comp
 | signature | the **student's own** attendance signature for THIS session, from `session_students.signature`: `{ time }` and nothing else, or `null`. The stored `ip`, `browser` and `hash` are never returned — a class payload is readable by the whole roster. Previously read from `activity_progress.signature`, which is per-activity and could not distinguish two sittings of the same lesson |
 | can_sign | `true` when the caller may countersign this row right now. **Only answered for the caller's own row**; `null` on everyone else's |
 | sign_blocked_reason | why `can_sign` is false: `not_required` \| `not_attended` \| `not_yet_open` \| `window_closed` \| `already_signed`. Own row only. `not_required` covers both "this course does not ask" and "this class predates the requirement" |
+| absence_notified_at | Unix timestamp when the student gave advance notice of absence (**Notify Absence**), or `null`. Kept after the teacher changes the status |
+| absence_reason | Reason given with the notice, or `null` |
+| can_notify_absence | `true` when the caller may give notice now. Own row only; `null` on everyone else's |
+| can_withdraw_absence | `true` when the caller may withdraw their notice now. Own row only; `null` on everyone else's |
 | exam_status, exam_rating, code, notes | from `activity_progress.value` / `score` / `code` / `notes` — exam activities only |
 
 **Access.** Non-teacher, non-manager callers (`user_group_id > 140` — Flight Dispatcher and below and not the session/subject teacher) see only their own roster row. Teachers and managers see every row. Roster rows with `session_students.user_id IS NULL` (an unexpanded pilot-group placeholder) are excluded entirely.
@@ -1490,6 +1494,43 @@ List absence-justification rows for a session, scoped by role.
 | upload_id | Linked `SessionJustification` upload id, or `null` |
 | created | Unix timestamp |
 | user_id, user_name | The justifying student |
+
+### Notify Absence
+
+<mark style="color:green;">`POST`</mark> `/trainings/onsite/notify_absence.json`
+
+A student gives advance notice that they will not attend a class they are on the roster for — or withdraws a notice they gave. Attending is the default; this is the only action a student takes when they cannot make it.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| session_id | string | Yes | `sessions.id` |
+| reason | string | No | Optional reason shown to the teacher. Trimmed, max 500 characters (longer input is truncated) |
+| withdraw | bool | No | `1`/`true` withdraws the caller's notice instead of giving one |
+
+**Access.** Applies to the caller's own roster row only. Company-scoped via the session (`404 Training Session not found`). No `session_students` row for the caller (after pilot-group invites are expanded) → `404 Not on this session roster`. ACL: Student Pilot and other groups inheriting the root allow; Captain (180), Cabin Crew (240) and Specialist (245) are granted explicitly; Auditor (250) is not.
+
+**Guards** (`AbsenceNoticePolicy`, read under a `SELECT ... FOR UPDATE` lock on the `session_students` row). Refused with `400 Absence notice not allowed: <reason>` where `<reason>` is one of:
+
+| Reason | Meaning |
+|--------|---------|
+| `not_enrolled` | The caller has no `trainings_users` row for this training (invitee only) |
+| `closed` | Session is signed, `closed` or `canceled` |
+| `ended` | Class has ended — `datetime` + session `minutes` (falls back to the lesson/exam length; with neither, the class start) |
+| `already_marked` | Notify only: `attendance_status` is not `NULL` — the teacher already recorded something |
+| `not_notified` | Withdraw only: no notice was given, or the status in force is no longer `absent` |
+| `justification_pending` | Withdraw only: a `pending` justification exists for this absence |
+
+**Effect.** Notify sets `session_students.attendance_status = absent`, `attended = 0`, `absence_notified_at = now`, `absence_reason`. Withdraw resets `attendance_status` to `NULL` and clears both notice columns. `activity_progress` is not touched (unmarked and absent both count as not present). The session teacher and the subject teacher (if different, and never the caller) receive an in-app message, non-urgent — no push or email. Because the status is now `absent`, **Submit Justification** accepts a justification immediately.
+
+The teacher keeps the last word: **Store Attendance** may overwrite the status as usual, and `absence_notified_at`/`absence_reason` are kept as the record that notice was given.
+
+#### Response
+
+```json
+{ "notice": { "attendance_status": "absent", "absence_notified_at": 1792224000, "absence_reason": "Medical appointment" } }
+```
+
+On withdraw all three values are `null`.
 
 ### Submit Justification
 

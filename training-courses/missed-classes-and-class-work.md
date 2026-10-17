@@ -26,6 +26,27 @@ A signed register is locked. A training manager can reopen it with **Modify sign
 <figure><img src="../.gitbook/assets/trainingsAttendanceStatuses.png" alt=""><figcaption><p>The four attendance statuses on a class register.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/trainingsAttendanceSigned.png" alt=""><figcaption><p>A signed register: statuses are read-only, the totals are summarised, and only "Modify Signed Attendance" reopens it.</p></figcaption></figure>
+### Telling the teacher you can't attend
+
+Being on a class register means you're expected: a student who will attend doesn't need to do anything. A student who knows in advance that they can't make it opens the class page and selects **I can't attend**, optionally adding a reason.
+
+<!-- SCREENSHOT TODO — add trainingsAbsenceNotice.png to .gitbook/assets/, then uncomment:
+
+<figure><img src="../.gitbook/assets/trainingsAbsenceNotice.png" alt=""><figcaption><p>A student telling the class they can't attend.</p></figcaption></figure>
+
+-->
+
+From that moment:
+
+* The student's attendance is marked **Absent**. It's a starting point, not a decision — the teacher can still change it when taking the register, for example if the student turns up after all.
+* The class's teacher (and the subject's teacher, if different) receives an in-app message with the student's name, the class and the reason.
+* On the register, the teacher and training managers see a **Notified absence** mark next to the student, with when the notice was given and the reason. The mark stays even if the teacher changes the status, as a record that notice was given.
+* The student can upload a justification document straight away, from the **Attendance** tab — see [Justifying an absence](#justifying-an-absence). It's reviewed like any other justification.
+
+The notice can be given until the class ends, as long as it hasn't been signed or cancelled, and only while the student hasn't been marked yet — once the teacher has recorded something, the register is theirs. Until then, the student can also take it back with **I can attend after all**, which returns them to unmarked. That isn't possible while a justification they submitted for this absence is still waiting for review.
+
+Only students enrolled in the training can give notice. The missed-class email is still sent when the register is signed, so the student gets the class summary and any class work request like any other absent student.
+
 ### Signing your own attendance
 
 Some courses ask students to countersign their attendance — the setting is **Require students to sign assistance** on the training, off by default. On those courses, a student recorded as **Attended** or **Attended (post-class)** is asked, once per class, to confirm it themselves.
