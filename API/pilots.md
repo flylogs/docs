@@ -651,6 +651,8 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
 **Callers with `user_group_id` 250 (External Auditor)** get the full certificate list, but each `Uploads` entry has `url` (and `thumb_url` for photos) omitted — the file itself cannot be fetched, only its metadata (filename, mime, size). This applies to this endpoint and to `GET /uploads/index/UserCertificate/{certId}.json`.
 {% endhint %}
 
+`PilotLimitation` (the medical limitations of each certificate) is present only when the caller is the pilot themselves or has `user_group_id <= 170` (Flight Instructor and above, the people who can edit the pilot's certificates). Other colleagues get the list without it.
+
 #### Response
 
 ```json
@@ -714,7 +716,7 @@ Special cases:
 
 <mark style="color:blue;">`GET`</mark> `/pilots/certificate/{certId}.json`
 
-Retrieve a single certificate with up to 5 attached uploads and its medical limitations. The certificate must belong to a user of the caller's company (`404` otherwise).
+Retrieve a single certificate with up to 5 attached uploads. The certificate must belong to a user of the caller's company (`404` otherwise). `PilotLimitation` (its medical limitations) is included only for the certificate's owner and callers with `user_group_id <= 170`.
 
 ```json
 {
@@ -730,9 +732,10 @@ Retrieve a single certificate with up to 5 attached uploads and its medical limi
 
 ### Medical Limitations (dispatch)
 
-<mark style="color:blue;">`GET`</mark> `/pilots/limitations.json?users=12,34&date=2026-10-18`
+<mark style="color:blue;">`GET`</mark> `/pilots/limitations.json?schedule_id={id}&date=2026-10-18`
+<mark style="color:blue;">`GET`</mark> `/pilots/limitations.json?flight_id={id}&date=2026-10-18`
 
-The medical limitations that apply to these pilots on `date` (`Y-m-d`; defaults to today), meaning those stored on a medical-type certificate that has not expired on that date. Up to 10 user ids. Used by the dispatch box. Read-only.
+The medical limitations of the crew (PIC, SIC, supervisor) of one booking or flight on `date` (`Y-m-d`; defaults to today), meaning those stored on a medical-type certificate that has not expired on that date. The crew is read from the booking or flight, never from the request. Used by the dispatch box. Read-only.
 
 ```json
 {
@@ -743,13 +746,13 @@ The medical limitations that apply to these pilots on `date` (`Y-m-d`; defaults 
     ]
   },
   "pilots": { "12": "Daniel Ortega" },
+  "crew": { "pic": "12", "sic": null, "supervisor": null },
   "date": "2026-10-18"
 }
 ```
 
-- `RXO` and `SIC` (follow-up examinations) are left out.
-- Users outside the caller's company, or with no limitations, are simply absent. `limitations` and `pilots` are `{}` when there is nothing.
-- Same audience as [List Certificates](#list-certificates).
+- `RXO` and `SIC` (follow-up examinations) are left out. Crew members with no limitations are absent; `limitations` and `pilots` are `{}` when there is nothing.
+- **Access:** the same rule as dispatching. The caller must be on that crew, or have `user_group_id <= 150` (can dispatch any flight). Anyone else gets `403`. The booking or flight must belong to the caller's company (`404` otherwise). Sending neither id gives `400`.
 
 **Limitation codes** (EASA AMC2 MED.B.001), stored one row per code per certificate:
 

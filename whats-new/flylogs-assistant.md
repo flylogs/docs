@@ -84,6 +84,14 @@ When you attach a certificate, **Read the document** reads its type, description
 
 [Documents & certificates →](../crew-management/document-and-certificates.md#reading-the-document-for-you)
 
+### Medical limitations at dispatch
+
+When a medical is read, Flylogs also picks up its limitations (VDL, OPL, OSL…). They are kept with the medical and shown to whoever dispatches a flight the pilot crews, with a warning when the flight as planned goes against one, for example passengers on board for a medical valid only without passengers.
+
+<figure><img src="../.gitbook/assets/medical-limitations-dispatch.png" alt=""><figcaption><p>The crew's medical limitations in the dispatch box.</p></figcaption></figure>
+
+[Medical limitations →](../crew-management/document-and-certificates.md#medical-limitations) · [Flight dispatch →](../schedules/flight-dispatch-function.md#crew-medical-limitations)
+
 ### ATA chapters for work orders
 
 Work orders, both in maintenance jobs and in maintenance plan actions, now get the same ATA chapter suggestion as aircraft reports.
@@ -114,6 +122,7 @@ The Flights audit shows what each edit of a confirmed flight was about (times, c
 | Grade and comment check | Flight Instructors and above |
 | Cancellation reasons from notes | Whoever can open the Cancellations page |
 | Help before you report | Everyone |
+| Medical limitations at dispatch | The flight's crew and staff who can dispatch any flight (user group 150 and below) |
 | Read the document (certificates) | Anyone who can add the certificate: the holder, or Flight Instructors and above for anyone in the company |
 | ATA chapter on work orders | Anyone who can create or edit work orders and maintenance plans |
 | Edit reasons on the Flights audit | Whoever can open the Flights audit |

@@ -99,6 +99,8 @@ Flylogs also warns, in red, when the flight as entered goes against a limitation
 
 Limitations **never block dispatch**. They make sure the person dispatching knows about them; the decision stays with them. RXO and SIC (follow-up examinations) are not shown here. Only limitations stored in Flylogs are shown, so keep the crew's medicals up to date.
 
+**Who sees this box:** the same people who can dispatch the flight, which means its own crew (PIC, SIC, supervisor) and staff who can dispatch any flight (user group 150 and below).
+
 ***
 
 ### **Pre-dispatch gates: checklist & FRAT**

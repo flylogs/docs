@@ -38,13 +38,21 @@ A medical certificate can carry one or more **limitations**: correction for visi
 
 When you add or edit a medical, the **Limitations** section lists the ones on file. Add another with **Add a limitation…**, or remove one with its ×. Limitations whose wording matters (SSL, TML, OAL) get a field for the text written on the certificate.
 
-If you use **Read the document**, Flylogs also reads the limitations printed on the medical, written as codes or in words, and **Apply to the form** adds them to the form. As always, nothing is saved until you press **Save**.
+If you use **Read the document**, Flylogs also reads the limitations printed on the medical, written as codes or in words, and lists them with the rest of what it read.
 
-<figure><img src="../.gitbook/assets/medical-limitations-read.png" alt=""><figcaption><p>Three limitations read from a Class 2 medical: VDL, OPL and SSL with its wording.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/medical-limitations-reading.png" alt=""><figcaption><p>What was read from the medical, including its three limitations.</p></figcaption></figure>
+
+**Apply to the form** adds them to the form. As always, nothing is saved until you press **Save**.
+
+<figure><img src="../.gitbook/assets/medical-limitations-read.png" alt=""><figcaption><p>After Apply: each limitation with its meaning, and SSL with the wording from the certificate.</p></figcaption></figure>
 
 Saved limitations appear under the medical in the certificate list. Hover over a code to see its meaning.
 
 <figure><img src="../.gitbook/assets/medical-limitations-list.png" alt=""><figcaption><p>The limitation codes under the medical in the certificate list.</p></figcaption></figure>
+
+Whoever dispatches a flight the pilot crews sees the limitations too, with a warning when the flight goes against one:
+
+<figure><img src="../.gitbook/assets/medical-limitations-dispatch.png" alt=""><figcaption><p>At dispatch: the PIC's medical is valid only without passengers, and the flight carries two.</p></figcaption></figure>
 
 Limitations belong to the medical they are printed on. When the pilot files a renewed medical and the old one expires, the old limitations stop applying, and the new medical brings its own. Deleting a medical deletes its limitations.
 
@@ -71,7 +79,12 @@ The codes are the ones in EASA AMC2 MED.B.001:
 | OAL | Restricted to demonstrated aircraft type |
 | SSL | Special restriction(s) as specified |
 
-**Who sees them:** the same people who can see the pilot's certificates (the pilot, and colleagues in the same company), and anyone dispatching a flight the pilot crews. See [Flight Dispatch Function](../schedules/flight-dispatch-function.md#crew-medical-limitations). RXO and SIC are follow-up examinations, so they are not shown at dispatch. **Who can change them:** the same people who can edit the certificate.
+**Who sees them:**
+
+* **In the certificate list:** the pilot, plus Flight Instructors, the Chief Pilot and managers of the company (user group 170 and below), who can also edit them. Colleagues who open the pilot's profile read-only see the certificates but not the limitations.
+* **At dispatch:** the crew of that flight (PIC, SIC, supervisor) and staff who can dispatch any flight (user group 150 and below). RXO and SIC are follow-up examinations, so they are not shown at dispatch. See [Flight Dispatch Function](../schedules/flight-dispatch-function.md#crew-medical-limitations).
+
+**Who can change them:** the same people who can edit the certificate.
 
 ### Automatic Alerting
 
