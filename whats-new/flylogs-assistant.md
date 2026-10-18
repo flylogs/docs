@@ -86,6 +86,8 @@ When you attach a certificate, **Read the document** reads its type, description
 
 ### Medical limitations at dispatch
 
+{% embed url="https://youtu.be/XtV2CPYxAl0" %}
+
 When a medical is read, Flylogs also picks up its limitations (VDL, OPL, OSL…). They are kept with the medical and shown to whoever dispatches a flight the pilot crews, with a warning when the flight as planned goes against one, for example passengers on board for a medical valid only without passengers.
 
 <figure><img src="../.gitbook/assets/medical-limitations-dispatch.png" alt=""><figcaption><p>The crew's medical limitations in the dispatch box.</p></figcaption></figure>

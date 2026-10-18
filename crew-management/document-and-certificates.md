@@ -34,6 +34,8 @@ To be read, the document is sent to our AI provider, and Flylogs asks the provid
 
 ### Medical limitations
 
+{% embed url="https://youtu.be/XtV2CPYxAl0" %}
+
 A medical certificate can carry one or more **limitations**: correction for vision, valid by day only, valid only without passengers, and so on. Flylogs records them with the medical, so whoever dispatches the pilot's flights can see them.
 
 When you add or edit a medical, the **Limitations** section lists the ones on file. Add another with **Add a limitation…**, or remove one with its ×. Limitations whose wording matters (SSL, TML, OAL) get a field for the text written on the certificate.

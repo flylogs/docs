@@ -81,6 +81,8 @@ This ensures pilots can review all important details immediately, without needin
 
 ### **Crew medical limitations**
 
+{% embed url="https://youtu.be/XtV2CPYxAl0" %}
+
 When anyone on the crew (PIC, SIC or supervisor) has limitations on a medical that is valid on the day of the flight, the dispatch box lists them first, with their meaning. For example, VDL means "valid only with correction for defective distant vision" and OPL means "valid only without passengers". See [Medical limitations](../crew-management/document-and-certificates.md#medical-limitations).
 
 <figure><img src="../.gitbook/assets/medical-limitations-dispatch.png" alt=""><figcaption><p>The PIC's medical is valid only without passengers, and the flight carries two.</p></figcaption></figure>
