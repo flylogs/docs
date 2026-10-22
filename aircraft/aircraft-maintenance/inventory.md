@@ -14,6 +14,8 @@ The system displays all part numbers in your catalog, and you can add the number
 
 ### Stock counts
 
+{% embed url="https://youtu.be/sjiV_keHCOY" %}
+
 The inventory list shows three unit counts for each part:
 
 | Column | What it counts |
