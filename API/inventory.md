@@ -35,7 +35,7 @@ Items are ordered by `name ASC`.
 
 <mark style="color:green;">`POST`</mark> `/maintenance/inventory/index.json`
 
-Retrieve a paginated list of inventory parts for the company.
+Retrieve every inventory part for the company, ordered by part number. The list is not paged in practice (up to 10,000 items per page).
 
 #### Request Body (optional filters)
 
@@ -43,7 +43,7 @@ Retrieve a paginated list of inventory parts for the company.
 |-----------|------|-------------|
 | category | string | Filter by part category |
 | status | string | Filter by approval status |
-| name | string | Search in part number, name, and manufacturer |
+| name | string | Keyword search in part number, name, manufacturer, model, ATA chapter and description, and in the serial, batch, lot and certificate numbers and remarks of the item's units |
 
 #### Response
 
@@ -65,22 +65,25 @@ Retrieve a paginated list of inventory parts for the company.
       "InventoryUnit": [
         {
           "id": "e5f6a7b8-c9d0-1234-efgh-i12345678901",
-          "aircraft_id": "45"
+          "aircraft_id": "45",
+          "status": "installed"
         }
       ]
     }
   ],
   "paginate": {
     "page": 1,
-    "current": 10,
+    "current": 85,
     "count": 85,
     "prevPage": false,
-    "nextPage": true,
-    "pageCount": 2,
-    "limit": 50
+    "nextPage": false,
+    "pageCount": 1,
+    "limit": 10000
   }
 }
 ```
+
+`InventoryUnit` lists the item's units that have not been deleted. The NEO list shows three counts from it: **Units** (all units), **Installed** (`status` = `installed`) and **Available** (`status` = `available`). Units in any other status (`ordered`, `received`, `removed`, `overhauled`, `retired`…) count towards Units only.
 
 ---
 
