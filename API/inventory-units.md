@@ -15,6 +15,7 @@ Retrieve a paginated list of inventory units for the company.
 | inventory | string | Filter by inventory item UUID |
 | workorder | string | Filter by work order UUID (empty string returns unassigned units) |
 | aircraft | number | Filter by aircraft ID |
+| status | string | Filter by unit status, e.g. `installed` (see enumerations) |
 | name | string | Search in part number, name, and serial number |
 | limit | number | Results per page (default 50, max 500) |
 
@@ -22,24 +23,50 @@ Retrieve a paginated list of inventory units for the company.
 
 ```json
 {
-  "items": {
-    "Oil filter": {
-      "e5f6a7b8-c9d0-1234-efgh-i12345678901": "SN-001234"
+  "items": [
+    {
+      "InventoryUnit": {
+        "id": "e5f6a7b8-c9d0-1234-efgh-i12345678901",
+        "inventory_id": "d4e5f6a7-b8c9-0123-defg-h12345678901",
+        "serial_number": "SN-001234",
+        "status": "installed",
+        "aircraft_id": "45",
+        "installation_date": "2026-01-15",
+        "expiration": "2027-12-22",
+        "certificate_type": "EASA Form 1",
+        "certificate_number": "F1-70017",
+        "life_limit_hours": "500.00",
+        "life_limit_cycles": null,
+        "installed_aircraft_seconds": "14905800",
+        "installed_aircraft_cycles": "10820",
+        "used_seconds": "0",
+        "used_cycles": "0"
+      },
+      "Inventory": {
+        "id": "d4e5f6a7-b8c9-0123-defg-h12345678901",
+        "deleted": false,
+        "name": "Dry air vacuum pump",
+        "part_number": "215CC",
+        "ata_chapter": "37",
+        "certification": "EASA Form 1"
+      },
+      "Aircraft": { "id": "45", "registration": "EC-ABC" },
+      "InventoryProvider": { "id": "f6a7b8c9-d0e1-2345-fghi-j12345678901", "name": "Aviation Parts Inc." }
     }
-  },
+  ],
   "paginate": {
     "page": 1,
-    "current": 10,
-    "count": 120,
+    "current": 1,
+    "count": 1,
     "prevPage": false,
-    "nextPage": true,
-    "pageCount": 3,
-    "limit": 50
+    "nextPage": false,
+    "pageCount": 1,
+    "limit": 500
   }
 }
 ```
 
-Note: items are grouped by inventory name, with unit ID as key and serial number as value.
+Units are ordered by serial number. The aircraft page in NEO calls this with `aircraft` and `status=installed` to list the installed parts, and computes each unit's life left from the aircraft's current hours and landings (see [Edit Unit](#edit-unit)).
 
 ---
 
@@ -71,9 +98,13 @@ Retrieve full details for a single inventory unit, including change history and 
       "base_id": "b1c2d3e4-f5a6-7890-bcde-f12345678901",
       "workorder_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
       "life_limit_cycles": null,
-      "life_limit_hours": null,
+      "life_limit_hours": "500.00",
       "expiration": null,
       "installation_date": "2024-01-15",
+      "installed_aircraft_seconds": "16273800",
+      "installed_aircraft_cycles": "11230",
+      "used_seconds": "756000",
+      "used_cycles": "0",
       "last_inspection_date": "2024-04-25",
       "next_due_inspection": "2024-10-25",
       "remarks": "",
@@ -88,6 +119,11 @@ Retrieve full details for a single inventory unit, including change history and 
     "InventoryChange": [
       {
         "action": "INSTALL",
+        "inventory_id": "d4e5f6a7-b8c9-0123-defg-h12345678901",
+        "serial_number": "SN-001234",
+        "aircraft_id": "45",
+        "aircraft_seconds": "16273800",
+        "aircraft_cycles": "11230",
         "created": "1714003200",
         "User": {
           "id": "123",
@@ -129,7 +165,15 @@ Retrieve full details for a single inventory unit, including change history and 
 
 <mark style="color:green;">`POST`</mark> `/maintenance/unit/edit.json`
 
-Create or update an inventory unit. Changing `aircraft_id` automatically logs an INSTALL or REMOVE event.
+Create or update an inventory unit.
+
+A unit is **installed** when its `status` is `installed` and it has an `aircraft_id`. Saving a unit records its life and its history automatically:
+
+* **Installed** (not installed before, or moved to another aircraft): `installed_aircraft_seconds` / `installed_aircraft_cycles` are set to the aircraft's airframe time (whole seconds) and landings — at the end of `installation_date` when that date is in the past, otherwise now — unless you send them. An `INSTALL` history row is written with the aircraft and those figures.
+* **Removed** (status changed from `installed`, aircraft cleared, or moved): the time and landings flown since installation are added to `used_seconds` / `used_cycles`, the installation snapshot is cleared, `aircraft_id` is cleared when the unit is no longer installed, and a `REMOVE` row is written with the aircraft's figures at removal.
+* Any other save writes `ADD` (create) or `CNG` (edit).
+
+Life used = `used_*` + (aircraft now − `installed_aircraft_*`) while installed. NEO shows it against `life_limit_hours` / `life_limit_cycles`.
 
 #### Request Body
 
@@ -146,6 +190,10 @@ Create or update an inventory unit. Changing `aircraft_id` automatically logs an
 | InventoryUnit[workorder_id] | string | no | Associated work order UUID |
 | InventoryUnit[life_limit_cycles] | number | no | Life limit in cycles |
 | InventoryUnit[life_limit_hours] | number | no | Life limit in hours |
+| InventoryUnit[used_seconds] | number | no | Time used before the current installation, in whole seconds (earlier installations, or a used part) |
+| InventoryUnit[used_cycles] | number | no | Cycles used before the current installation |
+| InventoryUnit[installed_aircraft_seconds] | number | no | Aircraft airframe time at installation, in whole seconds. Empty = record automatically (or keep the stored value) |
+| InventoryUnit[installed_aircraft_cycles] | number | no | Aircraft landings at installation. Empty = record automatically (or keep the stored value) |
 | InventoryUnit[expiration] | string | no | Expiration date |
 | InventoryUnit[installation_date] | string | no | Installation date |
 | InventoryUnit[last_inspection_date] | string | no | Last inspection date |
@@ -173,15 +221,15 @@ Create or update an inventory unit. Changing `aircraft_id` automatically logs an
 
 ## Delete Unit
 
-<mark style="color:green;">`POST`</mark> `/maintenance/unit/delete.json`
+<mark style="color:green;">`POST`</mark> `/maintenance/unit/delete/{id}.json` (or `/maintenance/unit/delete.json` with `id` in the body). GET is refused (405).
 
-Delete an inventory unit. Requires manager role.
+Delete an inventory unit. Only user groups 1, 100, 105, 110 and 300 may delete. A unit that is installed on an aircraft or attached to a work order cannot be deleted (400): remove or detach it first. A `DEL` row is written to the part's history with the unit's serial number, and the unit's earlier history is kept.
 
-#### Request Body
+#### Request
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| id | string | yes | Unit UUID |
+| id | string | yes | Unit UUID, in the URL or as POST data |
 
 #### Response
 
