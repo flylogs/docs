@@ -16,7 +16,7 @@ API access is an optional service that must be activated once per company:
 | Club / Premium | **€390 per year**, paid online from this tab |
 | Unlimited | **Included free** — activated instantly with one click |
 
-On Club and Premium plans, clicking **Activate & pay** takes you to a secure checkout. As soon as the payment succeeds, API access is enabled instantly — no waiting for support.
+On Club and Premium plans, clicking **Activate & pay** opens a secure card form (processed by Stripe) right on the page. As soon as the payment succeeds, API access is enabled instantly — no waiting for support.
 
 {% hint style="warning" %}
 The €390 fee is **recurring**: it is added to your subscription fee on every yearly renewal — including the next one, even if it is less than a year away — and stays added until you deactivate API access.

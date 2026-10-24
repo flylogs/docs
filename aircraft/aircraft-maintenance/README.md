@@ -108,6 +108,10 @@ This message is an advisory, and the crew has the option to by-pass it.
 
 <figure><img src="../../.gitbook/assets/maintenanceOverDueMessage.png" alt="Aircraft maintenance required advisory message"><figcaption></figcaption></figure>
 
+### Installed parts
+
+The aircraft page also lists the parts installed on the aircraft, with their release document, installation date, life left and expiration. See [Inventory](inventory.md#installed-parts-on-the-aircraft-page).
+
 ### Maintenance prediction
 
 Flylogs will now predict based on previous maintenance records and aircraft utilization, when the next maintenance action will be required.

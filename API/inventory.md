@@ -43,7 +43,8 @@ Retrieve every inventory part for the company, ordered by part number. The list 
 |-----------|------|-------------|
 | category | string | Filter by part category |
 | status | string | Filter by approval status |
-| name | string | Keyword search in part number, name, manufacturer, model, ATA chapter and description, and in the serial, batch, lot and certificate numbers and remarks of the item's units |
+| certification | string | Filter by part certification (see Selectables `certifications`) |
+| name | string | Keyword search in part number, name, manufacturer, model, ATA chapter, certification and description, and in the serial, batch, lot and certificate numbers and remarks of the item's units |
 
 #### Response
 
@@ -59,6 +60,8 @@ Retrieve every inventory part for the company, ordered by part number. The list 
         "mfr_name": "Champion Aerospace",
         "category": "Engine",
         "approval_status": "Approved",
+        "certification": "EASA Form 1",
+        "ata_chapter": "79",
         "description": "Standard oil filter for Lycoming engines.",
         "deleted": false
       },
@@ -85,13 +88,15 @@ Retrieve every inventory part for the company, ordered by part number. The list 
 
 `InventoryUnit` lists the item's units that have not been deleted. The NEO list shows three counts from it: **Units** (all units), **Installed** (`status` = `installed`) and **Available** (`status` = `available`). Units in any other status (`ordered`, `received`, `removed`, `overhauled`, `retired`…) count towards Units only.
 
+`certification` is the release document the part comes with (`EASA Form 1`, `FAA 8130-3`, `JAA Form 1`, `TCCA Form 24-0078`, `ANAC SEGVOO 003`, `Certificate of Conformity`, `Other`), or `null`. The same values are accepted for `InventoryUnit.certificate_type`. NEO labels `description` as **Notes**.
+
 ---
 
 ## Selectables
 
 <mark style="color:blue;">`GET`</mark> `/maintenance/inventory/selectables.json`
 
-Retrieve available status and category values for building forms.
+Retrieve available status, category and certification values for building forms.
 
 #### Response
 
@@ -107,6 +112,15 @@ Retrieve available status and category values for building forms.
     "Under-review": "Under review",
     "Expired": "Expired",
     "Unapproved": "Unapproved"
+  },
+  "certifications": {
+    "EASA Form 1": "EASA Form 1",
+    "FAA 8130-3": "FAA 8130-3",
+    "JAA Form 1": "JAA Form 1",
+    "TCCA Form 24-0078": "TCCA Form 24-0078",
+    "ANAC SEGVOO 003": "ANAC SEGVOO 003",
+    "Certificate of Conformity": "Certificate of Conformity",
+    "Other": "Other"
   },
   "categories": {
     "Avionics": "Avionics",
@@ -142,6 +156,10 @@ Retrieve available status and category values for building forms.
 
 Retrieve full details for a single inventory part, including units, providers, and change history.
 
+`InventoryChange` is the history of the part **and of its units** (added `ADD`, edited `CNG`, deleted `DEL`, `INSTALL`, `REMOVE`), newest first, up to 500 rows. `model` tells whether a row is about the part (`Inventory`) or a unit (`InventoryUnit`, with its `serial_number` kept even after the unit is deleted). `INSTALL`/`REMOVE` rows carry the aircraft and its airframe time (`aircraft_seconds`, whole seconds) and landings at that moment.
+
+Each unit's `Aircraft` carries its current `hours` (decimal) and `landings`, so the unit's life can be computed: see [Edit Unit](inventory-units.md#edit-unit).
+
 #### Path Parameters
 
 | Parameter | Type | Description |
@@ -171,9 +189,17 @@ Retrieve full details for a single inventory part, including units, providers, a
     },
     "InventoryChange": [
       {
-        "id": "a7b8c9d0-e1f2-3456-ghij-k12345678901",
-        "action": "ADD",
+        "id": "912",
+        "model": "InventoryUnit",
+        "foreign_key": "e5f6a7b8-c9d0-1234-efgh-i12345678901",
+        "inventory_id": "d4e5f6a7-b8c9-0123-defg-h12345678901",
+        "serial_number": "SN-001234",
+        "action": "INSTALL",
+        "aircraft_id": "45",
+        "aircraft_seconds": "16273800",
+        "aircraft_cycles": "11230",
         "created": "1714003200",
+        "Aircraft": { "id": "45", "registration": "EC-ABC" },
         "User": {
           "id": "123",
           "UserDetail": {
@@ -192,12 +218,19 @@ Retrieve full details for a single inventory part, including units, providers, a
         "Base": {
           "name": "LEBL"
         },
+        "life_limit_hours": "500.00",
+        "installed_aircraft_seconds": "16273800",
+        "installed_aircraft_cycles": "11230",
+        "used_seconds": "0",
+        "used_cycles": "0",
         "Aircraft": {
           "id": "45",
           "registration": "EC-ABC",
           "active": true,
           "maintenance": true,
           "flight_count": "1200",
+          "hours": "4560.50000",
+          "landings": "11290",
           "AircraftModel": {
             "name": "C172",
             "AircraftManufacturer": {
@@ -229,7 +262,9 @@ Create or update an inventory part. When creating, an initial inventory unit is 
 | Inventory[mfr_name] | string | yes (create) | Manufacturer name |
 | Inventory[category] | string | yes (create) | Part category (see categories list) |
 | Inventory[approval_status] | string | no | Approval status |
-| Inventory[description] | string | no | Part description |
+| Inventory[ata_chapter] | string | no | ATA chapter (up to 10 characters) |
+| Inventory[certification] | string | no | Release document the part comes with, one of `certifications` from Selectables; send an empty value to clear it |
+| Inventory[description] | string | no | Part notes (shown as **Notes** in NEO) |
 | InventoryProvider[name] | string | no | Provider name (creates or links provider) |
 | InventoryUnit[serial_number] | string | no | Initial unit serial number |
 | InventoryUnit[status] | string | no | Unit status |

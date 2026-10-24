@@ -128,6 +128,12 @@ The booking's briefing and the flight page list the NOTAMs for the departure and
 
 This is an automated reading to help you brief, not a replacement for it: **read every NOTAM before flight.**
 
+### **Alternate aerodromes**
+
+An alternate aerodrome is optional. Enter it in the **Alternate** field when you dispatch, or on the flight form itself, so a draft flight that was never booked can have one too. Two aerodromes fit in the field, separated by a space or a slash (for example `LEVS LEGT`).
+
+Once an alternate is set, the booking briefing and the flight page show its weather (METAR and TAF) and NOTAMs next to the departure and arrival, and the **Wx & NOTAMS** PDF export on the flight page includes it. Alternate NOTAMs are shown in full and are not ranked, so read all of them.
+
 ### **Remarks**
 
 1. If a schedule record is **published** and **dispatched** and the PIC is changed, the record will automatically be switched back to SCHEDULED and the associated flight will be unlinked.
