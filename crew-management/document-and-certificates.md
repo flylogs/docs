@@ -8,6 +8,24 @@ Flylogs offers a feature called "My Certificates" which is a system to track and
 
 Using "My Certificates", users can create various types of documents, attach files, and set deadlines for expiration.
 
+"My Certificates" is on the home dashboard of **every user**, whatever their role and whether they fly or not: managers, the safety, HR, finance, training and crew-scheduling managers, dispatchers, instructors, pilots, cabin crew and mechanics. Staff who don't fly keep their own trainings and ratings there too. The "pilot documents required" warning is shown only to users who fly.
+
+### Certificate types
+
+Besides licences, class and type ratings, medicals, language proficiency, IDs and passports, you can file:
+
+| Type | What it is | Expiry |
+|---|---|---|
+| MCC Certificate | Multi-crew cooperation course (FCL.735) | None |
+| AUPRT Certificate | Advanced upset prevention and recovery training (FCL.745.A) | None |
+| TRI Certificate | Type rating instructor | Filled in 3 years after the issue date; change it if your certificate says otherwise |
+| TRE Certificate | Type rating examiner | The date printed on the certificate |
+| FE Certificate | Flight examiner | The date printed on the certificate |
+| CRE Certificate | Class rating examiner | The date printed on the certificate |
+| IRE Certificate | Instrument rating examiner | The date printed on the certificate |
+
+Instructor and examiner certificates don't count as the pilot's class or type rating in the licence, rating and medical check. A flight type or a course can require any of them like any other certificate.
+
 > Flylogs will send automatic expiration warnings, both to the user and the company managers.
 
 {% embed url="https://youtu.be/Puba9spPksE" %}
