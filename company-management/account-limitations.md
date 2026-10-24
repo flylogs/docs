@@ -56,10 +56,10 @@ Bills are issued by **Flylogs LLC** (30 N Gould St Ste R, Sheridan, WY 82801, US
 
 Bills that Flylogs issues for your account (for example a renewal at your agreed price, or the API activation fee) are listed under **Company > Subscription > Billing History** as *Payment pending* until they are paid. Each one can be paid either way:
 
-* **By card** — click **Pay by card** next to the bill. You are taken to a secure card checkout for the exact bill amount; when the payment goes through you return to the Subscription page, the bill becomes an invoice and the invoice PDF is emailed to the company administrators.
-* **By bank transfer** — only for bills whose proforma (click the bill) prints bank details; use those details and the reference printed on it. The bill is marked paid once Flylogs receives the transfer.
+* **By card** — click **Pay by card** next to the bill. A secure card form (processed by Stripe) opens on the page for the exact bill amount; when the payment goes through the bill becomes an invoice and the invoice PDF is emailed to the company administrators.
+* **By bank transfer** — download the proforma (click the bill) and use the bank details and reference printed on it. The account shown depends on your company's country, so the transfer is a domestic one wherever possible: US companies get a US account (ACH or wire), UK companies a UK account (sort code), and everyone else a EUR account (IBAN). The bill is marked paid once Flylogs receives the transfer.
 
-The pending-bill email also has a **Pay by card** button that opens the same card checkout.
+The pending-bill email also has a **Pay by card** button that opens the same card form.
 
 If you started a payment from **Manage Subscription** but left the card checkout before finishing, that order also stays in the Billing History as *Payment pending* and can be completed with **Pay by card**. It is booked as the renewal you chose when you started it. Only your most recent unfinished order is shown, and unfinished orders are removed after 14 days — after that, start a new one from **Manage Subscription**.
 
@@ -68,5 +68,5 @@ Paying a bill never shortens your subscription. If the period the bill covers en
 While a payment is pending, a new one cannot be started from **Manage Subscription** (or the API activation): pay the pending one first. An unfinished order you started yourself is cancelled automatically 14 days after you started it, and you can then start a new one. A bill issued by Flylogs stays pending until it is paid — contact support if it needs to be changed.
 
 {% hint style="info" %}
-Only the company's administrators (the users who can open **Company > Subscription**) can pay bills. If you click **Pay by card** again before finishing, the same checkout is reused, so a bill is never charged twice.
+Only the company's administrators (the users who can open **Company > Subscription**) can pay bills. If you click **Pay by card** again before finishing, the same payment is reused, so a bill is never charged twice.
 {% endhint %}
