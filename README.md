@@ -10,7 +10,7 @@ Welcome to the **Flight Crew Operating Manual (FCOM)** for Flylogs. It explains 
 
 This manual is updated continuously as new features are released. Each change is announced in [What's new](whats-new/README.md), and the matching reference page is linked from there.
 
-{% embed url="https://youtu.be/uqOeHZhy8iY" %}
+{% embed url="https://youtu.be/BEamJPS41GQ" %}
 
 ## Who this manual is for
 
