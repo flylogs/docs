@@ -120,7 +120,7 @@ Open **Aircraft → Suppliers**, or the **Suppliers** button on the inventory li
 
 <figure><img src="../../.gitbook/assets/inventorySuppliers.png" alt="Suppliers list with contact details, account numbers and two duplicates flagged"><figcaption><p>The supplier list</p></figcaption></figure>
 
-Click **New supplier** to add one, or the pencil to edit it. You can also add a supplier without leaving a part or unit form: **New supplier** next to the supplier list opens the same form and selects the supplier once it is saved. Each supplier name can only exist once, regardless of capitals or spacing.
+Click **New supplier** to add one, or the pencil to edit it. You can also add a supplier without leaving a part or unit form: **New supplier** next to the supplier list opens the same form and selects the supplier once it is saved. Each supplier name can only exist once, regardless of capitals or spacing. On a part page, click the supplier's name — the part's or a unit's — to open its details; managers and mechanics can edit them there.
 
 <figure><img src="../../.gitbook/assets/inventorySupplierEdit.png" alt="Edit supplier form with contact person, account number, email, phone and notes"><figcaption><p>Supplier details</p></figcaption></figure>
 

@@ -226,6 +226,10 @@ Each unit's `Aircraft` carries its current `hours` (decimal) and `landings`, so 
         "Base": {
           "name": "LEBL"
         },
+        "InventoryProvider": {
+          "id": "f6a7b8c9-d0e1-2345-fghi-j12345678901",
+          "name": "Aviation Parts Inc."
+        },
         "life_limit_hours": "500.00",
         "installed_aircraft_seconds": "16273800",
         "installed_aircraft_cycles": "11230",
