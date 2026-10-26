@@ -69,9 +69,15 @@ Retrieve every inventory part for the company, ordered by part number. The list 
         {
           "id": "e5f6a7b8-c9d0-1234-efgh-i12345678901",
           "aircraft_id": "45",
-          "status": "installed"
+          "status": "installed",
+          "base_id": "b1c2d3e4-f5a6-7890-abcd-ef1234567890",
+          "Base": { "id": "b1c2d3e4-f5a6-7890-abcd-ef1234567890", "name": "Main base" }
         }
-      ]
+      ],
+      "InventoryProvider": {
+        "id": "f6a7b8c9-d0e1-2345-fghi-j12345678901",
+        "name": "Aviation Parts Inc."
+      }
     }
   ],
   "paginate": {
@@ -87,6 +93,8 @@ Retrieve every inventory part for the company, ordered by part number. The list 
 ```
 
 `InventoryUnit` lists the item's units that have not been deleted. The NEO list shows three counts from it: **Units** (all units), **Installed** (`status` = `installed`) and **Available** (`status` = `available`). Units in any other status (`ordered`, `received`, `removed`, `overhauled`, `retired`…) count towards Units only.
+
+Each unit's `Base` is where the unit is kept. NEO's stock schedule export (Excel / PDF, built in the browser from this response) shows it as **Stock location**: the available units per base, e.g. `Main base (12)`. `InventoryProvider` is the part's supplier (`null` when none).
 
 `certification` is the release document the part comes with (`EASA Form 1`, `FAA 8130-3`, `JAA Form 1`, `TCCA Form 24-0078`, `ANAC SEGVOO 003`, `Certificate of Conformity`, `Other`), or `null`. The same values are accepted for `InventoryUnit.certificate_type`. NEO labels `description` as **Notes**.
 
@@ -265,7 +273,8 @@ Create or update an inventory part. When creating, an initial inventory unit is 
 | Inventory[ata_chapter] | string | no | ATA chapter (up to 10 characters) |
 | Inventory[certification] | string | no | Release document the part comes with, one of `certifications` from Selectables; send an empty value to clear it |
 | Inventory[description] | string | no | Part notes (shown as **Notes** in NEO) |
-| InventoryProvider[name] | string | no | Provider name (creates or links provider) |
+| Inventory[inventory_provider_id] | string | no | Supplier UUID, one of the company's suppliers (404 otherwise); send an empty value to clear it |
+| InventoryProvider[name] | string | no | Supplier by name: links the company's supplier of that name (case and spacing ignored), creating it only when there is none |
 | InventoryUnit[serial_number] | string | no | Initial unit serial number |
 | InventoryUnit[status] | string | no | Unit status |
 | InventoryUnit[condition] | string | no | Unit condition |
@@ -333,65 +342,161 @@ Delete an inventory part. Requires manager role.
 
 ---
 
-## List Providers
+## List Suppliers
 
-<mark style="color:green;">`POST`</mark> `/maintenance/inventory/providers.json`
+<mark style="color:blue;">`GET`</mark> / <mark style="color:green;">`POST`</mark> `/maintenance/inventory/providers.json`
 
-List inventory providers for the company, optionally filtered by search.
+The company's parts suppliers, ordered by name. Deleted (merged) suppliers are not listed. Each supplier carries how many parts and units point at it.
+
+Available to every group that inherits the default allow (managers 1/100/105/110, staff 120–170, mechanics 300) and to auditors (250). Pilots and students (190, 200) and the default-deny groups (180, 240, 245) get `403`. The maintenance section needs the Club, Premium or Unlimited plan.
 
 #### Request Body (optional)
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| search | string | Search in provider name, email, and phone |
+| search | string | Search in name, contact, email, phone and account number |
 
 #### Response
 
+A JSON array:
+
 ```json
-{
-  "providers": [
-    {
-      "InventoryProvider": {
-        "id": "f6a7b8c9-d0e1-2345-fghi-j12345678901",
-        "company_id": "c1d2e3f4-a5b6-7890-abcd-ef1234567890",
-        "name": "Aviation Parts Inc.",
-        "email": "parts@example.com",
-        "phone": "+1234567890"
-      }
+[
+  {
+    "InventoryProvider": {
+      "id": "f6a7b8c9-d0e1-2345-fghi-j12345678901",
+      "company_id": "c1d2e3f4-a5b6-7890-abcd-ef1234567890",
+      "name": "Aviation Parts Inc.",
+      "contact_name": "Jane Doe",
+      "email": "parts@example.com",
+      "phone": "+1234567890",
+      "website": "www.example.com",
+      "address": "Hangar 3, Main Airport",
+      "vat": "IE1234567X",
+      "account_number": "FL-0042",
+      "notes": "Net 30",
+      "deleted": false,
+      "created": "1793025958",
+      "modified": "1793025958",
+      "parts": 4,
+      "units": 27
     }
-  ]
-}
+  }
+]
 ```
+
+`parts` and `units` count the parts and units (not deleted) that name this supplier — what a merge would move.
 
 ---
 
-## View Provider
+## View Supplier
 
 <mark style="color:blue;">`GET`</mark> `/maintenance/inventory/provider/{id}.json`
 
-Retrieve details for a single provider.
+Retrieve one supplier of the company (404 for another company's or a deleted one). Same access as List Suppliers.
 
 #### Path Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| id | string | Provider ID |
+| id | string | Supplier UUID |
+
+#### Response
+
+The `InventoryProvider` object as in List Suppliers, without `parts` / `units`.
+
+---
+
+## Create or Edit Supplier
+
+<mark style="color:green;">`POST`</mark> `/maintenance/inventory/provider_edit.json`
+
+Create a supplier, or edit one when `InventoryProvider[id]` is sent. Names are unique within the company, ignoring case and spacing: a second "Tecnam" is refused with `errors.name`. The company is always the caller's.
+
+Managers (user groups 1, 100, 105, 110) and mechanics (300) only. Other groups get `403`.
+
+#### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| InventoryProvider[id] | string | no | Supplier UUID (omit to create) |
+| InventoryProvider[name] | string | yes | Supplier name |
+| InventoryProvider[contact_name] | string | no | Contact person |
+| InventoryProvider[email] | string | no | Email (validated when given) |
+| InventoryProvider[phone] | string | no | Phone |
+| InventoryProvider[website] | string | no | Website |
+| InventoryProvider[address] | string | no | Postal address |
+| InventoryProvider[vat] | string | no | Supplier's VAT number |
+| InventoryProvider[account_number] | string | no | Your own account / customer number with this supplier |
+| InventoryProvider[notes] | string | no | Free notes |
+
+Fields that are sent are saved as sent, so an empty value clears that field.
 
 #### Response
 
 ```json
 {
+  "result": true,
+  "message": "Supplier saved",
+  "errors": null,
   "provider": {
-    "InventoryProvider": {
-      "id": "f6a7b8c9-d0e1-2345-fghi-j12345678901",
-      "company_id": "c1d2e3f4-a5b6-7890-abcd-ef1234567890",
-      "name": "Aviation Parts Inc.",
-      "email": "parts@example.com",
-      "phone": "+1234567890"
-    }
+    "InventoryProvider": { "id": "f6a7b8c9-d0e1-2345-fghi-j12345678901", "name": "Aviation Parts Inc.", "...": "..." }
   }
 }
 ```
+
+On validation failure:
+
+```json
+{
+  "result": false,
+  "message": "Could not save the supplier due to validation errors",
+  "errors": { "name": ["A supplier with this name already exists"] },
+  "provider": null
+}
+```
+
+---
+
+## Delete or Merge Supplier
+
+<mark style="color:green;">`POST`</mark> `/maintenance/inventory/provider_delete.json`
+
+Delete a supplier. To clean up a duplicate, send `merge_into`: every part and unit of the deleted supplier moves to that supplier first, and the kept supplier's **blank** details (contact, email, phone, website, address, VAT, account number) are filled from the deleted one — its own values are never overwritten; notes are appended. Everything happens in one transaction.
+
+A supplier still used by parts or units is only deleted with `merge_into`; without it the call answers `409` with the counts, so no part loses its supplier silently.
+
+Managers (user groups 1, 100, 105, 110) and mechanics (300) only. Other groups get `403`.
+
+#### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | yes | Supplier to delete |
+| merge_into | string | no | Supplier that receives its parts and units (must be another supplier of the company) |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "message": "Supplier merged into Aviation Parts Inc.",
+  "merged": { "parts": 1, "units": 12 }
+}
+```
+
+Still in use, no `merge_into` (`409`):
+
+```json
+{
+  "result": false,
+  "message": "This supplier is used by 1 part(s) and 12 unit(s). Choose another supplier to move them to.",
+  "parts": 1,
+  "units": 12
+}
+```
+
+`400` when `merge_into` is the supplier itself; `404` when either supplier is not one of the company's live suppliers. Deleted suppliers are kept as records (soft delete) so old history still resolves.
 
 ---
 

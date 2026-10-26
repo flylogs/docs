@@ -165,7 +165,11 @@ Retrieve full details for a single inventory unit, including change history and 
 
 <mark style="color:green;">`POST`</mark> `/maintenance/unit/edit.json`
 
-Create or update an inventory unit.
+Create or update an inventory unit, or create several identical units at once.
+
+**Several identical units.** Send `quantity` (1–200) with a new unit (no `InventoryUnit[id]`) to create that many copies with the same details — for parts held in numbers without individual serial numbers, such as spark plugs or oil filters. Each copy is its own unit, so it is fitted, removed and counted one at a time, and each gets its own `ADD` history row. Identical units carry no serial number: `serial_number` is ignored when `quantity` is more than 1. The units are created in one transaction (all or none). A `quantity` outside 1–200, or not a whole number, is rejected with `errors.quantity`. NEO shows such units folded into one "12 identical units" row on the part page.
+
+`InventoryUnit[supplier_id]` must be one of the company's suppliers (404 otherwise).
 
 A unit is **installed** when its `status` is `installed` and it has an `aircraft_id`. Saving a unit records its life and its history automatically:
 
@@ -199,6 +203,13 @@ Life used = `used_*` + (aircraft now − `installed_aircraft_*`) while installed
 | InventoryUnit[last_inspection_date] | string | no | Last inspection date |
 | InventoryUnit[next_due_inspection] | string | no | Next due inspection date |
 | InventoryUnit[remarks] | string | no | Remarks |
+| InventoryUnit[supplier_id] | string | no | Supplier UUID (see [Suppliers](inventory.md#list-suppliers)) |
+| InventoryUnit[batch_number] | string | no | Batch number |
+| InventoryUnit[lot_number] | string | no | Lot number |
+| InventoryUnit[certificate_type] | string | no | Release document type (see Selectables `certifications`) |
+| InventoryUnit[certificate_number] | string | no | Release document number |
+| InventoryUnit[certificate_date] | string | no | Release document date (`YYYY-MM-DD`) |
+| quantity | number | no | New units only: how many identical units to create (1–200, default 1) |
 
 #### Response
 
@@ -213,9 +224,13 @@ Life used = `used_*` + (aircraft now − `installed_aircraft_*`) while installed
   },
   "message": "Inventory item saved",
   "errors": null,
-  "data": { ... }
+  "data": { ... },
+  "created": 1,
+  "ids": ["e5f6a7b8-c9d0-1234-efgh-i12345678901"]
 }
 ```
+
+`result` is the saved unit (the last one of a batch). `created` is the number of units created and `ids` their UUIDs (0 and empty on an edit). With `quantity=12` the message is `"12 units saved"`.
 
 ---
 

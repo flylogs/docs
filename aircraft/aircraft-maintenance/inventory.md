@@ -44,6 +44,16 @@ The part page shows the same counts above its units, and each installed unit sho
 
 <figure><img src="../../.gitbook/assets/inventoryItemUnits.png" alt="Units card with one unit installed and one available"><figcaption><p>Units of a part after one was installed</p></figcaption></figure>
 
+### Adding several identical units
+
+Parts you hold in numbers without individual serial numbers — spark plugs, oil filters, seals — don't need to be entered one by one. On the part page click **Add Unit**, choose **Multiple units**, type the **Quantity** and fill in the details they share (batch number, release document, supplier, base…). Flylogs adds that many units to stock in one go, and the stock counts go up by the same number.
+
+<figure><img src="../../.gitbook/assets/inventoryUnitsMultiple.png" alt="Add Unit with Multiple units selected and a quantity of 12"><figcaption><p>Adding 12 identical units</p></figcaption></figure>
+
+Each unit is still kept on its own, so you can fit them to aircraft one at a time and the counts stay exact. On the part page identical units are folded into one line ("12 identical units"); click it to see them and open any one of them. Adding them shows as a single line in the **Change History**. Choose **Single unit** for a part with a serial number.
+
+<figure><img src="../../.gitbook/assets/inventoryIdenticalUnits.png" alt="Units card with 12 identical units grouped and expanded"><figcaption><p>Identical units on the part page</p></figcaption></figure>
+
 ### Life of a unit
 
 When a unit has a **Life Limit (Hours)** or **Life Limit (Cycles)**, the part page shows how much of it is used and how much is left, as text and as a bar:
@@ -99,6 +109,36 @@ The part's **Status** (Approved, Pending, Quarantined, Rejected, Expired…) is 
 The search box above the list finds parts by part number, name, manufacturer, model, ATA chapter, certification or notes, and by the serial, batch, lot or certificate number of any of their units. Use **Filters** to narrow the list by category, status or certification.
 
 <figure><img src="../../.gitbook/assets/inventorySearchSerial.png" alt="Searching the inventory by a unit serial number"><figcaption><p>Finding a part from a unit's serial number</p></figcaption></figure>
+
+### Where parts are kept
+
+Every unit has a **Base**: the place where it is stored. Use it to record where your stock is, and the units of the same part can sit at different bases. The [stock schedule export](#exporting-the-stock-schedule) has a **Stock location** column that lists the available units per base, for example *Main base (3)*. For the exact shelf or box within a base, use the part's **Notes**, which are shown in the list.
+
+### Suppliers
+
+Open **Aircraft → Suppliers**, or the **Suppliers** button on the inventory list, to manage the companies you buy parts from. For each supplier you can record the contact person, email, phone, website, address, VAT number, **your own account number** with them and free notes. Suppliers added here appear in the supplier list of every part and unit.
+
+<figure><img src="../../.gitbook/assets/inventorySuppliers.png" alt="Suppliers list with contact details, account numbers and two duplicates flagged"><figcaption><p>The supplier list</p></figcaption></figure>
+
+Click **New supplier** to add one, or the pencil to edit it. You can also add a supplier without leaving a part or unit form: **New supplier** next to the supplier list opens the same form and selects the supplier once it is saved. Each supplier name can only exist once, regardless of capitals or spacing.
+
+<figure><img src="../../.gitbook/assets/inventorySupplierEdit.png" alt="Edit supplier form with contact person, account number, email, phone and notes"><figcaption><p>Supplier details</p></figcaption></figure>
+
+**Duplicates.** Suppliers listed more than once are marked **Duplicate**. Click the bin on the one you want to remove and choose the supplier to keep: all its parts and units move to it, and any details the kept supplier is missing (email, phone, account number…) are copied over — the kept supplier's own details are never overwritten. A supplier that no part or unit uses is simply deleted.
+
+<figure><img src="../../.gitbook/assets/inventorySupplierMerge.png" alt="Merge a duplicate supplier into the one you keep"><figcaption><p>Merging a duplicate supplier</p></figcaption></figure>
+
+Managers and mechanics can add, edit and merge suppliers; auditors can see the list.
+
+### Exporting the stock schedule
+
+To share your stock with the maintenance team or other members who don't use Flylogs, click **Export** on the inventory list and choose **Excel (.xlsx)** or **PDF**. The file contains the parts currently shown — the same search, filters and sort order — with the list's columns plus **Stock location** and **Supplier**, and the total units, units installed and units in stock.
+
+<figure><img src="../../.gitbook/assets/inventoryExportMenu.png" alt="Export menu with Excel and PDF on the inventory list"><figcaption><p>Exporting the inventory</p></figcaption></figure>
+
+<figure><img src="../../.gitbook/assets/inventoryStockSchedulePdf.png" alt="Stock schedule PDF with part counts, stock location and supplier"><figcaption><p>The stock schedule as PDF</p></figcaption></figure>
+
+The Excel file has a filter on every column, so the team can sort and filter it further.
 
 ### Part details
 
