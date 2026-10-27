@@ -57,6 +57,7 @@
   * [API](company-management/company-settings/api.md)
 * [Billing System](company-management/billing-system.md)
 * [Base management](company-management/base-management.md)
+* [Custom forms](company-management/custom-forms.md)
 * [Account limitations](company-management/account-limitations.md)
 * [Account types](company-management/account-types.md)
 
@@ -186,3 +187,4 @@
 * [News](API/news.md)
 * [Reports](API/reports.md)
 * [Manager Users](API/manager-users.md)
+* [Custom Forms](API/custom-forms.md)
