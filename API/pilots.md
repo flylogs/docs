@@ -630,7 +630,7 @@ Returns the canonical certificate type catalogue used across the app.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| type | string | Category — one of `licence`, `rating`, `medical`, `training`, `document`, `language` (the `language_proficiency` type), `course` (`mcc`, `auprt`), `instructor` (`tri`), `examiner` (`tre`, `fe`, `cre`, `ire`) |
+| type | string | Category — one of `licence`, `rating`, `medical`, `training`, `document`, `language` (the `language_proficiency` type), `course` (`mcc`, `auprt`), `instructor` (`tri`, `cri`, `iri`, `sfi`, `mcci`), `examiner` (`tre`, `fe`, `cre`, `ire`, `sfe`) |
 | validity | number \| null | Default validity window in **months**. `null` = no expiry. |
 | name | string | Display name |
 | abbr | string | Short code for compact tables |

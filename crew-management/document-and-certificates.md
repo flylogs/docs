@@ -19,10 +19,15 @@ Besides licences, class and type ratings, medicals, language proficiency, IDs an
 | MCC Certificate | Multi-crew cooperation course (FCL.735) | None |
 | AUPRT Certificate | Advanced upset prevention and recovery training (FCL.745.A) | None |
 | TRI Certificate | Type rating instructor | Filled in 3 years after the issue date; change it if your certificate says otherwise |
+| CRI Certificate | Class rating instructor | Filled in 3 years after the issue date; change it if your certificate says otherwise |
+| IRI Certificate | Instrument rating instructor | Filled in 3 years after the issue date; change it if your certificate says otherwise |
+| SFI Certificate | Synthetic flight instructor | Filled in 3 years after the issue date; change it if your certificate says otherwise |
+| MCCI Certificate | Multi-crew cooperation instructor | Filled in 3 years after the issue date; change it if your certificate says otherwise |
 | TRE Certificate | Type rating examiner | The date printed on the certificate |
 | FE Certificate | Flight examiner | The date printed on the certificate |
 | CRE Certificate | Class rating examiner | The date printed on the certificate |
 | IRE Certificate | Instrument rating examiner | The date printed on the certificate |
+| SFE Certificate | Synthetic flight examiner | The date printed on the certificate |
 
 Instructor and examiner certificates don't count as the pilot's class or type rating in the licence, rating and medical check. A flight type or a course can require any of them like any other certificate.
 
