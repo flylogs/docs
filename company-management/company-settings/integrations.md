@@ -9,7 +9,7 @@ The Integrations tab connects Flylogs to your aircraft tracking hardware so flig
 Both integrations are **one-way**: Flylogs only reads data from the tracking service. Nothing is ever sent from Flylogs back to it.
 
 {% hint style="info" %}
-Integrations are available only on the **Premium** and **Unlimited** plans. On the Free and Club plans the tab shows an upgrade notice instead of the settings, and the import does not run even if a key was set on a previous plan.
+Integrations are available only on the **Premium** and **Unlimited** plans. On the Free and Club plans the tab shows an upgrade notice instead of the settings, and the import does not run even if a key was set on a previous plan. When a company moves to a plan without integrations (for example when a Premium subscription expires and the company returns to Free), Airbly and Spidertracks are switched off automatically. The saved Airbly key and the Spidertracks connection are kept, so after upgrading again you only need to switch the integration back on.
 {% endhint %}
 
 Only a company **manager** can connect or disconnect an integration — the Company Settings page is restricted to manager-level user types.
