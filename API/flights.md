@@ -360,7 +360,21 @@ When all four event times are present, the API calculates `block_time` (on-block
 
 * To **create** a flight, the caller must hold the **Flight.create** company permission; otherwise the API returns `403 Forbidden` ("not authorized to create a flight draft").
 * Users above Company Administrator (`user_group_id > 110`) cannot create flights dated before today minus the company's **logbook block window** (`flights_block_days`), when one is set.
-* To **update** an existing flight, the caller needs the **Flight.edit** permission. A crew member or the creator without it can no longer edit a **confirmed** flight once more than 12 hours have passed since its off-blocks time (`400`, "not authorized to edit a flight"). Unconfirmed flights stay editable.
+* To **update** a **confirmed** flight, the caller must be one of:
+  * Company Administrator, Operations Manager or Compliance & Safety Manager (`user_group_id <= 110`): always.
+  * A holder of the **Flight.edit** permission: any confirmed flight, at any time.
+  * The flight's PIC or its creator: only within 12 hours of its off-blocks time.
+
+  Anyone else gets `400` ("not authorized to edit a flight"). Other crew members (SIC, supervisor) without **Flight.edit** cannot edit a confirmed flight. The error body carries `"error": "FLIGHT_EDIT_NOT_ALLOWED"`, `"self_edit_window_hours": 12` and a `reason`:
+
+  | `reason` | Meaning |
+  |---|---|
+  | `NOT_PIC_OR_CREATOR` | The caller is neither the PIC nor the creator, and has no **Flight.edit**. |
+  | `SELF_EDIT_WINDOW_EXPIRED` | The caller is the PIC or creator, but more than 12 hours have passed since off-blocks. |
+  | `NO_OFFBLOCKS_TIME` | The caller is the PIC or creator, but the flight has no off-blocks time, so the 12-hour window cannot apply. |
+
+  Branch on `error` and `reason`, never on `message`.
+* To update an **unconfirmed** flight (draft, scheduled, dispatched), the caller needs the **Flight.create** permission.
 * Only flights in the caller's own company can be updated. Cancelled or deleted flights cannot.
 
 #### Response

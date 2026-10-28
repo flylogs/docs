@@ -27,29 +27,22 @@ The bypass lets a crew member or staff user edit a flight even when they do not 
 
 It applies when **both** conditions hold:
 
-- **Who:** the viewer is the **PIC** of the flight, **or** the viewer is **Pilot or above** (any pilot, instructor or manager role — Student Pilots, Cabin Crew, Specialists, Auditors and Mechanics excluded).
+- **Who:** the viewer is the flight's **PIC** or the user who **created** it.
 - **When:**
-  - the flight is a **DRAFT**, **or**
-  - the flight is **CONFIRMED** and the current time is within the **`flights_block_days`** window measured from `Flight.landing_time`.
+  - the flight is **unconfirmed** (draft, scheduled, dispatched) and the viewer's role has the `Flight.create` permission, **or**
+  - the flight is **CONFIRMED** and no more than **12 hours** have passed since `Flight.offblocks_time`.
+
+The server enforces the same rule on save (`FlightsController::create()` → `FlightEditPolicy`), so nobody else can edit a confirmed flight without `Flight.edit`, the API included.
 
 #### `flights_block_days` (Company Settings → Logbook → Block logbook after)
 
-This setting has two effects:
-
-**1. Minimum date for new flights and draft edits**
+This setting sets the minimum date for new flights and draft edits. It does **not** affect editing confirmed flights (see the 12-hour rule above).
 
 When `flights_block_days` is set, users cannot create a new flight (or edit an existing draft) with a date older than `today − N days`. The date picker enforces a minimum date and the server rejects out-of-window dates.
 
 Company Administrators, Operations Managers and Compliance & Safety Managers are exempt and can log flights on any past date.
 
-**2. Self-edit bypass window for confirmed flights**
-
-| Value | Effect on self-edit bypass for confirmed flights |
-|-------|--------------------------------------------------|
-| `0` (Disabled) | Bypass **never** allowed for confirmed flights — only `Flight.edit` permission can edit. Drafts are still bypassable. |
-| `N > 0` | Bypass allowed for confirmed flights whose landing time is within the last `N` days. After `N` days the flight is locked from self-edit and only `Flight.edit` permission can edit. |
-
-> Note: the SIC alone does **not** get the bypass. They must either be **Pilot or above** or use the **Cancel** action available to crew on draft flights.
+> Note: the SIC and supervisor do **not** get the bypass. Without `Flight.edit` they can only use the **Cancel** action available to crew on draft flights.
 
 ## Confirm action — password requirement
 
