@@ -18,7 +18,7 @@ Custom forms are available on the **Premium** and **Unlimited** plans. If your c
 | Fill in and sign a form | Whoever the form says fills it in (see below) |
 | See a filled copy | Managers, the person it is about, whoever filled or signed it, and the user groups you add as viewers |
 
-You find **Forms** under **Home** in the main menu. Every user with forms to fill finds them under **Home → My forms**.
+Managers find **Forms** under **Home** in the main menu. Every user finds the forms they have to fill under **My forms**, in the menu that opens from their name at the top right.
 
 ## Building a form
 
@@ -144,7 +144,9 @@ Forms for exams, first login, document downloads and certificates will be added 
 
 ## Responses
 
-**Forms → Responses** lists every copy of a form: who it is about, its status, when it was started, submitted and due, and which required answers are still missing. Filter by status or name, open any copy, or export the list to Excel (one column per field).
+**Forms → Responses** lists every copy of a form: who it is about, its status, when it was started, submitted and due, and which required answers are still missing. The **Related to** column links to the record each copy belongs to: the flight, the booking, the student's enrolment (or the course, for a pre-entry form filled before enrolment) or the person. The same link is at the top of each filled copy.
+
+Who gets the link: flights and bookings link for everyone who can see the copy, and the flight or booking page still applies its own access. Enrolment, course and person pages link for managers (`user_group_id` ≤ 110); a student also gets a link to their own enrolment. Filter by status or name, open any copy, or export the list to Excel (one column per field).
 
 | Status | Meaning |
 | --- | --- |

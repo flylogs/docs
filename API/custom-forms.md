@@ -136,7 +136,7 @@ Soft delete; refused with `HAS_RESPONSES` once anyone has a copy.
 
 <mark style="color:blue;">`GET`</mark> `/manager/custom_forms/responses/{formId}.json?status=&q=&page=`
 
-50 per page, newest change first. `q` searches the person's name. Each row: `id`, `status`, `origin`, `subject_user {id, name}`, `subject_label`, `answers`, `revision_id`, `created`, `submitted`, `due`, `missing [{key, label}]` (required answers still missing on that copy's own revision). Plus `paging {page, limit, count, pageCount}`.
+50 per page, newest change first. `q` searches the person's name. Each row: `id`, `status`, `origin`, `subject_user {id, name}`, `subject_label`, `subject_ref`, `answers`, `revision_id`, `created`, `submitted`, `due`, `missing [{key, label}]` (required answers still missing on that copy's own revision). Plus `paging {page, limit, count, pageCount}`.
 
 ### Send a form to people
 
@@ -192,7 +192,7 @@ The bundle:
 
 | Key | Content |
 | --- | --- |
-| `response` | `id`, `status`, `origin`, subject, `subject_label`, `answers`, `due`, `created`, `submitted`, `submitted_by` |
+| `response` | `id`, `status`, `origin`, subject, `subject_label`, `subject_ref`, `answers`, `due`, `created`, `submitted`, `submitted_by` |
 | `form` | `id`, `name`, `description`, `require_password`, `retention_months` |
 | `revision` | the revision the copy is pinned to, with its `schema` and labels |
 | `units`, `unit_groups` | signing units and who signs each |
@@ -201,6 +201,16 @@ The bundle:
 | `files` | the copy's uploads with signed URLs |
 | `can_skip`, `can_reopen`, `can_delete` | |
 | `history` | managers only: `SIGN`, `SUBMIT`, `REOPEN`, `WAIVE`, `SKIP`, `REQUEST` with user, time and reason |
+
+`subject_ref` is the record the copy is about, or `null` (a flight not saved yet, a public copy):
+
+| `type` | `id` |
+| --- | --- |
+| `FLIGHT` | flight id |
+| `BOOKING` | booking (schedule) id |
+| `ENROLMENT` | the person's enrolment (`trainings_users.id`) in the course, plus `course_id` |
+| `COURSE` | course id, when the person has no enrolment in it yet |
+| `PERSON` | user id |
 
 ### Save answers
 
