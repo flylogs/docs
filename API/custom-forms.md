@@ -246,17 +246,39 @@ Deletes a `DRAFT` copy with its signatures, history and files. Allowed for the u
 
 ## Flight forms
 
-Trigger types `PREFLIGHT`, `POSTFLIGHT` (scope `flight_type_ids`, `aircraft_ids`), `FIRST_FLIGHT_OF_DAY` (`aircraft_ids`) and `SOLO` (`training_ids`; applies when a training mission on the flight has `require_authorization > 0`). Stages: `PRE` = preflight, first flight of the day, solo; `POST` = post-flight. `CustomForm.fill_seat`: `PIC` (default), `SIC`, `SUPERVISOR`, `ANY_CREW`.
+Trigger types `PREFLIGHT`, `POSTFLIGHT`, `BOOKING` (scope `flight_type_ids`, `aircraft_ids`), `FIRST_FLIGHT_OF_DAY` (`aircraft_ids`) and `SOLO` (`training_ids`; applies when a training mission on the flight has `require_authorization > 0`). Stages: `PRE` = preflight, first flight of the day, solo; `POST` = post-flight; `BOOK` = booking creation.
+
+A scope id that does not belong to the company (flight type, aircraft, course) makes `manager_save` answer `{"result": false, "errors": {"triggers": [{"path": "triggers.0.scope.aircraft_ids", "code": "SCOPE_NOT_FOUND"}]}}`; nothing is saved. `CustomForm.fill_seat`: `PIC` (default), `SIC`, `SUPERVISOR`, `ANY_CREW`.
 
 ### Forms of a flight
 
-<mark style="color:blue;">`GET`</mark> `/custom_forms/flight_forms.json?stage=PRE|POST&schedule_id=` · `&flight_id=` · `&token=<uuid>&aircraft_id=&flight_type_id=&date=YYYY-MM-DD&mission_ids[]=`
+<mark style="color:blue;">`GET`</mark> `/custom_forms/flight_forms.json?stage=PRE|POST|BOOK&schedule_id=` · `&flight_id=` · `&token=<uuid>&aircraft_id=&flight_type_id=&date=YYYY-MM-DD&mission_ids[]=`
 
-`offered` (each with `type`, `mode`, `trigger_id`, open `response`) and `responses` (this stage's copies) for a booking, a flight, or a flight not saved yet (a client-generated uuid `token`). Staff above `user_group_id` 145 only for flights they crew.
+`offered` (each with `type`, `mode`, `trigger_id`, open `response`) and `responses` (this stage's copies) for a booking, a flight, or a flight not saved yet (a client-generated uuid `token`). Staff above `user_group_id` 145 only for flights they crew. `stage=BOOK` needs a `token` (the booking dialog's).
 
 ### Starting a flight form
 
 `POST /custom_forms/start/{formId}.json` with `subject_model` `Schedule` | `Flight` | `Pending`, `subject_id` (booking id, flight id or token) and the `trigger_id` from `flight_forms`; for `Pending` also `aircraft_id`, `flight_type_id`, `date`, `mission_ids`. Allowed for the seat holder (any crew for `ANY_CREW`), the form's `FILL` groups and managers. Each stage keeps its own copy.
+
+### Offline
+
+<mark style="color:blue;">`GET`</mark> `/custom_forms/flight_definitions.json`
+
+Every `PUBLISHED` form of the company with a `PREFLIGHT`, `FIRST_FLIGHT_OF_DAY`, `SOLO` or `POSTFLIGHT` trigger, for clients that fill flight forms without signal (Premium and Unlimited plans; readable by managers and by pilots, students and instructors so it can be cached on their devices — it carries form definitions only, never answers):
+
+```json
+{ "definitions": [ {
+  "form": { "id": "…", "name": "…", "description": "…", "fill_mode": "SUBJECT", "fill_seat": "PIC", "require_password": false },
+  "revision": { "id": "…", "schema": { … }, … },
+  "groups": { "OPEN": [], "FILL": [], "VIEW": [] },
+  "triggers": [ { "id": "…", "type": "POSTFLIGHT", "mode": "MANDATORY", "scope": { "aircraft_ids": ["12"] } } ]
+} ] }
+```
+
+A copy filled offline is replayed after its flight is created:
+
+* `POST /custom_forms/start/{formId}.json` with `subject_model: "Flight"` and an optional `revision_id` — the revision it was filled on. It must be a `PUBLISHED` revision of the same form, so a copy filled before the form was republished is kept on its own revision.
+* `POST /custom_forms/sign/{id}.json` with an optional `offline_signed_at` (unix seconds). Values up to 5 minutes in the future and no older than 30 days are written into the copy's history ("signed offline at … UTC"); others are ignored. The signature itself is dated when it reaches the server. A form with `require_password` still needs the password.
 
 ### Where they are enforced
 
@@ -266,8 +288,9 @@ Trigger types `PREFLIGHT`, `POSTFLIGHT` (scope `flight_type_ids`, `aircraft_ids`
 | `POST /flights/dispatch/{id}.json` | PRE | the flight | same |
 | `POST /flights/create.json` — new flight, no `client_id` | PRE | `data[form_token]` | same |
 | `POST /flights/confirm/{id}.json` | POST | the flight | `{"result": {"code": "FORM_REQUIRED", "message", "forms", …}}` |
+| `POST /schedules/edit.json` — new booking made by the caller for themselves | BOOK | `data[form_token]` | `{"result": false, "code": "FORM_REQUIRED", "message", "forms"}` |
 
-A create carrying `client_id` (offline replay) is never refused. On dispatch the booking's copies move to the new flight; on create the token's copies (the caller's) move to the new flight. `manager_waive` accepts `subject_model` `Schedule` | `Flight` with the `trigger_id` it answers.
+A create carrying `client_id` (offline replay) is never refused. A booking counts as made for oneself when `self_schedule` is `1` or the caller is its `pic_id`, `sic_id` or `supervisor_id`; edits and bookings made for others are never asked. Every row of one booking dialog (repeat dates, legs) sends the same `form_token`: the first saved booking takes the copies, and the next rows are covered by them. On dispatch the booking's copies move to the new flight; on create the token's copies (the caller's) move to the new flight. `manager_waive` accepts `subject_model` `Schedule` | `Flight` with the `trigger_id` it answers.
 
 ## Course enrolment
 

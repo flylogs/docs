@@ -107,6 +107,7 @@ On the **Attached to** tab you can also attach a form to flights:
 | **First flight of the day** | the same places, once per aircraft per day: whoever fills it, it covers that aircraft for the rest of the day | aircraft |
 | **Before a solo flight** | the same places, for flights on a training mission that needs a mission authorisation | courses |
 | **Post-flight** | in the confirm window | flight types, aircraft |
+| **Booking creation** | when someone books a flight for themselves | flight types, aircraft |
 
 **Who fills it**: on *Who fills & sees*, choose the crew member — PIC (default), SIC, instructor / supervisor, or any crew member. Managers and the form's filling groups can always fill it on the crew's behalf.
 
@@ -114,13 +115,32 @@ On the **Attached to** tab you can also attach a form to flights:
 
 What is never blocked:
 
-* flights saved **offline** — the form then shows as missing on the flight;
+* flights saved **offline** — the forms are offered on the device (see below) but saving is never held up;
 * flights already confirmed, imported flights and flights recorded from ADS-B;
-* an offline **confirmation** of a flight that still owes a mandatory post-flight form is refused when it syncs, with the form named. The flight stays a draft; fill the form and confirm again online.
+* bookings made by staff for someone else, bookings created by Auto Pilot and copied weeks.
 
 A form filled before the flight exists (for a new flight or a booking) is attached to the flight once it is saved or dispatched. The flight page lists its preflight and post-flight forms. The same form can be both preflight and post-flight: each is a separate copy.
 
-Forms at booking creation, filling flight forms offline, exams, first login, document downloads and certificates will be added in later releases.
+### Booking forms
+
+A form attached to **booking creation** is asked when a pilot or student books a flight for themselves — from self-booking, or from the schedule when they are on the booking's crew. A **mandatory** booking form must be signed before the booking is made; a **skippable** one can be skipped.
+
+One copy covers everything booked in the same go: a booking repeated over several dates or a trip with several legs asks for the form once. The signed copy is attached to the booking and, once dispatched, to its flight.
+
+### Filling flight forms offline
+
+The app keeps a copy of your company's flight forms on the device, so preflight and post-flight forms can be filled in without signal:
+
+* entering a **new flight offline**, the preflight forms that apply are offered before it is saved. You can fill them now or save the flight and fill them later;
+* **confirming offline**, the post-flight forms are shown in the confirm window.
+
+Answers, photos and PDFs stay on the device and are signed there. When the device is back online the flight is sent first, then its forms, then its confirmation, so the confirmation finds its forms already signed. The history of each copy notes that it was signed offline and when.
+
+A form that is signed **with a password** can be filled offline but is signed once you are back online. Forms *before a solo flight* are only offered online.
+
+If a mandatory post-flight form is still missing when an offline confirmation syncs, the confirmation is refused with the form named. The flight stays a draft; fill the form and confirm again online.
+
+Forms for exams, first login, document downloads and certificates will be added in later releases.
 
 ## Responses
 
