@@ -47,7 +47,7 @@ Flylogs offers two types of knowledge evaluation exams:
 For onsite classes and exams, attendance is part of the evaluation. Each student is set to one of four statuses when the teacher signs the register:
 
 * **Attended** and **Attended (post-class)** both count as present for progress and attendance-rate purposes.
-* **Absent** and **Absent (justified)** both count as missed, but only a plain **Absent** is left open for the student to justify — see [Missed classes and class work](missed-classes-and-class-work.md).
+* **Absent** counts as missed and lowers the attendance rate. **Absent (justified)** is neutral: it is left out of the attendance rate altogether, so it doesn't lower it — but it never counts as attended either, so the lesson is not completed and the course progress doesn't move. Only a plain **Absent** is left open for the student to justify — see [Missed classes and class work](missed-classes-and-class-work.md).
 
 **Attended (post-class)** is the status to use when a student didn't attend live but still completed the class afterwards — for example after reviewing the class content and any requested class work. It credits the student the same way **Attended** does, while keeping the record honest about how it happened: reports keep post-class credit in its own bucket, separate from students who were simply there on the day.
 

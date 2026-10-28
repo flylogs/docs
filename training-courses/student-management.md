@@ -65,8 +65,8 @@ These training reports for the student can also be accessed from the pilot profi
 
 For onsite trainings, the attendance ring on the student's progress page breaks missed sessions down further, so a low attendance rate isn't a mystery:
 
-* **Missed** — the total number of sessions the student did not attend.
-* **Justified** — of those, how many have an approved absence justification.
+* **Missed** — the sessions the student did not attend without a justification. Only these lower the attendance rate.
+* **Justified** — sessions missed with an approved absence justification. They are left out of the attendance rate (attended ÷ attended + missed), so they don't lower it, but they never count as attended: the lesson stays uncompleted and the course progress doesn't move.
 * **Not justified** — how many are still a plain, unresolved absence.
 * **Credited after class** — how many were later marked **Attended (post-class)**, i.e. the student made up the class afterwards. When some of those were recovered by attending another sitting of the same lesson (see [Recovering a class in another sitting](missed-classes-and-class-work.md#recovering-a-class-in-another-sitting)), that number is shown alongside.
 

@@ -21,7 +21,7 @@ Each student on a class register is set to one of:
 
 Before the teacher signs the class, students can be left **unmarked** — nothing has been decided yet. Nothing is saved to the training record until the class is **signed**: signing is the moment the register becomes a record, and it turns every student still unmarked into **Absent**.
 
-A signed register is locked. A training manager can reopen it with **Modify signed attendance**, make corrections, and sign again with **Update attendance** — every signature is kept as history, so nothing is overwritten. Both **Attended** and **Attended (post-class)** count as present; **Absent (justified)** does not.
+A signed register is locked. A training manager can reopen it with **Modify signed attendance**, make corrections, and sign again with **Update attendance** — every signature is kept as history, so nothing is overwritten. Both **Attended** and **Attended (post-class)** count as present; **Absent (justified)** does not — it doesn't complete the lesson or add progress, but it is left out of the student's attendance rate, so it doesn't lower it either.
 
 <figure><img src="../.gitbook/assets/trainingsAttendanceStatuses.png" alt=""><figcaption><p>The four attendance statuses on a class register.</p></figcaption></figure>
 

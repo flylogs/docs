@@ -426,7 +426,7 @@ Compact progress + attendance roll-up for an enrollment. Cheap to call (no neste
     "status_reason": null,
     "theory": {
       "progress":   { "total": 38, "completed": 21, "percentage": 55 },
-      "attendance": { "given":  42, "taken":     31, "percentage": 73 }
+      "attendance": { "given":  40, "taken":     31, "percentage": 77 }
     },
     "flight": {
       "progress":   { "total": 22, "completed": 9,  "percentage": 41 },
@@ -440,7 +440,7 @@ Compact progress + attendance roll-up for an enrollment. Cheap to call (no neste
 #### Field semantics
 
 - `theory.progress` — derived from `Training::getProgress` (mandatory `training_activities` in scope, all subjects). `completed` includes LESSON activities marked attended **and** EXAM activities passed (gate exams gate the corresponding lesson's completion). `percentage = floor(completed * 100 / total)`.
-- `theory.attendance` — derived from `Training::getAttendance`. `given` = `session_students.invited = 1` rows whose `sessions.training_activity` is subject-scoped and `sessions.datetime < now()`. `taken` = subset where `attended = 1`.
+- `theory.attendance` — derived from `Training::getAttendance`. `given` = `session_students.invited = 1` rows whose `sessions.training_activity` is subject-scoped and `sessions.datetime < now()`, **less** rows with `attendance_status = absent_justified` — a justified absence is neutral for the rate. `taken` = subset where `attended = 1` (a justified absence is never `attended`, so it never adds progress). `percentage = floor(taken * 100 / given)`.
 - For `Training.type == "DISTANCE"` the `attendance` block mirrors `progress` (no live sessions exist for distance training).
 - `flight` is `null` when `Training.flights == false`.
 - `flight.progress` — `total` = count of `TrainingFlight` templates in the training. `completed` = distinct templates with at least one `UserTrainingFlight.completed = 1` row (flight `status = LANDED`). Same logic as `Training.FlightProgress` in `My Trainings`.
