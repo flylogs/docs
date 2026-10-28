@@ -166,6 +166,16 @@ The position of the type in every flight-type list. Drag rows in the flight type
 
 Define, **per seat** (*To act as PIC* / *To act as SIC* / *To act as Supervisor*, matching CM1 / CM2 / the third seat), which certificates a crew member must hold to occupy that seat on this flight type — for example a licence, Class 1 medical and single-engine rating for the PIC, but only a medical for a student in CM2. The three seats are independent, and a seat with no requirements imposes none. See [Document & Certificate Requirements](../crew-management/document-and-certificate-requirements.md) for how these are checked across the app.
 
+<figure><img src="../.gitbook/assets/flight-type-required-certs-card.png" alt="The Required certificates card on the Dual flight type, with licence, SEP rating, Class 1 medical and ID selected for PIC, Class 1 medical and ID for SIC, and nothing for Supervisor"><figcaption><p>The <strong>Required certificates</strong> card on a <em>Dual</em> type. Click a chip to require that certificate for the seat; the counter next to each seat shows how many are selected. Here the instructor in CM1 needs four, the student in CM2 needs a Class 1 medical and an ID, and the third seat has no requirement.</p></figcaption></figure>
+
+On the flight form, each crew member gets a badge under their name as soon as both the flight type and the person are chosen — green when they hold everything the seat requires, red with the list of missing or expired certificates otherwise. The badge is a warning only and never stops the flight from being saved.
+
+<figure><img src="../.gitbook/assets/flight-form-crew-documentation.png" alt="The flight form with flight type Dual: CM1 Andrew Flyers shows Documentation valid, CM2 Sergi Salvador shows Missing: Medical Class 1, ID"><figcaption><p>The same <em>Dual</em> type on the flight form. The instructor in CM1 meets every requirement; the student in CM2 is missing the Class 1 medical and the ID.</p></figcaption></figure>
+
+In the Schedule Manager, the booking form lists the same result on each crew card: *Docs OK*, or one line per missing or expired certificate, plus a caution naming the crew member. Validity is checked at the booking's date and time, not today's.
+
+<figure><img src="../.gitbook/assets/schedule-crew-required-certs.png" alt="The Edit flight booking form in the Schedule Manager: the Pilot in Command card shows Docs OK, the Second in Command card lists Medical Class 1 and ID in red, with a caution below"><figcaption><p>A <em>Dual</em> booking in the Schedule Manager. Each seat is checked against its own list, so the PIC card shows <em>Docs OK</em> while the SIC card lists the two certificates the student still needs.</p></figcaption></figure>
+
 ## How flight types affect the rest of Flylogs
 
 ### Flights
