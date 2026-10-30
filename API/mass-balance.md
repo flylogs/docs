@@ -150,9 +150,11 @@ Loadsheets already saved keep their own profile copy.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| inputs | string (JSON) | `{ "loads": { stationKey: mass }, "fuel": { stationKey: { "takeoff": vol, "taxi": vol, "burn": vol } }, "labels": { stationKey: text } }` |
+| inputs | string (JSON) | `{ "loads": { stationKey: mass }, "fuel": { stationKey: { "takeoff": vol, "taxi": vol, "burn": vol } }, "labels": { stationKey: text }, "occupants": { seatStationKey: [{ "name": text, "mass": mass }] } }` |
 
 Calculated with the aircraft's **current** profile (`400` if the flight has no aircraft or the aircraft has no profile). Unknown station keys are dropped. Saving different numbers clears any signature; saving identical numbers keeps it. Returns `{ result, message, loadsheet }`.
+
+`occupants` (optional) lists the people on a **seat** station, each with their own name and mass. `name` is free text (up to 100 characters; the person does not need a Flylogs account) and `mass` may be `null` when not known yet. For a seat station listed in `occupants` the server ignores any `loads`/`labels` sent for it and derives them: the load is the sum of the entered masses (a negative mass is kept on its own so it is reported as `NEGATIVE_INPUT`) and the label is the names joined with ` / `. Rows with neither a name nor a mass are dropped; at most 20 people per station. Without `occupants`, `loads` and `labels` work as before. A saved loadsheet returns `occupants` in `inputs` only when it has any.
 
 ## Sign flight loadsheet
 
