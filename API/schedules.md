@@ -169,6 +169,23 @@ dispatch cleanly today if the item was rectified or extended in the meantime —
 conversely, a schedule that was fine at booking time can be blocked at dispatch time if an
 item expired in between.
 
+#### Type rating hard block
+
+When the aircraft requires a type rating (`Aircraft.require_type_rating`) and a crew seat is not covered at the moment of the flight (see [Type rating requirement](#type-rating-requirement)), dispatch is refused:
+
+```json
+{
+  "result": false,
+  "code": "TYPE_RATING_REQUIRED",
+  "message": "This aircraft requires a type rating. No valid type rating for CESSNA 172 Skyhawk: Andrew Flyers (PIC). Enter an override reason to proceed anyway.",
+  "type_rating": { "required": true, "ok": false, "uncovered": ["pic"], "can_override": true, "...": "..." }
+}
+```
+
+A manager (`user_group_id <= 110`) dispatches anyway by posting `type_rating_override_reason` (text, up to 500 characters). An override already given on the booking for the same aircraft and crew also lets the dispatch through. Validity is judged at the later of now and the booking start, so a rating that lapsed after the booking was made blocks the dispatch.
+
+`GET /schedules/dispatch_check/{scheduleId}.json` reports the same answer in `type_rating` before the dispatch form is filled in: `null` when nothing is required or the crew is covered, otherwise the payload above plus `message` when it would be refused.
+
 ---
 
 ## FRAT Prefill
@@ -411,6 +428,8 @@ Slots are generated inside the operating-hours windows configured for the **airc
 or filters `results` — an expired item does not block *scheduling*, only *dispatch* (see
 [Dispatch Schedule](#dispatch-schedule)) — it is only a flag the frontend can use to warn the
 person booking the slot ahead of time.
+
+`typeRatingBlocked` is `true`, with an empty `results`, when `pic` is sent, the aircraft requires a type rating and that pilot is not covered on the requested date (see [Type rating requirement](#type-rating-requirement)). Optional body parameters `sic` and `supervisor` let a TRI or TRE on board cover a student. Without `pic` nothing is checked here.
 
 ---
 
@@ -698,6 +717,33 @@ the schedule's aircraft has no expired MEL/CDL item, including when the request 
 `aircraft_id` at all. Note that this is purely advisory: the same expired item is a **hard
 block** the moment someone actually tries to dispatch this schedule into a flight — see the
 MEL/CDL hard block note under [Dispatch Schedule](#dispatch-schedule) above.
+
+---
+
+## Type rating requirement
+
+An aircraft can require a type rating (`Aircraft.require_type_rating`, set by staff on [Edit Aircraft](aircraft.md)). Off by default. When it is on, a crew member is **covered** when they hold a certificate of type `type_rating`, `tri` or `tre` that:
+
+* is linked to the aircraft's model (see [Aircraft models](pilots.md#aircraft-models)),
+* is not revoked,
+* is valid at the booking or flight start (issue date before it, expiration after it).
+
+Seats checked: the **PIC** always, the **SIC** only on a multi-pilot aircraft (`Aircraft.multipilot`), the supervisor never. A student without the rating is covered when someone else on board (PIC, SIC or supervisor) holds a valid **TRI or TRE** for the model.
+
+Where it applies:
+
+| Path | Behaviour |
+|------|-----------|
+| `POST /schedules/edit.json` (manager bookings, self-booking, repeats, copy-week, Auto Pilot) | `403` with a message naming the crew and the model. Checked on create, and on an edit only when the aircraft, a crew seat or the day changes. Cancelling (`status = CANCELED`) is never refused. |
+| `/schedules/flight.json`, `/flights/dispatch/{id}.json` | `result: false`, `code: TYPE_RATING_REQUIRED` (see [Type rating hard block](#type-rating-hard-block)). |
+| `POST /flights/create.json` | Never refused. The saved flight carries `type_rating_warning` (see [Flights](flights.md)). |
+| `POST /schedules/find_slot.json` | `typeRatingBlocked` (see [Find Slots](#find-slots)). |
+| `POST /schedules/available_pilots.json` | With `aircraft_id`, `noTypeRating` lists the ids of available / maybe users who are not covered. They are flagged, not removed. |
+| `GET /aircraft/pilot.json` (self-booking aircraft list) | Each aircraft carries `require_type_rating` and `type_rating_ok` (`null` for students). |
+| Student self-booking, auto-assigned Flight Instructor | Only an FI covered for the model is assigned. |
+| `GET /flight_types/compliance.json?aircraft_id=` | Read API: see [Certificate Compliance](flight-types.md#type-rating). |
+
+**Manager override.** Users with `user_group_id <= 110` (Company Administrator, Operations Manager, Compliance & Safety Manager) may proceed by posting `data[Schedule][type_rating_override_reason]` (booking) or `type_rating_override_reason` (dispatch), up to 500 characters. The reason, the user and the uncovered seats are stored for that booking and that exact aircraft and crew; once the aircraft or any crew seat changes the override no longer applies. Everyone else gets the refusal. Plans: all.
 
 ---
 

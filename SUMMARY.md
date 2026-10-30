@@ -78,6 +78,7 @@
 
 * [Aircraft management](aircraft/aircraft-basics.md)
 * [Aircraft manager](aircraft/aircraft-manager.md)
+* [Type rating requirement](aircraft/type-rating-requirement.md)
 * [Create your aircraft](aircraft/create-your-aircraft.md)
 * [ADSB surveillance](aircraft/adsb-surveillance.md)
 * [Aircraft logbook](aircraft/aircraft-logbook.md)

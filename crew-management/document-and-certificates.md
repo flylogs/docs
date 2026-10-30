@@ -57,6 +57,28 @@ When you attach a PDF or a photo of the certificate (JPEG, PNG or WebP, up to 10
 To be read, the document is sent to our AI provider, and Flylogs asks the provider not to store it. Medical certificates contain health data: if you would rather not send them, type the dates by hand as before. The file is only sent when you press **Read the document**.
 {% endhint %}
 
+### Type ratings: aircraft covered
+
+A type rating applies to specific aircraft types, and so do the TRI and TRE certificates built on it. When you add or edit a **Type Rating**, **TRI Certificate** or **TRE Certificate**, the **Aircraft covered** section lets you choose the aircraft models it covers. One rating can cover several models: an A320 family rating covers the A319, A320 and A321.
+
+* The models your company flies are listed under **Your fleet**. Click one to add it.
+* For any other model, choose the manufacturer, then the model. You can add models from several manufacturers.
+* Remove a model with its ×.
+
+<figure><img src="../.gitbook/assets/type-rating-aircraft-form.png" alt=""><figcaption><p>An A320 family type rating covering the A319, A320 and A321.</p></figcaption></figure>
+
+The models appear under the certificate in the certificate list:
+
+<figure><img src="../.gitbook/assets/type-rating-aircraft-list.png" alt=""><figcaption><p>The aircraft covered, listed under the type rating.</p></figcaption></figure>
+
+Other certificate types don't carry aircraft models. If you change a type rating to another type, its models are removed when you save. Deleting the certificate deletes its models too.
+
+**Who can change them:** the same people who can edit the certificate. Anyone who can see the certificate list also sees the models.
+
+An aircraft can [require a type rating](../aircraft/type-rating-requirement.md). Its crew is then checked against these links when the aircraft is booked or dispatched, so keep them up to date.
+
+When an instructor flies a training mission, Flylogs keeps a copy of their certificates on the student's mission record. For a TRI, TRE or type rating, that copy now includes the aircraft covered on the day.
+
 ### Medical limitations
 
 {% embed url="https://youtu.be/XtV2CPYxAl0" %}

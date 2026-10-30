@@ -640,6 +640,7 @@ Returns the canonical certificate type catalogue used across the app.
 | mandatory | boolean | Counts toward the `valid` certificate result |
 | order | number | Display sort order |
 | group_role | string | `pilot` \| `all` — restricts which user roles see this type |
+| aircraft_models | boolean | `true` for the types that name the aircraft models they cover (`type_rating`, `tri`, `tre`). See [Aircraft models](#aircraft-models). |
 
 ### List Certificates
 
@@ -652,6 +653,8 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
 {% endhint %}
 
 `PilotLimitation` (the medical limitations of each certificate) is present only when the caller is the pilot themselves or has `user_group_id <= 170` (Flight Instructor and above, the people who can edit the pilot's certificates). Other colleagues get the list without it.
+
+`AircraftModel` (the aircraft models a Type Rating, TRI or TRE covers) is present on every certificate, for everyone who can read the list. It is `[]` for the other types. See [Aircraft models](#aircraft-models).
 
 #### Response
 
@@ -671,6 +674,21 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
       "PilotLimitation": [
         { "id": "8c1a…", "code": "VML", "detail": null },
         { "id": "f575…", "code": "SSL", "detail": "Not valid for aerobatic flight" }
+      ],
+      "AircraftModel": []
+    },
+    {
+      "id": "301",
+      "user_id": "123",
+      "type": "type_rating",
+      "name": "A320 family",
+      "issue": "2026-03-01",
+      "expiration": "2027-03-01",
+      "Uploads": [],
+      "AircraftModel": [
+        { "id": "571", "name": "A-319", "icao": "A319", "manufacturer": "AIRBUS" },
+        { "id": "573", "name": "A-320", "icao": "A320", "manufacturer": "AIRBUS" },
+        { "id": "574", "name": "A-321", "icao": "A321", "manufacturer": "AIRBUS" }
       ]
     }
   ],
@@ -716,7 +734,7 @@ Special cases:
 
 <mark style="color:blue;">`GET`</mark> `/pilots/certificate/{certId}.json`
 
-Retrieve a single certificate with up to 5 attached uploads. The certificate must belong to a user of the caller's company (`404` otherwise). `PilotLimitation` (its medical limitations) is included only for the certificate's owner and callers with `user_group_id <= 170`.
+Retrieve a single certificate with up to 5 attached uploads. The certificate must belong to a user of the caller's company (`404` otherwise). `PilotLimitation` (its medical limitations) is included only for the certificate's owner and callers with `user_group_id <= 170`. `AircraftModel` (the models a Type Rating, TRI or TRE covers) is always included, `[]` for other types.
 
 ```json
 {
@@ -725,10 +743,26 @@ Retrieve a single certificate with up to 5 attached uploads. The certificate mus
     "Uploads": [
       { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678" }
     ],
-    "PilotLimitation": [ { "id": "8c1a…", "code": "VML", "detail": null } ]
+    "PilotLimitation": [ { "id": "8c1a…", "code": "VML", "detail": null } ],
+    "AircraftModel": []
   }
 }
 ```
+
+### Aircraft models
+
+Type ratings, and the TRI and TRE certificates built on them, apply to specific aircraft types. A certificate of type `type_rating`, `tri` or `tre` (the types flagged `aircraft_models: true` in [Certificate Types](#certificate-types)) stores the aircraft models it covers: one or more ids from the global aircraft model catalogue (`GET /aircraft/manufacturers.json`, then `GET /aircraft/model/{manufacturerId}.json`). One certificate can cover several models, for example an A320 family rating covering the A319, A320 and A321.
+
+Each entry of `AircraftModel` is:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | string | Aircraft model id (`aircraft_models.id`, the same id as `Aircraft.aircraft_model_id`) |
+| name | string | Model name |
+| icao | string | ICAO type designator |
+| manufacturer | string | Manufacturer name |
+
+Entries are sorted by manufacturer, then model name. The models are written with [Add / Edit Certificate](#add--edit-certificate) and removed with the certificate.
 
 ### Medical Limitations (dispatch)
 
@@ -880,6 +914,8 @@ Reads the running totals at the bottom of a logbook page, to suggest the profile
 - `reason` takes the same values as in [Read Certificate Document](#read-certificate-document).
 - **Access:** `user_group_id <= 150` (the only users who can write previous flight time), for themselves or a user of their company. Others get `403`.
 
+### Add / Edit Certificate
+
 <mark style="color:green;">`POST`</mark> `/pilots/add_certificate.json`
 
 Create a new certificate, or update an existing one by sending its `id`. Uses `multipart/form-data` for the optional file attachment.
@@ -894,9 +930,11 @@ UserCertificate[issue]=2024-06-01
 UserCertificate[expiration]=2025-06-01
 UserCertificate[photo]=@/path/to/scan.pdf
 UserCertificate[limitations]=[{"code":"VML","detail":null},{"code":"SSL","detail":"Not valid for aerobatic flight"}]
+UserCertificate[aircraft_model_ids]=[571,573,574]
 ```
 
 - **Limitations** (`UserCertificate[limitations]`, a JSON array): the medical's limitation codes, which replace the stored set for this certificate. Unknown codes and duplicates are dropped, and `detail` is cut to 255 characters. When the field is **omitted**, the stored limitations are left as they are. They are **always cleared** when the certificate type is not a medical. Rows that stay keep their `id`. The response's `result.PilotLimitation` holds the stored set.
+- **Aircraft models** (`UserCertificate[aircraft_model_ids]`, a JSON array of [aircraft model](#aircraft-models) ids; a comma list or `aircraft_model_ids[]` form fields are also accepted): the models a `type_rating`, `tri` or `tre` covers. They replace the stored set for this certificate. Ids that are not in the aircraft model catalogue and duplicates are dropped, and at most 50 models are kept. When the field is **omitted**, the stored models are left as they are. They are **always cleared** when the certificate type is anything else. Models that stay are not rewritten. The response's `result.AircraftModel` holds the stored set.
 
 - **Ownership.** On an update (`id` sent) the owner is always the one stored on the certificate: the posted `user_id` is ignored, so a certificate can never be moved between users. On a create, callers with `user_group_id > 170` (Captain, Pilot, Student Pilot, Cabin Crew, Specialist, Auditor, Mechanic) always file on their own profile — the posted `user_id` is replaced with the authenticated user.
 - Managers, Chief Pilots and Flight Instructors (`user_group_id <= 170` — Flight Instructor and above) can file and edit certificates for any user in their own company. Everyone else gets `403` when editing a certificate that is not theirs, and `404` when the certificate belongs to another company.

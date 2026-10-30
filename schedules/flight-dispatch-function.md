@@ -105,6 +105,12 @@ Limitations **never block dispatch**. They make sure the person dispatching know
 
 ***
 
+### **Type rating**
+
+When the aircraft [requires a type rating](../aircraft/type-rating-requirement.md), the dispatch box checks the crew on the day of the flight. If the PIC (or the SIC on a multi-pilot aircraft) has no valid type rating for the aircraft's model, and no TRI or TRE on board covers them, the flight cannot be dispatched. The Company Administrator, Operations Manager and Compliance & Safety Manager can enter an override reason to dispatch anyway; it is recorded for that crew and aircraft.
+
+***
+
 ### **Pre-dispatch gates: checklist & FRAT**
 
 Two optional safety gates can be required before a flight is dispatched. Both are **off by default** and are enabled per company under **Company Settings → Flights → Pre-dispatch gates**. The feature is available on **Club, Premium and Unlimited** plans.

@@ -400,6 +400,24 @@ On success the API returns the saved flight with its aircraft and crew:
 
 Keep `Flight.id`: you need it to confirm, view, update or cancel the flight.
 
+#### Type rating warning
+
+Logging a flight is never refused for a missing type rating: the flight has happened, and refusing it would lose the logbook record. When the aircraft requires a type rating and a crew seat is not covered (see [Type rating requirement](schedules.md#type-rating-requirement)), the saved flight carries `type_rating_warning`, with the same fields as the [compliance `type_rating` block](flight-types.md#type-rating) plus a `message`:
+
+```json
+{
+  "Flight": { "id": "bcc2…", "status": "DRAFT" },
+  "type_rating_warning": {
+    "required": true,
+    "ok": false,
+    "uncovered": ["pic"],
+    "message": "This aircraft requires a type rating. No valid type rating for CESSNA 172 Skyhawk: Antonio Oreilly (PIC)."
+  }
+}
+```
+
+It is checked on a new flight, and on an update only when the aircraft, a crew seat or the date changes. Offline-synced flights get the same answer.
+
 #### Safe retries with `client_id`
 
 If your integration may send the same new flight more than once (it queues requests while offline, or retries after a timeout), add a `client_id` to the `Flight` object: your own id for that flight, up to 64 characters of letters, digits, `_` and `-`, unique within your company.
@@ -576,6 +594,7 @@ Checked in order, each returning `result: false` with its own message when it fa
 
 | Condition | Message |
 |-----------|---------|
+| The aircraft requires a type rating and a crew seat is not covered (`code: TYPE_RATING_REQUIRED`, see [Type rating hard block](schedules.md#type-rating-hard-block)). A manager (`user_group_id <= 110`) proceeds by posting `type_rating_override_reason`; an override on this flight or on the booking it came from, for the same crew, also counts. | "This aircraft requires a type rating. No valid type rating for …" |
 | FRAT required (`schedule_dispatch_frat` on, dispatcher is crew) and not completed | "A completed Flight Risk Assessment (FRAT) is required to dispatch this flight." |
 | Non-school company and no `pax` posted | "Number of passengers (PAX) is required to dispatch this flight." |
 | Departure or destination missing (neither already on the flight nor posted) | "Departure and destination airports are required to dispatch this flight." |

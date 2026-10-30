@@ -389,6 +389,50 @@ Per-seat breakdown. For each seat: `compliant` is `false` when any required type
 | 404 | Flight type not found in the caller's company, or `user_id` is not a member of the company |
 | 403 | A user with `user_group_id > 170` (Captain and below) passed a `user_id` other than their own |
 
+#### Type rating
+
+<mark style="color:blue;">`GET`</mark> `/flight_types/compliance.json?aircraft_id={id}&pic_id={id}&sic_id={id}&supervisor_id={id}&at={unix}&schedule_id={id}`
+
+With `aircraft_id` the answer also carries `type_rating`: whether that aircraft requires a type rating and which seats of the given crew are covered, by the same rule the booking and dispatch gates apply (see [Type rating requirement](schedules.md#type-rating-requirement)). The flight type id may then be left out, and `compliance` is `null`. Without any crew parameter the target user is checked as PIC. Crew from another company is ignored. `schedule_id` reports a manager's override stored on that booking for this crew.
+
+```json
+{
+  "result": {
+    "flight_type_id": null,
+    "flight_type": null,
+    "user_id": "618",
+    "at": 1797325200,
+    "compliance": null,
+    "type_rating": {
+      "required": true,
+      "ok": true,
+      "aircraft_id": 160,
+      "model": { "id": 2009, "label": "CESSNA 172 Skyhawk" },
+      "seats": {
+        "pic": {
+          "user_id": 178, "name": "Antonio Oreilly", "covered": true, "via": "instructor",
+          "instructor_id": 306, "instructor_name": "Andrew Flyers",
+          "certificate": { "id": "b3f1…", "type": "tri", "name": "TRI C172", "expiration": "2029-01-01" }
+        }
+      },
+      "uncovered": [],
+      "overridden": false,
+      "override_reason": null,
+      "can_override": true
+    }
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| required | The aircraft requires a type rating. When `false`, nothing else is meaningful. |
+| ok | Every checked seat is covered. |
+| seats | Checked seats only (`pic`; `sic` on multi-pilot aircraft). `via` is `own` (their own TR / TRI / TRE) or `instructor` (a TRI / TRE on board covers them); `certificate` is the covering certificate that stays valid longest. |
+| uncovered | Seats that are not covered. |
+| overridden / override_reason | A manager's override stored on `schedule_id` for this crew. |
+| can_override | The caller may proceed with a reason (`user_group_id <= 110`). |
+
 #### This endpoint is advisory
 
 The result reports compliance; it does not decide whether an action is allowed. Nothing on this endpoint blocks a booking or a flight on its own — enforcement lives with the company settings of whichever feature is calling it:

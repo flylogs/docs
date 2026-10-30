@@ -152,6 +152,10 @@ This check follows the same rule as the toggle above: the warning blocks the boo
 
 <figure><img src="../.gitbook/assets/scheduleFlightDetailModal.png" alt=""><figcaption><p>Flight detail card showing the PIC/SIC, the Dual flight type, and a certificate-expiry warning for the SIC.</p></figcaption></figure>
 
+#### Type rating
+
+On an aircraft that [requires a type rating](../aircraft/type-rating-requirement.md), pilots who hold no valid type rating for its model see it as **type rating required** in the aircraft list and cannot book it. Students are not judged in the list: they fly with an instructor, and the instructor Flylogs assigns to a student booking is always one rated on the aircraft.
+
 ### Pending bookings
 
 If no Flight Instructor is available for the selected slot, the student's booking is stored with the new **PENDING** status: the slot is locked for the student, displayed like any scheduled flight, but it is not confirmed yet because it lacks an FI as PIC.

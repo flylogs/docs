@@ -78,6 +78,7 @@ Retrieve the fleet list. Pilots (`user_group_id > 170` — Captain and below) se
       "multiengine": false,
       "multipilot": false,
       "simulator": false,
+      "require_type_rating": false,
       "serial": "172-12345",
       "registration_exp": "2026-09-30",
       "insurance_exp": "2025-12-31",
@@ -111,6 +112,8 @@ Retrieve the fleet list. Pilots (`user_group_id > 170` — Captain and below) se
   }
 ]
 ```
+
+> `Aircraft.require_type_rating` is `true` when crew need a type rating for the aircraft's model (see [Type rating requirement](schedules.md#type-rating-requirement)); it is also returned by [View Aircraft](#view-aircraft).
 
 > `Aircraft.hours` and `Aircraft.landings` are the running totals from the aircraft logbook (decimal hours string and integer count). `Aircraft.log_reference` is a Unix timestamp of the last logbook entry. `AircraftLogReference.total_time` / `landings` are the baseline reference values (often `null` or `0.000` when no reference has been set). `User` is `null` when no default pilot is assigned.
 
@@ -602,6 +605,8 @@ The submitted list **replaces** all of the pilot's custom prices: aircraft not s
 
 Add a new aircraft to the fleet. Admin access required.
 
+When `Aircraft.require_type_rating` is `1` the response carries `type_rating_uncovered` (see [Requires a type rating](#requires-a-type-rating)); otherwise it is `null`.
+
 ---
 
 ## Edit Aircraft
@@ -610,8 +615,30 @@ Add a new aircraft to the fleet. Admin access required.
 
 Update aircraft details. Requires `canEditAircraft`: `user_group_id` in 1, 100, 105, 110, 150, 300,
 or being one of the [aircraft's managers](#aircraft-manager). A manager's request has the `Manager`
-key and `Aircraft.company_id`, `Aircraft.active` and `Aircraft.deleted` stripped before the save, so
-the manager list and those three columns can only be changed by staff.
+key and `Aircraft.company_id`, `Aircraft.active`, `Aircraft.deleted` and `Aircraft.require_type_rating`
+stripped before the save, so the manager list and those columns can only be changed by staff.
+
+#### Requires a type rating
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Aircraft.require_type_rating | 0 / 1 | Crew can only be booked or dispatched on this aircraft with a valid Type Rating, TRI or TRE linked to its model. Off by default. Staff only. See [Type rating requirement](schedules.md#type-rating-requirement). |
+
+When a save switches it **on**, the response carries `type_rating_uncovered`: the active flying users of the company who hold no valid linked rating for the model today, so nobody is locked out unknowingly. `null` on every other save.
+
+```json
+{
+  "result": true,
+  "message": "The changes were saved!",
+  "type_rating_uncovered": {
+    "count": 3,
+    "total": 12,
+    "pilots": [ { "id": 178, "name": "Antonio Oreilly" } ]
+  }
+}
+```
+
+`pilots` holds the first 20 by name; `count` is the full number.
 
 #### Clocks
 
