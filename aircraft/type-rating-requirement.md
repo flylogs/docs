@@ -18,6 +18,8 @@ Open the aircraft, press **Edit** and tick **Requires a type rating** under **Ai
 
 When you save, Flylogs lists the active pilots of your company who hold no valid type rating linked to this model today. They can no longer be booked or dispatched on the aircraft until their certificates are updated, so check the list before you leave the page.
 
+<figure><img src="../.gitbook/assets/type-rating-uncovered-pilots.png" alt=""><figcaption><p>After switching it on: the pilots who are not covered yet.</p></figcaption></figure>
+
 The aircraft list shows a **TR** tag on every aircraft that requires a type rating, and the aircraft page shows the setting under **Details**.
 
 **Who can change it:** the Company Administrator, Operations Manager, Compliance & Safety Manager, Chief Pilot and Mechanic, the same people who can activate or retire the aircraft. An [aircraft manager](aircraft-manager.md) cannot change it.
@@ -50,6 +52,10 @@ Which seats are checked:
 | Logging a flight | **Never refused.** The flight has already happened, so it is saved and the save message warns that the crew had no valid type rating. |
 | Self-booking | Aircraft the pilot is not rated on are shown as **type rating required** and cannot be picked. Students are not judged here: they fly with an instructor, and when Flylogs picks the instructor for a student booking it only picks one rated on the aircraft. |
 | Auto Pilot | Students without the rating are only paired with a rated instructor, and pilots without it are not placed on the aircraft. |
+
+<figure><img src="../.gitbook/assets/type-rating-schedule-refused.png" alt=""><figcaption><p>Schedule form: the PIC has no type rating for the King Air, so the booking cannot be saved.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/type-rating-schedule-instructor.png" alt=""><figcaption><p>With a TRI for the model on board as supervisor, the same PIC is covered.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/type-rating-dispatch.png" alt=""><figcaption><p>At dispatch: the PIC's TRI has expired, and a manager can enter a reason to proceed.</p></figcaption></figure>
 
