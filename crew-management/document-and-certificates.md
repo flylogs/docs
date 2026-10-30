@@ -10,6 +10,8 @@ Using "My Certificates", users can create various types of documents, attach fil
 
 "My Certificates" is on the home dashboard of **every user**, whatever their role and whether they fly or not: managers, the safety, HR, finance, training and crew-scheduling managers, dispatchers, instructors, pilots, cabin crew and mechanics. Staff who don't fly keep their own trainings and ratings there too. The "pilot documents required" warning is shown only to users who fly.
 
+Managers can also keep these certificates up to date for other people. For flight crew, open the profile under **Flight Crew** and go to the **Qualifications** tab. For dispatchers, mechanics and other staff, open the profile under **Home > Staff** (available to the Company Administrator, Operations, Compliance & Safety and HR managers): its **Certificates** section lets them view, add, edit and delete that person's certificates and attach the document. Only management roles up to Chief Pilot can edit someone else's certificates; everyone else manages only their own.
+
 ### Certificate types
 
 Besides licences, class and type ratings, medicals, language proficiency, IDs and passports, you can file:
