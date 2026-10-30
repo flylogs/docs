@@ -59,6 +59,8 @@ To be read, the document is sent to our AI provider, and Flylogs asks the provid
 
 ### Type ratings: aircraft covered
 
+{% embed url="https://youtu.be/js2au78NTM4" %}
+
 A type rating applies to specific aircraft types, and so do the TRI and TRE certificates built on it. When you add or edit a **Type Rating**, **TRI Certificate** or **TRE Certificate**, the **Aircraft covered** section lets you choose the aircraft models it covers. One rating can cover several models: an A320 family rating covers the A319, A320 and A321.
 
 * The models your company flies are listed under **Your fleet**. Click one to add it.

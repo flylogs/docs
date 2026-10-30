@@ -6,6 +6,8 @@ description: >-
 
 # Type rating requirement
 
+{% embed url="https://youtu.be/js2au78NTM4" %}
+
 Some aircraft can only be flown by pilots who hold a type rating for that model. Switch on **Requires a type rating** on the aircraft and Flylogs checks the crew every time the aircraft is booked or dispatched.
 
 The check uses the aircraft models linked to each pilot's Type Rating, TRI and TRE certificates. Before you switch it on, make sure those certificates name the aircraft they cover: see [Type ratings: aircraft covered](../crew-management/document-and-certificates.md#type-ratings-aircraft-covered).
