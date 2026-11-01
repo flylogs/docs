@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Flight legs](whats-new/flight-legs.md)
   * [Suggestions while you work](whats-new/flylogs-assistant.md)
   * [Sunrise and sunset operating hours](whats-new/operating-hours-sunrise-sunset.md)
   * [Sign in with a passkey](whats-new/passkeys-and-two-factor.md)
@@ -99,6 +100,7 @@
 * [Create a flight](flights/create-a-flight.md)
 * [Draft a mission comment](flights/draft-mission-comment.md)
 * [Offline flight data](flights/offline-flight-data.md)
+* [Flight legs](flights/flight-legs.md)
 * [Flight audit and reporting](flights/flight-audit-and-reporting.md)
 * [Audit trails](flights/audit-trails.md)
 
@@ -178,6 +180,7 @@
 * [Users](API/users.md)
 * [Company](API/company.md)
 * [Flights](API/flights.md)
+* [Flight legs](API/flight-legs.md)
 * [Aircraft](API/aircraft.md)
 * [Pilots](API/pilots.md)
 * [Schedules](API/schedules.md)

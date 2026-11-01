@@ -21,6 +21,7 @@
 * [Events](events.md)
 * [Flight Types](flight-types.md)
 * [Flights](flights.md)
+* [Flight legs](flight-legs.md)
 * [Inventory](inventory.md)
 * [Inventory Units](inventory-units.md)
 * [Maintenance Jobs](maintenance-jobs.md)

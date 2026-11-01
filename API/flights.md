@@ -281,6 +281,10 @@ Users with `user_group_id > 170` (Captain and below) may only view flights they 
 }
 ```
 
+#### Flight legs
+
+`flight.FlightLeg` lists the flight's legs (sorties such as skydiving lifts or tows), ordered by `sequence`. It is an empty array when the flight has none. Legs are read and written through their own endpoints, never through Create or Update Flight: see [Flight legs](flight-legs.md).
+
 #### Permission Flags
 
 | Field | Type | Description |

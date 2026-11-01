@@ -1,5 +1,7 @@
 # Flight records
 
+> Flying several sorties in one record (skydiving lifts, tows, survey runs)? Record each one as a [flight leg](flight-legs.md).
+
 ### Data safety
 
 By entrusting your flight data to Flylogs, you can rest assured that our robust and dependable audit and reporting tools will provide you with peace of mind and ensure compliance with all regulatory requirements.

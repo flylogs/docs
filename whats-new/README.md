@@ -22,6 +22,12 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ***
 
+## November 2026
+
+**[Flight legs](flight-legs.md)** · Flights\
+Record every lift, tow or run of a flight in its own row — start and end with one tap, altitude, persons and fuel used — saved as you go, even offline.\
+[Manual →](../flights/flight-legs.md)
+
 ## October 2026
 
 **[Suggestions while you work](flylogs-assistant.md)** · Safety, Maintenance, Schedules, Trainings\
