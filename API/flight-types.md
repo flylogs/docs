@@ -54,6 +54,7 @@ List active (non-deleted) flight types for the company, ordered by `order` field
         "name": "Training",
         "color": "#3498db",
         "booking": true,
+        "require_frat": false,
         "order": "0",
         "deleted": false
       },
@@ -130,6 +131,7 @@ Create a new flight type. Also returns the `flightClassification` reference data
 | FlightType.pic_flight_time | string | No | PIC time classification key |
 | FlightType.sic_flight_time | string | No | SIC time classification key |
 | FlightType.supervisor_flight_time | string | No | Supervisor time classification key. Defaults to `none` |
+| FlightType.require_frat | boolean | No | Crew dispatching a flight of this type must submit a completed FRAT (`frat_score`, `frat_band`, `frat_data`) — see [Dispatch Schedule](schedules.md#flight-risk-assessment-frat). Defaults to `false` |
 
 #### Aircraft restriction (optional)
 

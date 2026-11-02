@@ -8,12 +8,16 @@ This article explains how to enable the FRAT, how the score and bands work, what
 
 ### Enabling the gates
 
-The FRAT and the pre-dispatch checklist are both **optional** and **off by default**. A Company Administrator enables them under **Company Settings → Flights → Pre-dispatch gates**. The feature is available on the **Club, Premium and Unlimited** plans.
+The FRAT and the pre-dispatch checklist are both **optional** and **off by default**. The FRAT is enabled **per flight type**: open **Flight types**, edit a type and switch on **Require Flight Risk Assessment (FRAT)** in the **Pre-dispatch** card. The pre-dispatch checklist stays a company setting under **Company Settings → Flights → Pre-dispatch gates**. The feature is available on the **Club, Premium and Unlimited** plans.
 
-<figure><img src="../.gitbook/assets/frat-settings-toggles.png" alt="Pre-dispatch gates settings with the checklist and FRAT toggles"><figcaption>Company Settings → Flights → Pre-dispatch gates</figcaption></figure>
+Before November 2026 the FRAT was a single company switch; companies that had it on now have it on for every one of their flight types, so nothing changed for them until they turn it off on the types that do not need it.
+
+<figure><img src="../.gitbook/assets/flight-type-require-frat.png" alt="The Pre-dispatch card on the flight type form with the Require Flight Risk Assessment (FRAT) switch turned on"><figcaption>Flight types → edit → Pre-dispatch</figcaption></figure>
+
+<figure><img src="../.gitbook/assets/company-settings-pre-dispatch-gates.png" alt="Company Settings, Flights tab, Pre-dispatch gates: the checklist switch and a note that the FRAT is now set per flight type"><figcaption>Company Settings → Flights → Pre-dispatch gates keeps only the checklist and links to Flight types</figcaption></figure>
 
 * **Require pre-dispatch checklist** — shows an acknowledgement checklist (weather, NOTAMs, aircraft status, crew documents, SOPs) that must be fully ticked before a flight can be dispatched.
-* **Require Flight Risk Assessment (FRAT)** — requires a completed FRAT before a crew member can dispatch their own flight; high-risk flights need a Supervisor.
+* **Require Flight Risk Assessment (FRAT)** (on the flight type) — requires a completed FRAT before a crew member can dispatch their own flight of that type; high-risk flights need a Supervisor.
 
 You can enable either gate on its own, or both together.
 
@@ -21,7 +25,7 @@ You can enable either gate on its own, or both together.
 
 ### When the FRAT appears
 
-The FRAT is shown in the **dispatch confirmation** on the schedule view, directly under the pre-dispatch checklist. It is required only when **the person dispatching is a crew member of that flight** — the assigned PIC, SIC or Supervisor. Operations staff who are not assigned to the flight can dispatch without completing it.
+The FRAT is shown in the **dispatch confirmation** on the schedule view, directly under the pre-dispatch checklist. It is required only when the **flight type** of the booking or flight has **Require Flight Risk Assessment (FRAT)** on **and** **the person dispatching is a crew member of that flight** — the assigned PIC, SIC or Supervisor. Operations staff who are not assigned to the flight can dispatch without completing it.
 
 When both gates are enabled, the crew member sees the checklist first, then the FRAT:
 
@@ -29,7 +33,11 @@ When both gates are enabled, the crew member sees the checklist first, then the 
 
 When only the FRAT is enabled, the checklist is hidden:
 
-<figure><img src="../.gitbook/assets/frat-dispatch-frat-only.png" alt="Dispatch confirmation showing only the FRAT questionnaire"><figcaption>The FRAT on its own</figcaption></figure>
+<figure><img src="../.gitbook/assets/frat-dispatch-frat-only.png" alt="Dispatch confirmation with the dispatch data and the completed FRAT questionnaire, risk score 8, Low risk"><figcaption>The FRAT on its own, on a flight type that requires it</figcaption></figure>
+
+On a flight type that does not require the FRAT, the dispatch confirmation shows only the dispatch data:
+
+<figure><img src="../.gitbook/assets/frat-dispatch-no-frat.png" alt="Dispatch confirmation with only the dispatch data and passenger list, no FRAT"><figcaption>The same dispatch on a flight type without the FRAT</figcaption></figure>
 
 ***
 

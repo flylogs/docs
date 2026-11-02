@@ -154,6 +154,12 @@ The warning never blocks the save and never clears the aircraft: a flight logged
 
 **API.** The restriction is not enforced by the API; see [Flight types API](../API/flight-types.md#aircraft-restriction-optional).
 
+### Require Flight Risk Assessment (FRAT)
+
+A switch in the **Pre-dispatch** card, off by default. When it is on, a crew member (PIC, SIC or Supervisor) dispatching a flight of this type must first complete the [Flight Risk Assessment (FRAT)](../schedules/flight-risk-assessment-frat.md); a high-risk result can only be dispatched by a Supervisor. Turn it on for the kinds of flying where you want a recorded go/no-go decision (for example solo, commercial or cross-country flights) and leave it off for the rest. A flight with no flight type never requires a FRAT. Only users who can manage flight types (Company Administrator and the managers allowed to edit flight types) can change it.
+
+<figure><img src="../.gitbook/assets/flight-type-require-frat.png" alt="The Pre-dispatch card on the flight type form with the Require Flight Risk Assessment (FRAT) switch turned on"><figcaption><p>The <strong>Pre-dispatch</strong> card on the flight type form.</p></figcaption></figure>
+
 ### Visibility — visible on self-booking
 
 A toggle (shown as the **Scheduling** column in the list) that controls whether the flight type appears in the **self-booking / scheduling** flight-type picker. Turn it off for types that should only be used when logging a flight after the fact (e.g. Test or Ferry), and on for the everyday operations crew book themselves onto.
@@ -190,6 +196,7 @@ In the Schedule Manager, the booking form lists the same result on each crew car
 ### Schedules, dispatch & booking
 
 * **Booking picker.** Only types with **Visible on self-booking** enabled can be chosen when booking a slot.
+* **FRAT.** Dispatching a booking or flight of a type with **Require Flight Risk Assessment (FRAT)** on asks the crew member for a completed FRAT first.
 * **Crew compliance.** When a manager assigns crew in the schedule editor, each crew card shows *Docs OK* or lists exactly which required certificates are missing/expired for that seat, and can block the save. The pre-flight **dispatch briefing** shows the same per-seat checklist. In **self-booking**, a flyer who doesn't meet the type's requirements is always warned, and is stopped from booking only when *Require pilot documentation* is on and *Allow self-booking without valid documents* is off. Validity is evaluated for the scheduled time, so a certificate that expires before the flight ends is flagged.
 
 ### Trainings

@@ -113,10 +113,10 @@ When the aircraft [requires a type rating](../aircraft/type-rating-requirement.m
 
 ### **Pre-dispatch gates: checklist & FRAT**
 
-Two optional safety gates can be required before a flight is dispatched. Both are **off by default** and are enabled per company under **Company Settings → Flights → Pre-dispatch gates**. The feature is available on **Club, Premium and Unlimited** plans.
+Two optional safety gates can be required before a flight is dispatched. Both are **off by default**. The checklist is enabled per company under **Company Settings → Flights → Pre-dispatch gates**; the FRAT is enabled per **flight type** (**Flight types → edit → Pre-dispatch**). The feature is available on **Club, Premium and Unlimited** plans.
 
 * **Pre-dispatch checklist** — a short acknowledgement checklist (weather, NOTAMs, aircraft status, crew documents, SOPs) that must be fully ticked before the **Dispatch** button is enabled. The checklist is an acknowledgement only and is not stored.
-* **Flight Risk Assessment (FRAT)** — a crew member dispatching their own flight must complete a FAA-style PAVE risk questionnaire; high-risk flights require a Supervisor. See the dedicated [Flight Risk Assessment (FRAT)](flight-risk-assessment-frat.md) article for the full details.
+* **Flight Risk Assessment (FRAT)** — on flight types that require it, a crew member dispatching their own flight must complete a FAA-style PAVE risk questionnaire; high-risk flights require a Supervisor. See the dedicated [Flight Risk Assessment (FRAT)](flight-risk-assessment-frat.md) article for the full details.
 
 ***
 

@@ -40,10 +40,14 @@ Files removed by the retention policy are deleted permanently and cannot be reco
 
 ### Pre-dispatch gates
 
-These two switches add mandatory safety steps to the [flight dispatch function](../../schedules/flight-dispatch-function.md). Both are off by default.
+This switch adds a mandatory safety step to the [flight dispatch function](../../schedules/flight-dispatch-function.md). It is off by default.
+
+<figure><img src="../../.gitbook/assets/company-settings-pre-dispatch-gates.png" alt="Pre-dispatch gates: the checklist switch and a note linking to Flight types for the FRAT"><figcaption>Pre-dispatch gates</figcaption></figure>
 
 * **Require pre-dispatch checklist** — the crew must tick every item on an acknowledgement checklist (weather, NOTAMs, aircraft status, crew documents, SOPs) before the Dispatch button becomes active. The checklist is an acknowledgement only; the ticks are not stored.
-* **Require Flight Risk Assessment (FRAT)** — a crew member dispatching their own flight must first complete a FAA-style PAVE questionnaire. The answers produce a risk score and a band (Low / Medium / High). **High-risk flights can only be dispatched by a supervisor.** Results are stored per flight and per crew member for audit. Several questions are pre-answered from the dispatcher's own flight history (recent hours, type familiarity, airports flown, night experience) and live route weather. The requirement only applies when the person dispatching is assigned to the flight. See [Flight Risk Assessment (FRAT)](../../schedules/flight-risk-assessment-frat.md).
+The **Flight Risk Assessment (FRAT)** is no longer a company setting: it is switched on per flight type, under **Flight types → edit → Pre-dispatch → Require Flight Risk Assessment (FRAT)** (see [Flight Types](../../flights/flight-types.md#require-flight-risk-assessment-frat)). Companies that had the FRAT switched on here have it on for all their flight types.
+
+* **What the FRAT does** — a crew member dispatching their own flight of such a type must first complete a FAA-style PAVE questionnaire. The answers produce a risk score and a band (Low / Medium / High). **High-risk flights can only be dispatched by a supervisor.** Results are stored per flight and per crew member for audit. Several questions are pre-answered from the dispatcher's own flight history (recent hours, type familiarity, airports flown, night experience) and live route weather. The requirement only applies when the person dispatching is assigned to the flight. See [Flight Risk Assessment (FRAT)](../../schedules/flight-risk-assessment-frat.md).
 
 ### Flight permissions
 

@@ -599,7 +599,7 @@ Checked in order, each returning `result: false` with its own message when it fa
 | Condition | Message |
 |-----------|---------|
 | The aircraft requires a type rating and a crew seat is not covered (`code: TYPE_RATING_REQUIRED`, see [Type rating hard block](schedules.md#type-rating-hard-block)). A manager (`user_group_id <= 110`) proceeds by posting `type_rating_override_reason`; an override on this flight or on the booking it came from, for the same crew, also counts. | "This aircraft requires a type rating. No valid type rating for …" |
-| FRAT required (`schedule_dispatch_frat` on, dispatcher is crew) and not completed | "A completed Flight Risk Assessment (FRAT) is required to dispatch this flight." |
+| FRAT required (flight type `require_frat` on, dispatcher is crew) and not completed | "A completed Flight Risk Assessment (FRAT) is required to dispatch this flight." |
 | Non-school company and no `pax` posted | "Number of passengers (PAX) is required to dispatch this flight." |
 | Departure or destination missing (neither already on the flight nor posted) | "Departure and destination airports are required to dispatch this flight." |
 

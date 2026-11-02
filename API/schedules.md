@@ -137,7 +137,7 @@ Create a flight record from a schedule (dispatch function). Converts the schedul
 
 #### Flight Risk Assessment (FRAT)
 
-When the company setting `schedule_dispatch_frat` is enabled **and** the authenticated user is a crew member of the schedule (PIC, SIC or Supervisor), a completed FRAT is **mandatory**. In that case call this endpoint with <mark style="color:green;">`POST`</mark> and include the FRAT fields below; the dispatch is rejected (`result: false`) if they are missing. When the setting is off, or the dispatcher is not crew, the `GET` form is sufficient.
+When the schedule's flight type has `require_frat` enabled (see [Flight types](flight-types.md); this replaced the company setting `schedule_dispatch_frat`) **and** the authenticated user is a crew member of the schedule (PIC, SIC or Supervisor), a completed FRAT is **mandatory**. In that case call this endpoint with <mark style="color:green;">`POST`</mark> and include the FRAT fields below; the dispatch is rejected (`result: false`) if they are missing. When the flight type does not require it, the schedule has no flight type, or the dispatcher is not crew, the `GET` form is sufficient.
 
 The FRAT result is stored per flight and per user (one row per crew member).
 
