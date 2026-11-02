@@ -4,6 +4,8 @@ description: Build your own forms, decide who fills them in, and keep every fill
 
 # Custom forms
 
+{% embed url="https://youtu.be/ri90Ge6el0c" %}
+
 Custom forms let you rebuild the forms you keep on paper or in Word — a course application form, a checklist, a declaration — inside Flylogs. You build a form once; every copy filled in from it is kept as a signed record, attached to the person (and course) it is about.
 
 {% hint style="info" %}
