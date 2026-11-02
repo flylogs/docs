@@ -53,6 +53,8 @@ Every field and every section has a **Show** setting. By default it is always sh
 
 Example: *Refuel performed?* (Yes / No) → *Fuel slip photo*, shown only if the answer is **Yes**. A hidden field is never required, and whatever was entered in it is discarded when the answer above changes.
 
+<figure><img src="../.gitbook/assets/custom-forms-builder-fields.png" alt=""><figcaption><p>A daily inspection on the Fields tab: the fuel slip photo is shown only if the refuel answer is Yes.</p></figcaption></figure>
+
 ### Sections signed by someone else
 
 A section can be **signed separately** by chosen user groups — for example an English-proficiency row assessed by a CTKI, while the Head of Training signs the rest. That section can only be filled and signed by those groups; nobody else (not even a manager) can sign it for them. The form is complete only when every section shown has been signed.
@@ -79,6 +81,8 @@ On the **Revisions** tab you can add your own labels — *Issue*, *Revision*, *E
 ## Signing
 
 Filling in is saved as you type. When a section is complete, press **Sign**. If **Sign with password** is on (Settings tab), the signer re-enters their password, as for course approvals. Either way, each signature records who signed, when, and a fingerprint of the answers signed. Signed answers can no longer be changed.
+
+<figure><img src="../.gitbook/assets/custom-forms-signed-copy.png" alt=""><figcaption><p>A signed copy: the answers, the photo, the revision it was filled on and the signature.</p></figcaption></figure>
 
 A manager can **reopen** a signed copy with a reason: its signatures are voided, the answers it held are kept in the history, and it must be signed again.
 
@@ -111,9 +115,15 @@ On the **Attached to** tab you can also attach a form to flights:
 | **Post-flight** | in the confirm window | flight types, aircraft |
 | **Booking creation** | when someone books a flight for themselves | flight types, aircraft |
 
+<figure><img src="../.gitbook/assets/custom-forms-attached-first-flight.png" alt=""><figcaption><p>A form attached to the first flight of the day, as mandatory.</p></figcaption></figure>
+
 **Who fills it**: on *Who fills & sees*, choose the crew member — PIC (default), SIC, instructor / supervisor, or any crew member. Managers and the form's filling groups can always fill it on the crew's behalf.
 
+<figure><img src="../.gitbook/assets/custom-forms-who-fills-flight.png" alt=""><figcaption><p>Who fills &amp; sees for a flight form: the PIC fills it in.</p></figcaption></figure>
+
 **Mandatory** flight forms block the step until they are signed or a manager waives them with a reason: the **Dispatch** button, saving a new flight, or **Confirm**. **Skippable** ones are offered and can be skipped.
+
+<figure><img src="../.gitbook/assets/custom-forms-dispatch-fill.png" alt=""><figcaption><p>The pilot fills in and signs the daily inspection in the dispatch window. Dispatch stays off until it is signed.</p></figcaption></figure>
 
 What is never blocked:
 
@@ -149,6 +159,8 @@ Forms for exams, first login, document downloads and certificates will be added 
 **Forms → Responses** lists every copy of a form: who it is about, its status, when it was started, submitted and due, and which required answers are still missing. The **Related to** column links to the record each copy belongs to: the flight, the booking, the student's enrolment (or the course, for a pre-entry form filled before enrolment) or the person. The same link is at the top of each filled copy.
 
 Who gets the link: flights and bookings link for everyone who can see the copy, and the flight or booking page still applies its own access. Enrolment, course and person pages link for managers (`user_group_id` ≤ 110); a student also gets a link to their own enrolment. Filter by status or name, open any copy, or export the list to Excel (one column per field).
+
+<figure><img src="../.gitbook/assets/custom-forms-responses.png" alt=""><figcaption><p>Responses of a form: status, dates and the flight each copy belongs to.</p></figcaption></figure>
 
 | Status | Meaning |
 | --- | --- |
