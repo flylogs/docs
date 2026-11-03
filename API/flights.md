@@ -351,6 +351,8 @@ Send a JSON body with a top-level `Flight` object:
 | supervisor_id | integer | No | Supervisor. |
 | tach_start, tach_end | number | Conditional | Tach readings. Required to confirm when the aircraft counts its airframe hours on the tach. |
 | hobbs_start, hobbs_end | number | Conditional | Hobbs readings. Required to confirm when the aircraft counts its airframe hours on the Hobbs meter. |
+| fuel | number | No | Fuel **uplifted** with the flight (before or after it), in the uplift unit (`CompanySetting.fuel_uplift_unit`, else the aircraft's `fuel_tracking`). Seeds the flight's refuelling, see [Refuelings](refuelings.md). |
+| fuel_start, fuel_end | number | No | Fuel on board at engine start / shutdown, in the aircraft's gauge unit (`Aircraft.fuel_tracking`). Fuel used is worked out from them and the legs' uplifts, never stored: see [Flight legs → Fuel](flight-legs.md#fuel). |
 | comments | string | No | Free-text change note, stored in the flight's change history. |
 | id | string | No | Include the ID of an existing flight to **update** it instead of creating one. |
 

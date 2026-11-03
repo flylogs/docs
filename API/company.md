@@ -59,6 +59,7 @@ Retrieve the full company profile, theme, operational settings, and billing conf
     "max_flight_hours_year": "900",
     "aircraft_report_without_flight": true,
     "aircraft_grounding_enforced": true,
+    "fuel_uplift_unit": "l",
     "FlightTimezone": {
       "id": "90",
       "name": "Atlantic/Canary",
@@ -108,6 +109,8 @@ Present on both `GET /companies/settings.json` and `GET /manager/companies/prefe
 
 {% hint style="info" %}
 **Aircraft defects.** `aircraft_report_without_flight` (default `true`): every user may create an [aircraft report](aircraft-reports.md#access-control) with no `flight_id`; `false` keeps that to `user_group_id` ≤ 150, 300 and the aircraft's managers. `aircraft_grounding_enforced` (default `true`): an open report marked `GROUNDED` blocks crew bookings and all dispatch, and only maintenance may release it; `false` makes `GROUNDED` informative only (see [Grounded aircraft](aircraft-reports.md#grounded-aircraft)). Both are saved with the other settings through `POST /manager/companies/settings.json` as `CompanySetting[...]`.
+
+**Fuel uplift unit.** `fuel_uplift_unit` (`l`, `usgal`, `impgal`, `kgs`, `lbs`, or `null`) is the unit the company uplifts (buys) fuel in, for the whole fleet: uplifts (`Flight.fuel`, `FlightLeg.fuel`), refuellings and fuel used are in it. `null` (or `""` on save) = each aircraft uplifts in its own gauge unit, `Aircraft.fuel_tracking`. An aircraft whose gauge unit and this unit are a weight and a volume needs its `fuel_type` (see [Aircraft → Fuel units](aircraft.md#fuel-units)).
 
 **Flight timezone.** When `flight_timezone_id` is set, the resolved `CompanySetting.FlightTimezone` object is returned (same shape as `CompanyDetail.Timezone`). Flight wall-clock times (`offblocks_time`, `takeoff_time`, `landing_time`, `onblocks_time`) and the flight `date` in the [Flights API](flights.md) are interpreted and formatted in this zone; when it is `null`/absent, the company timezone is used. Schedules and trainings always use the company timezone.
 {% endhint %}

@@ -114,6 +114,7 @@ Aircraft, and the supplier and airport values already in use, for filters and th
     "airports": ["LELL", "LEPP"],
     "fuel_types": ["AVGAS100LL", "JETA1", "JETA", "MOGAS", "SAF", "OTHER"],
     "units": ["l", "usgal", "impgal"],
+    "uplift_unit": null,
     "currency": "EUR"
   }
 }
@@ -143,7 +144,7 @@ Form-encoded. Include `data[Refueling][id]` to update; omit it to create.
 | invoice_ref | |
 | notes | |
 
-**`fuel_type` and `unit` are not accepted.** Both are inherited from the aircraft and snapshotted onto the row when it is created, so that a fleet's units are stated in exactly one place and changing an aircraft later never re-interprets historic quantities.
+**`fuel_type` and `unit` are not accepted.** Both are inherited and snapshotted onto the row when it is created — `unit` is the company's uplift unit (`uplift_unit` above, `CompanySetting.fuel_uplift_unit`), else the aircraft's `fuel_tracking`; `fuel_type` is the aircraft's — so that units are stated in exactly one place and changing the company setting or an aircraft later never re-interprets historic quantities.
 
 ```json
 { "result": true, "message": "The changes were saved!", "id": "8f1c…", "errors": [] }
@@ -180,7 +181,9 @@ Fields you omit are left unchanged on every row. Each row is saved individually,
 
 Send `data[Refueling][id]`.
 
-A refuelling seeded from a flight will reappear the next time that flight is saved — the flight still says fuel went in. To remove it permanently, clear the fuel quantity on the flight instead.
+A refuelling seeded from a flight will reappear the next time that flight is saved — the flight still says fuel went in. To remove it permanently, clear the fuel quantity on the flight (and on its legs) instead.
+
+A flight's refuelling holds **every uplift of the flight**: `Flight.fuel` plus the `fuel` uplifted after each of its [legs](flight-legs.md#fuel). It is re-seeded when the flight's fuel or status changes and when a leg's uplift is saved or deleted. Its `unit` is the company's uplift unit (`CompanySetting.fuel_uplift_unit`, else the aircraft's `fuel_tracking`).
 
 ---
 

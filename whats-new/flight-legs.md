@@ -2,7 +2,7 @@
 
 **November 2026** · Flights
 
-Skydiving lifts, glider and banner tows, survey runs: some flights are many short sorties. Until now every sortie went into Remarks as free text. **Flight legs** give each sortie its own row, with the same columns for every operation: start and end (one tap on **Now**), airborne time worked out for you, altitude in feet or flight level, persons, fuel used and notes.
+Skydiving lifts, glider and banner tows, survey runs: some flights are many short sorties. Until now every sortie went into Remarks as free text. **Flight legs** give each sortie its own row, with the same columns for every operation: start and end (one tap on **Now**), airborne time worked out for you, altitude in feet or flight level, persons, fuel and notes.
 
 {% embed url="https://youtu.be/xHmTY6UUn5c" %}
 
@@ -18,7 +18,7 @@ Skydiving lifts, glider and banner tows, survey runs: some flights are many shor
 * **Deleted by mistake?** Tap **Undo**.
 * Large buttons and number keypads on iPhone and iPad.
 
-Legs never change the flight's own block times, landings or fuel, and **Remarks** is still there for anything else.
+Legs never change the flight's own block times or landings, and **Remarks** is still there for anything else. Fuel on legs works as described in [Fuel used, worked out from the gauge](fuel-used-from-the-gauge.md).
 
 ### Everywhere the flight goes
 

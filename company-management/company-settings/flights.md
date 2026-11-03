@@ -1,5 +1,5 @@
 ---
-description: Logbook protection, flight form options, pre-dispatch gates, aircraft defects and flight permissions
+description: Logbook protection, flight form options, fuel, pre-dispatch gates, aircraft defects and flight permissions
 ---
 
 # Flights
@@ -37,6 +37,18 @@ Files removed by the retention policy are deleted permanently and cannot be reco
 
 * **Pax & cargo fields** — shows or hides the passenger and cargo weight fields on the flight log form and on the schedule review pages. It is enabled automatically for companies registered as AOC operators, and optional for everyone else.
 * **Require password to confirm flights** — adds a second validation step: the user must retype their own account password to confirm a flight into the logbook. Recommended for shared office or dispatch computers, where a logged-in session might be used by someone else.
+
+### Fuel
+
+**Fuel uplift unit** is the unit your company buys fuel in, for the whole fleet: litres, US gallons, imperial gallons, kilograms or pounds. Fuel uplifted on flights and after legs, refuellings on **Billing → Fuel & Excise**, and fuel used are all in this unit. Leave it on **Same as each aircraft's fuel tracking unit** when every aircraft is refuelled in the unit its gauge reads.
+
+<figure><img src="../../.gitbook/assets/company-settings-fuel-uplift-unit.png" alt="Fuel uplift unit set to Litres"><figcaption>Fuel uplift unit</figcaption></figure>
+
+Each aircraft keeps its own **fuel tracking** unit, the unit its gauge reads, and its edit form shows the company's uplift unit next to it.
+
+<figure><img src="../../.gitbook/assets/aircraft-fuel-uplift-company.png" alt="Aircraft form: Fuel tracking in Litres and the company uplift unit shown next to it"><figcaption>The aircraft form shows the company's uplift unit</figcaption></figure>
+
+When an aircraft's gauge is a weight and the uplift unit a volume (or the reverse), set that aircraft's **fuel type** so Flylogs can convert between them. Changing the uplift unit does not change refuellings already recorded.
 
 ### Pre-dispatch gates
 

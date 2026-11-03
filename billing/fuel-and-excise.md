@@ -16,7 +16,7 @@ Fuel is usually an operator's largest variable cost, and a large slice of what y
 
 You do not have to type them in. Whenever a flight is saved with a fuel quantity, Flylogs records a refuelling for it automatically — the fuel figure on a flight has always been an uplift (a tank top-up), not the fuel burned on that one leg. The refuelling arrives with the date, the aircraft and the landing airport already filled in, waiting only for what it cost.
 
-Fuel quantity is recorded on the flight form whenever the aircraft has fuel tracking configured, whatever type of operation you run.
+Fuel quantity is recorded on the flight form whenever the aircraft has fuel tracking configured, whatever type of operation you run. On flights with [legs](../flights/flight-legs.md#fuel), the fuel uplifted after each leg is added to the same refuelling.
 
 You can also add a refuelling by hand, for fuel bought outside a recorded flight.
 
@@ -24,11 +24,11 @@ You can also add a refuelling by hand, for fuel bought outside a recorded flight
 
 ### What is inherited from the aircraft
 
-Two things are never asked for on any form, because they belong to the aircraft:
+Two things are never asked for on any form, because they are already set elsewhere:
 
 | Inherited | Comes from |
 | --------- | ---------- |
-| **Unit** (litres, US gallons, imperial gallons, kg, lb) | The aircraft's fuel tracking setting |
+| **Unit** (litres, US gallons, imperial gallons, kg, lb) | Your company's uplift unit (**Company Settings → Flights → Fuel**), or the aircraft's fuel tracking unit when the company has none set |
 | **Fuel type** (AVGAS 100LL, Jet A-1, Jet A, MOGAS, SAF, other) | The aircraft's fuel type |
 
 Both are stored with each refuelling as they were on the day. Changing an aircraft's fuel type later corrects it going forward and leaves your filed history alone.

@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[Fuel used, worked out from the gauge](fuel-used-from-the-gauge.md)** · Flights\
+Fuel on board at start and end on every flight, uplifts recorded after each leg, and fuel used calculated from them, including a gauge in pounds refuelled in litres.\
+[Manual →](../flights/flight-legs.md#fuel)
+
 **[Grounded aircraft and defect reporting](grounded-aircraft-and-defect-reporting.md)** · Fleet & Maintenance\
 A report marked Grounded now stops crew bookings and all dispatch until maintenance releases the aircraft, and any pilot can report a defect without logging a flight. Both are company settings.\
 [Manual →](../aircraft/aircraft-maintenance/aircraft-reports.md)

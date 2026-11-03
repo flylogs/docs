@@ -180,7 +180,8 @@ Retrieve full details for a single aircraft, including maintenance, rates, logbo
     "adsb": "ABC123",
     "self_schedule": true,
     "maintenance": "enabled",
-    "fuel_tracking": true,
+    "fuel_tracking": "lbs",
+    "fuel_type": "JETA1",
     "oil_tracking": false,
     "hours": "12500",
     "landings": "8900",
@@ -414,7 +415,7 @@ Download the aircraft logbook as an Excel file. Token passed as query parameter:
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/consumptions/{id}.json`
 
-Retrieve monthly average fuel and oil consumption rates. Defaults to last 12 months.
+Retrieve monthly average fuel and oil consumption rates. Defaults to last 12 months. Fuel is every uplift of the flights (`Flight.fuel` plus the legs' `fuel`) per block hour, in the uplift unit (`CompanySetting.fuel_uplift_unit`, else the aircraft's `fuel_tracking`).
 
 #### Path Parameters
 
@@ -639,6 +640,15 @@ When a save switches it **on**, the response carries `type_rating_uncovered`: th
 ```
 
 `pilots` holds the first 20 by name; `count` is the full number.
+
+#### Fuel units
+
+The **uplift** unit (the unit fuel is bought in) is a company setting, `CompanySetting.fuel_uplift_unit` (see [Company](company.md)), not a field of the aircraft. Uplifts (`Flight.fuel`, `FlightLeg.fuel`, refuellings) and fuel used are in that unit, or in the aircraft's `fuel_tracking` unit when the company has none set. `Aircraft.fuel_uplift_unit` (November 2026) no longer exists; a posted value is ignored.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Aircraft.fuel_tracking | string \| null | **Gauge** unit: `l`, `usgal`, `impgal`, `kgs`, `lbs`; `null` = fuel not tracked. Fuel on board (`Flight.fuel_start` / `fuel_end`, `FlightLeg.fuel_start` / `fuel_end`) is in this unit. |
+| Aircraft.fuel_type | string \| null | `AVGAS100LL`, `JETA1`, `JETA`, `MOGAS`, `SAF`, `OTHER`. **Required** when the gauge unit and the company's uplift unit are a weight (`kgs`, `lbs`) and a volume: the save is refused with a field error under `errors.Aircraft.fuel_type` unless the type has a known density (any but `OTHER`). |
 
 #### Clocks
 
