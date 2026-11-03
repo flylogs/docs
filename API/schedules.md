@@ -169,6 +169,23 @@ dispatch cleanly today if the item was rectified or extended in the meantime —
 conversely, a schedule that was fine at booking time can be blocked at dispatch time if an
 item expired in between.
 
+#### Grounded aircraft hard block
+
+An aircraft with an open report marked **Grounded** (see
+[Grounded aircraft](aircraft-reports.md#grounded-aircraft)) cannot be dispatched by anybody,
+managers included, until maintenance releases it:
+
+```json
+{
+  "result": false,
+  "message": "TF-ABC is grounded (ATA 32 — Left brake soft) and cannot be dispatched until maintenance releases it back to service."
+}
+```
+
+`GET /schedules/dispatch_check/{scheduleId}.json` returns the same sentence in
+`grounded.message`, with the grounding reports in `grounded.reports`, before the dispatch
+form is filled in (`grounded: null` when the aircraft is flyable).
+
 #### Type rating hard block
 
 When the aircraft requires a type rating (`Aircraft.require_type_rating`) and a crew seat is not covered at the moment of the flight (see [Type rating requirement](#type-rating-requirement)), dispatch is refused:
@@ -428,6 +445,12 @@ Slots are generated inside the operating-hours windows configured for the **airc
 or filters `results` — an expired item does not block *scheduling*, only *dispatch* (see
 [Dispatch Schedule](#dispatch-schedule)) — it is only a flag the frontend can use to warn the
 person booking the slot ahead of time.
+
+`grounded` is `null` unless the aircraft is [grounded](aircraft-reports.md#grounded-aircraft),
+in which case it is `{ "blocked": bool, "reports": [ ... ] }`. For `user_group_id` 1, 100,
+105, 110, 150, 300 and the aircraft's managers `blocked` is `false` and the slots are
+returned as usual, so the booking can be planned for after the repair. For everybody else
+`blocked` is `true` and `results` is empty — the same people `/schedules/edit.json` refuses.
 
 `typeRatingBlocked` is `true`, with an empty `results`, when `pic` is sent, the aircraft requires a type rating and that pilot is not covered on the requested date (see [Type rating requirement](#type-rating-requirement)). Optional body parameters `sic` and `supervisor` let a TRI or TRE on board cover a student. Without `pic` nothing is checked here.
 
@@ -717,6 +740,28 @@ the schedule's aircraft has no expired MEL/CDL item, including when the request 
 `aircraft_id` at all. Note that this is purely advisory: the same expired item is a **hard
 block** the moment someone actually tries to dispatch this schedule into a flight — see the
 MEL/CDL hard block note under [Dispatch Schedule](#dispatch-schedule) above.
+
+### Grounded aircraft on save
+
+Unlike an expired MEL item, a **grounded** aircraft (open report with `aircraft_status` or
+`dispatch_condition` = `GROUNDED`, see [Grounded aircraft](aircraft-reports.md#grounded-aircraft))
+does stop new bookings. The check runs when the booking lands on the aircraft — a create,
+or an edit that changes `aircraft_id` — so the bookings already on it stay editable and
+cancellable.
+
+| Who | Result |
+|-----|--------|
+| `user_group_id` 1, 100, 105, 110, 150, 300, or a manager of the aircraft | Saved. `groundedWarnings[]` lists the grounding reports |
+| Everybody else | `403 Forbidden`: *"TF-ABC is grounded (ATA 32 — Left brake soft) and cannot be booked until maintenance releases it back to service."* |
+
+```json
+"groundedWarnings": [
+  { "aircraft_registration": "TF-ABC", "report_id": "c3d4...", "title": "Left brake soft", "ata_chapter": "32" }
+]
+```
+
+`groundedWarnings` is `[]` when the aircraft is not grounded. Whoever books it, the flight
+still cannot be dispatched until the aircraft is released.
 
 ---
 

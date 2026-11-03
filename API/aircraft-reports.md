@@ -14,6 +14,7 @@ List) items. Requires **premium** or **unlimited** subscription plan.
 | Create a `DEFECT`, `INFO`, `MAINTENANCE` or `SERVICE` report | Any authenticated company user |
 | Create a **MEL** / **CDL** item | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of that aircraft |
 | Edit a MEL/CDL report, `extend`, `delete` | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of the report's aircraft |
+| **Release a grounding** — an edit that leaves an open grounding report no longer grounding (`aircraft_status` → `FLYABLE`, `dispatch_condition` away from `GROUNDED`, or `status` → `CLOSED`) | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of the report's aircraft. Anyone who may file a report may still *ground* an aircraft |
 
 "Manager of the aircraft" is any user named in `Aircraft.ManagerIds` (a tail may have several) and is independent of the user group — see
 [Aircraft → Aircraft manager](aircraft.md#aircraft-manager). A report on any other aircraft
@@ -306,6 +307,19 @@ endpoint on a MEL/CDL report — the "assigned pilot may raise" exception on **C
 does **not** carry over to **Edit**. Anyone else gets a `404 Not Found`.
 {% endhint %}
 
+{% hint style="warning" %}
+**Releasing a grounded aircraft is role-gated on every report type.** When the stored
+report [grounds its aircraft](#grounded-aircraft) and the posted fields would stop it
+doing so, the caller must be `user_group_id` in `(1, 100, 105, 110, 300)` or a manager
+of the aircraft. Anyone else gets `200` with
+`{"result": false, "message": "Only maintenance staff or the aircraft manager can release a grounded aircraft back to service."}`
+and nothing is saved. Editing the text of a grounding report, or grounding a flyable one,
+stays open to anyone who may edit the report.
+
+An edit that turns a non-grounding report into a grounding one sends the same staff
+message as **Create Report**, listing the aircraft's upcoming bookings.
+{% endhint %}
+
 #### Path Parameters
 
 | Parameter | Type | Description |
@@ -533,7 +547,17 @@ dispatched.
 
 `MelItem.status` is one of `OPEN`, `EXPIRING_SOON` (within 3 days of the deadline),
 `EXPIRED`, or `CLOSED`, computed server-side at request time. `blocked` is `true` as soon
-as **any** item in `items` is `EXPIRED`; `blockReason` names the first one found.
+as **any** item in `items` is `EXPIRED`, or the aircraft is [grounded](#grounded-aircraft);
+`blockReason` names the grounding report when there is one, otherwise the first expired item.
+
+`grounded` lists the open reports grounding the aircraft (`[]` when none), oldest first:
+
+```json
+"grounded": [
+  { "id": "c3d4...", "aircraft_id": "12", "title": "Left brake soft", "ata_chapter": "32",
+    "status": "OPEN", "aircraft_status": "GROUNDED", "dispatch_condition": "NONE", "created": "1730600000" }
+]
+```
 
 ---
 
@@ -546,8 +570,43 @@ Company-wide open and expiring-soon MEL/CDL counts, for a dashboard tile.
 #### Response
 
 ```json
-{ "openCount": 4, "expiringSoonCount": 1 }
+{
+  "openCount": 4,
+  "expiringSoonCount": 1,
+  "blockedAircraft": { "12": "ATA 32 blocks dispatch — MEL Category C expired" },
+  "groundedAircraft": { "15": "This aircraft is grounded (ATA 32 — Left brake soft) and cannot be dispatched until maintenance releases it back to service." }
+}
 ```
+
+`blockedAircraft` maps each aircraft with an expired MEL/CDL item to the reason;
+`groundedAircraft` maps each [grounded](#grounded-aircraft) aircraft to the reason. Both are
+`[]` (an empty JSON array, not an object) when nothing qualifies.
+
+---
+
+## Grounded aircraft
+
+An aircraft is **grounded** while it has at least one report whose `status` is not
+`CLOSED` and whose `aircraft_status` **or** `dispatch_condition` is `GROUNDED`. A
+`DEFERRED` report still grounds. The report type does not matter.
+
+While an aircraft is grounded:
+
+| Where | Effect |
+|-------|--------|
+| [Dispatch](schedules.md#dispatch-schedule) (`schedules/flight`) and [flight dispatch](flights.md#dispatch-flight) (`flights/dispatch/{id}`) | Refused for **everybody**: `{"result": false, "message": "<REG> is grounded (ATA 32 — Left brake soft) and cannot be dispatched until maintenance releases it back to service."}` |
+| `schedules/dispatch_check/{id}` | `grounded: { message, reports[] }` (null when flyable), so the refusal is known before the dispatch form is filled in |
+| [Create a booking or move one onto the aircraft](schedules.md#grounded-aircraft-on-save) (`schedules/edit`) | `user_group_id` in **1, 100, 105, 110, 150, 300** and the aircraft's managers: saved, with `groundedWarnings[]` in the response. Everyone else: `403` with the same sentence ending in *cannot be booked …* Existing bookings stay editable and cancellable |
+| [`schedules/find_slot`](schedules.md#find-slots) | `grounded: { blocked, reports[] }`. When `blocked` is `true` (crew) `results` is empty |
+| `aircraft_status.json` / `mel_summary.json` | `blocked` + `grounded` / `groundedAircraft`, see above |
+
+Only `user_group_id` **1, 100, 105, 110, 300** or a manager of the aircraft can release it
+(see **Edit Report**). Closing the report through the CRS of the maintenance job it is
+attached to also releases it.
+
+When a report grounds an aircraft (on create, or by an edit), the staff message lists up
+to 20 of the aircraft's upcoming bookings, in the company time zone and date/time format.
+Nothing is cancelled automatically.
 
 ---
 

@@ -6,8 +6,7 @@ description: Record aircraft defects and observations, and group them into maint
 
 An **aircraft report** records something about the state of an aircraft: a defect, an
 informational note, a maintenance action, a servicing entry, or a **MEL** / **CDL** item.
-Pilots file them at the end of a flight, or at any time from **Aircraft → Reports**, and
-every report carries the severity, the ATA chapter, the dispatch condition and whether
+Every report carries the severity, the ATA chapter, the dispatch condition and whether
 the aircraft is left **flyable** or **grounded**.
 
 {% hint style="info" %}
@@ -17,6 +16,66 @@ reports became **Defect** reports, automatically and once only.
 {% endhint %}
 
 Filing a report notifies the company's managers and maintenance staff by message.
+
+## Reporting a defect without a flight
+
+A defect does not need a flight. Found something on the walk-around, on a parked
+aircraft, or with no flight planned at all? Use **Report defect**. You find it:
+
+* on the **Flights** page, next to *Log flight* (you pick the aircraft in the form),
+* on a booking: in the booking pop-up on the schedule and on the booking page,
+* in the **dispatch** window, under *Found a defect on the walk-around?*,
+* on the aircraft page.
+
+<figure><img src="../../.gitbook/assets/grounded-report-defect-button.png" alt="Report defect button next to Log Flight on the Flights page"><figcaption><p>Report defect sits next to Log Flight, so no flight is needed.</p></figcaption></figure>
+
+Every user can file a defect this way, including pilots and students. No block or flight
+times are asked for. You can still file a report from a logged flight, as before. Managers
+and maintenance staff also have **Aircraft → Reports**.
+
+<figure><img src="../../.gitbook/assets/grounded-report-defect-form.png" alt="The new aircraft report form with the aircraft status set to Grounded"><figcaption><p>Choosing Grounded tells you straight away what it will do.</p></figcaption></figure>
+
+## Grounding an aircraft
+
+Set **Aircraft status** (or **Dispatch condition**) to **Grounded** when the aircraft must
+not fly. While at least one open report grounds it:
+
+* **Pilots, instructors and students cannot book it.** The slot finder shows no slots
+  and says why, and a booking attempt is refused.
+
+  <figure><img src="../../.gitbook/assets/grounded-self-booking.png" alt="Book a Flight showing the aircraft as grounded with the report title"><figcaption><p>Book a Flight names the report that grounds the aircraft.</p></figcaption></figure>
+
+* **Nobody can dispatch it**, managers included. The dispatch window says which report
+  grounds the aircraft.
+
+  <figure><img src="../../.gitbook/assets/grounded-dispatch-blocked.png" alt="Dispatch window panel saying the aircraft is grounded and cannot be dispatched"><figcaption><p>The dispatch window refuses a grounded aircraft for everybody.</p></figcaption></figure>
+
+* **Company Administrators, Operations Managers, Compliance & Safety Managers, Chief
+  Pilots, Mechanics and the aircraft's managers can still book it**, with a warning.
+  This way they can plan the flights that follow the repair. Those flights cannot be
+  dispatched until the aircraft is released either.
+* Bookings already on the aircraft are **not cancelled**. The message managers receive
+  when the aircraft is grounded lists them, so they can decide what to do.
+* The fleet list shows a red "no entry" icon next to the aircraft, and the
+  aircraft page shows a **Grounded** badge.
+
+  <figure><img src="../../.gitbook/assets/grounded-fleet-list.png" alt="Fleet list with a red no-entry icon in the status column of a grounded aircraft"><figcaption><p>A grounded aircraft in the fleet list. Hover the icon to see why.</p></figcaption></figure>
+
+
+A *Deferred* report that is marked Grounded still grounds the aircraft.
+
+### Releasing the aircraft
+
+The aircraft is back in service when no open report grounds it any more. That happens
+when its reports are set back to **Flyable**, are **closed**, or are closed automatically
+when the CRS of their maintenance job is signed.
+
+Only **Company Administrators, Operations Managers, Compliance & Safety Managers,
+Mechanics and the aircraft's managers** can release a grounded aircraft. Anyone who
+can file a report can ground one. A pilot can take an aircraft out of service, but only
+maintenance can put it back.
+
+<figure><img src="../../.gitbook/assets/grounded-release-locked.png" alt="Report edit form for a pilot with a note that only maintenance can release the aircraft"><figcaption><p>For everyone else the Flyable and Closed choices are locked.</p></figcaption></figure>
 
 ## Hints while you write a defect
 
@@ -100,6 +159,9 @@ extend or close one.
 | Action | Who |
 |--------|-----|
 | File a report, view reports | Any user of a company on a **premium** or **unlimited** plan |
+| Ground an aircraft (mark a report Grounded) | Anyone who can file a report |
+| Release a grounded aircraft (set it back to Flyable, or close its report) | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or a manager of the aircraft |
+| Book a grounded aircraft (with a warning) | Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots and Mechanics, or a manager of the aircraft. Nobody can dispatch it |
 | Close / reopen a report, edit management fields | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics |
 | Attach / detach reports to a maintenance job | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or the user the aircraft is assigned to |
 | Raise a MEL/CDL item | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or the aircraft's assigned pilot |

@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Grounded aircraft and defect reporting](whats-new/grounded-aircraft-and-defect-reporting.md)
   * [Flight legs](whats-new/flight-legs.md)
   * [Suggestions while you work](whats-new/flylogs-assistant.md)
   * [Sunrise and sunset operating hours](whats-new/operating-hours-sunrise-sunset.md)

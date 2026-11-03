@@ -24,11 +24,63 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[Grounded aircraft and defect reporting](grounded-aircraft-and-defect-reporting.md)** · Fleet & Maintenance\
+A report marked Grounded now stops crew bookings and all dispatch until maintenance releases the aircraft, and any pilot can report a defect without logging a flight.\
+[Manual →](../aircraft/aircraft-maintenance/aircraft-reports.md)
+
+**Flight risk assessment per flight type** · Schedules & Dispatch\
+The FRAT is now switched on per flight type instead of for the whole company, so a training sortie can require it while a ferry flight does not.\
+[Manual →](../schedules/flight-risk-assessment-frat.md)
+
 **[Flight legs](flight-legs.md)** · Flights\
 Record every lift, tow or run of a flight in its own row — start and end with one tap, altitude, persons and fuel used — saved as you go, even offline.\
 [Manual →](../flights/flight-legs.md)
 
 ## October 2026
+
+**Type ratings on aircraft** · Aircraft & Crew\
+Link type ratings to aircraft models and require one on an aircraft: bookings and dispatch check the crew holds a valid rating, with a reasoned manager override.\
+[Manual →](../aircraft/type-rating-requirement.md)
+
+**Name and mass for every person on the loadsheet** · Aircraft & Flights\
+Each seat row on the Mass & Balance loadsheet now lists every person by name with their own mass, picked from the crew and the passenger manifest.\
+[Manual →](../aircraft/mass-and-balance.md)
+
+**Custom forms** · Company\
+Rebuild your paper forms inside Flylogs, ask for them at enrolment, on a booking or before a flight, and keep every filled copy as a signed record.\
+[Manual →](../company-management/custom-forms.md)
+
+**Instructor and examiner certificates** · Crew Management\
+New certificate types for CRI, IRI, SFI, MCCI, SFE, TRI, TRE, FE, CRE, IRE, MCC and AUPRT, each with the right default validity.\
+[Manual →](../crew-management/document-and-certificates.md)
+
+**Inventory suppliers and batch parts** · Fleet & Maintenance\
+Keep a supplier directory, see each part's supplier, and enter consumables such as spark plugs or filters as one batch instead of one by one.\
+[Manual →](../aircraft/aircraft-maintenance/inventory.md)
+
+**Medical certificate limitations** · Crew Management\
+Record VML, OSL, OPL and the other limitations on a medical. The dispatch window shows them for every crew member.\
+[Manual →](../crew-management/document-and-certificates.md)
+
+**Flylogs reads licences, IDs, aircraft documents and logbook pages** · Crew Management & Aircraft\
+Upload a licence, ID, aircraft document or the last page of a paper logbook and Flylogs fills in the form for you to check.\
+[Manual →](../crew-management/create-pilots-or-students.md)
+
+**Tell your class you can't attend** · Training courses\
+Students who know they will miss a class can say so in advance from the class page, with an optional reason. A justified absence no longer lowers the attendance rate.\
+[Manual →](../training-courses/missed-classes-and-class-work.md)
+
+**Company calendar feed and every-booking notifications** · Schedules\
+Managers can subscribe to a calendar feed with every company booking, and can choose to be notified of every booking, change and cancellation.\
+[Manual →](../schedules/schedule-notifications.md)
+
+**Bill numbering** · Billing\
+Bills are numbered from one consecutive company sequence, you choose per bill whether it gets a number, and numbering can restart every year.\
+[Manual →](../billing/billing-setup.md)
+
+**Course credit and automatic completion certificates** · Training courses\
+Credit training from one course towards another, with limits on previous experience. The completion certificate is issued automatically and lists the credited training.\
+[Manual →](../training-courses/course-pathways.md)
 
 **[Suggestions while you work](flylogs-assistant.md)** · Safety, Maintenance, Schedules, Trainings\
 Flylogs suggests how to classify a safety report, which report a flight remark needs, the ATA chapter of a defect, which NOTAMs matter, and more — nothing changes until you click.\

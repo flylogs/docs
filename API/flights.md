@@ -592,6 +592,19 @@ Exactly the same gate as [Dispatch Schedule](schedules.md#dispatch-schedule): an
 }
 ```
 
+#### Grounded aircraft hard block
+
+Same gate as [Dispatch Schedule](schedules.md#grounded-aircraft-hard-block): while the
+aircraft has an open report marked **Grounded** (see
+[Grounded aircraft](aircraft-reports.md#grounded-aircraft)), nobody can dispatch it.
+
+```json
+{
+  "result": false,
+  "message": "TF-ABC is grounded (ATA 32 — Left brake soft) and cannot be dispatched until maintenance releases it back to service."
+}
+```
+
 #### Other preconditions
 
 Checked in order, each returning `result: false` with its own message when it fails:
