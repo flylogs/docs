@@ -141,8 +141,16 @@ You can deactivate users to hide them from any list and archive them. The user i
 
 You can delete staff members and pilots also, but in this case, Flylogs will mark the user as deleted with the same result and this action can not be undone unless you request it to our support service.
 
-#### Deactivated pilots
+#### Deactivated users
 
-If you deactivate a pilot, this user will dissapear from your list as expected, but the user will still have access and login option to the Flylogs account without edit capabilities.
+If you deactivate a user, they disappear from your lists as expected, but they can still log in to a **read-only** view of their own records:
 
-This is setup this way so the pilots can always log in to check his/her logbooks as needed.
+* their flights and logbook (including the logbook download),
+* their trainings,
+* their own profile and documents.
+
+They cannot edit anything, log or edit flights, send messages, file safety reports or see other users. This applies to every user type — pilots, students, instructors, staff, mechanics and cabin crew — so anyone can always check their logbook or training records, as aviation authorities require.
+
+**Company Administrators** are the exception: a deactivated Company Administrator cannot log in at all.
+
+Two other settings still block the read-only login: an account whose **expiration date** has passed, and the company-wide **Disable login** switch.

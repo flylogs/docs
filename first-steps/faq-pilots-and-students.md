@@ -18,7 +18,7 @@ If still the password does not work, use the Password recovery procedure here: [
 
 Your account has been deactivated by your company trainings manager, get in contact with them to sort it out if you think that it may be a mistake.
 
-When your account gets deactivated, you are still able to login to view your data. You will not be able to interact, fly or send messages to other users.
+When your account gets deactivated, you are still able to log in to a read-only view of your own flights, logbook, trainings and documents. You will not be able to interact, fly or send messages to other users.
 
 <br>
 
