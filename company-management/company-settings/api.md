@@ -38,6 +38,7 @@ Add one entry per address with **Add IP address**. Keep the list short and curre
 API keys are long-lived credentials for server-to-server integrations, an alternative to session tokens that never requires an interactive login. See [API Authentication](../../API/authentication.md) for how to use them in requests.
 
 * Each key **acts as the user who created it** and inherits that user's permissions — a key created by a read-only user cannot write.
+* Only managers up to **Human Resources Manager** can hold a key. A key stops working if its user is deactivated, deleted, expires, or is moved to any other role.
 * Keys look like `flk_…` and are sent as a `Bearer` token in the `Authorization` header.
 * The plaintext key is shown **only once**, at creation. Copy it immediately; afterwards only a prefix is displayed.
 * An optional **expiry date** disables the key automatically at the end of that day. *Never* keeps it valid until revoked.
