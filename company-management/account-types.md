@@ -149,8 +149,8 @@ If you deactivate a user, they disappear from your lists as expected, but they c
 * their trainings,
 * their own profile and documents.
 
-They cannot edit anything, log or edit flights, send messages, file safety reports or see other users. This applies to every user type — pilots, students, instructors, staff, mechanics and cabin crew — so anyone can always check their logbook or training records, as aviation authorities require.
+They cannot edit anything, log or edit flights, send messages, file safety reports or see other users. This applies to pilots, students, instructors, managers, staff and cabin crew, so they can always check their logbook or training records, as aviation authorities require.
 
-**Company Administrators** are the exception: a deactivated Company Administrator cannot log in at all.
+**Company Administrators, External Auditors and Mechanics** are the exception: once deactivated, they cannot log in at all.
 
 Two other settings still block the read-only login: an account whose **expiration date** has passed, and the company-wide **Disable login** switch.
