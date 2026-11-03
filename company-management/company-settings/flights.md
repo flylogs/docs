@@ -1,5 +1,5 @@
 ---
-description: Logbook protection, flight form options, pre-dispatch gates and flight permissions
+description: Logbook protection, flight form options, pre-dispatch gates, aircraft defects and flight permissions
 ---
 
 # Flights
@@ -48,6 +48,17 @@ This switch adds a mandatory safety step to the [flight dispatch function](../..
 The **Flight Risk Assessment (FRAT)** is no longer a company setting: it is switched on per flight type, under **Flight types → edit → Pre-dispatch → Require Flight Risk Assessment (FRAT)** (see [Flight Types](../../flights/flight-types.md#require-flight-risk-assessment-frat)). Companies that had the FRAT switched on here have it on for all their flight types.
 
 * **What the FRAT does** — a crew member dispatching their own flight of such a type must first complete a FAA-style PAVE questionnaire. The answers produce a risk score and a band (Low / Medium / High). **High-risk flights can only be dispatched by a supervisor.** Results are stored per flight and per crew member for audit. Several questions are pre-answered from the dispatcher's own flight history (recent hours, type familiarity, airports flown, night experience) and live route weather. The requirement only applies when the person dispatching is assigned to the flight. See [Flight Risk Assessment (FRAT)](../../schedules/flight-risk-assessment-frat.md).
+
+### Aircraft defects
+
+Two switches decide how your company handles defects reported on an aircraft. Both are **on** by default. They only appear on plans that include the maintenance module.
+
+<figure><img src="../../.gitbook/assets/company-settings-aircraft-defects.png" alt="Aircraft defects: Report defects without a flight and Grounded aircraft cannot be booked or dispatched, both switched on"><figcaption>Aircraft defects</figcaption></figure>
+
+* **Report defects without a flight** — every user gets a **Report defect** button on the Flights page, on bookings, in the dispatch window and on the aircraft page, and can report a defect without logging a flight. Switched off, only Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots, Mechanics and the aircraft's managers can. Everyone else reports defects from a logged flight of that aircraft.
+* **Grounded aircraft cannot be booked or dispatched** — while an open report marks an aircraft **Grounded**, pilots, instructors and students cannot book it, nobody can dispatch it, and only maintenance staff or the aircraft's managers can release it. Switched off, Grounded is shown on the report only: the aircraft can still be booked and dispatched, and anyone who can edit the report can set it back to Flyable.
+
+See [Aircraft reports](../../aircraft/aircraft-maintenance/aircraft-reports.md) for the full rules.
 
 ### Flight permissions
 

@@ -25,7 +25,7 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 ## November 2026
 
 **[Grounded aircraft and defect reporting](grounded-aircraft-and-defect-reporting.md)** · Fleet & Maintenance\
-A report marked Grounded now stops crew bookings and all dispatch until maintenance releases the aircraft, and any pilot can report a defect without logging a flight.\
+A report marked Grounded now stops crew bookings and all dispatch until maintenance releases the aircraft, and any pilot can report a defect without logging a flight. Both are company settings.\
 [Manual →](../aircraft/aircraft-maintenance/aircraft-reports.md)
 
 **Flight risk assessment per flight type** · Schedules & Dispatch\

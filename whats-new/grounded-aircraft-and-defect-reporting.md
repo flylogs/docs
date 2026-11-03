@@ -32,4 +32,8 @@ While an open report marks the aircraft **Grounded**:
 
 Only maintenance staff (Company Administrators, Operations Managers, Compliance & Safety Managers, Mechanics) and the aircraft's managers can release it: set the report back to **Flyable**, close it, or sign the CRS of its maintenance job.
 
+Both are on by default and each can be switched off in **Company Settings → Flights → Aircraft defects**: keep defect reporting without a flight to managers and mechanics, or leave Grounded as an informative label only.
+
+<figure><img src="../.gitbook/assets/company-settings-aircraft-defects.png" alt="The two Aircraft defects switches in Company Settings"><figcaption><p>Each behaviour is a company setting.</p></figcaption></figure>
+
 See [Aircraft reports](../aircraft/aircraft-maintenance/aircraft-reports.md) for details.

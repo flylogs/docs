@@ -11,7 +11,7 @@ List) items. Requires **premium** or **unlimited** subscription plan.
 | Action | Allowed |
 |--------|---------|
 | List / view | Any authenticated company user on a premium/unlimited plan |
-| Create a `DEFECT`, `INFO`, `MAINTENANCE` or `SERVICE` report | Any authenticated company user |
+| Create a `DEFECT`, `INFO`, `MAINTENANCE` or `SERVICE` report | Any authenticated company user. When the company setting `aircraft_report_without_flight` is `false`, a report with no `flight_id` is limited to `user_group_id` ≤ 150, 300 and the aircraft's managers; everybody else must send the `flight_id` of a flight of that aircraft, or gets `{"result": false, "message": "Your company files aircraft reports from a logged flight. …"}` |
 | Create a **MEL** / **CDL** item | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of that aircraft |
 | Edit a MEL/CDL report, `extend`, `delete` | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of the report's aircraft |
 | **Release a grounding** — an edit that leaves an open grounding report no longer grounding (`aircraft_status` → `FLYABLE`, `dispatch_condition` away from `GROUNDED`, or `status` → `CLOSED`) | `user_group_id` in **1, 100, 105, 110, 300**, or the manager of the report's aircraft. Anyone who may file a report may still *ground* an aircraft |
@@ -585,6 +585,11 @@ Company-wide open and expiring-soon MEL/CDL counts, for a dashboard tile.
 ---
 
 ## Grounded aircraft
+
+Enforced while the company setting `aircraft_grounding_enforced` is `true` (the default, see
+[Company settings](company.md)). When it is `false`, `GROUNDED` is informative only: none of
+the effects below apply, `aircraft_status.json` returns `grounded: []`, `mel_summary.json`
+returns `groundedAircraft: []`, and the release gate on **Edit Report** is off.
 
 An aircraft is **grounded** while it has at least one report whose `status` is not
 `CLOSED` and whose `aircraft_status` **or** `dispatch_condition` is `GROUNDED`. A

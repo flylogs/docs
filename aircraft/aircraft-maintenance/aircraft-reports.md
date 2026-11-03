@@ -29,8 +29,12 @@ aircraft, or with no flight planned at all? Use **Report defect**. You find it:
 
 <figure><img src="../../.gitbook/assets/grounded-report-defect-button.png" alt="Report defect button next to Log Flight on the Flights page"><figcaption><p>Report defect sits next to Log Flight, so no flight is needed.</p></figcaption></figure>
 
+<figure><img src="../../.gitbook/assets/report-defect-booking-popup.png" alt="Booking pop-up on the schedule with a Report defect button at the bottom left"><figcaption><p>On a booking, the aircraft is already filled in.</p></figcaption></figure>
+
 Every user can file a defect this way, including pilots and students. No block or flight
-times are asked for. You can still file a report from a logged flight, as before. Managers
+times are asked for. A company can keep it to managers, mechanics and the aircraft's managers
+with **Company Settings → Flights → Aircraft defects → Report defects without a flight**; the
+button is then hidden from everyone else. You can still file a report from a logged flight, as before. Managers
 and maintenance staff also have **Aircraft → Reports**.
 
 <figure><img src="../../.gitbook/assets/grounded-report-defect-form.png" alt="The new aircraft report form with the aircraft status set to Grounded"><figcaption><p>Choosing Grounded tells you straight away what it will do.</p></figcaption></figure>
@@ -40,6 +44,13 @@ and maintenance staff also have **Aircraft → Reports**.
 Set **Aircraft status** (or **Dispatch condition**) to **Grounded** when the aircraft must
 not fly. While at least one open report grounds it:
 
+{% hint style="info" %}
+This is on by default and can be switched off in **Company Settings → Flights → Aircraft
+defects → Grounded aircraft cannot be booked or dispatched**. Switched off, Grounded is
+shown on the report only and none of the restrictions below apply.
+{% endhint %}
+
+
 * **Pilots, instructors and students cannot book it.** The slot finder shows no slots
   and says why, and a booking attempt is refused.
 
@@ -48,7 +59,7 @@ not fly. While at least one open report grounds it:
 * **Nobody can dispatch it**, managers included. The dispatch window says which report
   grounds the aircraft.
 
-  <figure><img src="../../.gitbook/assets/grounded-dispatch-blocked.png" alt="Dispatch window panel saying the aircraft is grounded and cannot be dispatched"><figcaption><p>The dispatch window refuses a grounded aircraft for everybody.</p></figcaption></figure>
+  <figure><img src="../../.gitbook/assets/grounded-dispatch-blocked.png" alt="Dispatch window panel saying the aircraft is grounded, with Report defect underneath"><figcaption><p>The dispatch window refuses a grounded aircraft for everybody. A defect found on the walk-around is reported right there.</p></figcaption></figure>
 
 * **Company Administrators, Operations Managers, Compliance & Safety Managers, Chief
   Pilots, Mechanics and the aircraft's managers can still book it**, with a warning.
@@ -60,6 +71,8 @@ not fly. While at least one open report grounds it:
   aircraft page shows a **Grounded** badge.
 
   <figure><img src="../../.gitbook/assets/grounded-fleet-list.png" alt="Fleet list with a red no-entry icon in the status column of a grounded aircraft"><figcaption><p>A grounded aircraft in the fleet list. Hover the icon to see why.</p></figcaption></figure>
+
+  <figure><img src="../../.gitbook/assets/grounded-aircraft-page.png" alt="Aircraft page header with Edit, Report defect and a red Grounded badge"><figcaption><p>The aircraft page: Grounded badge and Report defect.</p></figcaption></figure>
 
 
 A *Deferred* report that is marked Grounded still grounds the aircraft.
@@ -159,8 +172,9 @@ extend or close one.
 | Action | Who |
 |--------|-----|
 | File a report, view reports | Any user of a company on a **premium** or **unlimited** plan |
+| File a report without a flight | Everyone. With *Report defects without a flight* switched off: Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots, Mechanics and the aircraft's managers |
 | Ground an aircraft (mark a report Grounded) | Anyone who can file a report |
-| Release a grounded aircraft (set it back to Flyable, or close its report) | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or a manager of the aircraft |
+| Release a grounded aircraft (set it back to Flyable, or close its report) — while *Grounded aircraft cannot be booked or dispatched* is on | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or a manager of the aircraft |
 | Book a grounded aircraft (with a warning) | Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots and Mechanics, or a manager of the aircraft. Nobody can dispatch it |
 | Close / reopen a report, edit management fields | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics |
 | Attach / detach reports to a maintenance job | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or the user the aircraft is assigned to |

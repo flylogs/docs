@@ -57,6 +57,8 @@ Retrieve the full company profile, theme, operational settings, and billing conf
     "cabincrew": false,
     "max_duty_hours": "14",
     "max_flight_hours_year": "900",
+    "aircraft_report_without_flight": true,
+    "aircraft_grounding_enforced": true,
     "FlightTimezone": {
       "id": "90",
       "name": "Atlantic/Canary",
@@ -105,6 +107,8 @@ Present on both `GET /companies/settings.json` and `GET /manager/companies/prefe
 | cabincrew | boolean | Cabin crew tracking enabled |
 
 {% hint style="info" %}
+**Aircraft defects.** `aircraft_report_without_flight` (default `true`): every user may create an [aircraft report](aircraft-reports.md#access-control) with no `flight_id`; `false` keeps that to `user_group_id` ≤ 150, 300 and the aircraft's managers. `aircraft_grounding_enforced` (default `true`): an open report marked `GROUNDED` blocks crew bookings and all dispatch, and only maintenance may release it; `false` makes `GROUNDED` informative only (see [Grounded aircraft](aircraft-reports.md#grounded-aircraft)). Both are saved with the other settings through `POST /manager/companies/settings.json` as `CompanySetting[...]`.
+
 **Flight timezone.** When `flight_timezone_id` is set, the resolved `CompanySetting.FlightTimezone` object is returned (same shape as `CompanyDetail.Timezone`). Flight wall-clock times (`offblocks_time`, `takeoff_time`, `landing_time`, `onblocks_time`) and the flight `date` in the [Flights API](flights.md) are interpreted and formatted in this zone; when it is `null`/absent, the company timezone is used. Schedules and trainings always use the company timezone.
 {% endhint %}
 
