@@ -17,6 +17,7 @@
 | 145 | Flight Dispatcher |
 | 150 | Chief Pilot |
 | 170 | Flight Instructor |
+| 175 | Theory Knowledge Instructor (flight schools only; never more access than 170 — see [Trainings → Theory Knowledge Instructors](trainings.md#theory-knowledge-instructors-175)) |
 | 180 | Captain |
 | 190 | Pilot |
 | 200 | Student Pilot |

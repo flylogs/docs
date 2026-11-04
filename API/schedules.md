@@ -483,6 +483,69 @@ Selection rules: the FI must have `user_group_id <= 170` (Flight Instructor and 
 
 ---
 
+## Auto Pilot criteria
+
+<mark style="color:blue;">`GET`</mark> <mark style="color:green;">`POST`</mark> `/manager/schedules/autopilot_settings.json`
+
+Reads or replaces the company's [Auto Pilot](../schedules/auto-pilot.md) criteria. Only users with `user_group_id <= 140` may call it (`403` otherwise).
+
+#### Body Parameters (POST)
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| settings | string | Yes | JSON document `{"types": {"<flight_type_id>": rule}, "general": general}`. Replaces the stored document. |
+
+Each `rule` may contain any of:
+
+| Key | Type | Description |
+|-----|------|-------------|
+| include | bool | Auto Pilot may book this flight type. Default: `false` for exam and ground types, `true` otherwise. |
+| picDay, picWeek, sicDay, sicWeek | int 0–99 or null | Most flights of this type one person may sit in that seat per day / ISO week. `null` = no limit (default). |
+| supervise | bool | Solo flights of this type are booked with a supervising instructor. Default `false`. |
+| superviseMax | int 1–99 | Overlapping solo flights one supervisor may cover. Default `3`. |
+
+`general` (optional) holds the run-wide rules:
+
+| Key | Type | Description |
+|-----|------|-------------|
+| studentDay, studentWeek | int 0–99 or null | Most lessons per student per day / ISO week across all types. Defaults `1` / `3`. |
+| instructorDay, instructorWeek | int 0–99 or null | Most lessons per instructor per day / ISO week. Defaults `4` / no limit. |
+| bookChecks, bookExams | bool | Auto Pilot may book progress checks / exams itself. Default `false`. |
+
+Rules for flight types of another company, unknown keys and out-of-range values are dropped. A body that is not a settings document answers `400`. Before the `schedule_autopilot` column exists, `GET` answers empty settings and `POST` answers `409`.
+
+#### Response
+
+```json
+{ "result": true, "settings": { "types": { "368": { "picDay": 3 }, "552": { "include": false } } } }
+```
+
+`GET` answers `{ "settings": { "types": { … } } }`.
+
+---
+
+## Auto Pilot mission kinds
+
+<mark style="color:green;">`POST`</mark> `/manager/schedules/autopilot_mission_kinds.json`
+
+What each syllabus mission is, as Auto Pilot reads it: `LESSON`, `CHECK` (progress / stage / pre-solo check), `EXAM` (skill test, check ride) or `GROUND` (not flown). Only users with `user_group_id <= 140` may call it (`403` otherwise).
+
+A mission is classified once, by Flylogs AI from its name, course and flight type, with a keyword rule when the AI is unsure. The result is stored on the mission and cleared when the mission is renamed. If the AI cannot be reached, the keyword answer is returned but not stored.
+
+#### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| ids[] | string[] | Yes | `training_flights` ids, at most 400 per call. Ids of another company's courses are ignored. |
+
+#### Response
+
+```json
+{ "kinds": { "3f0c…": "LESSON", "9a12…": "CHECK" } }
+```
+
+---
+
 ## Flight Instructor Availabilities
 
 <mark style="color:blue;">`GET`</mark> `/schedules/fi_availabilities.json?start={unix}&end={unix}`

@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[Auto Pilot criteria and supervisors](auto-pilot-criteria.md)** · Schedules\
+Auto Pilot plans from each student's due lessons instead of copying past weeks: mission, aircraft, instructor, then slot, within new daily and weekly limits. Progress checks and exams are left to a manager, and solo flights can get a supervisor, now shown on the calendar.\
+[Manual →](../schedules/auto-pilot.md)
+
 **[Fuel used, worked out from the gauge](fuel-used-from-the-gauge.md)** · Flights\
 Fuel on board at start and end on every flight, uplifts recorded after each leg, and fuel used calculated from them, including a gauge in pounds refuelled in litres.\
 [Manual →](../flights/flight-legs.md#fuel)

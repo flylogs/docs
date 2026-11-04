@@ -60,6 +60,28 @@
 > `created`, `modified`) backs **Classwork Grades** / **Rate Classwork**
 > below.
 
+## Theory Knowledge Instructors (175)
+
+`user_group_id = 175` is the ground-school teacher of a flight school (offered by `GET /users/user_groups.json` to `companies.type = 'school'` only). It sits **between Flight Instructor (170) and Captain (180)**, so every rule written as `user_group_id <= 170` ("Flight Instructor and above") leaves it out. A Theory Knowledge Instructor never has more access than a Flight Instructor.
+
+**A course they teach** = the caller is the teacher of one of the course's subjects (`training_subjects.teacher_id`) or of one of its class sessions that is not cancelled (`sessions.teacher_id`).
+
+| Endpoint | What a Theory Knowledge Instructor gets |
+|---|---|
+| `GET /manager/trainings/trainings/index.json` | Only the courses they teach (empty list if none). |
+| `GET /manager/trainings/students/list/training:{id}.json` | The students of a course they teach; `{"students": []}` for any other course. |
+| `GET /manager/trainings/students/view/{enrollmentId}.json` | The record of a student of a course they teach; `404` otherwise. Read-only. |
+| `GET /trainings/students/report/{enrollmentId}.json`, `GET /trainings/trainings/certificate/{enrollmentId}.json` | Full report / certificate download for a student of a course they teach in their company; the verification subset otherwise. |
+| `GET /trainings/students/summary/{enrollmentId}.json`, `GET /trainings/students/subject_report/{subjectId}/{userId}.json` | Any student of a course they teach; otherwise their own only. |
+| `POST /manager/trainings/onsite/class.json` | Create / edit classes of a course they teach; `404` otherwise. |
+| `POST /manager/trainings/onsite/store_exam_result.json` | Record onsite exam results for a course they teach; `404` otherwise. |
+| Class attendance, class signature, homework grading, absence justifications | Same as any teacher: allowed on the sessions where they are the teacher (session or subject teacher). |
+| `GET /manager/trainings/subjects/teachers.json` | Listed as a selectable teacher. |
+
+**ACL-denied (`403 ACL_DENIED`):** every mutating `Students/manager_*` action (`enroll`, `edit`, `status`, `notes`, `finish`, `reset`, `unroll`, `migrate*`, `prior`), course and subject editing, stages, stage checks, mission authorizations, approvals, intakes, requirements, `Trainings/manager_certificates`, the flight-instructor pages (`/manager/pilots/fi_assignments`, `/schedules/fi_availabilities`, `/manager/flights/audit`, `/manager/flights/annuals`), `/manager/users/*`, pilot groups and maintenance inventory. Rule: the group copies Flight Instructor's grants and is denied every action a Flight Instructor may use and a Pilot (190) may not, except the read-only student pages above.
+
+Outside trainings a Theory Knowledge Instructor has the access of a line pilot: own flights, own schedule, own documents. They cannot create or confirm flights unless the school ticks them under **Company settings → Flights → Who can create / confirm flights** (`company_permissions`), like Captains and Pilots.
+
 ## My Trainings
 
 <mark style="color:blue;">`GET`</mark> `/trainings.json`
@@ -412,6 +434,7 @@ Compact progress + attendance roll-up for an enrollment. Cheap to call (no neste
 #### Access
 
 - Manager-level callers (`user_group_id <= 170` — Flight Instructor and above): any enrollment in caller's company.
+- Theory Knowledge Instructors (`175`): their own enrollment, plus any enrollment in a course they teach — `403` otherwise.
 - Student-level callers (`user_group_id > 170` — Captain and below): only their own enrollment — `403` otherwise.
 
 #### Response
@@ -529,7 +552,7 @@ Notes:
 
 <mark style="color:blue;">`GET`</mark> `/manager/trainings/subjects/teachers.json`
 
-Return the teacher-picker list (formerly bundled inside `manager_view`). Users are scoped to the caller's `company_id` and to user groups with `instructor_teacher = 1`.
+Return the teacher-picker list (formerly bundled inside `manager_view`). Users are scoped to the caller's `company_id` and to `user_group_id <= 170` (Flight Instructor and above) **plus Theory Knowledge Instructors (175)**, grouped by user-group name.
 
 The payload is a `Hash::combine` of `id → "name surname"`, grouped by user-group name.
 
@@ -1082,6 +1105,8 @@ Company-scoped: the session's `Training.company_id` must match the caller's comp
 <mark style="color:green;">`POST`</mark> `/manager/trainings/onsite/class.json`
 
 Create or update a class session. Sent as `application/x-www-form-urlencoded`.
+
+A Theory Knowledge Instructor (`175`) may only create or edit classes of a course they teach; any other activity or class id answers `404`.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -1996,7 +2021,7 @@ Retrieve exam results and (when enabled) correct answers.
 
 Retrieve students with filtering. All filter parameters optional (use empty string to skip).
 
-**Access:** staff `user_group_id <= 135`, Chief Pilot (150), Flight Instructors (170) and auditors (250). Crew Scheduling (140) and Flight Dispatcher (145) are ACL-denied. Flight Instructors (170) can read this list, `/manager/trainings/students/index.json` and `/manager/trainings.json` (the course list) but are ACL-denied every mutating `Students/manager_*` action (`enroll`, `edit`, `finish`, `status`, `reset`, `unroll`), which stay `<= 135` / Chief Pilot. Any other group gets `403 ACL_DENIED`.
+**Access:** staff `user_group_id <= 135`, Chief Pilot (150), Flight Instructors (170), Theory Knowledge Instructors (175) and auditors (250). Crew Scheduling (140) and Flight Dispatcher (145) are ACL-denied. Flight Instructors (170) can read this list, `/manager/trainings/students/index.json` and `/manager/trainings.json` (the course list) but are ACL-denied every mutating `Students/manager_*` action (`enroll`, `edit`, `finish`, `status`, `reset`, `unroll`), which stay `<= 135` / Chief Pilot. Theory Knowledge Instructors (175) get the same read-only access **limited to the courses they teach**: for any other `training` this list answers `{"students": []}`. Any other group gets `403 ACL_DENIED`.
 
 `status` accepts one of `ACTIVE` (default when omitted), `COMPLETED`, `STOPPED`, `FAILED`, `EXPELLED`, or `ALL` to return every enrollment regardless of status. Anything else returns `400 Unknown status`. Each row carries `TrainingsUser.status`, `TrainingsUser.status_reason` and `TrainingsUser.status_changed`.
 
@@ -2007,6 +2032,8 @@ Retrieve students with filtering. All filter parameters optional (use empty stri
 <mark style="color:blue;">`GET`</mark> `/manager/trainings/students/view/{enrollmentId}.json`
 
 Retrieve full student enrollment details.
+
+A Theory Knowledge Instructor (`175`) gets `404` for an enrollment in a course they do not teach.
 
 #### Suggested completion date
 

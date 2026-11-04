@@ -33,6 +33,9 @@ Aircraft are listed down the left side; time runs across the top. Each schedule 
 * **Maintenance blocks** — Open maintenance jobs appear as striped 🔧 background bands on the affected aircraft, and the slot cannot be booked over them.
 * **Airworthiness blocks** — A red ⛔ band covers an aircraft row from the moment its latest signed CRS stops being valid (the **Fixed date** set when the CRS was signed) or an aircraft document (insurance, airworthiness, registration…) expires. Selecting a slot inside the band is refused and a notice above the calendar names the aircraft, the instant and the maintenance job or document responsible, with a link to open the job. The same notice appears in the flight form, and Save is disabled, if you set a start inside the band by hand. To lift it, sign a new CRS, change that job's fixed date, or renew the document. Only the aircraft's **latest** signed CRS counts — an older job's fixed date no longer applies once a newer CRS is signed.
 * **Colour legend** — A legend below the calendar maps the left‑border colour of each block to its status (Draft, Scheduled, Confirmed, Delay, Departed, Landed, Canceled, Dispatched). A 🛣️ road icon marks local / touch‑and‑go training missions.
+* **Crew on the block** — Each block shows the flight type, then the PIC, then the SIC, then the route. If the booking has a **supervisor**, they are shown on their own line behind a 🕵 icon (hover the icon to see "Supervisor"). When there is no SIC, the supervisor takes the SIC's line: the supervisor is then directly supervising the PIC, for example a student on a solo flight. Crew names are shown to staff, and to pilots on their own bookings.
+
+<figure><img src="../.gitbook/assets/schedule-calendar-supervisor.png" alt="Day view of the schedule calendar. Two SOLO flights on FL-172 and FL-INS each show the student and, behind a supervisor icon, the same supervising instructor, S.Chase. An SPIC flight on FL-DGG shows the PIC, the SIC and the supervisor F.Gonza. A Dual flight on FL-DHG shows PIC and SIC only."><figcaption><p>Solo flights show their supervisor in place of the SIC. One instructor (S.Chase) supervises two overlapping solos.</p></figcaption></figure>
 
 ### Creating a flight
 
@@ -96,7 +99,7 @@ If a selected PIC or SIC is enrolled in a flight training with pending missions,
 The right column carries:
 
 * **Status** — Draft, Scheduled or Canceled. Leave as **Draft** to keep the record private to managers, or set **Scheduled** to publish it to crew on save. See [Publishing multiple schedule records](publishing-multiple-schedule-records.md).
-* **Supervisor / Examiner / Specialist** — a third crew slot, labelled to match your company type.
+* **Supervisor / Examiner / Specialist** — a third crew slot, labelled to match your company type. An instructor may supervise several solo flights that overlap: set them as supervisor on each one. The calendar shows the supervisor on each block.
 * **Notes** — free text for the crew.
 * **Notify crew** — for non‑Draft records, tick to email the assigned crew when you save.
 
@@ -137,8 +140,10 @@ The green **Actions** menu (top‑right) gives bulk and utility tools. The first
 
 * **Publish schedule** — email/notify pilots for a range of records at once (see [Publishing multiple schedule records](publishing-multiple-schedule-records.md)).
 * **Copy week** — duplicate a whole week's schedule to another week.
-* **Clear week** — delete a week's records in one step.
-* **Auto‑pilot** — auto‑assign crew across the fleet.
+* **Clear week** — delete every record in a date range in one step. It opens on the current week, starting on the **Start of week** set in [Company Settings → General](../company-management/company-settings/general.md). Pick another week or range in the calendar the same way as in Auto Pilot.
+
+<figure><img src="../.gitbook/assets/clear-week-range-picker.png" alt="The Clear Week window with its date range calendar open on November and December 2026, weeks starting on Monday and the week of 2 to 8 November selected"><figcaption><p>Clear Week uses the same date range calendar as Auto Pilot. The weeks follow the company's Start of week.</p></figcaption></figure>
+* **Auto‑pilot** — draft a schedule for a date range from your recent bookings and the lessons students still owe. See [Auto Pilot](auto-pilot.md).
 
 Available to anyone who can edit:
 

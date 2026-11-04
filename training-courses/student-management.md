@@ -8,7 +8,7 @@ Flylogs training allows any existing user in your company to be enrolled as a st
 
 To get started, go to the "**Trainings**" menu tab and click on "**STUDENTS**." On this page, you'll see the students currently enrolled in the selected training. You can choose any of your trainings, and the list will update to display all existing students and their progress.
 
-**Who can see this page:** company managers (Administrator, Operations, Compliance & Safety, HR, Financial and Trainings Manager), Chief Pilot, Flight Instructors and external auditors. Flight Instructors and auditors get a **read-only** view: they can open any student's record but cannot enroll, edit, complete or reset an enrollment — those actions are limited to staff up to and including Chief Pilot.
+**Who can see this page:** company managers (Administrator, Operations, Compliance & Safety, HR, Financial and Trainings Manager), Chief Pilot, Flight Instructors and external auditors. Flight Instructors and auditors get a **read-only** view: they can open any student's record but cannot enroll, edit, complete or reset an enrollment — those actions are limited to staff up to and including Chief Pilot. [Theory Knowledge Instructors](../company-management/account-types.md#theory-knowledge-instructors) get the same read-only view, limited to the students of the courses they teach: the course list only shows those courses, and the page header reads *Students of the courses you teach (read only)*.
 
 #### Enrolling new students
 

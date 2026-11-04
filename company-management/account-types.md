@@ -54,9 +54,39 @@ Pilots can also be created with or without flying privileges. This way, you can 
 
 * **Chief Pilot:** This pilot has access to view all other pilots, flights, aircraft, SMS and schedules, and can publish and edit company documents and document folders as well as the documents attached to each aircraft. Editing the aircraft themselves and signing maintenance remains with administrators, operations managers and mechanics.
 * **Flight Instructors,** have a more limited access to view all their own flights, schedules and SMS. They can also view all students.
+* **Theory Knowledge Instructor (TKI):** ground-school teacher. Teaches theory classes and sees the students of the courses they teach. Flight schools only. See [Theory Knowledge Instructors](#theory-knowledge-instructors) below.
 * **Captain:** Own flights and schedule view/edit only.&#x20;
 * **Pilot:** Own flights and schedule view/edit only.
 * **Student Pilot:** This is the most limited access with view only capabilities and limited access to other pilot profiles.
+
+### Theory Knowledge Instructors
+
+The Theory Knowledge Instructor (TKI) account type is for the people who teach ground school: air law, meteorology, human performance and the other theory subjects. It is offered to **flight schools only**. Other company types do not see it when they create a user.
+
+A TKI never has more access than a Flight Instructor. Everything a TKI can see about students is limited to **the courses they teach**: courses where they are the teacher of a subject, or of a class that was not cancelled.
+
+**What a TKI can do:**
+
+* Teach theory classes: take attendance, sign the class, grade homework and review absence justifications on the classes where they are the teacher.
+* Edit the details of the classes they teach (date, duration, location, remarks) with **Edit class**. New classes are still scheduled by the training staff.
+* Record onsite exam results for the students of those courses.
+* Be picked as the teacher of a subject.
+* Open **Trainings → Students** and the student record, read only. The list only shows the courses they teach and the students enrolled in them. The home page has a **My Students** shortcut to it.
+* Download the training report and the completion certificate of those students.
+* Everything a line pilot can do with their own flights, schedule and documents.
+
+**What a TKI cannot do:**
+
+* See students of courses they do not teach.
+* Enroll, edit, complete, reset or move students, change an enrollment status or write manager notes.
+* Edit courses, subjects, lessons, exams, stages, stage checks or intakes, or approve missions and enrollment requests.
+* See the list of issued certificates.
+* Anything reserved to Flight Instructors: sign flight lessons, appear as a flight instructor in bookings or instructor availability, see **My students** under Pilots (FI assignments), the flights audit or the annual flight report.
+* Create or confirm flights, unless you tick **Theory Knowledge Instructor** under [Company settings → Flights](company-settings/flights.md) (**Who can create flights** / **Who can confirm flights**), the same as for Captains and Pilots.
+
+<figure><img src="../.gitbook/assets/tki-students-page.png" alt="Students page seen by a Theory Knowledge Instructor"><figcaption><p>A Theory Knowledge Instructor sees only the courses they teach, read only.</p></figcaption></figure>
+
+**Instructors who also teach theory:** keep them as **Flight Instructor**. A Flight Instructor can already teach theory classes and see every student, so they do not need the TKI type.
 
 ### Cabin Crew
 
@@ -122,6 +152,7 @@ Roles are listed from **most** to **least** privileged. Where the rest of this m
 | Flight Dispatcher | — | — | ✅ | View | — | — | ✅ |
 | Chief Pilot | View pilots | — | View all | View | — | View | View all |
 | Flight Instructor | View students | — | Own + students | — | Teach | Own | Own |
+| Theory Knowledge Instructor | View own students | — | Own | — | Teach theory (own courses) | Own | Own |
 | Captain | — | — | Own | — | — | Own | Own |
 | Pilot | — | — | Own | — | — | Own | Own |
 | Student Pilot | — | — | Own (read) | — | Enrolled | Own | Own (read) |

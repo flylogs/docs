@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Auto Pilot criteria and supervisors](whats-new/auto-pilot-criteria.md)
   * [Fuel used, worked out from the gauge](whats-new/fuel-used-from-the-gauge.md)
   * [Grounded aircraft and defect reporting](whats-new/grounded-aircraft-and-defect-reporting.md)
   * [Flight legs](whats-new/flight-legs.md)
@@ -119,6 +120,7 @@
 
 * [Flight Schedule Records](schedules/flight-schedule-records.md)
 * [Schedule Edit page (Schedule Manager)](schedules/schedule-edit-page.md)
+* [Auto Pilot](schedules/auto-pilot.md)
 * [Schedule Review page](schedules/schedule-review-page.md)
 * [Publishing multiple schedule records](schedules/publishing-multiple-schedule-records.md)
 * [Schedule Views](schedules/schedule-views.md)
