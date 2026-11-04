@@ -18,6 +18,13 @@ For flights with [legs](../flights/flight-legs.md) — skydiving lifts, tows, su
 
 Every uplift after a leg is added to the flight's refuelling on **Billing → Fuel & Excise**, so nothing is typed twice.
 
+### Better statistics
+
+* The aircraft's **Consumption** chart shows the fuel actually burned per hour for every month whose flights have start and end readings, instead of an estimate from uplifts.
+* The **consumption check** on Fuel & Excise compares aircraft on measured burn once they have 10 hours of readings.
+* The **aircraft logbook export** gains Fuel start, Fuel end, Fuel uplift and Fuel used columns.
+* The **cloud storage** flights file gains fuel on board at start and end.
+
 ### Pounds on the gauge, litres at the pump
 
 Your company can now set an **uplift unit** in **Company Settings → Flights → Fuel**, separate from each aircraft's fuel tracking (gauge) unit: gauges in pounds refuelled in litres, for example. It is one setting for the whole fleet, because fuel is bought in the same unit whatever the aircraft. Set each such aircraft's **fuel type** too, so pounds convert to litres with the right density (Jet A-1 0.804 kg/l). Without it Flylogs says so instead of guessing.

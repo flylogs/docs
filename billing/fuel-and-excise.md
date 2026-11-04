@@ -155,6 +155,8 @@ Most flags do not mean an engine started drinking. They usually mean an uplift w
 
 An aircraft that flew very little in the period, or has no history to compare against, is shown without a flag: the ratio would mean nothing.
 
+**Measured burn when you have it.** When an aircraft has at least 10 hours of flights with [fuel on board read at start and end](../flights/flight-legs.md#fuel) in the period **and** in its baseline, it is compared on the litres it actually burned per hour instead of the litres bought per hour. The rate column says which one it is (**measured burn** or **fuel bought**). Both sides always use the same method, so a change of method never shows up as a flag.
+
 ### Fuel bought against fuel billed
 
 What the fuel cost you, against the fuel extra charged on to pilots for the same period, per aircraft. Under-recovery usually means an hourly rate that has not kept up with the pump.

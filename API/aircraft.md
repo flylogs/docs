@@ -345,6 +345,8 @@ Reads an aircraft document and suggests the [expiry field](#expiration-date-fiel
 
 Retrieve the aircraft technical logbook with pagination.
 
+For an aircraft that tracks fuel, each flight carries `fuel` (its own uplift), `fuel_start` / `fuel_end` (on board, gauge unit), and two server-computed values: `fuel_uplift` (its own uplift plus the uplifts after its legs) and `fuel_used` (start + uplifts between legs − end, see [Flight legs → Fuel](flight-legs.md#fuel); null when it cannot be worked out), both in the uplift unit. The top-level `fuel` gives the units (`gauge`, `uplift`); it is `null` when the aircraft tracks no fuel.
+
 #### Path Parameters
 
 | Parameter | Type | Description |
@@ -382,6 +384,11 @@ Retrieve the aircraft technical logbook with pagination.
         "onblocks_time": "09:25:00",
         "rules": "VFR",
         "landings": "1",
+        "fuel": "40.00",
+        "fuel_start": "1500.00",
+        "fuel_end": "1100.00",
+        "fuel_uplift": 440,
+        "fuel_used": 625.67,
         "Pic": {
           "id": "123",
           "UserDetail": { "name": "John", "surname": "Doe" }
@@ -389,6 +396,7 @@ Retrieve the aircraft technical logbook with pagination.
       }
     }
   ],
+  "fuel": { "gauge": "lbs", "uplift": "l" },
   "paging": {
     "page": 1,
     "current": 1,
@@ -415,7 +423,12 @@ Download the aircraft logbook as an Excel file. Token passed as query parameter:
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/consumptions/{id}.json`
 
-Retrieve monthly average fuel and oil consumption rates. Defaults to last 12 months. Fuel is every uplift of the flights (`Flight.fuel` plus the legs' `fuel`) per block hour, in the uplift unit (`CompanySetting.fuel_uplift_unit`, else the aircraft's `fuel_tracking`).
+Retrieve monthly fuel and oil consumption rates, per block hour of confirmed flights. Defaults to last 12 months. Fuel is in the uplift unit (`CompanySetting.fuel_uplift_unit`, else the aircraft's `fuel_tracking`), from two sources that are never added together:
+
+* **Measured** — flights whose fuel used can be worked out from fuel on board (see [Flight legs → Fuel](flight-legs.md#fuel)). A month with any such flight gets its own `measured_fuel_per_block_hour`. A negative burn (mis-keyed reading) or an unconvertible one is left out.
+* **Uplift** — every uplift of the flights (`Flight.fuel` plus the legs' `fuel`) over all block hours, pooled over a trailing 6 months (`trailing_fuel_per_block_hour`): an uplift refills fuel burned on earlier flights, so it is only meaningful averaged.
+
+`fuel_per_block_hour` is the value to plot: the measured rate where the month has one, else the trailing uplift rate, with `fuel_source` naming which. `rolling_fuel_per_block_hour` (same on every row) is the measured rate over the window's measured hours when there are any, else total uplift / total hours, with `rolling_fuel_source`. Oil is always uplift-based.
 
 #### Path Parameters
 
@@ -433,14 +446,26 @@ Retrieve monthly average fuel and oil consumption rates. Defaults to last 12 mon
 
 ```json
 [
-  {
-    "month_unix": 1709251200,
-    "month": "2025-03",
-    "avg_fuel_per_block_hour": 32.5,
-    "avg_oil_per_block_hour": 0.2
-  }
+  [
+    {
+      "month_unix": "1709251200",
+      "month": "2025 Mar",
+      "trailing_fuel_per_block_hour": "34.1",
+      "trailing_oil_per_block_hour": "0.2",
+      "measured_fuel_per_block_hour": "31.8",
+      "measured_hours": "42.5",
+      "fuel_per_block_hour": "31.8",
+      "fuel_source": "measured",
+      "rolling_fuel_per_block_hour": "32.2",
+      "rolling_fuel_source": "measured",
+      "rolling_measured_hours": "310.4",
+      "rolling_oil_per_block_hour": "0.21"
+    }
+  ]
 ]
 ```
+
+`fuel_source` is `"measured"`, `"uplift"`, or `null` when there is nothing to show.
 
 ---
 

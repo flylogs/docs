@@ -61,6 +61,8 @@ Tick the datasets you want. Each one produces one or more CSV files under your d
 | Training records | `trainings/training_enrolments.csv`, `trainings/training_records.csv` | Trainings (Premium, Unlimited) |
 | Safety reports | `safety/safety_reports.csv` | Safety (Premium, Unlimited) |
 
+The flights file carries the fuel uplift and, as its last two columns, the **fuel on board at start and end** in each aircraft's gauge unit (added in November 2026 at the end of the file, so spreadsheets that read the columns by position keep working).
+
 Datasets your plan does not include are shown locked and are skipped even if they were selected on a previous plan. Selecting them again after an upgrade needs no reconfiguration — the choice is remembered.
 
 What is deliberately **not** exported: passport numbers, home addresses, emergency contacts, private notes and stored signatures never leave Flylogs. Safety reports still in **draft** are excluded too — a draft is private to its author until submitted. Deleted flights, aircraft and reports are never included.

@@ -46,6 +46,12 @@ The export also carries each flight's meter readings, but only for the meters th
 
 Readings are exported exactly as they are entered on the flight (two decimals) and the **time** column is the difference between the two readings, in decimal hours. It is left blank when either reading is missing. An aircraft with no meters configured exports the same columns as before.
 
+For aircraft that track fuel, four fuel columns follow the meters, with the units in the header:
+
+* **Fuel start / Fuel end** — fuel on board at engine start and shutdown, in the aircraft's gauge unit.
+* **Fuel uplift** — the flight's own uplift plus every uplift recorded after its [legs](../flights/flight-legs.md#fuel), in the uplift unit.
+* **Fuel used** — start + uplifts between legs − end, in the uplift unit. Blank when the start or end reading is missing, or when the units cannot be converted because the aircraft has no fuel type.
+
 ### Setting up initial hours
 
 When you [create a new aircraft](create-your-aircraft.md), you enter its current flight time and landings — this becomes the first Setup log entry.

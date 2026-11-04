@@ -83,6 +83,10 @@ Many turbine aircraft read fuel in pounds but buy it in litres. Two settings cov
 
 Example: 1,500 lb at start, 400 l uplifted after leg 1, 1,100 lb at end, Jet A-1. The 400 lb burned from the tank are 181.4 kg, or 225.7 l, so fuel used is 225.7 + 400 = **625.7 l**.
 
+### Statistics
+
+Fuel used feeds the aircraft's **Consumption** chart: a month whose flights have fuel on board at start and end shows the fuel actually burned per block hour (a filled dot), and a month without readings keeps the estimate from uplifts, a 6-month average (a hollow dot). The [consumption check](../billing/fuel-and-excise.md) on Fuel & Excise uses measured burn the same way, and the [aircraft logbook export](../aircraft/aircraft-logbook.md#downloading-the-logbook) has fuel start, end, uplift and used per flight.
+
 ### Billing
 
 Every uplift after a leg is added to the flight's refuelling on **Billing → Fuel & Excise**, together with the flight's own fuel uplift, so nothing has to be typed twice. See [Fuel & Excise](../billing/fuel-and-excise.md).

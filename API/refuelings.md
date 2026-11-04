@@ -323,9 +323,10 @@ The baseline is the **twelve months immediately before `from`**, so the period u
   "baseline": { "from": "2025-01-01", "to": "2025-12-31" },
   "threshold": 0.25,
   "aircraft": [
-    { "aircraft_id": "8", "registration": "EC-JMZ", "litres": 12912, "hours": 730.7,
-      "rate": 17.67, "baseline_rate": 11.62, "baseline_hours": 787.7,
-      "variance": 0.5210, "flagged": true, "comparable": true }
+    { "aircraft_id": "8", "registration": "EC-JMZ", "litres": 12912,
+      "burned_litres": 11840.2, "measured_hours": 702.4, "source": "measured", "hours": 730.7,
+      "rate": 16.86, "baseline_rate": 11.62, "baseline_hours": 787.7,
+      "variance": 0.4510, "flagged": true, "comparable": true }
   ],
   "billing": [
     { "aircraft_id": "8", "registration": "EC-JMZ",
@@ -334,6 +335,13 @@ The baseline is the **twelve months immediately before `from`**, so the period u
   ]
 }
 ```
+
+`litres` is always the fuel **bought** in the period. `rate` and `baseline_rate` are litres per block hour of one of two sources, named in `source`:
+
+* `measured` — litres actually **burned** (`burned_litres` over `measured_hours`), from confirmed flights whose fuel used can be worked out from fuel on board (see [Flight legs → Fuel](flight-legs.md#fuel)), converted to litres with the aircraft's fuel type. Used only when the aircraft has at least 10 such hours in the period **and** in the baseline; negative or unconvertible burns are left out.
+* `uplift` — litres bought over all block hours, as before.
+
+Both sides always use the same source, so a change of method never shows as variance. `burned_litres` is null when the period has no measured flight.
 
 `flagged` is `|variance| >= threshold`, but only for aircraft with at least 10 block hours in the period — below that the ratio is dominated by whether a fill happened to land inside the window. `comparable` is false when there are too few hours or no baseline.
 
