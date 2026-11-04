@@ -74,12 +74,19 @@ Rejecting a flight notifies the schedule managers so they can reassign the crew.
 
 ### Cancelling a flight
 
-Crew members can cancel a scheduled flight they are assigned to from the schedule detail window using the **Cancel Flight** button. A cancellation **reason** must always be selected, and some reasons require an additional written explanation.
+Crew members (PIC, SIC or supervisor) can cancel a flight they are assigned to from the schedule detail window or the schedule view page using the **Cancel Flight** button. A cancellation **reason** must always be selected, and some reasons require an additional written explanation. You never need to dispatch a flight just to cancel it.
 
-Cancellation is only possible:
+You can cancel while the booking is **Scheduled**, **Pending** or **Dispatched**:
 
-* **Before** the scheduled departure time, and
-* Outside the company's minimum cancellation window, if one is configured. For example, if your company sets a 24-hour minimum, flights can no longer be cancelled by crew less than 24 hours before departure — contact your operations department instead.
+* **Aircraft, weather (MET), maintenance and ATC** reasons can be used at any time, even after the scheduled departure time.
+* **Personal and other reasons** are only accepted outside the company's minimum cancellation window, if one is configured. For example, if your company sets a 24-hour minimum, inside those 24 hours the reason list only offers the aircraft, weather, maintenance and ATC reasons. For anything else, contact your operations department.
+* If your company has set the window to **Disabled**, crew cannot cancel their own bookings at all.
+
+<figure><img src="../.gitbook/assets/schedule-cancel-notice-window.png" alt="Cancel Flight form inside the cancellation window"><figcaption><p>Inside the company's cancellation window only aircraft, weather, maintenance and ATC reasons are offered</p></figcaption></figure>
+
+If the flight has already been **dispatched**, the form says so. Cancelling the booking also cancels its flight draft, so you don't have to open the flight separately. Any training mission authorization the flight used is handed back, and the reason is recorded in both the schedule history and the flight history. A flight that has already been logged can't be cancelled from the booking.
+
+<figure><img src="../.gitbook/assets/schedule-cancel-dispatched.png" alt="Cancel Flight form on a dispatched booking"><figcaption><p>Cancelling a dispatched booking also cancels its flight</p></figcaption></figure>
 
 Cancelled flights remain visible with the **Canceled** badge and the cancellation is recorded in the schedule history. See [Schedule cancellations](schedule-cancellations.md) for more detail.
 
@@ -112,5 +119,5 @@ Once dispatched, the schedule switches to **Dispatched** status and the detail w
 
 * Your assigned flights appear on your home dashboard and in the schedule calendar, always displayed in the **company timezone**.
 * Confirm or reject assignments from the flight detail window, or use **Accept All**.
-* Cancel only before departure and outside the company's minimum cancellation window, always with a reason.
+* Cancel with a reason, without dispatching first. Aircraft, weather, maintenance and ATC reasons are accepted at any time; other reasons only outside the company's minimum cancellation window.
 * PIC, SIC and Supervisor can dispatch their own flight from the schedule view page, each under their own conditions — the Supervisor can always dispatch.

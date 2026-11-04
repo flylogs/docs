@@ -205,6 +205,39 @@ A manager (`user_group_id <= 110`) dispatches anyway by posting `type_rating_ove
 
 ---
 
+## Cancel Schedule
+
+<mark style="color:green;">`POST`</mark> `/schedules/cancel.json`
+
+Crew-facing cancellation. A booking never has to be dispatched to be cancelled.
+
+#### Body Parameters (form-encoded)
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| schedule_id | string | Booking to cancel (`id` is accepted too) |
+| reason | string | `AIRCRAFT`, `MET`, `MAINT`, `ATC`, `ME` (stored as `OTHERS`) or `OTHERS` |
+| text | string | Optional free text, stored in the schedule history |
+
+#### Who and when
+
+* **Caller**: the booking's creator (`user_id`), PIC, SIC or supervisor. Anyone else gets `403 You are not authorized to cancel this booking`. Cross-company or unknown ids return `404`.
+* **Status**: `SCHEDULED`, `PENDING` and `DISPATCHED` bookings are accepted. Any other status returns `404 Event not found`.
+* **Notice window** (`schedule_flight_cancellation_min_time`, hours): inside the window, `ME` / `OTHERS` / an empty reason return `403`. `AIRCRAFT`, `MET`, `MAINT` and `ATC` are accepted at any time, including after `start`. The value `999` (*Disabled*) refuses every reason with `403`.
+* **Dispatched booking**: its flight is cancelled with it (`Flight.status = CANCELED`), mission authorizations are restored, and a `FlightChange` row with `action = cancel` records the reason. If the flight has already been logged (`LANDED`), the call returns `400 This flight has already been logged; cancel it from the flight instead.` and nothing changes.
+
+On success the booking becomes `CANCELED`, a `ScheduleHistory` row is written, the crew are notified and watchlisted pilots are told the slot is free.
+
+#### Response
+
+```json
+{ "result": true, "notification": 2 }
+```
+
+`/manager/schedules/cancel/{id}.json` (management ranks, ACL-restricted) follows the same status and dispatched-flight rules, without the notice window.
+
+---
+
 ## FRAT Prefill
 
 <mark style="color:blue;">`GET`</mark> `/schedules/frat_prefill/{scheduleId}.json`
@@ -661,7 +694,7 @@ The same limit decides who gets the editable master calendar from `GET /schedule
 The setting only opens the schedule editor endpoints — `GET /schedules/get.json`, `GET /schedules/view/{id}.json`, `POST /schedules/edit.json` and `POST /schedules/delete.json`. It does **not** grant the `manager_*` schedule actions: `POST /manager/schedules/review.json`, `GET /schedules/notify/{id}.json`, `/manager/schedules/cancel`, `/manager/schedules/history`, `/manager/schedules/availabilities`, `/manager/schedules/cancellations` and `/manager/schedules/reminders` stay ACL-restricted to management ranks and return `403 Forbidden` for group 170 whatever the setting says.
 
 {% hint style="info" %}
-`/schedules/cancel.json` is the crew-facing cancel endpoint and is **not** affected: it always requires the caller to be the booking's creator, PIC or SIC. Managers cancel through `/manager/schedules/cancel.json`, which is ACL-restricted and not granted to group 170.
+`/schedules/cancel.json` is the crew-facing cancel endpoint and is **not** affected: it always requires the caller to be the booking's creator, PIC, SIC or supervisor (see [Cancel Schedule](#cancel-schedule)). Managers cancel through `/manager/schedules/cancel.json`, which is ACL-restricted and not granted to group 170.
 {% endhint %}
 
 ### Aircraft managers
