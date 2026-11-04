@@ -774,6 +774,8 @@ Company setting `schedule_require_availability` (boolean, default `0`, under *Co
 
 Clients should treat any pilot not in `availableUsers` and not in `busyUsers` from `POST /schedules/available_pilots.json` as non-selectable when the setting is on.
 
+**`unrecorded=1` on `POST /schedules/available_pilots.json`.** When the setting is **off**, this optional body parameter adds every active pilot with no availability row for the slot to `availableUsers`. Pilots who are busy, `UNAVAILABLE` or `MAYBE` are not added. The added pilots then go through the same certificate check (`invalidUsers`) and type-rating check (`noTypeRating`) as everyone else. The ids that were added and passed those checks are returned in `unrecordedUsers`. When the setting is **on**, the parameter is ignored, because only confirmed pilots may be assigned. Auto Pilot always sends it.
+
 ### MEL and CDL warnings on save
 
 Saving a schedule (create or edit, via `/schedules/edit.json`) never fails because of a MEL

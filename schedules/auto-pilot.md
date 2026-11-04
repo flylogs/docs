@@ -28,7 +28,7 @@ Auto Pilot runs these steps in order:
 4. **Book the lessons, day by day.** For each day of the range, Auto Pilot works in rounds. In every round, each student gets at most one lesson. Students who have been booked least in this run come first, then those who flew longest ago. For each lesson the student is due, it tries:
    1. **Mission and flight type.** The lesson sets the flight type and who sits where: the instructor as PIC and the student as SIC, the student as PIC with the instructor beside them, or the student alone. The student's daily, weekly and per-type limits are checked here.
    2. **Aircraft.** An aircraft that flies that flight type, is airworthy, has no maintenance in the way and still has hours left. A maintenance already on the schedule resets the hours. Aircraft with fewer hours booked in this run are tried first, so the work is spread across the fleet.
-   3. **Earliest free slot.** Inside the base's operating hours, on a 30-minute grid. The aircraft and the student must both be free, and the student must be available.
+   3. **Earliest free slot.** Inside the base's operating hours, on a 30-minute grid. The aircraft and the student must both be free, and the student must be available (see [Who counts as available](#who-counts-as-available)).
    4. **Instructor or supervisor.** A dual lesson needs an instructor who has taught that flight type, is free, and is within their limits. Instructors who already fly that aircraft are preferred. A solo of a flight type set to **Supervisor** needs a supervisor (see [Supervision](#supervision)).
    5. **Book it as a draft.** The aircraft, crew and limits are marked as used, and Auto Pilot moves on to the next student.
 
@@ -36,6 +36,15 @@ Auto Pilot runs these steps in order:
 5. **Preview, then create.** You review the plan. **Create** saves every flight as a draft.
 
 An operation where no student owes a lesson, such as a non-training operator, keeps the earlier behaviour. Auto Pilot copies the recurring pattern of the last four weeks and fills the free time on each aircraft.
+
+### Who counts as available
+
+Auto Pilot follows the **Require confirmed availability** setting in [Company Settings → Schedule](../company-management/company-settings/schedule.md):
+
+* **Off (the default).** A student or instructor is available unless they are marked **Unavailable** or **Maybe** for the slot, are already booked, are on an OFF or REST day in the base roster, or are teaching a class. They do not need to enter an availability for the slot.
+* **On.** Only people who entered **Available** or **Always** for the whole slot, or who are on DUTY or STANDBY in the base roster, are booked.
+
+In both cases nobody is booked with expired licences, medicals or ratings, or without a valid type rating for an aircraft that requires one.
 
 ## What Auto Pilot books
 
