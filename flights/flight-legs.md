@@ -73,6 +73,10 @@ Pilots never type fuel used. They record what they read on the gauge and what th
 
 Fuel used is shown in the uplift unit, on the form while you type, on the flight page, in the PDF and in the logbook export.
 
+<figure><img src="../.gitbook/assets/flight-fuel-card.png" alt="Flight form fuel card: fuel on board at start 2400 lbs and at end 2110 lbs, fuel used 563.61 L with 400 L uplifted between legs" width="420"><figcaption><p>The fuel card on the flight form: gauge readings in pounds, fuel used worked out in litres.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flight-legs-fuel-leg.png" alt="A leg with fuel on board 2150 to 1900 lbs and 400 L uplifted after it; fuel used 141.04 L in the header"><figcaption><p>Leg 2: fuel on board at its start and end, and the 400 L uplifted after it. Its own fuel used is in the header.</p></figcaption></figure>
+
 ### Gauge in pounds, refuelled in litres
 
 Many turbine aircraft read fuel in pounds but buy it in litres. Two settings cover it:
@@ -86,6 +90,8 @@ Example: 1,500 lb at start, 400 l uplifted after leg 1, 1,100 lb at end, Jet A-1
 ### Statistics
 
 Fuel used feeds the aircraft's **Consumption** chart: a month whose flights have fuel on board at start and end shows the fuel actually burned per block hour (a filled dot), and a month without readings keeps the estimate from uplifts, a 6-month average (a hollow dot). The [consumption check](../billing/fuel-and-excise.md) on Fuel & Excise uses measured burn the same way, and the [aircraft logbook export](../aircraft/aircraft-logbook.md#downloading-the-logbook) has fuel start, end, uplift and used per flight.
+
+<figure><img src="../.gitbook/assets/aircraft-consumption-measured.png" alt="Consumption chart: filled dots for measured months, a hollow dot for September estimated from uplifts, headline measured burn 34.9 L per block hour"><figcaption><p>The Consumption tab on the aircraft page. Filled dots are measured from fuel on board, hollow dots estimated from uplifts.</p></figcaption></figure>
 
 ### Billing
 
@@ -102,6 +108,10 @@ Legs work without a connection. The message then says "Leg 3 saved offline", and
 The flight page shows a **Legs** table with every leg and the totals: number of legs, total airborne time, persons, fuel used and fuel uplifted. Under each leg's fuel used are its gauge readings (start → end) and the uplift after it. The flight's details show fuel on board at start and end, the uplifts and the flight's fuel used.
 
 <figure><img src="../.gitbook/assets/flight-legs-view-table.png" alt=""><figcaption><p>The Legs table on the flight page, with totals.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flight-legs-view-fuel.png" alt="Legs table with a Fuel used column: each leg shows litres used, its gauge readings in lbs and, on leg 2, +400 L uplift" width="420"><figcaption><p>On an aircraft that tracks fuel, the Fuel used column carries each leg's gauge readings and the uplift after it.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flight-view-fuel-details.png" alt="Flight details: fuel on board at start 2400 LBS, at end 2110 LBS, uplifts after legs 400 L, fuel used 563.61 L"><figcaption><p>The flight's fuel in its details.</p></figcaption></figure>
 
 ## In the PDF and the logbook export
 

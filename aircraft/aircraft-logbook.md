@@ -52,6 +52,8 @@ For aircraft that track fuel, four fuel columns follow the meters, with the unit
 * **Fuel uplift** — the flight's own uplift plus every uplift recorded after its [legs](../flights/flight-legs.md#fuel), in the uplift unit.
 * **Fuel used** — start + uplifts between legs − end, in the uplift unit. Blank when the start or end reading is missing, or when the units cannot be converted because the aircraft has no fuel type.
 
+<figure><img src="../.gitbook/assets/aircraft-logbook-xlsx-fuel.png" alt="Logbook export with FUEL START, FUEL END, FUEL UPLIFT and FUEL USED columns in litres"><figcaption><p>The fuel columns in the logbook export, between FLIGHT and TOTAL TIME.</p></figcaption></figure>
+
 ### Setting up initial hours
 
 When you [create a new aircraft](create-your-aircraft.md), you enter its current flight time and landings — this becomes the first Setup log entry.

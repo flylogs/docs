@@ -18,7 +18,13 @@ For flights with [legs](../flights/flight-legs.md) — skydiving lifts, tows, su
 
 Every uplift after a leg is added to the flight's refuelling on **Billing → Fuel & Excise**, so nothing is typed twice.
 
+<figure><img src="../.gitbook/assets/flight-fuel-card.png" alt="Flight form fuel card: fuel on board at start 2400 lbs and at end 2110 lbs, fuel used 563.61 L with 400 L uplifted between legs" width="420"><figcaption><p>The fuel card on the flight form: gauge readings in pounds, fuel used worked out in litres.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flight-legs-view-fuel.png" alt="Legs table with a Fuel used column: each leg shows litres used, its gauge readings in lbs and, on leg 2, +400 L uplift" width="420"><figcaption><p>On an aircraft that tracks fuel, the Fuel used column carries each leg's gauge readings and the uplift after it.</p></figcaption></figure>
+
 ### Better statistics
+
+<figure><img src="../.gitbook/assets/aircraft-consumption-measured.png" alt="Consumption chart: filled dots for measured months, a hollow dot for September estimated from uplifts, headline measured burn 34.9 L per block hour"><figcaption><p>The Consumption tab on the aircraft page. Filled dots are measured from fuel on board, hollow dots estimated from uplifts.</p></figcaption></figure>
 
 * The aircraft's **Consumption** chart shows the fuel actually burned per hour for every month whose flights have start and end readings, instead of an estimate from uplifts.
 * The **consumption check** on Fuel & Excise compares aircraft on measured burn once they have 10 hours of readings.
