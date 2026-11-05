@@ -86,7 +86,9 @@ Once a pilot is selected, the side panel shows live context:
 
 * The pilot's **availability status** for the current time window — AVAILABLE, MAYBE, UNAVAILABLE or BUSY — which updates automatically when you change the date or times.
 * Pilot group, phone and **last flight** date.
-* **Documents** — a green **Docs OK** indicator when the pilot is document‑valid for the flight. If not, only the problem documents are listed (expired items in red) together with a "Missing/expired required docs" warning. Validity is role‑aware: rank 200 members only need a valid medical, rank 300 members only a valid licence; pilots need licence, ratings, medical and training certificates.
+* **Documents** — checked against the [required certificates](../flights/flight-types.md) the selected flight type sets for that seat, valid at the booking's date and time. A green **Docs OK** means the pilot holds every one of them; otherwise only the missing or expired certificates are listed in red. If the flight type requires **no** certificates for the seat, the card shows a grey **No docs required** instead, because nothing was checked. Hover it for a reminder of how to add requirements under **Flights → Flight types**.
+
+<figure><img src="../.gitbook/assets/schedule-crew-no-docs-required.png" alt="Edit flight booking with flight type Local flight: both crew cards show No docs required, and hovering it shows a tooltip explaining that the flight type has no required certificates and how to add them"><figcaption><p>A <em>Local flight</em> type with no required certificates. Each crew card says <em>No docs required</em> instead of <em>Docs OK</em>; hover it to see how to switch the check on.</p></figcaption></figure>
 
 If the selected aircraft is **multi‑pilot**, an SIC is required. The same pilot cannot be assigned as both PIC and SIC. The **Supervisor** selector shows the same availability dots.
 

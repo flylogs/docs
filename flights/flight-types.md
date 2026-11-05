@@ -174,13 +174,23 @@ Define, **per seat** (*To act as PIC* / *To act as SIC* / *To act as Supervisor*
 
 <figure><img src="../.gitbook/assets/flight-type-required-certs-card.png" alt="The Required certificates card on the Dual flight type, with licence, SEP rating, Class 1 medical and ID selected for PIC, Class 1 medical and ID for SIC, and nothing for Supervisor"><figcaption><p>The <strong>Required certificates</strong> card on a <em>Dual</em> type. Click a chip to require that certificate for the seat; the counter next to each seat shows how many are selected. Here the instructor in CM1 needs four, the student in CM2 needs a Class 1 medical and an ID, and the third seat has no requirement.</p></figcaption></figure>
 
+Not sure what a chip stands for? Hover it. The tooltip gives the full name, what the certificate is for, and how it is checked: the crew member needs one on their profile, already issued and not expired on the date of the flight. Medical chips also remind you that the medicals are alternatives (see below).
+
+<figure><img src="../.gitbook/assets/flight-type-required-certs-tooltip.png" alt="The Required certificates card with the mouse over the M2 chip: a tooltip reads M2 · Medical Class 2, explains it is required for the PPL and for solo student pilots, that any one selected medical class is enough, and that it is checked for the date of the flight"><figcaption><p>Hovering a chip explains the certificate. Here, <em>M2</em>: what it is, the medical-alternatives rule, and how validity is checked.</p></figcaption></figure>
+
+**Medicals are alternatives.** Every other certificate you select for a seat is required on its own, but if you select more than one medical class for the same seat (for example *M1* and *M2*), holding **any one** of them valid is enough. A student with a valid Class 2 medical then passes, and the Class 1 they don't hold is not listed as missing. Only when none of the selected medicals is valid are they all listed. The *expires before the flight* warning then follows the latest-expiring valid medical, not the earliest.
+
+<figure><img src="../.gitbook/assets/flight-type-required-certs-medical-alternatives.png" alt="The Required certificates card on the Dual flight type with M1 and M2 both selected for the SIC seat, under a description saying medicals are alternatives and holding any one is enough"><figcaption><p>M1 and M2 both selected for the SIC seat: a student holding either medical meets the medical requirement. The ID is still required on its own.</p></figcaption></figure>
+
 On the flight form, each crew member gets a badge under their name as soon as both the flight type and the person are chosen — green when they hold everything the seat requires, red with the list of missing or expired certificates otherwise. The badge is a warning only and never stops the flight from being saved.
 
 <figure><img src="../.gitbook/assets/flight-form-crew-documentation.png" alt="The flight form with flight type Dual: CM1 Andrew Flyers shows Documentation valid, CM2 Sergi Salvador shows Missing: Medical Class 1, ID"><figcaption><p>The same <em>Dual</em> type on the flight form. The instructor in CM1 meets every requirement; the student in CM2 is missing the Class 1 medical and the ID.</p></figcaption></figure>
 
-In the Schedule Manager, the booking form lists the same result on each crew card: *Docs OK*, or one line per missing or expired certificate, plus a caution naming the crew member. Validity is checked at the booking's date and time, not today's.
+In the Schedule Manager, the booking form lists the same result on each crew card: *Docs OK*, or one line per missing or expired certificate, plus a caution naming the crew member. Validity is checked at the booking's date and time, not today's. When the flight type has no required certificates for a seat, that card shows *No docs required* instead of *Docs OK*, so a type without requirements is never mistaken for a passed check.
 
 <figure><img src="../.gitbook/assets/schedule-crew-required-certs.png" alt="The Edit flight booking form in the Schedule Manager: the Pilot in Command card shows Docs OK, the Second in Command card lists Medical Class 1 and ID in red, with a caution below"><figcaption><p>A <em>Dual</em> booking in the Schedule Manager. Each seat is checked against its own list, so the PIC card shows <em>Docs OK</em> while the SIC card lists the two certificates the student still needs.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/schedule-crew-no-docs-required.png" alt="Edit flight booking with flight type Local flight: both crew cards show No docs required, and hovering it shows a tooltip explaining that the flight type has no required certificates and how to add them"><figcaption><p>A <em>Local flight</em> type with no required certificates. Each crew card says <em>No docs required</em> instead of <em>Docs OK</em>; hover it to see how to switch the check on.</p></figcaption></figure>
 
 ## How flight types affect the rest of Flylogs
 
@@ -197,7 +207,7 @@ In the Schedule Manager, the booking form lists the same result on each crew car
 
 * **Booking picker.** Only types with **Visible on self-booking** enabled can be chosen when booking a slot.
 * **FRAT.** Dispatching a booking or flight of a type with **Require Flight Risk Assessment (FRAT)** on asks the crew member for a completed FRAT first.
-* **Crew compliance.** When a manager assigns crew in the schedule editor, each crew card shows *Docs OK* or lists exactly which required certificates are missing/expired for that seat, and can block the save. The pre-flight **dispatch briefing** shows the same per-seat checklist. In **self-booking**, a flyer who doesn't meet the type's requirements is always warned, and is stopped from booking only when *Require pilot documentation* is on and *Allow self-booking without valid documents* is off. Validity is evaluated for the scheduled time, so a certificate that expires before the flight ends is flagged.
+* **Crew compliance.** When a manager assigns crew in the schedule editor, each crew card shows *Docs OK*, lists exactly which required certificates are missing/expired for that seat (and can block the save), or shows *No docs required* when the type sets none for that seat. The pre-flight **dispatch briefing** shows the same per-seat checklist. In **self-booking**, a flyer who doesn't meet the type's requirements is always warned, and is stopped from booking only when *Require pilot documentation* is on and *Allow self-booking without valid documents* is off. Validity is evaluated for the scheduled time, so a certificate that expires before the flight ends is flagged.
 
 ### Trainings
 
