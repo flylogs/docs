@@ -6,7 +6,7 @@ description: Classify your operations and control how each flight logs time, pre
 
 **Flight types** classify every flight by purpose (Training, Ferry, Rental, OPC…) and drive a surprising amount of the system: how logbook time is credited to each crew member, what the flight form pre-fills, whether a slot can be booked, and which certificates the crew must hold. Getting them right once means the rest of Flylogs behaves correctly for every flight of that kind.
 
-Each flight type belongs to your company. A starter set is created automatically when you sign up (tailored to your operation — school, commercial, special operations), and you can add, edit, reorder or remove them at any time.
+Each flight type belongs to your company. A starter set is created automatically when you sign up (tailored to your operation — school, commercial, special operations), and you can add, edit, reorder or remove them at any time. Every starter type requires a **licence** and a **Class 1 medical** for the PIC seat; change that under [Required certificates](#required-certificates) if your operation needs something else.
 
 ## Where to configure
 
@@ -174,19 +174,54 @@ Define, **per seat** (*To act as PIC* / *To act as SIC* / *To act as Supervisor*
 
 <figure><img src="../.gitbook/assets/flight-type-required-certs-card.png" alt="The Required certificates card on the Dual flight type, with licence, SEP rating, Class 1 medical and ID selected for PIC, Class 1 medical and ID for SIC, and nothing for Supervisor"><figcaption><p>The <strong>Required certificates</strong> card on a <em>Dual</em> type. Click a chip to require that certificate for the seat; the counter next to each seat shows how many are selected. Here the instructor in CM1 needs four, the student in CM2 needs a Class 1 medical and an ID, and the third seat has no requirement.</p></figcaption></figure>
 
-Not sure what a chip stands for? Hover it. The tooltip gives the full name, what the certificate is for, and how it is checked: the crew member needs one on their profile, already issued and not expired on the date of the flight. Medical chips also remind you that the medicals are alternatives (see below).
+Not sure what a chip stands for? Hover it. The tooltip gives the full name, what the certificate is for, and how it is checked: the crew member needs one on their profile, already issued and not expired. Medical chips also explain the medical rules below.
 
-<figure><img src="../.gitbook/assets/flight-type-required-certs-tooltip.png" alt="The Required certificates card with the mouse over the M2 chip: a tooltip reads M2 · Medical Class 2, explains it is required for the PPL and for solo student pilots, that any one selected medical class is enough, and that it is checked for the date of the flight"><figcaption><p>Hovering a chip explains the certificate. Here, <em>M2</em>: what it is, the medical-alternatives rule, and how validity is checked.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-type-required-certs-tooltip.png" alt="The Required certificates card with the mouse over the M2 chip: a tooltip reads M2 · Medical Class 2, says what it is for, explains that a higher class also counts and that any one selected medical is enough, and how the check works"><figcaption><p>Hovering a chip explains the certificate. Here, <em>M2</em>: what it is, the medical rules, and how validity is checked.</p></figcaption></figure>
 
-**Medicals are alternatives.** Every other certificate you select for a seat is required on its own, but if you select more than one medical class for the same seat (for example *M1* and *M2*), holding **any one** of them valid is enough. A student with a valid Class 2 medical then passes, and the Class 1 they don't hold is not listed as missing. Only when none of the selected medicals is valid are they all listed. The *expires before the flight* warning then follows the latest-expiring valid medical, not the earliest.
+#### How medicals are checked
 
-<figure><img src="../.gitbook/assets/flight-type-required-certs-medical-alternatives.png" alt="The Required certificates card on the Dual flight type with M1 and M2 both selected for the SIC seat, under a description saying medicals are alternatives and holding any one is enough"><figcaption><p>M1 and M2 both selected for the SIC seat: a student holding either medical meets the medical requirement. The ID is still required on its own.</p></figcaption></figure>
+Every other certificate you select for a seat is required on its own. Medicals follow two extra rules.
+
+**A higher class also counts.** A seat that requires one medical accepts that medical or a higher one:
+
+| Required | Accepted |
+|----------|----------|
+| Class 1 (*M1*) | Class 1 only |
+| Class 2 (*M2*) | Class 2 or Class 1 |
+| Class 3 (*M3*) | Class 3, Class 2 or Class 1 |
+| LAPL (*LAPL*) | LAPL, Class 2 or Class 1 |
+
+It never works the other way round: a Class 2 does not meet a Class 1 requirement.
+
+**More than one selected means any one of them.** If you select *M1* and *M2* for the same seat, a crew member with either one passes, and the other is not listed as missing. Only when none of them is met are they listed.
+
+A medical recorded without a class counts for any of them. When a crew member holds several medicals that count, the *expires before the flight* warning follows the one that expires last.
+
+#### Checked at the date of the flight
+
+Every crew check uses the flight's date and time, not today's: the schedule editor, the dispatch briefing, the flight form and the booking warnings. A medical that expires next month does not count for a flight after that, and a flight logged late is not flagged for a medical that has expired since.
+
+<figure><img src="../.gitbook/assets/dispatch-crew-docs-at-flight-date-valid.png" alt="Crew licences panel for a 5 July booking: Aitor Aguirre's M1 is green, with Valid until 2026-10-16"><figcaption><p>A booking on 5 July. Aitor's M1 runs until 16 October, so it counts.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/dispatch-crew-docs-at-flight-date-expired.png" alt="Crew licences panel for a 4 November booking: Aitor Aguirre's M1 is red"><figcaption><p>A booking on 4 November. The same M1 has expired by then, so it is red.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flight-form-docs-at-flight-date.png" alt="Flight form for a 29 June flight: CM1 Aitor Aguirre shows Missing: ID, SEP Land Rating, with no mention of the medical"><figcaption><p>On the flight form, for a flight on 29 June. Only the certificates he did not hold that day are listed: the medical that has since expired is not.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flight-type-required-certs-medical-alternatives.png" alt="The Required certificates card on the Dual flight type with M1 and M2 both selected for the SIC seat, under a description explaining the medical rules"><figcaption><p>M1 and M2 both selected for the SIC seat: a student holding either medical meets the medical requirement. The ID is still required on its own.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/schedule-crew-higher-medical-accepted.png" alt="Edit flight form on a type requiring Class 3 for the PIC and Class 2 for the SIC. Andrew Flyers holds a Class 1 and shows Docs OK. Eneko Smith holds only a Class 3 and shows Medical Class 2 in red"><figcaption><p>In the Schedule Manager. This type requires Class 3 for the PIC and Class 2 for the SIC. The PIC holds a Class 1, so <em>Docs OK</em>. The SIC holds only a Class 3, which is lower than the Class 2 required.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/dispatch-crew-higher-medical-accepted.png" alt="Crew licences panel on the dispatch briefing: M3 in green for the PIC with its valid-until date, M2 in red for the SIC"><figcaption><p>The same booking on the dispatch briefing. The flight form applies the same rules.</p></figcaption></figure>
 
 On the flight form, each crew member gets a badge under their name as soon as both the flight type and the person are chosen — green when they hold everything the seat requires, red with the list of missing or expired certificates otherwise. The badge is a warning only and never stops the flight from being saved.
 
 <figure><img src="../.gitbook/assets/flight-form-crew-documentation.png" alt="The flight form with flight type Dual: CM1 Andrew Flyers shows Documentation valid, CM2 Sergi Salvador shows Missing: Medical Class 1, ID"><figcaption><p>The same <em>Dual</em> type on the flight form. The instructor in CM1 meets every requirement; the student in CM2 is missing the Class 1 medical and the ID.</p></figcaption></figure>
 
 In the Schedule Manager, the booking form lists the same result on each crew card: *Docs OK*, or one line per missing or expired certificate, plus a caution naming the crew member. Validity is checked at the booking's date and time, not today's. When the flight type has no required certificates for a seat, that card shows *No docs required* instead of *Docs OK*, so a type without requirements is never mistaken for a passed check.
+
+The **Flight types** list shows the same information at a glance: each seat's required certificates appear under that seat's time column, alternative medicals are merged into one chip such as *M1 / M2*, and a type with none says *No required certificates*. Hover any chip for its explanation.
+
+<figure><img src="../.gitbook/assets/flight-types-list-required-certs.png" alt="The Flight types list. Each row shows required certificate chips under the CM1, CM2 and Supervisor columns, Dual shows an M1 / M2 chip for CM2, and Local flight shows No required certificates and an Only on line with two aircraft"><figcaption><p>The <strong>Flight types</strong> list. Check here that the types you fly have requirements: <em>Local flight</em> has none, so its crew are not document-checked.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/schedule-crew-required-certs.png" alt="The Edit flight booking form in the Schedule Manager: the Pilot in Command card shows Docs OK, the Second in Command card lists Medical Class 1 and ID in red, with a caution below"><figcaption><p>A <em>Dual</em> booking in the Schedule Manager. Each seat is checked against its own list, so the PIC card shows <em>Docs OK</em> while the SIC card lists the two certificates the student still needs.</p></figcaption></figure>
 

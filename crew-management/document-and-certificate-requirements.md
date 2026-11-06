@@ -29,13 +29,13 @@ The two other toggles in this same panel are related but separate: **Block Pilot
 
 ![](../.gitbook/assets/pdcs-settings.png)
 
-For example, a pilot with expired certificates will not be able to be scheduled or dispatched — like shown in the image below, from the pre-flight dispatch view.
+These toggles stop a **pilot** whose documents are invalid on the date of the flight from dispatching it and, with its own setting, from self-booking it. The crew check a manager sees is different: it runs **per flight type**, against the certificates you enter on that type (see *Per–flight type certificate requirements* below). A flight type with no required certificates checks nothing there, so enter them on every type you fly.
 
 ### Manager warnings
 
-When managers select any pilot for a schedule or dispatch, Flylogs automatically displays the crew's certificate status.
+When managers select a pilot for a schedule or dispatch, Flylogs displays the crew's status against the **certificates required by the flight type** for that seat.
 
-**If any certificates are expired, a visual alert pops up listing exactly which certificates are invalid or expired, and depending on your company settings, it will block the pilot from being scheduled or dispatched.**
+**If a required certificate is missing or expired, a visual alert lists exactly which, and depending on your company settings, it blocks the PIC from being scheduled.** If the flight type requires none, the crew card says *No docs required* and nothing is checked.
 
 ![Pilot with expired certificates blocking pre-flight dispatch — the crew licences panel lists each certificate as valid or expired.](../.gitbook/assets/dispatch-expired-docs.png)
 
@@ -49,13 +49,13 @@ To configure this, open **Flights → Flight types**, edit a flight type, and pi
 
 ![](../.gitbook/assets/flight-type-required-certs.png)
 
-Once configured, Flylogs checks each crew member against **their seat's required certificates for the chosen flight type**, evaluating validity at the relevant moment — a check for a future flight reflects whether the certificates will still be valid then, and warns if one expires before the flight ends. These checks surface throughout the crew workflow:
+Once configured, Flylogs checks each crew member against **their seat's required certificates for the chosen flight type**, evaluating validity at the date and time of the flight, on every screen below — a check for a future flight reflects whether the certificates will still be valid then, and warns if one expires before the flight ends; a flight logged late is judged by what was valid on the day. These checks surface throughout the crew workflow:
 
-* **Schedule editor** — when a manager assigns a PIC or SIC, the crew card shows *Docs OK* or lists exactly which required certificates that person is **missing or expired** (expired ones are tagged), and blocks the save when your documentation settings require it. If the flight type has no required certificates for that seat, the card shows *No docs required* instead — nothing is checked until you add requirements to the flight type. When a seat requires more than one medical class (say Class 1 and Class 2), any one of them valid satisfies it; see [Flight types → Required certificates](../flights/flight-types.md#required-certificates).
+* **Schedule editor** — when a manager assigns a PIC or SIC, the crew card shows *Docs OK* or lists exactly which required certificates that person is **missing or expired** (expired ones are tagged), and blocks the save when your documentation settings require it. If the flight type has no required certificates for that seat, the card shows *No docs required* instead — nothing is checked until you add requirements to the flight type. A higher medical class also counts (a Class 1 meets a Class 2, Class 3 or LAPL requirement; a Class 2 meets a Class 3 or LAPL one), and when a seat requires more than one medical, any one of them is enough. See [How medicals are checked](../flights/flight-types.md#how-medicals-are-checked).
 * **Dispatch briefing** — the crew readiness checklist shows, per seat, each required certificate as ok / missing / expired, plus the soonest expiry.
 * **Booking a slot** — the booking modal warns when the person flying (or the chosen SIC) doesn't meet the flight type's requirements. It stops the booking only when *Require pilot documentation* is on and *Allow self-booking without valid documents* is off; otherwise the warning is informational and the pilot can book.
 * **Flight form** — under each selected PIC/SIC, a badge names any missing required certificate.
 
 A pilot always sees their own status; instructors, dispatchers and managers can see it for the crew they schedule.
 
-> **What counts:** for a flight type, only the certificates you configured as *required* for that seat are checked — so keep those lists up to date. A seat with no configured requirements is always considered ready. The lists are validated against the same certificate catalog used on the pilot's documents page, so requirements always match the document types you actually track.
+> **What counts:** for a flight type, only the certificates you configured as *required* for that seat are checked — so keep those lists up to date. A seat with no configured requirements is not checked at all. Companies created before this per-type check have empty lists until someone fills them in; new companies start with a licence and a Class 1 medical on the PIC seat of every starter type. The lists are validated against the same certificate catalog used on the pilot's documents page, so requirements always match the document types you actually track.

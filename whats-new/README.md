@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[Crew document checks follow your flight types](crew-document-checks-by-flight-type.md)** · Schedules & Dispatch\
+Crew are checked against the certificates listed on each flight type, so a type with no list checks nothing. The list page and crew cards now show this clearly, and a higher medical class counts for a lower one.\
+[Manual →](../flights/flight-types.md#required-certificates)
+
 **[Auto Pilot criteria and supervisors](auto-pilot-criteria.md)** · Schedules\
 Auto Pilot plans from each student's due lessons instead of copying past weeks: mission, aircraft, instructor, then slot, within new daily and weekly limits. Progress checks and exams are left to a manager, and solo flights can get a supervisor, now shown on the calendar.\
 [Manual →](../schedules/auto-pilot.md)

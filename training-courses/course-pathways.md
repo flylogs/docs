@@ -10,6 +10,10 @@ The case that prompted this is Commission Implementing Regulation (EU) 2024/2076
 
 {% embed url="https://youtu.be/BYCrnGC0tWQ" %}
 
+{% hint style="info" %}
+For moving students in general (one student, a group on a new course revision, or a closed record), start with [Course migrations](course-migrations.md). This page goes deeper into crediting LAPL(A) training, saved pathways and experience requirements.
+{% endhint %}
+
 This page covers three things that work together:
 
 1. **Crediting a closed course.** Start a student on another course with credit for a course they completed, stopped or did not pass. The old record stays exactly as it is.
@@ -105,7 +109,7 @@ The limits apply to **flight hours by flight type**, summed. Ground-subject hour
 
 Open the student's record on the course they finished (for example their LAPL(A)). If the record is **Completed**, **Stopped** or **Not passed**, the management panel shows **Credit into another course**.
 
-The wizard is the same as [Moving a student to another course](student-management.md#moving-a-student-to-another-course), with two differences:
+The wizard is the same as [moving one student](course-migrations.md#move-one-student), with two differences:
 
 * The closed record is **not changed**. Its status, certificate, progress and notes stay exactly as they are. A new enrolment opens on the target course with **copies** of everything that matches.
 * The two records link to each other: the new one shows **Credited from …**, and the old one shows **Credited into …** for every course it was credited into.
@@ -190,11 +194,12 @@ In the editor you can:
 
 A pathway belongs to one **course revision** of the source course, because an older revision has different items. When the target course publishes a new course revision, its pathways become **stale**: they are shown, but not applied, until you review them and save again.
 
-Pathways also apply to [bulk moves](student-management.md#moving-a-student-to-another-course) to a new course revision.
+Pathways also apply to [group moves](course-migrations.md#move-a-group-to-a-new-course-revision) to a new course revision.
 
 ## Related
 
-* [Student management](student-management.md#moving-a-student-to-another-course) covers moving a student in progress, and recording previous experience.
+* [Course migrations](course-migrations.md) covers moving a student in progress, moving a group, and crediting a closed record.
+* [Student management](student-management.md#recording-previous-experience) covers recording previous experience.
 * [Subject Bank (linked subjects)](subject-bank.md): linked subjects pair automatically on the pathway diagram.
 * [Course approvals](course-approvals.md) covers course revisions.
 * API: [Course pathways and experience requirements](../API/trainings.md#course-pathways-and-experience-requirements).

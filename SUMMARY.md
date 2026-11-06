@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Crew document checks by flight type](whats-new/crew-document-checks-by-flight-type.md)
   * [Auto Pilot criteria and supervisors](whats-new/auto-pilot-criteria.md)
   * [Fuel used, worked out from the gauge](whats-new/fuel-used-from-the-gauge.md)
   * [Grounded aircraft and defect reporting](whats-new/grounded-aircraft-and-defect-reporting.md)
@@ -143,6 +144,7 @@
 * [Exam sittings](training-courses/exam-sittings.md)
 * [Question bank and recovery exams](training-courses/question-bank-and-recovery-exams.md)
 * [Subject Bank (linked subjects)](training-courses/subject-bank.md)
+* [Course migrations](training-courses/course-migrations.md)
 * [Course pathways (LAPL to PPL)](training-courses/course-pathways.md)
 * [Flight Training](training-courses/flight-training.md)
 * [Stage Checks](training-courses/stage-checks.md)

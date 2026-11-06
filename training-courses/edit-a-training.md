@@ -150,7 +150,7 @@ Items are paired by name, so renaming a subject shows it as removed and added.
 
 #### Moving students to the new course revision
 
-Open the previous course revision (or follow the reminder on the new one) and click "**Move students**". Tick the students whose training is compatible with the new course revision; for each one you can also choose to credit hours flown on missions the new course revision does not have. What carries over follows the same rules as [moving a student to another course](student-management.md#moving-a-student-to-another-course). Students you leave unticked finish on the course revision they started.
+Open the previous course revision (or follow the reminder on the new one) and click "**Move students**". Tick the students whose training is compatible with the new course revision; for each one you can also choose to credit hours flown on missions the new course revision does not have. Students you leave unticked finish on the course revision they started. See [Course migrations](course-migrations.md#move-a-group-to-a-new-course-revision) for what carries over and how to fix pairings before moving a group.
 
 In **Trainings → Edit trainings** each course is listed once, with its course revisions (current, draft, previous — with how many students each has) underneath. A draft you no longer want can be thrown away with "**Discard draft**". Everywhere else a course revision is shown as *Course name · course revision 2*.
 

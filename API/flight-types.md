@@ -328,7 +328,9 @@ Set the display order of flight types. Restricted to managers (`user_group_id �
 
 Report whether a user holds the required certificates to occupy each seat (`pic` / `sic` / `supervisor`) of a flight type. Uses the flight type's [required certificates](#required-certificates-optional); a seat with no requirements is always compliant.
 
-A required type is satisfied when the user holds **at least one** certificate of that exact type that is valid at the evaluated time — issue date empty or in the past, expiration empty or in the future (same rule as the licence-validity check used across the app).
+A required type is satisfied when the user holds **at least one** certificate that counts for it and is valid at the evaluated time — issue date empty or in the past, expiration empty or in the future (same rule as the licence-validity check used across the app).
+
+What counts: that exact type, or the coarse type of its family (`medical` for any medical class). Medicals have two more rules. A higher class counts for a lower one: `medical_class_1` for `medical_class_2`, `medical_class_3` and `medical_lapl`; `medical_class_2` for `medical_class_3` and `medical_lapl`. And when a seat requires several medicals they are alternatives: one satisfied medical satisfies the seat's medical requirement.
 
 #### Path Parameters
 
@@ -345,7 +347,7 @@ A required type is satisfied when the user holds **at least one** certificate of
 
 #### Response
 
-Per-seat breakdown. For each seat: `compliant` is `false` when any required type is `missing` (not held) or `expired` (held but none currently valid); `ok` lists the satisfied types. `required` is the full list configured for that seat. `limit` is the earliest unix time the seat stops being compliant — the soonest expiration among the satisfied required certs — or `null` when the seat has no requirements or a required certificate never expires. Combined with a future `at`, this lets callers warn when a certificate expires before a planned flight.
+Per-seat breakdown. For each seat: `compliant` is `false` when any required type is `missing` (not held) or `expired` (held but none currently valid); `ok` lists the satisfied types. `required` is the list configured for that seat, minus any medical left unmet because an alternative medical is satisfied (`medical_class_1` + `medical_class_2` required with only `medical_class_2` held returns just `["medical_class_2"]`). `limit` is the earliest unix time the seat stops being compliant — the soonest expiration among the satisfied required certs, counting the satisfied medicals as one (their latest expiration) — or `null` when the seat has no requirements or a required certificate never expires. Combined with a future `at`, this lets callers warn when a certificate expires before a planned flight.
 
 ```json
 {
