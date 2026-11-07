@@ -366,6 +366,7 @@ For an aircraft that tracks fuel, each flight carries `fuel` (its own uplift), `
         "user_id": "123",
         "aircraft_id": "45",
         "time": "3600",
+        "meter": null,
         "total_time": "12500",
         "landings": "1",
         "total_landings": "8900",
@@ -408,6 +409,8 @@ For an aircraft that tracks fuel, each flight carries `fuel` (its own uplift), `
   }
 }
 ```
+
+`AircraftLog.meter` is the absolute meter reading of the flight on an aircraft counted on Hobbs time, and `null` otherwise. A reading below the running total is not used: the row adds `AircraftLog.time` instead, so `total_time` ends above `meter`. NEO shows a warning on such a row.
 
 ---
 

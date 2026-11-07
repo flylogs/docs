@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[See what your aircraft hours follow](hours-clock-and-ignored-readings.md)** · Fleet & Maintenance\
+The aircraft page shows which clock counts the hours next to the total, and a flight now warns you when its Hobbs reading was not used.\
+[Manual →](../aircraft/aircraft-logbook.md#which-clock-counts-the-hours)
+
 **[Crew document checks follow your flight types](crew-document-checks-by-flight-type.md)** · Schedules & Dispatch\
 Crew are checked against the certificates listed on each flight type, so a type with no list checks nothing. The list page and crew cards now show this clearly, and a higher medical class counts for a lower one.\
 [Manual →](../flights/flight-types.md#required-certificates)

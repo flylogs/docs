@@ -281,6 +281,10 @@ Users with `user_group_id > 170` (Captain and below) may only view flights they 
 }
 ```
 
+#### Aircraft log row
+
+`flight.AircraftLog` is this flight's row in the aircraft logbook, with `total_time`, `meter` and `time`. The fields are `null` until the flight is confirmed. `meter` is the flight's Hobbs end reading on an aircraft counted on Hobbs time, and `null` otherwise. If `total_time` is above `meter`, the reading was below the recorded hours and was not used: the flight added `time` instead. See [Aircraft logbook](../aircraft/aircraft-logbook.md#when-a-hobbs-reading-is-not-used).
+
 #### Flight legs
 
 `flight.FlightLeg` lists the flight's legs (sorties such as skydiving lifts or tows), ordered by `sequence`. It is an empty array when the flight has none. Legs are read and written through their own endpoints, never through Create or Update Flight: see [Flight legs](flight-legs.md).

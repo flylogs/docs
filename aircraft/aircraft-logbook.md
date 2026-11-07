@@ -28,12 +28,45 @@ For each row in the logbook table:
 
 * **Date** — when the log entry was created, shown in your company's timezone and date/time format.
 * **Flight reference** — for Flight-type entries, a link to the flight (callsign and route, e.g. `ABC123 KJFK → KLAX`). For Setup entries, a "Logbook reference" badge is shown instead.
-* **Time** — the flight's block time added by this entry (only for Flight-type entries).
+* **Time** — the time this flight added, measured on the aircraft's [hours clock](#which-clock-counts-the-hours) (only for Flight-type entries).
 * **Total time** — the aircraft's cumulative flight hours after this entry. This column is always filled in.
 
 Landings and cumulative landings are tracked the same way, alongside hours.
 
 Hovering a row shows extra detail: flight rules (IFR/VFR) and PIC for flights, or the logbook reference timestamp for Setup entries.
+
+### Which clock counts the hours
+
+**Hours counted from**, next to **Total Hours** at the top of the aircraft page, shows what the aircraft's hours follow: flight time, block time, tach time or Hobbs time. Everyone who can open the aircraft sees it. To change it, edit the aircraft and pick another **Maintenance time based on** option. The same value is also listed in the **Details** card.
+
+<figure><img src="../.gitbook/assets/hoursCountedFrom.png" alt="Aircraft summary bar showing Total Hours 1005:00 and Hours counted from Hobbs Time"><figcaption><p>Hours counted from sits next to the aircraft's total.</p></figcaption></figure>
+
+An aircraft can record a Hobbs or tach meter on every flight without counting its hours on that meter. If **Hours counted from** shows **Block Time**, for example, the Hobbs readings are stored on the flights, but the hours add up block time and will drift away from the Hobbs on the aircraft.
+
+To make the hours follow the meter, do both of these in one save on the aircraft edit page:
+
+1. Set **Maintenance time based on** to the meter.
+2. Use **Reset aircraft hours** to set the hours to the latest meter reading, dated after the last flight landed.
+
+Do both, because changing the clock alone keeps the hours where they are, and a Hobbs reading lower than those hours is not used (see below).
+
+### When a Hobbs reading is not used
+
+On an aircraft counted on Hobbs time, the Hobbs end reading of each flight becomes the aircraft's hours. As a safeguard, a reading **lower than the recorded hours** is not used, so a mistyped value cannot wind the hours back. The flight adds its own time instead: the difference between its Hobbs start and end readings.
+
+Flylogs now shows when this has happened, to everyone who can see the logbook or the flight:
+
+* **In the logbook**, a warning triangle appears on that flight's **Time** column. Hover over it to read the explanation.
+* **On the flight page**, the same explanation appears under the Hobbs reading.
+
+<figure><img src="../.gitbook/assets/logbookIgnoredReading.png" alt="Aircraft logbook with a warning triangle on the flight of 5 November"><figcaption><p>The flight of 5 November has a warning: its Hobbs reading was not used.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/flightIgnoredReading.png" alt="Flight page with Hobbs 962.50 to 963.70 and a warning that the reading is below the aircraft's recorded hours"><figcaption><p>The flight page gives the reading, what the flight added, and the aircraft's hours after it.</p></figcaption></figure>
+
+To clear the warning, do one of these:
+
+* **The reading is wrong:** correct it on the flight. The logbook is recalculated when you save.
+* **The recorded hours are wrong:** use **Reset aircraft hours** on the aircraft edit page (staff/admin roles).
 
 ### Downloading the logbook
 

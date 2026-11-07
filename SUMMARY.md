@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [See what your aircraft hours follow](whats-new/hours-clock-and-ignored-readings.md)
   * [Crew document checks by flight type](whats-new/crew-document-checks-by-flight-type.md)
   * [Auto Pilot criteria and supervisors](whats-new/auto-pilot-criteria.md)
   * [Fuel used, worked out from the gauge](whats-new/fuel-used-from-the-gauge.md)
