@@ -353,8 +353,8 @@ Send a JSON body with a top-level `Flight` object:
 | pic_id | integer | No at creation, **required to confirm** | Pilot in command. |
 | sic_id | integer | No | Second in command. |
 | supervisor_id | integer | No | Supervisor. |
-| tach_start, tach_end | number | Conditional | Tach readings. Required to confirm when the aircraft counts its airframe hours on the tach. |
-| hobbs_start, hobbs_end | number | Conditional | Hobbs readings. Required to confirm when the aircraft counts its airframe hours on the Hobbs meter. |
+| tach_start, tach_end | number | Conditional | Tach readings. Required to confirm when the aircraft counts its airframe hours on the tach. The end cannot be lower than the start. |
+| hobbs_start, hobbs_end | number | Conditional | Hobbs readings. Required to confirm when the aircraft counts its airframe hours on the Hobbs meter. The end cannot be lower than the start. |
 | fuel | number | No | Fuel **uplifted** with the flight (before or after it), in the uplift unit (`CompanySetting.fuel_uplift_unit`, else the aircraft's `fuel_tracking`). Seeds the flight's refuelling, see [Refuelings](refuelings.md). |
 | fuel_start, fuel_end | number | No | Fuel on board at engine start / shutdown, in the aircraft's gauge unit (`Aircraft.fuel_tracking`). Fuel used is worked out from them and the legs' uplifts, never stored: see [Flight legs → Fuel](flight-legs.md#fuel). |
 | comments | string | No | Free-text change note, stored in the flight's change history. |
@@ -451,6 +451,12 @@ If validation fails the HTTP status is still `200`, but the body is an error obj
 }
 ```
 
+An end reading below its start is refused the same way, under `validation.hobbs_end` or `validation.tach_end`, for any aircraft that records that meter. A reading left out of the request is compared using the value stored on the flight. Saves that do not mention a reading are not checked.
+
+#### Updating only some fields
+
+An update (`Flight.id` set) keeps any field the request leaves out, including times, durations, night and IFR time, and landings. To clear a time, send it empty. If you send any time and leave out `block_time` or `flight_time`, those two are worked out again from the times. Updating a `DRAFT` or other unconfirmed flight still needs `aircraft_id`.
+
 | Message | Cause |
 |---------|-------|
 | `Missing aircraft` | `aircraft_id` missing (`400`). |
@@ -525,7 +531,7 @@ Confirming a flight that is already confirmed is not an error: the response is t
 
 On paid plans the response's `adsb` field is the flight's ADS-B lookup (`status` `pending`, or `found` straight away when positions were already stored, e.g. from an [ADS-B Preview](#ads-b-preview)). Confirming never waits for an ADS-B provider; follow the result with [Flight ADS-B Track](#flight-ads-b-track).
 
-Some refusals come back as HTTP `200`: when the aircraft needs a Hobbs or tach reading that the flight is missing, `result` carries a `message` and an `errors` object instead of `status: "LANDED"`. Treat a confirm as successful only when `result.status` is `LANDED`.
+Some refusals come back as HTTP `200`: when the aircraft needs a Hobbs or tach reading that the flight is missing, or an end reading is below its start, `result` carries a `message` and an `errors` object instead of `status: "LANDED"`. Treat a confirm as successful only when `result.status` is `LANDED`.
 
 #### Overlap check
 
