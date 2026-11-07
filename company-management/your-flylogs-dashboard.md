@@ -31,6 +31,16 @@ As you enter more data in Flylogs, the dashboard continues to change and show yo
 
 ***
 
+### Fleet Maintenance Status
+
+The **Fleet Maintenance Status** card lists each active aircraft with maintenance data: the last signed maintenance, the hours left before the next one, and the hours reading at which it is due. Where they apply, it also shows the landings and days left, and any open MEL / CDL items. Aircraft closest to their next maintenance come first, and selecting a row opens the aircraft.
+
+<figure><img src="../.gitbook/assets/fleet-maintenance-status-home.png" alt="Fleet Maintenance Status card with one row per aircraft, showing the maintenance name, the hours left and the hours reading at which it is due"><figcaption><p>Hours left before the next maintenance on each aircraft</p></figcaption></figure>
+
+The card needs a plan that includes maintenance. It appears on the home page of **Company Administrators**, **Operations Managers**, **Compliance & Safety Managers**, **Human Resources Managers**, **Trainings Managers**, **Flight Dispatchers**, **Chief Pilots**, **Flight Instructors**, **Mechanics**, **Captains** and **Pilots**. On a Captain's or Pilot's home page, the card is hidden when no aircraft has maintenance data and no MEL / CDL item is open. **Student Pilots** do not get it.
+
+***
+
 ### Alerts
 
 The **Alerts** widget on your dashboard surfaces everything about to expire across your operation — aircraft certificates (insurance, airworthiness, registration, weight & balance, radio, avionics), scheduled maintenance, uploaded aircraft documents, company documents, and pilot certificates. Each item is colour-coded: red for already expired, amber for expiring within a month, grey for expiring within three months.

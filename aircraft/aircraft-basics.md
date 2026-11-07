@@ -17,6 +17,10 @@ On top of that, any single aircraft can name one or more [aircraft managers](air
 
 Each aircraft's photo can be uploaded, replaced, or removed from its edit page — the same administrator, Operations Manager, or any of the aircraft's own assigned Aircraft Managers can do this. New aircraft get a photo looked up automatically from public aviation photo sources when they're first added; after that, the photo is entirely up to you to manage.
 
+**Captains** and **Pilots** can see the fleet from the **Aircraft** menu, read only: the company's active aircraft, their hours, landings, potential and certificate expirations. They cannot add aircraft, and can edit one only if they are named as its manager. **Student Pilots** and **Cabin Crew** do not get the Aircraft menu unless they are an aircraft manager.
+
+<figure><img src="../.gitbook/assets/aircraft-fleet-pilot.png" alt="Aircraft Fleet page as a Pilot sees it: all active aircraft with fleet totals, flight hours chart, certificate health and the aircraft table, with no Add Aircraft button"><figcaption><p>The Aircraft Fleet page as a Pilot sees it</p></figcaption></figure>
+
 Remember, you have no limits on the amount of users you create, but choose carefully the profile type, since each user group, has different access levels and permissions to edit and manage resources in your account.
 
 View account limitations [here](../company-management/account-limitations.md).

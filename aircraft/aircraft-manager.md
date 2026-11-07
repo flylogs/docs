@@ -18,15 +18,18 @@ partners sharing an aeroplane are all just several names in the same card.
 The function is deliberately **independent of the user group**. A Captain, a Flight Instructor, a
 line Pilot or even a Student Pilot who owns the aeroplane they train in gets the same authority
 over *that* aircraft as a Company Administrator has over the whole fleet — and no extra authority
-anywhere else. Their user group is unchanged, and the rest of the fleet stays exactly as closed to
-them as it was.
+anywhere else. Their user group is unchanged, and they gain no authority over the rest of the fleet.
 
 The typical use is an operator that **manages aircraft on behalf of third-party owners**: the owner
-(or the crew member assigned to that aeroplane) gets a real seat in the system, sees their own
-aircraft's hours, next maintenance, expiring certificates and upcoming bookings, and cannot see
-anybody else's.
+(or the crew member assigned to that aeroplane) gets a real seat in the system and sees their own
+aircraft's hours, next maintenance, expiring certificates and upcoming bookings.
 
-<figure><img src="../.gitbook/assets/aircraft-manager-fleet.png" alt="Aircraft fleet page for a Captain who manages one aeroplane: one aircraft listed, and an Aircraft menu that now includes Aircraft Reports, MEL / CDL Items and Maintenance"><figcaption><p>A Captain who manages one aeroplane: the fleet holds just that tail, and the Aircraft menu has gained its maintenance sections</p></figcaption></figure>
+What the rest of the fleet looks like to them depends on their user group. A **Student Pilot** or
+**Cabin Crew** manager sees only the aircraft they manage on the fleet page. A **Captain** or
+**Pilot** manager sees every active aircraft there and on the **Fleet Maintenance Status** card, as
+all Captains and Pilots do, and can act only on the aircraft they manage.
+
+<figure><img src="../.gitbook/assets/aircraft-manager-fleet.png" alt="Aircraft fleet page for a Pilot who manages one aeroplane: all active aircraft listed, and an Aircraft menu that now includes Aircraft Reports, MEL / CDL Items and Maintenance"><figcaption><p>A Pilot who manages one aeroplane: the Aircraft menu has gained its maintenance sections, which apply to the managed aircraft</p></figcaption></figure>
 
 ## Setting the manager
 
@@ -67,8 +70,8 @@ On **the aircraft they are named on** — and only those:
 
 <figure><img src="../.gitbook/assets/aircraft-manager-maintenance.png" alt="Maintenance jobs card on the aircraft page showing completed, scheduled and overdue counters, a New job button and the aircraft's maintenance plans"><figcaption><p>Maintenance for that aircraft: the manager opens, edits and signs off its jobs</p></figcaption></figure>
 
-The **Aircraft** and **Maintenance** menu entries appear for a manager who would otherwise not see
-them at all. Inside those pages, every aircraft selector is narrowed to their own tails — the
+The **Aircraft** menu entry appears for every manager, and its **Maintenance** sections appear even
+for a manager whose user group would not otherwise see them. Inside those pages, every aircraft selector is narrowed to their own tails — the
 "New Job" and "New MEL item" forms will not even offer another registration.
 
 <figure><img src="../.gitbook/assets/aircraft-manager-schedule.png" alt="Schedule Manager opened by an aircraft manager: the board has a single resource row for their aircraft with the day's bookings on it"><figcaption><p>The Schedule Manager, narrowed to the tails the manager is responsible for</p></figcaption></figure>

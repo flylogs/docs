@@ -30,6 +30,10 @@ You may not be able to see all of these options. This is normal, as they depend 
 
 Home is your homepage and dashboard. It provides an overview of all your information — your profile, upcoming flights and duty, flight-hours chart, and a **Book a Flight** shortcut.
 
+**Captains** and **Pilots** also get the **Fleet Maintenance Status** card, when the company's plan includes maintenance. It shows how many hours each aircraft has left before its next maintenance, so you can plan your flights around it.
+
+<figure><img src="../.gitbook/assets/fleet-maintenance-status-home.png" alt="Fleet Maintenance Status card with one row per aircraft, showing the maintenance name, the hours left and the hours reading at which it is due"><figcaption><p>Hours left before the next maintenance on each aircraft</p></figcaption></figure>
+
 ### My Profile
 
 From the **My Profile** card on your Home dashboard, you will find all your personal information, flight history and qualifications.
