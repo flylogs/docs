@@ -22,9 +22,32 @@ Custom forms are available on the **Premium** and **Unlimited** plans. If your c
 
 Managers find **Forms** under **Home** in the main menu. Every user finds the forms they have to fill under **My forms**, in the menu that opens from their name at the top right.
 
+## Starting from a template
+
+The **Start from a template** panel, on the right of **Home → Forms**, holds ready-made forms. Click one and the builder opens with its fields, who fills it and what it is attached to already set up. Change anything you like: nothing is saved until you press **Save**, so you can open a template just to look at it and leave.
+
+<figure><img src="../.gitbook/assets/custom-forms-templates.png" alt="Forms page with the list of forms and the Start from a template panel on the right"><figcaption><p>Home → Forms: your forms on the left, the templates on the right.</p></figcaption></figure>
+
+| Template | What it holds | Set up as |
+| --- | --- | --- |
+| Daily inspection | Walk-around checks, a fuel slip photo shown only when the aircraft was refuelled, and a defect description shown only when a defect was found | First flight of the day, mandatory, filled by the PIC |
+| Fitness to fly (IMSAFE) | The pilot's personal declaration: illness, medication, stress, alcohol, fatigue, eating | Preflight, mandatory, filled by the PIC |
+| Post-flight report | Fuel uplifted, technical issues and occurrences to report to safety | Post-flight, skippable, filled by the PIC |
+| Solo flight briefing | Weather and NOTAMs, aircraft, authorised exercise and limits, student fit to fly | Before a solo flight, mandatory, filled by the instructor / supervisor |
+| Course application | Personal details, licence held, total flight time, medical certificate and a declaration | Course enrolment, skippable, filled by the student or on their behalf |
+| Disciplinary action record | What happened, the action taken (verbal, written or final warning, suspension), corrective action, review date and the person's statement | Not attached to anything; filled by managers and signed with their password |
+
+The template's text appears in your language. Once saved, the form is yours like any other: the template is not linked to it, and later changes to the templates never touch your forms.
+
+<figure><img src="../.gitbook/assets/custom-forms-template-builder.png" alt="Form builder opened from the Disciplinary action record template, with its sections and fields"><figcaption><p>The Disciplinary action record template opened in the builder, ready to review and save.</p></figcaption></figure>
+
+{% hint style="warning" %}
+A template attached to flights as **mandatory** blocks dispatch from the moment you publish it. Check the **Attached to** tab before you press **Publish**, and switch it to **Skippable** or narrow it to some aircraft if you want to try it out first.
+{% endhint %}
+
 ## Building a form
 
-Open **Home → Forms → New form**, give it a name, then add sections and fields on the **Fields** tab.
+Open **Home → Forms → New form** (or start from a template), give it a name, then add sections and fields on the **Fields** tab.
 
 ### Field types
 
@@ -82,7 +105,7 @@ On the **Revisions** tab you can add your own labels — *Issue*, *Revision*, *E
 
 Filling in is saved as you type. When a section is complete, press **Sign**. If **Sign with password** is on (Settings tab), the signer re-enters their password, as for course approvals. Either way, each signature records who signed, when, and a fingerprint of the answers signed. Signed answers can no longer be changed.
 
-<figure><img src="../.gitbook/assets/custom-forms-signed-copy.png" alt=""><figcaption><p>A signed copy: the answers, the photo, the revision it was filled on and the signature.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/custom-forms-signed-copy.png" alt="A submitted Disciplinary action record about a pilot, with its answers, revision and signature"><figcaption><p>A signed copy: the answers, the revision it was filled on, the person it is about and the signature.</p></figcaption></figure>
 
 A manager can **reopen** a signed copy with a reason: its signatures are voided, the answers it held are kept in the history, and it must be signed again.
 
@@ -91,6 +114,16 @@ A **draft** (a copy started but not every part signed yet) can be deleted with i
 ## Sending a form to people
 
 From **Forms → Responses → Request**, choose people and/or pilot groups, an optional due date and a note. Each person gets their own copy and a notification; anyone who already has an open copy of that form is not asked again. Overdue copies are shown in red to them and to you.
+
+## Filling in a form for someone
+
+Some forms are about a person but are filled in by you, not by them — a disciplinary record, an assessment, an interview note. From **Forms → Responses**, press **Fill in for someone**, choose the person and press **Start**. The copy opens for you to fill in and sign.
+
+<figure><img src="../.gitbook/assets/custom-forms-fill-for.png" alt="Fill in for someone window with a person picker"><figcaption><p>Start a copy about one person and fill it in yourself.</p></figcaption></figure>
+
+Unlike **Request**, the person is not asked to fill anything and gets no notification. As the person the form is about, they can still read it: once it is signed, the copy appears under their **My forms**, like any form about them. If they already have an open copy of that form, it is opened instead of a second one.
+
+Who can: managers (user groups 1, 100, 105, 110) and the groups the form names under *Who fills it in*. The form must be published.
 
 ## Course pre-entry forms
 
@@ -123,7 +156,7 @@ On the **Attached to** tab you can also attach a form to flights:
 
 **Mandatory** flight forms block the step until they are signed or a manager waives them with a reason: the **Dispatch** button, saving a new flight, or **Confirm**. **Skippable** ones are offered and can be skipped.
 
-<figure><img src="../.gitbook/assets/custom-forms-dispatch-fill.png" alt=""><figcaption><p>The pilot fills in and signs the daily inspection in the dispatch window. Dispatch stays off until it is signed.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/custom-forms-dispatch-fill.png" alt="Before the flight section of the dispatch window with the daily inspection being filled in"><figcaption><p>The pilot fills in and signs the daily inspection in the dispatch window. Dispatch stays off until every mandatory form is signed.</p></figcaption></figure>
 
 What is never blocked:
 
@@ -160,7 +193,7 @@ Forms for exams, first login, document downloads and certificates will be added 
 
 Who gets the link: flights and bookings link for everyone who can see the copy, and the flight or booking page still applies its own access. Enrolment, course and person pages link for managers (`user_group_id` ≤ 110); a student also gets a link to their own enrolment. Filter by status or name, open any copy, or export the list to Excel (one column per field).
 
-<figure><img src="../.gitbook/assets/custom-forms-responses.png" alt=""><figcaption><p>Responses of a form: status, dates and the flight each copy belongs to.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/custom-forms-responses.png" alt="Responses of the Disciplinary action record form with one submitted copy"><figcaption><p>Responses of a form: status, dates and the record each copy belongs to.</p></figcaption></figure>
 
 | Status | Meaning |
 | --- | --- |

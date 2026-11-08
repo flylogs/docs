@@ -182,6 +182,12 @@ Records a `WAIVED` copy, which satisfies the enrolment gate like a submitted one
 { "subject_model": "Training", "subject_id": "<course id>", "subject_user_id": 178, "trigger_id": "<ENROLMENT trigger id>" }
 ```
 
+About another person (managers, `user_group_id` ≤ 110, and the form's `FILL` groups only; the person must belong to the company). No notification is sent, unlike [sending a form](#send-a-form-to-people):
+
+```json
+{ "subject_model": "User", "subject_user_id": 178 }
+```
+
 Returns the open copy for that form and subject if there is one, otherwise a new `DRAFT` on the current revision. Response: `{"result": true, …bundle}`.
 
 ### Read a response

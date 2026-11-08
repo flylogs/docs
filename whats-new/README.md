@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[Form templates and filling in for someone](form-templates.md)** · Company management\
+Start a form from a ready-made template (daily inspection, IMSAFE, post-flight report, solo briefing, course application, disciplinary record) and fill in a copy about a person yourself.\
+[Manual →](../company-management/custom-forms.md#starting-from-a-template)
+
 **[See what your aircraft hours follow](hours-clock-and-ignored-readings.md)** · Fleet & Maintenance\
 The aircraft page shows which clock counts the hours next to the total, and a flight now warns you when its Hobbs reading was not used.\
 [Manual →](../aircraft/aircraft-logbook.md#which-clock-counts-the-hours)

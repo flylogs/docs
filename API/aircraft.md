@@ -41,7 +41,7 @@ their own aeroplane, or add themselves to one they do not manage.
 
 | | |
 |-|-|
-| Read (ids) | `Aircraft.ManagerIds` — e.g. `["17","204"]`. Sent to `user_group_id < 171` and to 300; omitted for everyone else. |
+| Read (ids) | `Aircraft.ManagerIds` — e.g. `["17","204"]`. Sent in full to `user_group_id < 171` and to 300. Anyone else who manages the tail gets just their own id (`["<own id>"]`), so a client can tell it may offer the manager actions; everyone else gets the key omitted. |
 | Read (with names) | `Manager` — an array of `{ id, UserDetail: { name, surname } }`. |
 | Write | `data[Manager][Manager][]=<user id>`, repeated once per manager. Staff only. |
 | Clear | post one empty value: `data[Manager][Manager][]=`. The aircraft then has no manager. |

@@ -15,6 +15,8 @@ There are two ways to upload a file:
 
 Any authenticated user may create an upload by either path. Uploads are scoped to the caller's company, which the server reads from the session — it is never taken from the request, so a client cannot write into another company's storage. `Complete Upload` additionally requires the caller to be the same user who signed the upload. No `user_group_id` restriction and no plan gate applies to creating uploads; the exception for External Auditors on listing is documented under `List Uploads`.
 
+**Aircraft documents** (`model` `Aircraft`, `foreign_key` the aircraft id) and the aircraft certificate tags (`AircraftCert*`) are the exception on writes: `sign`, `create`, `confirm` (moving a file into the tag), `complete`, `rename`, `expiration` and `delete` require `AircraftManagerPolicy::canEditAircraft()` — `user_group_id` 1, 100, 105, 110, 150 or 300, or being one of that aircraft's own `aircraft_managers`. Anyone else (Flight Instructors, Captains, Pilots, and any other group in the aircraft's company) may list and download them but gets `403` on every write, including on a file they uploaded themselves. Upload denials answer `403 Uploads are not enabled for this session`; delete answers `403 This file can not be deleted.`; rename and expiration answer `404`, the same as a missing file.
+
 ---
 
 ## List Uploads

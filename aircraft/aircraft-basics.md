@@ -21,6 +21,10 @@ Each aircraft's photo can be uploaded, replaced, or removed from its edit page â
 
 <figure><img src="../.gitbook/assets/aircraft-fleet-pilot.png" alt="Aircraft Fleet page as a Pilot sees it: all active aircraft with fleet totals, flight hours chart, certificate health and the aircraft table, with no Add Aircraft button"><figcaption><p>The Aircraft Fleet page as a Pilot sees it</p></figcaption></figure>
 
+The **Aircraft documents** section of each aircraft page follows the same rule. Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots, Mechanics and the aircraft's own [aircraft managers](aircraft-manager.md) can upload, rename, set an expiry date on and delete its documents. Everyone else who can open the aircraft (Flight Instructors, Captains, Pilots) can open and download them, but sees no **Upload** button and no edit or delete actions, and the server refuses those actions if attempted.
+
+<figure><img src="../.gitbook/assets/aircraft-documents-pilot.png" alt="Aircraft documents section as a Pilot sees it: the list of files with no Upload button and no rename, expiry or delete actions"><figcaption><p>Aircraft documents are read only for Captains and Pilots</p></figcaption></figure>
+
 Remember, you have no limits on the amount of users you create, but choose carefully the profile type, since each user group, has different access levels and permissions to edit and manage resources in your account.
 
 View account limitations [here](../company-management/account-limitations.md).
