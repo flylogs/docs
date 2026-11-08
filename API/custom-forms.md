@@ -47,11 +47,13 @@ Business refusals answer `200` with `{"result": false, "code": "<CODE>"}`.
 | Property | Notes |
 | --- | --- |
 | `key` | `^[a-z]_[a-z0-9_]{1,24}$`, unique across sections and fields |
-| `type` | `text_block`, `checkbox`, `yes_no`, `choice`, `text`, `textarea`, `number`, `date`, `datetime`, `photo`, `pdf` |
+| `type` | `text_block`, `checkbox`, `yes_no`, `choice`, `text`, `textarea`, `number`, `date`, `datetime`, `photo`, `pdf`, `person` |
 | `condition` | `null` or `{"field": "<earlier field key>", "equals": <value>}`. The source must be an earlier `checkbox` (`true`/`false`), `yes_no` (`"YES"`/`"NO"`) or `choice` (option key) field |
 | `filler_groups` | `null` (part of the main signature) or `user_group_id`s that sign this section separately |
 | `options` | `choice` only: `[{"key": "o_dual01", "label": "Dual"}]` |
 | `unit`, `hhmm` | `number` only |
+| `user_groups` | `person` only: `user_group_id`s whose active users may be chosen; `[]` = everyone in the company |
+| `is_subject` | `person` only: the chosen user becomes the copy's subject (`subject_user_id`). At most one per form, always `required`, never conditional (field or section, `SUBJECT_CONDITIONAL`), never in a separately signed section (`SUBJECT_SIGNED_SEPARATELY`); a second one is `SUBJECT_TWICE` |
 
 ### Answers
 
@@ -59,7 +61,7 @@ Business refusals answer `200` with `{"result": false, "code": "<CODE>"}`.
 { "f_ppl001": { "value": "YES", "files": ["<upload id>"] } }
 ```
 
-`value` by type: `checkbox` bool · `yes_no` `"YES"`/`"NO"` · `choice` option key · `text`/`textarea` string · `number` number · `date` `"YYYY-MM-DD"` · `datetime` unix seconds · `photo`/`pdf` `null` (the files are the answer). `files` holds upload ids filed with `model=FormResponse`, `foreign_key=<response id>` (see [Uploads](uploads.md)). Answers to hidden fields and unknown keys are dropped.
+`value` by type: `checkbox` bool · `yes_no` `"YES"`/`"NO"` · `choice` option key · `text`/`textarea` string · `number` number · `date` `"YYYY-MM-DD"` · `datetime` unix seconds · `person` user id · `photo`/`pdf` `null` (the files are the answer). `files` holds upload ids filed with `model=FormResponse`, `foreign_key=<response id>` (see [Uploads](uploads.md)). Answers to hidden fields and unknown keys are dropped.
 
 ### Signing units
 
@@ -136,7 +138,7 @@ Soft delete; refused with `HAS_RESPONSES` once anyone has a copy.
 
 <mark style="color:blue;">`GET`</mark> `/manager/custom_forms/responses/{formId}.json?status=&q=&page=`
 
-50 per page, newest change first. `q` searches the person's name. Each row: `id`, `status`, `origin`, `subject_user {id, name}`, `subject_label`, `subject_ref`, `answers`, `revision_id`, `created`, `submitted`, `due`, `missing [{key, label}]` (required answers still missing on that copy's own revision). Plus `paging {page, limit, count, pageCount}`.
+50 per page, newest change first. `q` searches the person's name. Each row: `id`, `status`, `origin`, `subject_user {id, name}`, `subject_label`, `subject_ref`, `answers`, `revision_id`, `created`, `submitted`, `due`, `missing [{key, label}]` (required answers still missing on that copy's own revision). Plus `people {user id: name}` for every user a `person` answer names, and `paging {page, limit, count, pageCount}`.
 
 ### Send a form to people
 
@@ -168,6 +170,25 @@ Records a `WAIVED` copy, which satisfies the enrolment gate like a submitted one
 
 `pending` (copies with a unit the caller still has to sign, due first), `available` (forms the caller may open at will), `submitted` (the caller's 50 latest finished copies).
 
+Each row: `id`, `form {id, name}`, `status`, `due`, `subject_label`, `created`, `modified`, `submitted`.
+
+### Latest forms (dashboard)
+
+<mark style="color:blue;">`GET`</mark> `/custom_forms/recent.json?limit=5`
+
+The latest copies the caller may see, most recently changed first. `limit` is 1–20 (default 5). Managers (`user_group_id ≤ 110`) get every copy in the company; anyone else gets the copies they started, signed or are about, and the copies of forms their group fills, views or signs a section of. Response: `{"responses": [row…]}`, each row as in My forms plus `to_fill` (`true` when a part of the copy is still the caller's to fill and sign).
+
+### Forms of a person
+
+<mark style="color:blue;">`GET`</mark> `/custom_forms/person/{userId}.json`
+
+The forms box on a person's page. The user must belong to the caller's company, otherwise `404`. Only the copies the caller may see are listed, newest change first, up to 50 in each list:
+
+* `filled`: copies the person filled in. That means they signed a part of it, or started it themselves. A copy that was only requested from them counts once they sign it.
+* `named`: copies with a `person` field whose answer is that person, such as the person the form is about or a witness. Each row adds `fields [{key, label, is_subject}]`, the person fields that name them.
+
+Rows are shaped as in My forms.
+
 ### Start a response
 
 <mark style="color:green;">`POST`</mark> `/custom_forms/start/{formId}.json`
@@ -198,6 +219,7 @@ The bundle:
 
 | Key | Content |
 | --- | --- |
+| `people` | per `person` field key: `[{id, name}]` the caller may choose (only while they can still fill that field), plus whoever it names now |
 | `response` | `id`, `status`, `origin`, subject, `subject_label`, `subject_ref`, `answers`, `due`, `created`, `submitted`, `submitted_by` |
 | `form` | `id`, `name`, `description`, `require_password`, `retention_months` |
 | `revision` | the revision the copy is pinned to, with its `schema` and labels |
@@ -222,7 +244,9 @@ The bundle:
 
 <mark style="color:green;">`POST`</mark> `/custom_forms/save/{id}.json` — `{"answers": {…}}`
 
-Only the fields of the caller's unsigned units are written; a field of those units missing from `answers` is cleared. Refusals: `LOCKED`, `NOT_YOURS`, `SIGNED_UNIT_CHANGED`.
+Only the fields of the caller's unsigned units are written; a field of those units missing from `answers` is cleared. Refusals: `LOCKED`, `NOT_YOURS`, `SIGNED_UNIT_CHANGED`, `PERSON_NOT_ALLOWED` (a `person` value outside the field's list; a value the copy already held is kept even if that user has since left the list).
+
+On a copy about a person (`subject_model` `User`), a new value in the `is_subject` field moves the copy to that person (`subject_id`, `subject_user_id`). Allowed only to callers who may start a copy about them (managers and the form's `FILL` groups); anyone else gets `NOT_YOURS`. Copies about a flight, booking or course keep their subject. A copy started about another person, by start or by request, arrives with that field already filled.
 
 ### Sign a unit
 
@@ -287,9 +311,12 @@ Every `PUBLISHED` form of the company with a `PREFLIGHT`, `FIRST_FLIGHT_OF_DAY`,
   "form": { "id": "…", "name": "…", "description": "…", "fill_mode": "SUBJECT", "fill_seat": "PIC", "require_password": false },
   "revision": { "id": "…", "schema": { … }, … },
   "groups": { "OPEN": [], "FILL": [], "VIEW": [] },
-  "triggers": [ { "id": "…", "type": "POSTFLIGHT", "mode": "MANDATORY", "scope": { "aircraft_ids": ["12"] } } ]
+  "triggers": [ { "id": "…", "type": "POSTFLIGHT", "mode": "MANDATORY", "scope": { "aircraft_ids": ["12"] } } ],
+  "people": { "f_wit001": [ { "id": 178, "name": "Antonio Oreilly" } ] }
 } ] }
 ```
+
+`people` lists, per `person` field, who it may name, so the field can be filled without signal.
 
 A copy filled offline is replayed after its flight is created:
 
@@ -324,7 +351,7 @@ When a course has a **MANDATORY** `ENROLMENT` form:
 | --- | --- |
 | Managers (`user_group_id ≤ 110`) | see every copy; fill the `form` unit on anyone's behalf; reopen; waive; delete any `DRAFT` |
 | The creator of a copy | delete it while it is a `DRAFT` with no signed unit |
-| The person the copy is about | see it; fill the `form` unit when `fill_mode` is `SUBJECT` or `SUBJECT_OR_GROUPS` |
+| The person the copy is about | see it once it is `SUBMITTED`, `SKIPPED` or `WAIVED`; while it is `REQUESTED` or `DRAFT`, only when `fill_mode` is `SUBJECT` or `SUBJECT_OR_GROUPS` (a `GROUPS` copy staff fill about them, such as a disciplinary record, returns `404` to them until it is signed); fill the `form` unit when `fill_mode` is `SUBJECT` or `SUBJECT_OR_GROUPS` |
 | `FILL` groups | see copies of the form; start one about anyone; fill the `form` unit when `fill_mode` is `GROUPS` or `SUBJECT_OR_GROUPS` |
 | A section's `filler_groups` | see the copy; fill and sign **only** that section (managers cannot sign it for them) |
 | `VIEW` groups, signers, the creator | see it |

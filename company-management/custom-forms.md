@@ -18,7 +18,7 @@ Custom forms are available on the **Premium** and **Unlimited** plans. If your c
 | --- | --- |
 | Build, publish, archive and delete forms; see every response; send forms to people; reopen a signed copy; delete any draft copy; waive a mandatory form | Flylogs Administrator, Company Administrator, Operations Manager, Compliance & Safety Manager (user groups 1, 100, 105, 110) |
 | Fill in and sign a form | Whoever the form says fills it in (see below) |
-| See a filled copy | Managers, the person it is about, whoever filled or signed it, and the user groups you add as viewers |
+| See a filled copy | Managers, the person it is about, whoever filled or signed it, and the user groups you add as viewers. When the form is filled by *selected user groups*, the person it is about sees it only once every part is signed |
 
 Managers find **Forms** under **Home** in the main menu. Every user finds the forms they have to fill under **My forms**, in the menu that opens from their name at the top right.
 
@@ -35,7 +35,7 @@ The **Start from a template** panel, on the right of **Home → Forms**, holds r
 | Post-flight report | Fuel uplifted, technical issues and occurrences to report to safety | Post-flight, skippable, filled by the PIC |
 | Solo flight briefing | Weather and NOTAMs, aircraft, authorised exercise and limits, student fit to fly | Before a solo flight, mandatory, filled by the instructor / supervisor |
 | Course application | Personal details, licence held, total flight time, medical certificate and a declaration | Course enrolment, skippable, filled by the student or on their behalf |
-| Disciplinary action record | What happened, the action taken (verbal, written or final warning, suspension), corrective action, review date and the person's statement | Not attached to anything; filled by managers and signed with their password |
+| Disciplinary action record | The person concerned (a person field that sets who the record is about), what happened, the action taken (verbal, written or final warning, suspension), corrective action, review date and the person's statement | Not attached to anything; filled by managers and signed with their password |
 
 The template's text appears in your language. Once saved, the form is yours like any other: the template is not linked to it, and later changes to the templates never touch your forms.
 
@@ -63,12 +63,27 @@ Open **Home → Forms → New form** (or start from a template), give it a name,
 | Date and time | A date and time, in your company's time zone and format |
 | Photo | One or more photos (the phone camera opens on mobile) |
 | PDF | One or more PDF files |
+| Person | Someone from your company, chosen from a list (see below) |
 
 Each field can be **required** or optional. A field's label can be a whole paragraph, so regulation wording can be quoted word for word.
 
 Tick **Allow evidence files** on a field to let people attach a photo or PDF next to their answer — for example a licence scan next to "Holds a PPL(A)? Yes". The evidence belongs to that row, not to the whole form.
 
 There are no calculated fields: a figure such as the minimum training hours after credits is typed by the person responsible, and Flylogs keeps exactly what they typed.
+
+### Person fields and who the form is about
+
+A **Person** field is a dropdown of your company's active users. Under **Who appears in the list**, pick the user groups it offers (for example only students, or only instructors); leave it empty to list everyone.
+
+Tick **This is who the form is about** on a person field when the form is a record about someone, such as a disciplinary record or an assessment. The person chosen there becomes the person the copy is about: they appear in the **Person** column of the responses, and they can read the copy under **My forms** once it is signed. That field is always required and always shown, and a form can have only one. Only managers and the groups that fill the form in can choose someone other than themselves.
+
+<figure><img src="../.gitbook/assets/custom-forms-person-field.png" alt="Person concerned field in the builder, with the user groups listed and This is who the form is about ticked"><figcaption><p>A person field set as the person the form is about.</p></figcaption></figure>
+
+Whoever fills the form picks the person from the list, typing part of the name to find them:
+
+<figure><img src="../.gitbook/assets/custom-forms-person-fill.png" alt="Person concerned dropdown filtered to one pilot while filling in a disciplinary record"><figcaption><p>Choosing the person while filling in the form.</p></figcaption></figure>
+
+Other person fields (a witness, the other crew member) just record who was chosen.
 
 ### Showing a field only when needed
 
@@ -117,7 +132,10 @@ From **Forms → Responses → Request**, choose people and/or pilot groups, an 
 
 ## Filling in a form for someone
 
-Some forms are about a person but are filled in by you, not by them — a disciplinary record, an assessment, an interview note. From **Forms → Responses**, press **Fill in for someone**, choose the person and press **Start**. The copy opens for you to fill in and sign.
+Some forms are about a person but are filled in by you, not by them — a disciplinary record, an assessment, an interview note. There are two ways to start one:
+
+* open the form from **My forms → Available** and choose the person in its *who the form is about* field (see [Person fields](#person-fields-and-who-the-form-is-about)), or
+* from **Forms → Responses**, press **Fill in for someone**, choose the person and press **Start**. The copy opens for you to fill in and sign, with its *who the form is about* field already set to that person.
 
 <figure><img src="../.gitbook/assets/custom-forms-fill-for.png" alt="Fill in for someone window with a person picker"><figcaption><p>Start a copy about one person and fill it in yourself.</p></figcaption></figure>
 
@@ -202,6 +220,28 @@ Who gets the link: flights and bookings link for everyone who can see the copy, 
 | Submitted | Every part signed |
 | Skipped | A skippable pre-entry form was skipped |
 | Waived | A manager waived a mandatory form, with a reason |
+
+## Forms on a person's page
+
+In **Flight Crew**, open a person and go to the **Manager Area** tab. The **Forms** box has two lists:
+
+* **Filled in by this person**: copies they signed a part of, or started themselves. A form only sent to them appears here once they sign it.
+* **Forms naming this person**: copies where a *Person* field names them, for example a disciplinary record about them or a report that lists them as a witness. Under each copy you see which field names them.
+
+<figure><img src="../.gitbook/assets/custom-forms-pilot-profile.png" alt="Forms box in the Manager Area tab of a pilot, with a disciplinary record naming them as the person concerned"><figcaption><p>A disciplinary record that names this pilot as the person concerned.</p></figcaption></figure>
+
+Click a copy to open it. The box lists only the copies you are allowed to see: managers (user groups 1, 100, 105 and 110) see them all, and other groups with access to the Manager Area see the copies their own access lets them open. The box appears only on plans that include custom forms.
+
+## Forms on the dashboard
+
+Every dashboard has a **Forms** widget with the five copies changed most recently. Click one to open it.
+
+* Managers (user groups 1, 100, 105 and 110) see the latest copies from the whole company. **View more** opens **Home → Forms**.
+* Everyone else sees the copies they filled in, signed or are about, plus copies of forms their group fills in or can view. A copy that still has a part for them to fill in is marked **To fill in**. **View more** opens **My forms**.
+
+<figure><img src="../.gitbook/assets/custom-forms-dashboard-widget.png" alt="Forms widget on a manager's dashboard listing the latest submitted copies"><figcaption><p>The Forms widget on a manager's dashboard.</p></figcaption></figure>
+
+The widget is hidden when there is nothing to show, and on plans that do not include custom forms.
 
 ## Retention
 

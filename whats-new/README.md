@@ -24,8 +24,8 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
-**[Form templates and filling in for someone](form-templates.md)** · Company management\
-Start a form from a ready-made template (daily inspection, IMSAFE, post-flight report, solo briefing, course application, disciplinary record) and fill in a copy about a person yourself.\
+**[Form templates and person fields](form-templates.md)** · Company management\
+Start a form from a ready-made template (daily inspection, IMSAFE, post-flight report, solo briefing, course application, disciplinary record), pick people with the new Person field, and fill in a copy about someone yourself.\
 [Manual →](../company-management/custom-forms.md#starting-from-a-template)
 
 **[See what your aircraft hours follow](hours-clock-and-ignored-readings.md)** · Fleet & Maintenance\
