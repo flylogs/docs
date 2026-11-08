@@ -32,9 +32,13 @@ Mapping from the old booleans, for clients migrating off them:
 
 ## List Flights
 
-<mark style="color:blue;">`GET`</mark> `/flights/load/page:{page}/from:{from}/to:{to}/aircraft:{aircraftId}/pilot:{pilotId}/base:{baseId}/flight_type:{typeId}/.json`
+<mark style="color:blue;">`GET`</mark> `/flights/index/page:{page}/from:{from}/to:{to}/aircraft:{aircraftId}/pilot:{pilotId}/base:{baseId}/flight_type:{typeId}/.json`
 
-Retrieve a paginated list of flight records with optional filters.
+Retrieve a paginated list of flight records with optional filters. With no filters, `GET /flights/index.json` returns page 1.
+
+{% hint style="warning" %}
+The old `/flights/load/…` URL is deprecated. It still returns the same response, but new integrations should use `/flights/index/…`.
+{% endhint %}
 
 #### Path Parameters
 
@@ -54,7 +58,7 @@ All filter parameters are optional — use empty string to skip a filter.
 #### Example
 
 ```
-GET /flights/load/page:1/from:2025-01-01/to:2025-03-31/aircraft:/pilot:/base:/flight_type:/.json
+GET /flights/index/page:1/from:2025-01-01/to:2025-03-31/aircraft:/pilot:/base:/flight_type:/.json
 ```
 
 #### Response

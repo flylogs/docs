@@ -4,7 +4,7 @@
 
 A **leg** is one sortie inside a flight record: a skydiving lift, a banner or glider tow, a survey run. A flight can hold up to **99** legs, in the order they were recorded. Legs are detail under the flight: they never change the flight's own block times, landings, fuel fields or remarks, and the [Create or Update Flight](flights.md#create-or-update-flight) endpoint never reads or writes them. The fuel **uplifted** after a leg (`fuel`) is added to the flight's refuelling (see [Fuel](#fuel)).
 
-Legs are listed as `FlightLeg` (ordered by `sequence`) in the flight's view payload (see [View Flight](flights.md#view-flight)) and in every row of the flight lists `GET /flights/load/…json` and `GET /manager/flights/audit.json`. In the lists each leg carries only `id, flight_id, sequence, start_time, end_time, altitude, altitude_unit, persons, fuel, fuel_start, fuel_end, notes`, and `Aircraft` carries `fuel_tracking` and `fuel_type` for the fuel arithmetic; the uplift unit is the company's `CompanySetting.fuel_uplift_unit`.
+Legs are listed as `FlightLeg` (ordered by `sequence`) in the flight's view payload (see [View Flight](flights.md#view-flight)) and in every row of the flight lists `GET /flights/index/…json` and `GET /manager/flights/audit.json`. In the lists each leg carries only `id, flight_id, sequence, start_time, end_time, altitude, altitude_unit, persons, fuel, fuel_start, fuel_end, notes`, and `Aircraft` carries `fuel_tracking` and `fuel_type` for the fuel arithmetic; the uplift unit is the company's `CompanySetting.fuel_uplift_unit`.
 
 ## Access
 
