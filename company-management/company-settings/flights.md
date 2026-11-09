@@ -68,7 +68,7 @@ Two switches decide how your company handles defects reported on an aircraft. Bo
 <figure><img src="../../.gitbook/assets/company-settings-aircraft-defects.png" alt="Aircraft defects: Report defects without a flight and Grounded aircraft cannot be booked or dispatched, both switched on"><figcaption>Aircraft defects</figcaption></figure>
 
 * **Report defects without a flight** — every user gets a **Report defect** button on the Flights page, on bookings, in the dispatch window and on the aircraft page, and can report a defect without logging a flight. Switched off, only Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots, Mechanics and the aircraft's managers can. Everyone else reports defects from a logged flight of that aircraft.
-* **Grounded aircraft cannot be booked or dispatched** — while an open report marks an aircraft **Grounded**, pilots, instructors and students cannot book it, nobody can dispatch it, and only maintenance staff or the aircraft's managers can release it. Switched off, Grounded is shown on the report only: the aircraft can still be booked and dispatched, and anyone who can edit the report can set it back to Flyable.
+* **Grounded aircraft cannot be booked or dispatched** — while an open report marks an aircraft **Grounded**, pilots, instructors and students cannot book it or log a flight on it, nobody can dispatch it, and only maintenance staff or the aircraft's managers can release it. Switched off, Grounded is shown on the report only: the aircraft can still be booked, dispatched and logged, and anyone who can edit the report can set it back to Flyable.
 
 See [Aircraft reports](../../aircraft/aircraft-maintenance/aircraft-reports.md) for the full rules.
 

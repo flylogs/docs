@@ -23,7 +23,7 @@ Student pilots will only be required to upload a valid medical certificate in or
 The configuration lives in **Company Settings → Pilots → Documentation Compliance**. Two toggles control the PDCS itself:
 
 * **Check pilot documentation validity** — the master switch for licence/rating/medical checks. Turned off, all checks below, the pilot dashboard, and self-booking are skipped.
-* **Block scheduling and flight dispatch with invalid documents** — requires the master switch above. When on, managers cannot save a schedule with an expired PIC document, and pilots cannot dispatch or log a flight without valid documents. This does not affect self-booking, which has its own **Allow self-booking without valid documents** toggle in the Self-Scheduling tab.
+* **Block scheduling and flight dispatch with invalid documents** — requires the master switch above. When on, managers cannot save a schedule with an expired PIC document, pilots cannot dispatch a flight without valid documents, and crew cannot log or confirm a flight whose PIC lacks the certificates its flight type requires (see *Flight form* below). This does not affect self-booking, which has its own **Allow self-booking without valid documents** toggle in the Self-Scheduling tab.
 
 The two other toggles in this same panel are related but separate: **Block Pilots that do not meet established Currency** (recency of flight experience, not document validity) and **Allow pilots to edit their certificates**.
 
@@ -54,7 +54,9 @@ Once configured, Flylogs checks each crew member against **their seat's required
 * **Schedule editor** — when a manager assigns a PIC or SIC, the crew card shows *Docs OK* or lists exactly which required certificates that person is **missing or expired** (expired ones are tagged), and blocks the save when your documentation settings require it. If the flight type has no required certificates for that seat, the card shows *No docs required* instead — nothing is checked until you add requirements to the flight type. A higher medical class also counts (a Class 1 meets a Class 2, Class 3 or LAPL requirement; a Class 2 meets a Class 3 or LAPL one), and when a seat requires more than one medical, any one of them is enough. See [How medicals are checked](../flights/flight-types.md#how-medicals-are-checked).
 * **Dispatch briefing** — the crew readiness checklist shows, per seat, each required certificate as ok / missing / expired, plus the soonest expiry.
 * **Booking a slot** — the booking modal warns when the person flying (or the chosen SIC) doesn't meet the flight type's requirements. It stops the booking only when *Require pilot documentation* is on and *Allow self-booking without valid documents* is off; otherwise the warning is informational and the pilot can book.
-* **Flight form** — under each selected PIC/SIC, a badge names any missing required certificate.
+* **Flight form** — under each selected PIC/SIC, a badge names any missing required certificate. When **Block scheduling and flight dispatch with invalid documents** is on, pilots, instructors and students cannot save or confirm a flight whose **PIC** lacks the flight type's required PIC certificates: the form names what is missing or expired. Staff roles from Company Administrator to Flight Dispatcher can still record such a flight; Chief Pilots and crew cannot. Flights already confirmed are not affected, and a flight saved in the app while offline is always kept.
+
+  ![The flight form refusing a SOLO flight because the PIC is missing a Class 1 medical and an ID](../.gitbook/assets/flight-log-certificates-blocked.png)
 
 A pilot always sees their own status; instructors, dispatchers and managers can see it for the crew they schedule.
 

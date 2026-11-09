@@ -24,6 +24,7 @@ While an open report marks the aircraft **Grounded**:
 
 * pilots, instructors and students cannot book it, and the slot finder says why,
 * nobody can dispatch it, managers included,
+* pilots, instructors and students cannot log a flight on it that took place while it was grounded,
 * managers and maintenance staff can still book it, with a warning, to plan the flights after the repair,
 * the message managers receive lists the bookings already on the aircraft (nothing is cancelled automatically),
 * the fleet list and the aircraft page show it as grounded.

@@ -61,10 +61,19 @@ shown on the report only and none of the restrictions below apply.
 
   <figure><img src="../../.gitbook/assets/grounded-dispatch-blocked.png" alt="Dispatch window panel saying the aircraft is grounded, with Report defect underneath"><figcaption><p>The dispatch window refuses a grounded aircraft for everybody. A defect found on the walk-around is reported right there.</p></figcaption></figure>
 
+* **Pilots, instructors and students cannot log a flight on it** from **Flights → Log
+  Flight**, or move a draft flight onto it. What counts is the time of the flight: a
+  flight that took off before the report was filed (for example the flight on which
+  the defect was found) can still be logged. Flights already logged are not affected,
+  and a flight saved in the app while offline is always kept.
+
+  <figure><img src="../../.gitbook/assets/grounded-flight-log-blocked.png" alt="Flight form with an error saying the aircraft was grounded at the time of this flight and cannot be logged"><figcaption><p>The flight form names the report that grounded the aircraft.</p></figcaption></figure>
+
 * **Company Administrators, Operations Managers, Compliance & Safety Managers, Chief
   Pilots, Mechanics and the aircraft's managers can still book it**, with a warning.
   This way they can plan the flights that follow the repair. Those flights cannot be
-  dispatched until the aircraft is released either.
+  dispatched until the aircraft is released either. They can also log a flight on it,
+  with the same warning, when a flight really took place.
 * Bookings already on the aircraft are **not cancelled**. The message managers receive
   when the aircraft is grounded lists them, so they can decide what to do.
 * The fleet list shows a red "no entry" icon next to the aircraft, and the
