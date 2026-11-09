@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[Billing on the meter you read](tach-billing-readings.md)** · Billing & Flights\
+On aircraft billed on tach or Hobbs time, the end reading is no longer estimated from block time: pilots enter it from the aircraft and the bill charges the exact difference. Readings also accept a decimal comma.\
+[Manual →](../flights/create-a-flight.md#hobbs-and-tach-readings)
+
 **[Form templates and person fields](form-templates.md)** · Company management\
 Start a form from a ready-made template (daily inspection, IMSAFE, post-flight report, solo briefing, course application, disciplinary record), pick people with the new Person field, and fill in a copy about someone yourself.\
 [Manual →](../company-management/custom-forms.md#starting-from-a-template)

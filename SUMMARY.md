@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Billing on the meter you read](whats-new/tach-billing-readings.md)
   * [Form templates and person fields](whats-new/form-templates.md)
   * [See what your aircraft hours follow](whats-new/hours-clock-and-ignored-readings.md)
   * [Crew document checks by flight type](whats-new/crew-document-checks-by-flight-type.md)

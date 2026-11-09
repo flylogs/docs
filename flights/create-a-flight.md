@@ -84,12 +84,16 @@ If the selected aircraft tracks **Hobbs** and/or **Tach** meters, the form shows
 
 * **Hobbs/Tach start** is pre-filled from the end reading of that aircraft's last logged flight, so consecutive flights stay continuous.
 * **Hobbs/Tach end** is auto-calculated as the start reading plus the block time. The link icon next to the field shows whether the value is auto-calculated or has been overridden — you can edit it manually, and click the pencil icon to revert to the auto-calculated value.
+* **Exception — the meter the aircraft bills on.** When the aircraft [bills on tach or Hobbs time](../aircraft/create-your-aircraft.md#aircraft-permissions-rental-and-billing), that meter's end reading is **never** auto-calculated: it stays empty until you type the reading from the aircraft, and there is no link icon. Both readings are required once the flight has flown, and 0 is not accepted, because the bill is the difference between them.
+* Readings can be typed with a **decimal comma**: `1251,4` becomes `1251.4` as you type.
+
+<figure><img src="../.gitbook/assets/tachEndRequired.png" alt="Tach start 1250.0 and an empty Tach end field marked Tach end required"><figcaption><p>An aircraft billed on tach time: the end reading must be entered.</p></figcaption></figure>
 
 **When editing an existing flight, your stored readings are respected:**
 
 * If the flight already has Hobbs/Tach values, they are **left untouched** — the form will not overwrite them.
 * If a value is empty, it is auto-filled as described above.
-* If you **change the aircraft**, all Hobbs/Tach readings are re-prefilled from the newly selected aircraft's last flight.
+* If you **change the aircraft**, all Hobbs/Tach readings are re-prefilled from the newly selected aircraft's last flight. When the new aircraft bills on a meter, that meter's end reading is cleared so you enter it yourself.
 
 <br>
 
