@@ -1,5 +1,14 @@
 # Safety report analytics
 
+The Analytics page has two tabs:
+
+* **Assurance** (opens first): the [Safety Assurance dashboard](safety-assurance.md) with safety performance indicators, the current risk picture, report handling and reviewers.
+* **Statistics**: the charts described below, unchanged.
+
+> **Access:** the page is visible to the Compliance & Safety Manager and above (user group 110 or lower) and to **auditors** (group 250, read-only). Auditors see every submitted safety report of the company in the lists and charts, but never the identity of the reporter of an anonymous report, and they cannot create or change anything. Requires a Premium or Unlimited plan.
+
+## Statistics tab
+
 An important part of the safety implementation in aviation, is about understanding where the safety risks are and mitigating them before they lead to any incident or accident.
 
 In order to do so, information management and understanding is key, which is the key benefit that Flylogs brings into your company.

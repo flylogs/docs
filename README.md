@@ -90,7 +90,7 @@ If you are new to Flylogs, follow these steps in order:
 
 * [Document library](documents/document-library.md), [View a document](documents/view-document.md), [Manager tools](documents/manager-tools.md), [Document stats](documents/document-stats.md)
 * [Safety reports](sms/safety-reports.md), [Create a safety report](sms/create-a-safety-report.md), [Offline safety reports](sms/offline-safety-reports.md)
-* [Safety report analytics](sms/safety-report-analytics.md), [ICAO 8951 risk matrix](sms/icao-8951-risk-matrix.md)
+* [Safety report analytics](sms/safety-report-analytics.md), [ICAO risk matrix (Doc 9859)](sms/icao-8951-risk-matrix.md)
 
 ### Billing
 

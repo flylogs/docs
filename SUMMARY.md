@@ -172,8 +172,11 @@
 * [Safety Reports](sms/safety-reports.md)
 * [Create a Safety Report](sms/create-a-safety-report.md)
 * [Offline safety reports](sms/offline-safety-reports.md)
-* [ICAO 8951 Risk Matrix](sms/icao-8951-risk-matrix.md)
+* [ICAO risk matrix (Doc 9859)](sms/icao-8951-risk-matrix.md)
 * [Safety report analytics](sms/safety-report-analytics.md)
+* [Safety Assurance dashboard](sms/safety-assurance.md)
+* [Hazard log](sms/hazard-log.md)
+* [Safety actions](sms/safety-actions.md)
 * [Flight remark findings](sms/flight-remark-findings.md)
 
 ## Security & Compliance
@@ -196,6 +199,7 @@
 * [Messages](API/messages.md)
 * [Trainings](API/trainings.md)
 * [Safety Reports](API/safety-reports.md)
+* [Safety Assurance](API/safety-assurance.md)
 * [Documents](API/documents.md)
 * [News](API/news.md)
 * [Reports](API/reports.md)

@@ -108,9 +108,12 @@ Numbering follows the ICAO Doc 9859 probability scale: 5 is the most likely (`Fr
 |--------------|------|--------|
 | ≤ 110 | Compliance & Safety Manager and above | Full access: view all reports, edit any, delete |
 | 111–150 | Human Resources Manager through Chief Pilot | View all reports, edit own reports and reports they are the assigned reviewer of |
-| > 150 | Flight Instructor and below | View only own reports, reports of flights they crewed, and `published` reports; edit only own reports and reports they are the assigned reviewer of |
+| 250 | Auditor | **Read-only.** Sees every submitted (non-draft) report of the company, like a manager, but cannot create, edit, delete or suggest. The reporter of an anonymous report stays hidden. |
+| > 150 (other than 250) | Flight Instructor and below | View only own reports, reports of flights they crewed, and `published` reports; edit only own reports and reports they are the assigned reviewer of |
 
 > Regardless of `user_group_id`, a `draft` report is visible **only to its author**. Drafts never appear in another user's list or view, nor in any analytics/stats endpoint.
+
+> **Auditors (`user_group_id` 250) never enter information.** Create, edit, delete and suggest return `403`. See [Safety Assurance](safety-assurance.md#access-control).
 
 > The [change history](#change-history) is manager-only (`user_group_id < 111` — Compliance & Safety Manager and above). It is omitted from the view payload for everyone else — including the report's author and its assigned reviewer.
 
@@ -122,7 +125,7 @@ Numbering follows the ICAO Doc 9859 probability scale: 5 is the most likely (`Fr
 
 <mark style="color:blue;">`GET`</mark> `/safety_reports/index/{flightId}.json`
 
-List safety reports for the company. Only top-level reports (no `parent_id`) are returned. Users with `user_group_id > 150` (Flight Instructor and below) see only reports where they are the reporter, PIC, SIC, supervisor, or the report is `published`. Results are paginated: default page size 25, maximum 100. Use the `limit` and `page` named parameters to navigate; the response includes a `paginate` object with the total count and page information.
+List safety reports for the company. Only top-level reports (no `parent_id`) are returned. Users with `user_group_id > 150` (Flight Instructor and below, **except auditors**, group 250, who see every submitted report) see only reports where they are the reporter, PIC, SIC, supervisor, or the report is `published`. Results are paginated: default page size 25, maximum 100. Use the `limit` and `page` named parameters to navigate; the response includes a `paginate` object with the total count and page information.
 
 #### Path Parameters
 
@@ -307,6 +310,10 @@ Full details for a single report including flight, aircraft, and reporter.
 }
 ```
 
+> The response also carries a top-level `hazards` array with the hazards of the [hazard log](safety-assurance.md#hazard-log) this report is linked to (`id`, `idn`, `title` only), and a top-level `risk_acceptance` object when the report's current risk has been [accepted](safety-assurance.md#accept-risk): `{ "by_name": "Jane Doe", "at": 1789000000, "note": "…" }` (`by_name` is looked up inside the company and is `null` when that user is no longer in it; `at` is unix time). `risk_acceptance` is `null` when no acceptance is recorded.
+>
+> The `SafetyReport` object includes these server-maintained fields: `assessed_at` (unix time the initial risk was first set), `closed_at` (unix time the status first became `closed` or `published`), `reviewer_assigned_at` (unix time the current reviewer was set; `null` on reports that predate it, meaning "assigned at creation"), and the [risk acceptance](safety-assurance.md#accept-risk) fields `risk_accepted_by`, `risk_accepted_at` and `risk_acceptance_note`. For reports that existed before they were introduced, `assessed_at` and `closed_at` were backfilled from the last modification and are approximate. None of them can be set through create or edit.
+>
 > `allowEdit` is `true` for managers (`user_group_id < 111` — Compliance & Safety Manager and above), the report creator, and the assigned reviewer (`reviewer_id`), provided the report is not deleted.
 >
 > Being crew of the reported flight grants **view** access but not edit: the crew of a flight are the subjects of a report about it, not its owners. (Crew used to be listed as editors here, but only `view` ever applied it — `edit` rejected the save with `You are not authorized to edit this report`. The two now share one rule and the stricter reading won.)

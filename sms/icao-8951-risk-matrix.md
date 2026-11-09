@@ -1,23 +1,23 @@
 ---
 description: >-
-  Flylogs now includes full support for the ICAO 8951 Risk Matrix as part of its
-  Safety Management System (SMS). This feature helps organizations assess,
-  document, and visualize safety risks using a standard 5×5 probability/severity
-  grid.
+  Flylogs includes the ICAO Doc 9859 risk matrix as part of its Safety
+  Management System (SMS). It helps organizations assess, document, and
+  visualize safety risks using a standard 5×5 probability/severity grid, and
+  supports the Annex 19 / Doc 9859 risk tolerability process.
 ---
 
-# ICAO 8951 Risk Matrix
+# ICAO risk matrix (Doc 9859)
 
 ### When Is the Risk Matrix Used?
 
-The ICAO 8951 risk matrix is set from the **Manage** action on a safety report. From there, the safety manager can:
+The ICAO risk matrix (Doc 9859) is set from the **Manage** action on a safety report. From there, the safety manager can:
 
 * Select the **initial risk severity**
 * Select the **initial risk probability**
 * Define **mitigation actions or corrective measures**
 * (Optionally) Select the **mitigated risk severity** and **probability**
 
-> **Access:** the Manage action, and the risk fields inside it, are only available to users in **group level 149 or lower** (administrators and managers).
+> **Access:** the Manage action, and the risk fields inside it, are only available to **managers (user group 110 or lower)** and to the report's **assigned reviewer**, for the investigation and risk fields. Report authors and other users cannot set them.
 
 Once saved, a visual risk matrix will be automatically generated and attached to the report for reference.
 
@@ -49,7 +49,7 @@ Once saved, a visual risk matrix will be automatically generated and attached to
 
 ### Understanding the Matrix
 
-The matrix follows the ICAO 8951 standard: **severity** (A Catastrophic → E Negligible) across the columns, **probability** (5 Frequent → 1 Extremely Improbable) down the rows. Every one of the 25 cells is pre-colored to its ICAO risk tolerability band:
+The matrix follows the ICAO Doc 9859 risk matrix: **severity** (A Catastrophic → E Negligible) across the columns, **probability** (5 Frequent → 1 Extremely Improbable) down the rows. Every one of the 25 cells is pre-colored to its ICAO risk tolerability band:
 
 * 🟩 Green: Low risk
 * 🟨 Yellow/Orange: Medium risk
@@ -73,4 +73,23 @@ The ICAO risk matrix helps:
 
 * Standardize risk assessment across all reports
 * Improve visibility for management decisions
-* Ensure compliance with ICAO safety management practices
+* Support the safety risk management process described in ICAO Annex 19 / Doc 9859
+
+***
+
+### Risk tolerability and risk acceptance
+
+ICAO Doc 9859 groups the three colours of the matrix into **tolerability regions**. Flylogs applies them as follows:
+
+| Band | ICAO tolerability | What Flylogs does |
+| --- | --- | --- |
+| Red (high) | Intolerable | The risk can **never be accepted**. It stays an *unmitigated risk* on the [Safety Assurance](safety-assurance.md) dashboard until mitigation brings it down. |
+| Yellow/Orange (medium) | Tolerable | Counts as an *unmitigated risk* until a safety manager records a **risk acceptance**: who accepted it, when, and a written rationale. |
+| Green (low) | Acceptable | Acceptable as is. It never counts as unmitigated. |
+
+* The **current risk** of a report or hazard is its mitigated (residual) risk when one is recorded, otherwise its initial risk.
+* **Changing the risk afterwards clears the acceptance.** If a report or hazard is re-assessed, the earlier decision no longer applies and a new one is needed.
+* A probability of **4 Occasional** or **5 Frequent** is treated as frequent and turns the indicator red even when the severity has not been assessed yet.
+* There is **no automatic acceptance** of reports that were closed before this feature existed. Closed reports that sit at a medium residual risk appear as unmitigated until a manager accepts them, which is the truthful state of the register. Managers can accept several at once from the list behind the *Unmitigated risks* tile, with one shared rationale that is stored on each item.
+* Risk acceptance is available only to the **Compliance & Safety Manager and above** (user group 110 or lower). Auditors can read the decision but not make it.
+* The decision is shown on the record: a safety report displays a **Risk acceptance** block under its risk matrix (who, when and the rationale) to everyone who can see the matrix, and a hazard shows who accepted its risk and when.

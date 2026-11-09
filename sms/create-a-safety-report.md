@@ -2,7 +2,7 @@
 
 
 
-Flylogs SMS, is an integrated Safety Management System based on the [ICAO recommendations](https://www.unitingaviation.com/publications/safetymanagementimplementation/content/#/) fully compliant with the [ICAO Doc 9859](https://www.icao.int/safety/safetymanagement/pages/guidancematerial.aspx).
+Flylogs SMS, is an integrated Safety Management System based on the [ICAO recommendations](https://www.unitingaviation.com/publications/safetymanagementimplementation/content/#/) that supports the safety management processes of [ICAO Annex 19 / Doc 9859](https://www.icao.int/safety/safetymanagement/pages/guidancematerial.aspx).
 
 **Every report is filed under one of two ICAO Annex 19 classifications**, each with its own severities:
 
