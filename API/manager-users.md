@@ -206,6 +206,16 @@ Auditor accounts are always temporary, external, read-only. These rules are enfo
 
 Update an existing user account. The same External Auditor account validation described under **Create User** above applies here too.
 
+#### Crew code (`UserDetail.crew_code`)
+
+Both **Create User** and **Edit User** accept `UserDetail.crew_code`, the operator's 3-letter crew code (3LC) printed in the [technical log](aircraft.md#technical-log-day) instead of the person's initials.
+
+* 2 or 3 letters or digits. It is trimmed and stored in upper case (`"pkl"` is saved as `"PKL"`); anything else fails with `"The crew code must be 2 or 3 letters or digits."`.
+* An empty string clears it, and the technical log goes back to the initials.
+* Only these manager endpoints and [`POST /pilots/edit.json`](pilots.md#edit-pilot) write it. A user can never set their own code from `POST /users/edit.json`.
+* Codes are not checked for uniqueness: two people can be given the same code.
+* Changes are recorded in the account history under the `crew_code` field.
+
 ---
 
 ## Delete User

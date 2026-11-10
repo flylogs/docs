@@ -123,6 +123,8 @@ Update the authenticated user's profile.
 
 All fields are optional — only include fields you want to update.
 
+`UserDetail.crew_code` (the 3-letter crew code) is always ignored here, for every user group: it is assigned by the operator, so only managers can set it, through [`POST /pilots/edit.json`](pilots.md#edit-pilot) or [`POST /manager/users/edit.json`](manager-users.md#edit-user).
+
 `User.schedule_notify_all` (managers only, `user_group_id` < 151; ignored for other groups): when `1`, the user also receives the push/WhatsApp/email roster notification for every schedule booking, change and cancellation in their company, not only the ones where they are PIC, SIC or supervisor. It is stored per company account, defaults to `0`, and is returned as `User.schedule_notify_all` by the profile endpoint.
 
 #### Response

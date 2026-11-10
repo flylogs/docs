@@ -64,10 +64,21 @@ Download it from:
 The technical log is always **one page** per aircraft and day. It has three tables:
 
 1. **Aircraft and operator**: registration, serial number, make and model, last CRS (with its release reference when there is one) and how long it is valid (date and hours). Below it, the **maintenance statement**: the maintenance due next, by hours, landings or date. The heading carries the company name, address, phone and logo.
-2. **Log**: preflight signature, callsign, flight type, departure and landing aerodromes, off-block, on-block, takeoff and landing times, block time, flight time, fuel on board at start and end (in the aircraft's fuel tracking unit), CRS hours left after the flight, the initials of up to three crew members, and remarks (including the post-flight signature). Ten rows, at least five of them left blank to be filled in by hand; a busier day gets more, shorter rows on the same page.
+2. **Log**: preflight signature, callsign, flight type, departure and landing aerodromes, off-block, on-block, takeoff and landing times, block time, flight time, fuel on board at start and end (in the aircraft's fuel tracking unit), CRS hours left after the flight, the crew code of up to three crew members, and remarks (including the post-flight signature). See [Crew codes](#crew-codes). Ten rows, at least five of them left blank to be filled in by hand; a busier day gets more, shorter rows on the same page.
 3. **Open defects and MEL/CDL items**, printed even when there are none: MEL reference and category, ATA chapter, name, operational (O) and maintenance (M) procedures, description, created date, validity date, the work order (maintenance job number) it is assigned to or was closed with, marked *(CRS)* once that job's CRS is signed, a release signature/stamp column, and the date and person when the item was closed that day. The rest of the page is filled with blank rows for defects written on paper. If there are more open items than fit, the last row says how many more there are.
 
 Times are shown in the flight timezone and your company's date and time format.
+
+#### Crew codes
+
+The crew columns and the preflight and post-flight signatures show a short code for each person:
+
+* the person's **3-letter code (3LC)**, when a manager has set one on their account;
+* otherwise, their **initials**, taken from the first letter of each word of the name and family name. "Pawel Kolosowski" prints as "PK", "Ana María de la Torre" as "AMT".
+
+If your organization assigns its own crew codes, set them on every account so that the technical log always shows them. Only management accounts can set the code, from the **Personal** tab of the pilot edit page or from the user edit form: see [Create Pilots or Students](../crew-management/create-pilots-or-students.md#3-letter-code-3lc). Pilots cannot change their own code.
+
+<figure><img src="../.gitbook/assets/techlog-crew-codes.png" alt="Technical log rows showing the 3-letter codes in the crew and signature columns"><figcaption><p>The technical log prints the 3-letter code of each crew member, and the initials of anyone without one.</p></figcaption></figure>
 
 ### Techlogs register
 

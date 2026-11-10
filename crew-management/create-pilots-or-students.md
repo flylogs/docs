@@ -30,6 +30,16 @@ If you do not have the email address of the pilot this is not a limitation, you 
 
 ![](../.gitbook/assets/pilot-add-personal.png)
 
+#### 3-letter code (3LC)
+
+Many operators give each crew member a short code, such as **PKL**. Enter it in the **3-letter code (3LC)** field of the **Personal** tab: 2 or 3 letters or digits, saved in capitals.
+
+The [technical log](../aircraft/technical-log.md#crew-codes) prints this code in the crew and signature columns. Leave it empty and the technical log uses the person's initials instead.
+
+<figure><img src="../.gitbook/assets/pilot-crew-code-field.png" alt="The 3-letter code field on the Personal tab of the pilot form"><figcaption><p>The 3-letter code field, next to Company ID.</p></figcaption></figure>
+
+Only management accounts can set it: on the pilot form, and on the edit form of staff users (**Manager → Users**). Pilots and students do not see the field on their own profile and cannot change their code. Every change is recorded in the account history.
+
 ### Account tab
 
 This is where the account's basic settings live: the **User Group** (Pilot Type, which defines the permissions given to the user — see [Pilot Account Types and options](pilot-accounts.md)), Base, Supervisor, and the **Active account** / **Flight privileges** toggles.

@@ -455,7 +455,9 @@ a number returns `page: null`.
   `landing_airport`, `flight_type` (name), `fuel_start`, `fuel_end`, times (unix), `block_time`
   and `flight_time` (seconds), `crs_hours_left`, `crew` (`pic`, `sic`, `supervisor`),
   `preflight` (the preflight signature, with `offline`) and `postflight` (the confirmation:
-  who and when).
+  who and when). Every crew member and signature carries `id`/`user_id`, `name`, `surname`
+  and `crew_code` (the 3-letter code a manager set on the account, `null` when none); the
+  PDF prints `crew_code` and falls back to the initials of the name when it is `null`.
 - `defects`: `DEFECT`, `MEL` and `CDL` reports open at some point of the day, with
   `mel_reference`, `mel_category`, `operational` (O), `maintenance` (M), `valid_until`,
   `released_by`, `work_order` (`id`, `number`, `completed`; the maintenance job the item is
