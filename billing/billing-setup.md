@@ -19,7 +19,7 @@ Within your flights section, you will find the billing list. This list, is a qui
 
 By clicking in any of the rows, you will open the manual flight billing window wich will allow you to easily select the desired billed person, rate and extra expenses.
 
-<figure><img src="../../.gitbook/assets/Screenshot 2023-04-13 at 15.46.38.png" alt=""><figcaption><p>Flight billing list</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot 2023-04-13 at 15.46.38.png" alt=""><figcaption><p>Flight billing list</p></figcaption></figure>
 
 
 
@@ -39,7 +39,7 @@ This bill can be still edited or deleted if needed by you or any other billing m
 
 The process takes into consideration all billing rates, company settings and available user packages as displayed in the following schema:
 
-<figure><img src="../../.gitbook/assets/Untitled Diagram.jpg" alt=""><figcaption><p>Automatic billing process schema</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/Untitled Diagram.jpg" alt=""><figcaption><p>Automatic billing process schema</p></figcaption></figure>
 
 1. If there was no specific BILL TO person in the flight, the system will use your company settings to determine who is the flight crew to be selected.
 2. Flylogs will check if the BILL TO user has any available packages, and if these, are valid for the aircraft used in the flight.

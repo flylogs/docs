@@ -122,10 +122,10 @@ Adding Flylogs to your home screen gives you a one-tap icon that launches the ap
 5. Edit the name if you want (the default is "Flylogs") and tap **Add** in the top-right corner.
 
 <div style="display:flex; gap:6px; width:100%; align-items:flex-start; margin: 12px 0;">
-  <a href=".gitbook/assets/IMG_0021.PNG" style="flex:1; min-width:0;"><img src=".gitbook/assets/IMG_0021.PNG" alt="Safari share menu" style="width:100%; height:auto; border-radius:6px;" /></a>
-  <a href=".gitbook/assets/IMG_0022.PNG" style="flex:1; min-width:0;"><img src=".gitbook/assets/IMG_0022.PNG" alt="Add to Home Screen" style="width:100%; height:auto; border-radius:6px;" /></a>
-  <a href=".gitbook/assets/IMG_0023.PNG" style="flex:1; min-width:0;"><img src=".gitbook/assets/IMG_0023.PNG" alt="Confirm name and Add" style="width:100%; height:auto; border-radius:6px;" /></a>
-  <a href=".gitbook/assets/IMG_0020.PNG" style="flex:1; min-width:0;"><img src=".gitbook/assets/IMG_0020.PNG" alt="Flylogs icon on home screen" style="width:100%; height:auto; border-radius:6px;" /></a>
+  <a href="../.gitbook/assets/IMG_7221.PNG" style="flex:1; min-width:0;"><img src="../.gitbook/assets/IMG_7221.PNG" alt="Safari share menu" style="width:100%; height:auto; border-radius:6px;" /></a>
+  <a href="../.gitbook/assets/IMG_7222.PNG" style="flex:1; min-width:0;"><img src="../.gitbook/assets/IMG_7222.PNG" alt="Add to Home Screen" style="width:100%; height:auto; border-radius:6px;" /></a>
+  <a href="../.gitbook/assets/IMG_7223.PNG" style="flex:1; min-width:0;"><img src="../.gitbook/assets/IMG_7223.PNG" alt="Confirm name and Add" style="width:100%; height:auto; border-radius:6px;" /></a>
+  <a href="../.gitbook/assets/IMG_7220.PNG" style="flex:1; min-width:0;"><img src="../.gitbook/assets/IMG_7220.PNG" alt="Flylogs icon on home screen" style="width:100%; height:auto; border-radius:6px;" /></a>
 </div>
 
 The Flylogs icon will now appear on your home screen. Tapping it launches the site in standalone mode — no browser tabs, no address bar, just the app.

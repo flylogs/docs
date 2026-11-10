@@ -84,7 +84,7 @@ Flylogs offers **six different management account types**, each with a different
   * Logbook viewing and download options
 
 You can find full documentation on management account types here:\
-[https://docs.flylogs.com/fcom/company-management/account-types](https://docs.flylogs.com/fcom/company-management/account-types)
+[Account types](../company-management/account-types.md)
 
 #### Important Note on Pilot Privileges
 
@@ -141,7 +141,7 @@ If you plan to use **distance or online training**, additional setup is required
 This is a lengthy process and should be planned separately from the basic account setup.
 
 Full documentation is available at:\
-[https://docs.flylogs.com/fcom/training-courses/training-basics](https://docs.flylogs.com/fcom/training-courses/training-basics)
+[Training basics](../training-courses/training-basics.md)
 
 ***
 

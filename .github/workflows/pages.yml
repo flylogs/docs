@@ -17,17 +17,21 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-node@v4
         with:
-          python-version: "3.12"
-      - run: pip install "mkdocs<2" "mkdocs-material==9.7.*"
-      - run: python tools/build_site.py
-      - run: mkdocs build -f build/mkdocs.yml
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+      - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: build/site
+          path: website/dist
 
   deploy:
     needs: build
