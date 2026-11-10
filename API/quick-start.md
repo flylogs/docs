@@ -26,7 +26,7 @@ The full key (starting with `flk_`) is shown **once** on creation. Copy it immed
 Also add your server's IP address under **Company Settings → API → Api Ip Whitelist** if your company requires it for API access.
 {% endhint %}
 
-See [API Keys](api-keys.md) for full details on managing keys.
+See [API Keys](reference/api-keys.md) for full details on managing keys.
 
 ## 3. Make Your First Request
 
@@ -66,7 +66,7 @@ List endpoints (flights, pilots) return paginated results:
 
 ```bash
 # Page 1 of flights
-curl https://fmc.flylogs.com/v1/flights/index/page:1/from:/to:/aircraft:/pilot:/base:/flight_type:/.json \
+curl https://fmc.flylogs.com/v1/flights/load/page:1/from:/to:/aircraft:/pilot:/base:/flight_type:/.json \
   -H "Authorization: Bearer <api-key>"
 ```
 
@@ -77,7 +77,7 @@ Check `paginate.nextPage` in the response to know if more pages exist.
 Many endpoints encode filters in the URL path rather than query parameters:
 
 ```
-/flights/index/page:1/from:2025-01-01/to:2025-03-31/aircraft:45/pilot:/base:/flight_type:/.json
+/flights/load/page:1/from:2025-01-01/to:2025-03-31/aircraft:45/pilot:/base:/flight_type:/.json
 ```
 
 Use empty string for filters you want to skip.
@@ -100,9 +100,9 @@ All errors return a JSON response with a `message` field:
 }
 ```
 
-| Status | Action |
-|--------|--------|
-| 401 | API key missing, invalid, expired or revoked |
-| 402 | API access is not enabled for the company — see [Authentication](authentication.md#error-responses) |
-| 403 | Insufficient permissions for this endpoint |
-| 429 | Rate limited — reduce request frequency |
+| Status | Action                                                                                                        |
+| ------ | ------------------------------------------------------------------------------------------------------------- |
+| 401    | API key missing, invalid, expired or revoked                                                                  |
+| 402    | API access is not enabled for the company — see [Authentication](reference/authentication.md#error-responses) |
+| 403    | Insufficient permissions for this endpoint                                                                    |
+| 429    | Rate limited — reduce request frequency                                                                       |
