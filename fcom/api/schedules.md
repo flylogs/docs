@@ -1,0 +1,897 @@
+# Schedules
+
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
+## List Schedules
+
+<mark style="color:blue;">`GET`</mark> `/schedules.json`
+
+Retrieve upcoming schedule records and status definitions.
+
+#### Response
+
+```json
+{
+  "future": [
+    {
+      "Schedule": {
+        "id": "789",
+        "status": "confirmed",
+        "title": "Training Flight",
+        "departure_airport": "LEMD",
+        "landing_airport": "LEMD",
+        "start": "2025-03-15 08:00:00",
+        "end": "2025-03-15 10:00:00",
+        "notes": "Circuit training",
+        "aircraft_id": "45",
+        "pic_id": "123",
+        "sic_id": null,
+        "supervisor_id": null,
+        "flight_type_id": "1",
+        "flight_id": null,
+        "pic_status": "accepted",
+        "sic_status": "pending",
+        "user_status": "accepted",
+        "notified": true,
+        "borderColor": "#3498db"
+      },
+      "Pic": {
+        "id": "123",
+        "email": "john@example.com",
+        "user_group_id": "110",
+        "UserGroup": { "name": "Pilot" },
+        "UserDetail": { "name": "John", "surname": "Doe", "id": "123" }
+      },
+      "Sic": null,
+      "Supervisor": null,
+      "Flight": null,
+      "Aircraft": {
+        "registration": "EC-ABC",
+        "photo": "https://...",
+        "aircraft_model_id": "10",
+        "AircraftModel": {
+          "id": "10",
+          "icao": "C172",
+          "name": "C172",
+          "type": "SEP",
+          "AircraftManufacturer": { "name": "Cessna" }
+        }
+      },
+      "FlightType": { "name": "Training", "color": "#3498db" },
+      "PicTrainingFlight": null,
+      "SicTrainingFlight": null
+    }
+  ],
+  "canCreate": true,
+  "status": {
+    "confirmed": { "color": "#2ecc71", "class": "success", "name": "Confirmed" },
+    "pending": { "color": "#f39c12", "class": "warning", "name": "Pending" },
+    "cancelled": { "color": "#e74c3c", "class": "danger", "name": "Cancelled" }
+  },
+  "crewstatus": {
+    "accepted": { "color": "#2ecc71", "class": "success", "name": "Accepted" },
+    "pending": { "color": "#f39c12", "class": "warning", "name": "Pending" },
+    "declined": { "color": "#e74c3c", "class": "danger", "name": "Declined" }
+  }
+}
+```
+
+***
+
+## View Schedule
+
+<mark style="color:blue;">`GET`</mark> `/schedules/view/{id}.json`
+
+Retrieve full details for a single schedule record, including history.
+
+Users with `user_group_id > 170` (Captain and below) may only view schedules they are involved in (creator, PIC, SIC, supervisor, or owner of the aircraft). Otherwise returns `403 Forbidden`.
+
+#### Path Parameters
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| id        | string | Schedule ID |
+
+#### Response
+
+Same structure as a single item in the `future` array, plus:
+
+```json
+{
+  "event": { "Schedule": {...}, "Pic": {...}, ... },
+  "ScheduleHistory": [
+    {
+      "id": "100",
+      "schedule_id": "789",
+      "action": "created",
+      "user_id": "123",
+      "reason": null,
+      "text": null,
+      "created": "2025-03-10 14:00:00",
+      "User": {
+        "id": "123",
+        "UserDetail": { "name": "John", "surname": "Doe" }
+      }
+    }
+  ],
+  "status": {...},
+  "crewstatus": {...}
+}
+```
+
+Each `ScheduleHistory` row carries a `reason`. Alongside the manual reasons (weather, maintenance, pilot, etc.), `NOT_FLOWN` marks a booking that the system auto-cancelled because it was scheduled but never dispatched or logged past the company's not-flown grace window. Its `user_id` is the PIC (attribution), so it counts against the PIC in the cancellation analytics.
+
+***
+
+## Dispatch Schedule
+
+<mark style="color:blue;">`GET`</mark> `/schedules/flight/{scheduleId}.json`
+
+Create a flight record from a schedule (dispatch function). Converts the schedule entry into an actual flight.
+
+#### Path Parameters
+
+| Parameter  | Type   | Description             |
+| ---------- | ------ | ----------------------- |
+| scheduleId | string | Schedule ID to dispatch |
+
+#### Flight Risk Assessment (FRAT)
+
+When the schedule's flight type has `require_frat` enabled (see [Flight types](../../API/flight-types.md); this replaced the company setting `schedule_dispatch_frat`) **and** the authenticated user is a crew member of the schedule (PIC, SIC or Supervisor), a completed FRAT is **mandatory**. In that case call this endpoint with <mark style="color:green;">`POST`</mark> and include the FRAT fields below; the dispatch is rejected (`result: false`) if they are missing. When the flight type does not require it, the schedule has no flight type, or the dispatcher is not crew, the `GET` form is sufficient.
+
+The FRAT result is stored per flight and per user (one row per crew member).
+
+| Field       | Type    | Description                                   |
+| ----------- | ------- | --------------------------------------------- |
+| frat\_score | integer | Total weighted risk score                     |
+| frat\_band  | string  | Risk band: `LOW`, `MEDIUM` or `HIGH`          |
+| frat\_data  | string  | JSON map of question id → chosen answer value |
+
+> A `HIGH` band may only be dispatched by a Supervisor. Plans: Club, Premium, Unlimited.
+
+#### MEL/CDL hard block
+
+An **expired** MEL or CDL item on the schedule's aircraft is a hard block on dispatch — unlike editing/creating a schedule (see [MEL and CDL warnings on save](schedules.md#mel-and-cdl-warnings-on-save) below), which only warns. The dispatch call returns `result: false` with a message naming the ATA chapter and category:
+
+```json
+{
+  "result": false,
+  "message": "ATA 32 blocks dispatch — MEL Category C expired."
+}
+```
+
+This is evaluated fresh on every dispatch attempt (open MEL/CDL items + current flight count vs. the item's baseline), so a schedule that carried a warning yesterday can still dispatch cleanly today if the item was rectified or extended in the meantime — and conversely, a schedule that was fine at booking time can be blocked at dispatch time if an item expired in between.
+
+#### Grounded aircraft hard block
+
+An aircraft with an open report marked **Grounded** (see [Grounded aircraft](../../API/aircraft-reports.md#grounded-aircraft)) cannot be dispatched by anybody, managers included, until maintenance releases it:
+
+```json
+{
+  "result": false,
+  "message": "TF-ABC is grounded (ATA 32 — Left brake soft) and cannot be dispatched until maintenance releases it back to service."
+}
+```
+
+`GET /schedules/dispatch_check/{scheduleId}.json` returns the same sentence in `grounded.message`, with the grounding reports in `grounded.reports`, before the dispatch form is filled in (`grounded: null` when the aircraft is flyable).
+
+#### Type rating hard block
+
+When the aircraft requires a type rating (`Aircraft.require_type_rating`) and a crew seat is not covered at the moment of the flight (see [Type rating requirement](schedules.md#type-rating-requirement)), dispatch is refused:
+
+```json
+{
+  "result": false,
+  "code": "TYPE_RATING_REQUIRED",
+  "message": "This aircraft requires a type rating. No valid type rating for CESSNA 172 Skyhawk: Andrew Flyers (PIC). Enter an override reason to proceed anyway.",
+  "type_rating": { "required": true, "ok": false, "uncovered": ["pic"], "can_override": true, "...": "..." }
+}
+```
+
+A manager (`user_group_id <= 110`) dispatches anyway by posting `type_rating_override_reason` (text, up to 500 characters). An override already given on the booking for the same aircraft and crew also lets the dispatch through. Validity is judged at the later of now and the booking start, so a rating that lapsed after the booking was made blocks the dispatch.
+
+`GET /schedules/dispatch_check/{scheduleId}.json` reports the same answer in `type_rating` before the dispatch form is filled in: `null` when nothing is required or the crew is covered, otherwise the payload above plus `message` when it would be refused.
+
+***
+
+## Cancel Schedule
+
+<mark style="color:green;">`POST`</mark> `/schedules/cancel.json`
+
+Crew-facing cancellation. A booking never has to be dispatched to be cancelled.
+
+#### Body Parameters (form-encoded)
+
+| Parameter    | Type   | Description                                                              |
+| ------------ | ------ | ------------------------------------------------------------------------ |
+| schedule\_id | string | Booking to cancel (`id` is accepted too)                                 |
+| reason       | string | `AIRCRAFT`, `MET`, `MAINT`, `ATC`, `ME` (stored as `OTHERS`) or `OTHERS` |
+| text         | string | Optional free text, stored in the schedule history                       |
+
+#### Who and when
+
+* **Caller**: the booking's creator (`user_id`), PIC, SIC or supervisor. Anyone else gets `403 You are not authorized to cancel this booking`. Cross-company or unknown ids return `404`.
+* **Status**: `SCHEDULED`, `PENDING` and `DISPATCHED` bookings are accepted. Any other status returns `404 Event not found`.
+* **Notice window** (`schedule_flight_cancellation_min_time`, hours): inside the window, `ME` / `OTHERS` / an empty reason return `403`. `AIRCRAFT`, `MET`, `MAINT` and `ATC` are accepted at any time, including after `start`. The value `999` (_Disabled_) refuses every reason with `403`.
+* **Dispatched booking**: its flight is cancelled with it (`Flight.status = CANCELED`), mission authorizations are restored, and a `FlightChange` row with `action = cancel` records the reason. If the flight has already been logged (`LANDED`), the call returns `400 This flight has already been logged; cancel it from the flight instead.` and nothing changes.
+
+On success the booking becomes `CANCELED`, a `ScheduleHistory` row is written, the crew are notified and watchlisted pilots are told the slot is free.
+
+#### Response
+
+```json
+{ "result": true, "notification": 2 }
+```
+
+`/manager/schedules/cancel/{id}.json` (management ranks, ACL-restricted) follows the same status and dispatched-flight rules, without the notice window.
+
+***
+
+## FRAT Prefill
+
+<mark style="color:blue;">`GET`</mark> `/schedules/frat_prefill/{scheduleId}.json`
+
+Returns objective signals computed from the **authenticated user's** own flight history, used to pre-answer the data-backed FRAT questions. Scoped to the caller and their company.
+
+#### Path Parameters
+
+| Parameter  | Type   | Description                       |
+| ---------- | ------ | --------------------------------- |
+| scheduleId | string | Schedule ID the assessment is for |
+
+#### Response
+
+| Field            | Type            | Description                                                                           |
+| ---------------- | --------------- | ------------------------------------------------------------------------------------- |
+| hours\_90        | number          | Block hours flown (as PIC or SIC) in the last 90 days                                 |
+| model\_hours     | number          | Block hours on this schedule's aircraft model in the last 12 months                   |
+| model\_known     | boolean         | Whether the schedule's aircraft has a known model                                     |
+| night\_hours     | number          | Night flight hours in the last 12 months                                              |
+| departure\_flown | boolean \| null | Whether the user has flown to/from the departure airport before (`null` if unknown)   |
+| landing\_flown   | boolean \| null | Whether the user has flown to/from the destination airport before (`null` if unknown) |
+
+***
+
+## Availability
+
+### Get Availability
+
+<mark style="color:blue;">`GET`</mark> `/schedules/get_availability.json`
+
+Retrieve pilot availability records within a date range.
+
+#### Query Parameters
+
+| Parameter | Type   | Required | Description                               |
+| --------- | ------ | -------- | ----------------------------------------- |
+| start     | string | Yes      | Start date (YYYY-MM-DD)                   |
+| end       | string | Yes      | End date (YYYY-MM-DD)                     |
+| timeZone  | string | Yes      | IANA timezone name (e.g. `Europe/Madrid`) |
+
+#### Response
+
+```json
+[
+  {
+    "id": "500",
+    "title": "Available",
+    "color": "#2ecc71",
+    "type": "AVAILABLE",
+    "start": 1710489600,
+    "end": 1710518400
+  }
+]
+```
+
+#### Availability Types
+
+| Type          | Description                          |
+| ------------- | ------------------------------------ |
+| `AVAILABLE`   | Pilot is available for scheduling    |
+| `UNAVAILABLE` | Pilot is not available               |
+| `MAYBE`       | Pilot may be available (conditional) |
+| `ALWAYS`      | Pilot is always available (default)  |
+
+### Add Availability
+
+<mark style="color:green;">`POST`</mark> `/schedules/add_availability.json`
+
+Create a new availability record.
+
+#### Request Body
+
+| Field | Type   | Required | Description                            |
+| ----- | ------ | -------- | -------------------------------------- |
+| start | string | Yes      | Start datetime                         |
+| end   | string | Yes      | End datetime                           |
+| type  | string | Yes      | `AVAILABLE`, `UNAVAILABLE`, or `MAYBE` |
+
+### Edit Availability
+
+<mark style="color:green;">`POST`</mark> `/schedules/edit_availability.json`
+
+Update an existing availability record.
+
+#### Request Body
+
+| Field | Type   | Required | Description                            |
+| ----- | ------ | -------- | -------------------------------------- |
+| id    | string | Yes      | Availability record ID                 |
+| start | string | Yes      | Start datetime                         |
+| end   | string | Yes      | End datetime                           |
+| type  | string | Yes      | `AVAILABLE`, `UNAVAILABLE`, or `MAYBE` |
+
+### Delete Availability
+
+<mark style="color:blue;">`GET`</mark> `/schedules/delete_availability/{id}.json`
+
+Delete a specific availability record.
+
+### Delete All Availability
+
+<mark style="color:blue;">`GET`</mark> `/schedules/delete_availability/all.json`
+
+Delete all availability records for the authenticated user.
+
+### Delete "Always Available"
+
+<mark style="color:blue;">`GET`</mark> `/schedules/delete_availability/always.json`
+
+Remove the "always available" default setting.
+
+***
+
+## Calendar Events
+
+<mark style="color:blue;">`GET`</mark> `/events/calendar.json`
+
+Retrieve calendar events (schedules, classes, exams) within a date range.
+
+#### Query Parameters
+
+| Parameter | Type   | Required | Description        |
+| --------- | ------ | -------- | ------------------ |
+| start     | string | Yes      | Start date         |
+| end       | string | Yes      | End date           |
+| timeZone  | string | Yes      | IANA timezone name |
+
+#### Response
+
+```json
+[
+  {
+    "id": "789",
+    "title": "Training Flight - EC-ABC",
+    "details": "Circuit training with John Doe",
+    "start": 1710489600,
+    "end": 1710496800,
+    "eventType": "schedule",
+    "color": "#3498db",
+    "resourceId": "45",
+    "location": "LEMD",
+    "url": "/schedules/view/789",
+    "status": "confirmed",
+    "modified": 1710460800
+  }
+]
+```
+
+***
+
+## Events Index
+
+<mark style="color:blue;">`GET`</mark> `/events/index.json`
+
+Retrieve events for the dashboard view.
+
+#### Query Parameters
+
+| Parameter | Type   | Required | Description |
+| --------- | ------ | -------- | ----------- |
+| start     | string | Yes      | Start date  |
+| end       | string | Yes      | End date    |
+
+***
+
+## Event Reason Totals
+
+<mark style="color:blue;">`GET`</mark> `/schedules/reports_event_reasons/{action}/{year}/{month}.json`
+
+Aggregate counts of `ScheduleHistory.reason` for a given action within a month, scoped to the authenticated user's company.
+
+#### Path Parameters
+
+| Parameter | Type   | Required | Description                                             |
+| --------- | ------ | -------- | ------------------------------------------------------- |
+| action    | string | Yes      | History action, e.g. `CANCELED`, `REJECTED`, `ACCEPTED` |
+| year      | int    | Yes      | Year                                                    |
+| month     | int    | Yes      | Month (1-12)                                            |
+
+#### Response
+
+```json
+{
+  "totals": [
+    { "name": "weather", "color": "#1f77b4", "total": "12" },
+    { "name": "maintenance", "color": "#d62728", "total": "3" }
+  ]
+}
+```
+
+Rows with `null` reason are omitted. `totals` is always a zero-indexed JSON array.
+
+**`?inferred=1`** — splits `OTHERS` ("Other reasons") by what each row's free text says. An hourly job reads that text and stores `ScheduleHistory.inferred_reason` / `inferred_confidence`; the reason the person chose is never changed. Rows read with confidence ≥ 0.6 come back as extra entries with `"inferred": true` and a `name` from `MET`, `MAINT`, `AIRCRAFT`, `ATC`, `PERSONAL`, `INSTRUCTOR`, `ADMIN` (the last three exist only as inferences), and the `OTHERS` total is reduced by the same amount. Without the parameter the totals are exactly as before. `inferred_reason` and `inferred_confidence` also appear on each row of `/manager/schedules/cancellations.json`. For `action = CANCELED`, the `NOT_FLOWN` ("Not flown") reason appears for bookings the system auto-cancelled as no-shows, attributed to the PIC.
+
+***
+
+## Find Slots
+
+<mark style="color:green;">`POST`</mark> `/schedules/find_slot.json`
+
+Finds bookable slots for a date and aircraft. The `pic` parameter is optional — when omitted (student self-bookings) pilot availability is not checked and only the aircraft, maintenance, CRS expiry and the requesting user's own schedule are considered.
+
+Each result carries an `available` marker:
+
+* `available: true` — the slot is fully free and can be booked directly.
+* `available: false` — the slot is blocked **only** by a `PENDING` booking (a student booking still waiting for a Flight Instructor). The PENDING record may be auto-canceled later, so the slot is still returned: the frontend shows it in yellow and offers to add it to the watchlist. Slots blocked by a confirmed booking, maintenance, an expired CRS or the user's own schedule are not returned at all.
+
+Cancelled records (`status = CANCELED`, whether cancelled manually or auto-cancelled as `NOT_FLOWN`) are excluded from the search, so their time frame is offered again for new bookings.
+
+Slots are generated inside the operating-hours windows configured for the **aircraft's base** on that date (see [company operating hours](company.md#operating-hours)). A day may hold several windows, and slots are generated per window, so no slot ever spans the closed stretch between two of them. When the base keeps no hours on the requested date the response carries `closed: true` with an empty `results` array — that is "the field is shut that day", which is a different answer from an open day whose slots are all taken.
+
+#### Body Parameters
+
+| Parameter | Type   | Required | Description                                          |
+| --------- | ------ | -------- | ---------------------------------------------------- |
+| date      | string | Yes      | Day to search (`YYYY-MM-DD`)                         |
+| aircraft  | int    | Yes      | Aircraft id                                          |
+| pic       | int    | No       | Pilot id — when omitted, availability is not checked |
+
+#### Response
+
+```json
+{
+  "results": [
+    { "start": 1750000000, "end": 1750003600, "available": true },
+    { "start": 1750003600, "end": 1750007200, "available": false }
+  ],
+  "futureAvailabilities": null,
+  "closed": false,
+  "melBlocked": false
+}
+```
+
+`closed` is `true` when the aircraft's base has no operating hours on the requested date; `results` is then always empty.
+
+`melBlocked` is `true` when the aircraft has an **expired** MEL/CDL item. It never removes or filters `results` — an expired item does not block _scheduling_, only _dispatch_ (see [Dispatch Schedule](schedules.md#dispatch-schedule)) — it is only a flag the frontend can use to warn the person booking the slot ahead of time.
+
+`grounded` is `null` unless the aircraft is [grounded](../../API/aircraft-reports.md#grounded-aircraft), in which case it is `{ "blocked": bool, "reports": [ ... ] }`. For `user_group_id` 1, 100, 105, 110, 150, 300 and the aircraft's managers `blocked` is `false` and the slots are returned as usual, so the booking can be planned for after the repair. For everybody else `blocked` is `true` and `results` is empty — the same people `/schedules/edit.json` refuses.
+
+`typeRatingBlocked` is `true`, with an empty `results`, when `pic` is sent, the aircraft requires a type rating and that pilot is not covered on the requested date (see [Type rating requirement](schedules.md#type-rating-requirement)). Optional body parameters `sic` and `supervisor` let a TRI or TRE on board cover a student. Without `pic` nothing is checked here.
+
+***
+
+## Available Flight Instructor (student self-booking)
+
+<mark style="color:green;">`POST`</mark> `/schedules/available_fi.json`
+
+Returns the Flight Instructor the system would auto-assign as PIC for a student self-booking, or `null` when none is available (the booking would then be stored with the `PENDING` status).
+
+Selection rules: the FI must have `user_group_id <= 170` (Flight Instructor and above), `pilot = true`, `active = true`; an availability record of type `AVAILABLE` or `ALWAYS` (never `MAYBE`/`UNAVAILABLE`) covering the full time frame; no conflicting schedule or onsite class; the aircraft within their aircraft attributions (empty list = all aircraft); and the flight type within their flight type attributions (empty list = all flight types). The student's assigned FI (training supervisor) has priority over other available FIs.
+
+#### Body Parameters
+
+| Parameter    | Type   | Required | Description                 |
+| ------------ | ------ | -------- | --------------------------- |
+| start        | int    | Yes      | Slot start (unix timestamp) |
+| end          | int    | Yes      | Slot end (unix timestamp)   |
+| aircraft     | int    | Yes      | Aircraft id                 |
+| flight\_type | string | No       | Flight type id              |
+
+#### Response
+
+```json
+{ "fi": { "id": "456", "name": "Jane Smith" } }
+```
+
+`fi` is `null` when no instructor is available.
+
+***
+
+## Auto Pilot criteria
+
+<mark style="color:blue;">`GET`</mark> <mark style="color:green;">`POST`</mark> `/manager/schedules/autopilot_settings.json`
+
+Reads or replaces the company's [Auto Pilot](../schedules/auto-pilot.md) criteria. Only users with `user_group_id <= 140` may call it (`403` otherwise).
+
+#### Body Parameters (POST)
+
+| Parameter | Type   | Required | Description                                                                                              |
+| --------- | ------ | -------- | -------------------------------------------------------------------------------------------------------- |
+| settings  | string | Yes      | JSON document `{"types": {"<flight_type_id>": rule}, "general": general}`. Replaces the stored document. |
+
+Each `rule` may contain any of:
+
+| Key                              | Type             | Description                                                                                                |
+| -------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------- |
+| include                          | bool             | Auto Pilot may book this flight type. Default: `false` for exam and ground types, `true` otherwise.        |
+| picDay, picWeek, sicDay, sicWeek | int 0–99 or null | Most flights of this type one person may sit in that seat per day / ISO week. `null` = no limit (default). |
+| supervise                        | bool             | Solo flights of this type are booked with a supervising instructor. Default `false`.                       |
+| superviseMax                     | int 1–99         | Overlapping solo flights one supervisor may cover. Default `3`.                                            |
+
+`general` (optional) holds the run-wide rules:
+
+| Key                           | Type             | Description                                                                       |
+| ----------------------------- | ---------------- | --------------------------------------------------------------------------------- |
+| studentDay, studentWeek       | int 0–99 or null | Most lessons per student per day / ISO week across all types. Defaults `1` / `3`. |
+| instructorDay, instructorWeek | int 0–99 or null | Most lessons per instructor per day / ISO week. Defaults `4` / no limit.          |
+| bookChecks, bookExams         | bool             | Auto Pilot may book progress checks / exams itself. Default `false`.              |
+
+Rules for flight types of another company, unknown keys and out-of-range values are dropped. A body that is not a settings document answers `400`. Before the `schedule_autopilot` column exists, `GET` answers empty settings and `POST` answers `409`.
+
+#### Response
+
+```json
+{ "result": true, "settings": { "types": { "368": { "picDay": 3 }, "552": { "include": false } } } }
+```
+
+`GET` answers `{ "settings": { "types": { … } } }`.
+
+***
+
+## Auto Pilot mission kinds
+
+<mark style="color:green;">`POST`</mark> `/manager/schedules/autopilot_mission_kinds.json`
+
+What each syllabus mission is, as Auto Pilot reads it: `LESSON`, `CHECK` (progress / stage / pre-solo check), `EXAM` (skill test, check ride) or `GROUND` (not flown). Only users with `user_group_id <= 140` may call it (`403` otherwise).
+
+A mission is classified once, by Flylogs AI from its name, course and flight type, with a keyword rule when the AI is unsure. The result is stored on the mission and cleared when the mission is renamed. If the AI cannot be reached, the keyword answer is returned but not stored.
+
+#### Body Parameters
+
+| Parameter | Type      | Required | Description                                                                                 |
+| --------- | --------- | -------- | ------------------------------------------------------------------------------------------- |
+| ids\[]    | string\[] | Yes      | `training_flights` ids, at most 400 per call. Ids of another company's courses are ignored. |
+
+#### Response
+
+```json
+{ "kinds": { "3f0c…": "LESSON", "9a12…": "CHECK" } }
+```
+
+***
+
+## Flight Instructor Availabilities
+
+<mark style="color:blue;">`GET`</mark> `/schedules/fi_availabilities.json?start={unix}&end={unix}`
+
+Weekly availability of all Flight Instructors (`user_group_id <= 170` — Flight Instructor and above and `pilot = true`) of the company.
+
+**Access control:** managers (`user_group_id <= 150` — Chief Pilot and above) always; FIs (`user_group_id` 151–170 with `pilot = true`) only when the **ALLOW FI SCHEDULE MANAGEMENT** company setting (`schedule_allow_fi_management`) is enabled. All other users receive `403 Forbidden`.
+
+#### Response
+
+```json
+{
+  "instructors": [
+    {
+      "User": { "id": "456", "user_group_id": "170" },
+      "UserDetail": { "name": "Jane", "surname": "Smith", "photo": null },
+      "ScheduleAvailability": [
+        { "id": "a1", "type": "AVAILABLE", "start": 1750000000, "end": 1750028800 }
+      ]
+    }
+  ],
+  "start": 1749945600,
+  "end": 1750550400
+}
+```
+
+***
+
+## My Slot Watchlist
+
+<mark style="color:blue;">`GET`</mark> `/schedules/watchlist.json`
+
+Lists the authenticated user's future slot watchlist entries. When a booking overlapping a watched slot is canceled or deleted, the watcher is notified (push notification + message) so they can grab the freed slot. Past entries are removed by the night cron.
+
+#### Response
+
+```json
+{
+  "watchlists": [
+    {
+      "ScheduleWatchlist": { "id": "w1", "aircraft_id": "45", "start": 1750000000, "end": 1750014400, "available": false, "created": 1749900000 },
+      "Aircraft": { "id": "45", "registration": "EC-ABC" }
+    }
+  ]
+}
+```
+
+`available` is set to `true` when an overlapping booking was canceled or deleted after the watch was created — the slot is now free and the entry is highlighted in green in the Schedules page widget.
+
+***
+
+## Watch a Slot
+
+<mark style="color:green;">`POST`</mark> `/schedules/watchlist_add.json`
+
+Adds an aircraft + time frame to the authenticated user's watchlist. Only active pilots (`pilot = true`, `active = true`) can watch slots; other users receive `403 Forbidden`. Overlapping entries for the same aircraft are merged.
+
+If no active booking overlaps the requested time frame, the slot is already free: **no record is created** and the response carries `slotAvailable: true` so the client can tell the user to book right away.
+
+#### Body Parameters
+
+| Parameter    | Type | Required | Description                                            |
+| ------------ | ---- | -------- | ------------------------------------------------------ |
+| aircraft\_id | int  | Yes      | Aircraft id (must be active and belong to the company) |
+| start        | int  | Yes      | Watch start (unix timestamp)                           |
+| end          | int  | Yes      | Watch end (unix timestamp, must be in the future)      |
+
+#### Response
+
+```json
+{ "result": true, "slotAvailable": false }
+```
+
+***
+
+## Remove a Watchlist Entry
+
+<mark style="color:green;">`POST`</mark> `/schedules/watchlist_delete/{id}.json`
+
+Removes one of the authenticated user's watchlist entries. Users can only delete their own entries.
+
+#### Response
+
+```json
+{ "result": true }
+```
+
+***
+
+## Schedule management scope (`/schedules/edit.json`, `/schedules/delete.json`)
+
+Who may edit or delete a booking **created by somebody else** depends on the user group and on the **ALLOW FI SCHEDULE MANAGEMENT** company setting (`schedule_allow_fi_management`, under _Company settings > Schedule_, returned by `GET /companies/settings.json`).
+
+The threshold is the _schedule manager limit_: `150` normally, raised to `170` while the setting is enabled.
+
+| User group                                                            | `schedule_allow_fi_management = 0`                 | `schedule_allow_fi_management = 1`                                                                  |
+| --------------------------------------------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Chief Pilot and above (`user_group_id <= 150`)                        | Full edit and delete on any booking of the company | Full edit and delete on any booking of the company                                                  |
+| Flight Instructor (`user_group_id` 151–170)                           | Own bookings only (own = `Schedule.user_id`)       | Full edit and delete on any booking of the company, including bookings created by other instructors |
+| Captain / Pilot / Student (`user_group_id > 170` — Captain and below) | Own bookings only                                  | Own bookings only                                                                                   |
+
+Users at or below the limit are not subject to any of the crew-level restrictions:
+
+* the record lookup is not narrowed to `Schedule.user_id = <me>`, so a booking created by another user resolves instead of returning `404 Not Found`;
+* the "you must be an aircraft manager or PIC/SIC/supervisor" check is skipped (`403 You cannot edit this booking.`);
+* the SIC anticipation window (`schedule_flight_cancellation_min_time`) is not enforced on edit;
+* on delete, neither the 12-hour anticipation rule nor the "PIC already confirmed" rule applies.
+
+Company scoping still applies to everyone: a booking belonging to another company is always `404 Not Found`.
+
+The same limit decides who gets the editable master calendar from `GET /schedules/get.json`, so an instructor who can see the whole schedule while the setting is on can also act on it.
+
+The setting only opens the schedule editor endpoints — `GET /schedules/get.json`, `GET /schedules/view/{id}.json`, `POST /schedules/edit.json` and `POST /schedules/delete.json`. It does **not** grant the `manager_*` schedule actions: `POST /manager/schedules/review.json`, `GET /schedules/notify/{id}.json`, `/manager/schedules/cancel`, `/manager/schedules/history`, `/manager/schedules/availabilities`, `/manager/schedules/cancellations` and `/manager/schedules/reminders` stay ACL-restricted to management ranks and return `403 Forbidden` for group 170 whatever the setting says.
+
+{% hint style="info" %}
+`/schedules/cancel.json` is the crew-facing cancel endpoint and is **not** affected: it always requires the caller to be the booking's creator, PIC, SIC or supervisor (see [Cancel Schedule](schedules.md#cancel-schedule)). Managers cancel through `/manager/schedules/cancel.json`, which is ACL-restricted and not granted to group 170.
+{% endhint %}
+
+### Aircraft managers
+
+Independently of the setting above, a [manager of an aircraft](aircraft.md#aircraft-manager) may edit any booking made **on that aircraft**, whatever their user group — the "you must be an aircraft manager or PIC/SIC/supervisor" check passes for them. An aircraft can have several managers and each of them gets this. Deleting somebody else's booking is **not** included: `/schedules/delete.json` still narrows to the booking's own creator for anyone above the schedule manager limit.
+
+`GET /schedules/get.json` — the feed the Schedule Manager board draws from — returns every booking made on an aircraft they manage, not only the ones they are crewed on, and leaves those bookings `editable`. Without this an aircraft manager above the limit would be handed a board with nothing on it, because `schedule_allow_see_master` narrows the feed to bookings where the caller is PIC, SIC or supervisor. Bookings on the rest of the fleet are unaffected: they appear only where the caller is crew, and stay read-only.
+
+`Schedules::manager_index` (the legacy fmc master board, HTML only — it has no JSON view) applies the same rule at the door: a caller above `user_group_id` 170, and not 300, is admitted when they manage at least one aircraft, and its fleet list is narrowed to exactly those aircraft. A caller who manages none still gets `404 Not Found`. Flight Instructors without **ALLOW FI SCHEDULE MANAGEMENT** keep their existing read-only board narrowed the same way.
+
+## Self-booking role behaviour (`/schedules/edit.json`)
+
+The schedule create/edit endpoint applies these role rules to self-bookings (`self_schedule = 1`):
+
+| User group                                                                         | Behaviour                                                                                                                                                                                                                                                                                          |
+| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Students (`user_group_id > 190` — Student Pilot and below)                         | Can never be PIC. Stored as SIC (`sic_status ACCEPTED`). The system auto-assigns an available FI as PIC (`pic_status PENDING`, status `SCHEDULED`). When no FI is available, the booking is saved with status **`PENDING`** and an empty PIC. Students are exempt from the certificate gate below. |
+| Pilots (`user_group_id` 171–190)                                                   | Unchanged: the user making the reservation is the PIC.                                                                                                                                                                                                                                             |
+| FIs / staff (`user_group_id <= 170` — Flight Instructor and above, `pilot = true`) | Fly as PIC. May pass another pilot in `pic_id`: it is stored as SIC with the instructor as PIC, saved directly as `SCHEDULED`.                                                                                                                                                                     |
+
+`PENDING` bookings are auto-assigned when a matching FI publishes `AVAILABLE`/`ALWAYS` availability (`/schedules/add_availability.json`, `/schedules/edit_availability.json` — response field `assignedPending`), and auto-canceled by the cron when `start - schedule_flight_cancellation_min_time` (hours) is reached.
+
+### Aircraft gate on self-bookings
+
+Self-booking is enabled **per aircraft**, not by any company setting. `/schedules/edit.json` refuses a self-booking (`self_schedule = 1`, or any caller with `user_group_id > 170` — Captain and below) whose target aircraft is not published for it. The check runs when the booking lands on the aircraft — on create, and on an edit that posts a different `aircraft_id`; an edit that leaves the aircraft alone is not re-checked, so withdrawing an aircraft from self-booking stops new bookings without freezing the ones pilots already hold.
+
+Two columns decide it, both returned by `GET /aircraft/view/{id}.json`:
+
+| Column                 | Meaning                                                                                                                                                                                                                                                                                                                                   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `self_schedule`        | `0` = the aircraft is not open to self-booking at all.                                                                                                                                                                                                                                                                                    |
+| `self_schedule_access` | Who may book it: `all` (everyone, students included), `certified` (students, `user_group_id` 200, excluded), `instructors` (`user_group_id <= 170` — Flight Instructor and above only), `pilots` (only the users named on the aircraft). Groups above 200 — external auditors (250) and mechanics (300) — never self-book under any mode. |
+
+The `pilots` mode is decided by a named list held on the aircraft, not by the user group: `GET /aircraft/view/{id}.json` returns it as `SelfSchedulePilotIds` (the user ids currently named, managers only) alongside `SelfSchedulePilotOptions` (the active pilots it can be built from) and a `SelfSchedulePilots.pilots` count. An **empty list means nobody** — the opposite of the pilot-side attributions, where empty means the whole fleet — and the list overrides those attributions for that aircraft. Post it back to `POST /aircraft/edit/{id}.json` as `data[SelfSchedulePilot][SelfSchedulePilot][]` (repeat the field per user id; post it once with an empty value to clear the list). Omitting the key leaves the list untouched, so a client that knows nothing about it cannot wipe it. Ids that are not active pilots of the caller's company are dropped.
+
+Refusals:
+
+```
+HTTP 403 Forbidden
+{ "message": "Self scheduling is not enabled on EC-GV1. Please contact your administrator." }
+
+HTTP 403 Forbidden
+{ "message": "You are not allowed to self schedule EC-GV1. Please contact your administrator." }
+
+HTTP 404 Not Found
+{ "message": "Aircraft not found" }          // not a live aircraft of the caller's company
+```
+
+`GET /aircraft/pilot.json` already filters the aircraft list by the same rule, so a client that builds its booking form from that list never hits these errors. They exist because the columns used to be a listing filter only.
+
+{% hint style="info" %}
+`schedule_allow_see_master` does **not** gate self-booking — it only decides whether pilots may read the master schedule. A company with it off still has self-booking on every aircraft whose `self_schedule` is `1`.
+{% endhint %}
+
+### Certificate gate on self-bookings
+
+A self-booking (`self_schedule = 1`) is rejected on the pilot's own certificates only when **both** company settings line up:
+
+```
+require_pic_docs = 1  AND  schedule_self_allow_nodocs = 0
+```
+
+`schedule_self_allow_nodocs` is the self-booking override: when it is `1`, a pilot whose licence, rating or medical is missing or expired can still create the booking. Both settings are returned by `GET /companies/settings.json` under `CompanySetting`.
+
+The gate applies to pilots with `pilot = true` and `149 < user_group_id <= 190` (Chief Pilots, Flight Instructors, Captains and Pilots). Managers (`user_group_id <= 149` — Flight Dispatcher and above), students (`> 190` — Student Pilot and below) and non-pilots are never gated. Validity is evaluated with the same rule as `checkValidLicence` (a certificate is valid when `issue` is empty or past and `expiration` is empty or future).
+
+When the gate rejects the booking:
+
+```
+HTTP 400 Bad Request
+{ "message": "Self scheduled is blocked because you lack the required pilot certificates. Please contact your administrator." }
+```
+
+{% hint style="info" %}
+`block_pic_without_docs` does **not** apply here — it gates manager schedule edits and flight dispatch, not self-bookings.
+{% endhint %}
+
+Clients should mirror this rule rather than blocking on certificate state alone: warn the pilot whenever documents are invalid, but keep the booking action available unless `require_pic_docs = 1` and `schedule_self_allow_nodocs = 0`. The same applies to the per-seat flight-type requirements returned by `GET /flight_types/compliance/{id}.json` — a non-compliant seat is a warning, and only that setting combination makes it a hard stop.
+
+### Confirmed-availability gate on crew assignment
+
+Company setting `schedule_require_availability` (boolean, default `0`, under _Company settings > Schedule_, returned by `GET /companies/settings.json`).
+
+* **Off (default):** historic behaviour. Only a crew member with an overlapping `UNAVAILABLE` availability row is flagged by `available_pilots`; nothing is enforced on save.
+* **On:** `POST /schedules/edit.json` returns `403 Forbidden` when `pic_id`, `sic_id` or `supervisor_id` is not confirmed available for `[start, end]`. Confirmed means an `AVAILABLE` or `ALWAYS` availability row covering the whole slot, or a base-roster `DUTY` / `STANDBY` entry. `MAYBE`, `UNAVAILABLE` (without a roster `DUTY`/`STANDBY` entry) and no record at all are refused.
+* **Scope:** managers and schedule editors assigning crew. Self-bookings (`self_schedule = 1`, students, and group 170 without `schedule_allow_fi_management`) are exempt. On edit, only seats whose pilot changed, or all seats when `start` / `end` moved, are checked.
+
+Clients should treat any pilot not in `availableUsers` and not in `busyUsers` from `POST /schedules/available_pilots.json` as non-selectable when the setting is on.
+
+**`unrecorded=1` on `POST /schedules/available_pilots.json`.** When the setting is **off**, this optional body parameter adds every active pilot with no availability row for the slot to `availableUsers`. Pilots who are busy, `UNAVAILABLE` or `MAYBE` are not added. The added pilots then go through the same certificate check (`invalidUsers`) and type-rating check (`noTypeRating`) as everyone else. The ids that were added and passed those checks are returned in `unrecordedUsers`. When the setting is **on**, the parameter is ignored, because only confirmed pilots may be assigned. Auto Pilot always sends it.
+
+### MEL and CDL warnings on save
+
+Saving a schedule (create or edit, via `/schedules/edit.json`) never fails because of a MEL or CDL item — an expired item on the schedule's aircraft only adds an entry to a `melWarnings` array in the response. The save itself still succeeds (`result: true`).
+
+```json
+{
+  "result": true,
+  "edit": { "Schedule": { "id": "789", "..." : "..." } },
+  "melWarnings": [
+    {
+      "aircraft_registration": "EC-ABC",
+      "report_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "ata_chapter": "32",
+      "category": "C",
+      "expires": 1717200000,
+      "expired": true
+    }
+  ]
+}
+```
+
+`melWarnings` is only ever populated with items that are currently **EXPIRED** — an item that is merely expiring soon does not appear here. `melWarnings` is empty (`[]`) whenever the schedule's aircraft has no expired MEL/CDL item, including when the request has no `aircraft_id` at all. Note that this is purely advisory: the same expired item is a **hard block** the moment someone actually tries to dispatch this schedule into a flight — see the MEL/CDL hard block note under [Dispatch Schedule](schedules.md#dispatch-schedule) above.
+
+### Grounded aircraft on save
+
+Unlike an expired MEL item, a **grounded** aircraft (open report with `aircraft_status` or `dispatch_condition` = `GROUNDED`, see [Grounded aircraft](../../API/aircraft-reports.md#grounded-aircraft)) does stop new bookings. The check runs when the booking lands on the aircraft — a create, or an edit that changes `aircraft_id` — so the bookings already on it stay editable and cancellable.
+
+| Who                                                                      | Result                                                                                                                                 |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `user_group_id` 1, 100, 105, 110, 150, 300, or a manager of the aircraft | Saved. `groundedWarnings[]` lists the grounding reports                                                                                |
+| Everybody else                                                           | `403 Forbidden`: _"TF-ABC is grounded (ATA 32 — Left brake soft) and cannot be booked until maintenance releases it back to service."_ |
+
+```json
+"groundedWarnings": [
+  { "aircraft_registration": "TF-ABC", "report_id": "c3d4...", "title": "Left brake soft", "ata_chapter": "32" }
+]
+```
+
+`groundedWarnings` is `[]` when the aircraft is not grounded. Whoever books it, the flight still cannot be dispatched until the aircraft is released.
+
+***
+
+## Type rating requirement
+
+An aircraft can require a type rating (`Aircraft.require_type_rating`, set by staff on [Edit Aircraft](aircraft.md)). Off by default. When it is on, a crew member is **covered** when they hold a certificate of type `type_rating`, `tri` or `tre` that:
+
+* is linked to the aircraft's model (see [Aircraft models](pilots.md#aircraft-models)),
+* is not revoked,
+* is valid at the booking or flight start (issue date before it, expiration after it).
+
+Seats checked: the **PIC** always, the **SIC** only on a multi-pilot aircraft (`Aircraft.multipilot`), the supervisor never. A student without the rating is covered when someone else on board (PIC, SIC or supervisor) holds a valid **TRI or TRE** for the model.
+
+Where it applies:
+
+| Path                                                                                         | Behaviour                                                                                                                                                                                        |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `POST /schedules/edit.json` (manager bookings, self-booking, repeats, copy-week, Auto Pilot) | `403` with a message naming the crew and the model. Checked on create, and on an edit only when the aircraft, a crew seat or the day changes. Cancelling (`status = CANCELED`) is never refused. |
+| `/schedules/flight.json`, `/flights/dispatch/{id}.json`                                      | `result: false`, `code: TYPE_RATING_REQUIRED` (see [Type rating hard block](schedules.md#type-rating-hard-block)).                                                                               |
+| `POST /flights/create.json`                                                                  | Never refused. The saved flight carries `type_rating_warning` (see [Flights](flights.md)).                                                                                                       |
+| `POST /schedules/find_slot.json`                                                             | `typeRatingBlocked` (see [Find Slots](schedules.md#find-slots)).                                                                                                                                 |
+| `POST /schedules/available_pilots.json`                                                      | With `aircraft_id`, `noTypeRating` lists the ids of available / maybe users who are not covered. They are flagged, not removed.                                                                  |
+| `GET /aircraft/pilot.json` (self-booking aircraft list)                                      | Each aircraft carries `require_type_rating` and `type_rating_ok` (`null` for students).                                                                                                          |
+| Student self-booking, auto-assigned Flight Instructor                                        | Only an FI covered for the model is assigned.                                                                                                                                                    |
+| `GET /flight_types/compliance.json?aircraft_id=`                                             | Read API: see [Certificate Compliance](../../API/flight-types.md#type-rating).                                                                                                                   |
+
+**Manager override.** Users with `user_group_id <= 110` (Company Administrator, Operations Manager, Compliance & Safety Manager) may proceed by posting `data[Schedule][type_rating_override_reason]` (booking) or `type_rating_override_reason` (dispatch), up to 500 characters. The reason, the user and the uncovered seats are stored for that booking and that exact aircraft and crew; once the aircraft or any crew seat changes the override no longer applies. Everyone else gets the refusal. Plans: all.
+
+***
+
+## Pilot Schedule Summary
+
+<mark style="color:green;">`POST`</mark> `/manager/schedules/pilot_schedule.json`
+
+Returns a pilot's duty/flight-time totals for the requested day and month, used by the Schedule Manager to warn before a booking is saved. When the company has FTL enabled, the response also carries an `ftl` block with the limits for that pilot's day.
+
+#### Body Parameters
+
+| Parameter    | Type       | Required | Description                                                                                                                                                                                                                                                               |
+| ------------ | ---------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| user\_id     | int        | Yes      | Pilot the summary is for (must belong to the caller's company)                                                                                                                                                                                                            |
+| date         | string/int | No       | Day to evaluate (datetime string or unix timestamp); defaults to now                                                                                                                                                                                                      |
+| excluded     | int        | No       | A schedule id to exclude from the totals (e.g. the booking currently being edited)                                                                                                                                                                                        |
+| end          | int        | No       | Unix timestamp end of the booking being proposed. When posted together with FTL being enabled, the response includes `ftl.fdp`: the projected Flight Duty Period for the day, as if this booking were added. Older clients that don't post it simply don't get `ftl.fdp`. |
+| aircraft\_id | int        | No       | Aircraft of the proposed booking. When posted, the response includes `proposed_is_sim` (`true` if this aircraft is a simulator).                                                                                                                                          |
+| sectors      | int        | No       | Number of legs of the proposed booking (multi-leg series), minimum 1, default 1. Each leg counts as one sector in `ftl.fdp.sectors` and therefore in `ftl.fdp.max_fdp`.                                                                                                   |
+
+#### Response
+
+```json
+{
+  "data": {
+    "today_total": 14400,
+    "month_total": 54000,
+    "proposed_is_sim": false,
+    "ftl": {
+      "enabled": true,
+      "profile_name": "EASA FTL",
+      "fdp": {
+        "fdp_start": 1759640400,
+        "fdp_end": 1759692600,
+        "fdp_sec": 52200,
+        "sectors": 4,
+        "max_fdp": 46800,
+        "wocl": false,
+        "exceeded": true
+      }
+    }
+  },
+  "excluded": ""
+}
+```
+
+`ftl.fdp` is `null` when the day (including the proposed booking) has no operated — i.e. non-simulator — session. It is omitted entirely when FTL is not enabled for the company, or when the request did not post `end`.
+
+`ftl.fdp` counts the pilot's bookings that **depart** on the requested day (a leg past midnight belongs to the day it departs), excluding `DRAFT` and `CANCELED` ones. Bookings where the pilot is the Supervisor open the FDP when they come before a flight the pilot operates, but are never a sector and never the FDP end.
+
+{% hint style="info" %}
+The older top-level estimates `ftl.sectors_today`, `ftl.max_fdp`, `ftl.wocl` and `ftl.fdp_start` are no longer returned. They counted simulator sessions as sectors and always used the EASA ORO WOCL window. Use `ftl.fdp` instead.
+{% endhint %}
+
+## Repeating series (`series_id`)
+
+Bookings created by a repeat share a `series_id` (UUID). There is no series endpoint: the id is a plain field on the booking.
+
+* `POST /schedules/edit.json` — on **create**, a schedule manager may post `data[Schedule][series_id]` (UUID, client-generated, one per leg of a multi-leg repeat). Any other value, or the field from a non-manager, is ignored. On **edit** the field cannot join a series: posting it **empty** detaches the booking ("this booking only"); any other value is ignored.
+* `GET /schedules/get.json` returns `series_id` on every booking (null when unlinked).
+* `GET /schedules/view/{id}.json` returns `Schedule.series_id` and, for schedule managers, `SeriesSiblings`: every booking of the same series in the caller's company (`id`, `start`, `end`, `status`, `flight_id`), oldest first. "This and following" is done by the client: it edits or deletes the later siblings one by one with the normal `edit.json` / `delete.json` calls, so every row is checked and notified exactly like a single booking.

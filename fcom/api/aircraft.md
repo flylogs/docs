@@ -1,0 +1,770 @@
+# Aircraft
+
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
+## Aircraft manager
+
+`Aircraft.ManagerIds` names the aircraft's **managers**: the people responsible for that tail. An aircraft may name **any number of them**, including none, and they are peers — there is no primary manager and no ordering. The rule is per aircraft and **independent of `user_group_id`** — a Captain (180), a Pilot (190) or a Student Pilot (200) named on a tail gets the same authority over it as a Company Administrator, and none at all over any other aircraft.
+
+> **Changed September 2026.** This used to be a single `Aircraft.user_id` column. That field is **gone** from every aircraft payload; read `Aircraft.ManagerIds` (ids) or `Manager` (ids with names) instead, and never assume there is exactly one.
+
+Two shared checks decide it (`AircraftManagerPolicy` server-side):
+
+| Check               | Allowed for                                                                       | Used by                                                                                                                                                                                       |
+| ------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `canEditAircraft`   | `user_group_id` in **1, 100, 105, 110, 150, 300**, or any manager of the aircraft | `aircraft/edit`, `aircraft/photo`, `aircraft/removePhoto`, [Mass & Balance](../../API/mass-balance.md) aircraft profile                                                                       |
+| `canManageAircraft` | `user_group_id` in **1, 100, 105, 110, 300**, or any manager of the aircraft      | [Maintenance Jobs](../../API/maintenance-jobs.md) create / edit / sign / duplicate / delete / link, [Aircraft Reports](../../API/aircraft-reports.md) MEL/CDL create, edit, extend and delete |
+
+A call aimed at an aircraft the caller neither manages nor covers by group answers **`404`**, not `403` — the record is treated as not existing for that caller.
+
+Two further endpoints follow the same rule:
+
+* [`GET /aircraft/my_aircraft.json`](aircraft.md#my-aircraft) — the aircraft this user manages. Clients use it to decide which per-aircraft actions to offer.
+* [`GET /schedules/manager_index.json`](schedules.md) — a caller above `user_group_id` 170 (and not 300) is admitted only when they manage at least one aircraft, and the board returned holds only those aircraft.
+
+Changing the manager list is staff-only: `aircraft/edit` silently drops the whole `Manager` key, plus `Aircraft.company_id`, `Aircraft.active` and `Aircraft.deleted`, from a request made by someone who is only there because they manage the tail. Otherwise a manager could drop the other managers of their own aeroplane, or add themselves to one they do not manage.
+
+#### Reading and writing the list
+
+|                   |                                                                                                                   |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Read (ids)        | `Aircraft.ManagerIds` — e.g. `["17","204"]`. Sent to `user_group_id < 171` and to 300; omitted for everyone else. |
+| Read (with names) | `Manager` — an array of `{ id, UserDetail: { name, surname } }`.                                                  |
+| Write             | `data[Manager][Manager][]=<user id>`, repeated once per manager. Staff only.                                      |
+| Clear             | post one empty value: `data[Manager][Manager][]=`. The aircraft then has no manager.                              |
+| Leave unchanged   | omit the `Manager` key entirely. A client that knows nothing about managers cannot wipe the list.                 |
+
+Posted ids are intersected with the **active users of the caller's own company**, so an id from another company or a deactivated account is dropped silently rather than rejecting the save. Deliberately not restricted by `user_group_id`: the person running a tail may be of any rank, including a third-party owner who does not fly for the school.
+
+## List Aircraft
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/index.json`
+
+Retrieve the fleet list. Pilots (`user_group_id > 170` — Captain and below) see only active aircraft. Managers see all non-deleted aircraft.
+
+#### Named Parameters
+
+| Parameter | Example          | Description                                                                 |
+| --------- | ---------------- | --------------------------------------------------------------------------- |
+| active    | `active:true`    | Filter by active status (`true` or `false`). Ignored for pilot-level users. |
+| search    | `search:C172`    | Filter by registration or model name (partial match)                        |
+| base\_id  | `base_id:{uuid}` | Filter aircraft assigned to a specific base                                 |
+
+#### Response
+
+```json
+[
+  {
+    "Aircraft": {
+      "id": "45",
+      "registration": "EC-ABC",
+      "active": true,
+      "multiengine": false,
+      "multipilot": false,
+      "simulator": false,
+      "require_type_rating": false,
+      "serial": "172-12345",
+      "registration_exp": "2026-09-30",
+      "insurance_exp": "2025-12-31",
+      "airworthiness_exp": "2026-06-15",
+      "radio_exp": "2026-03-01",
+      "weight_exp": null,
+      "billing": false,
+      "photo": "EC_ABC.1682241511.jpg",
+      "flight_count": "450",
+      "created": "2020-01-15 10:00:00",
+      "hours": "12.500",
+      "landings": "9",
+      "log_reference": "1736925801"
+    },
+    "AircraftModel": {
+      "name": "C172",
+      "icao": "C172",
+      "aircraft_manufacturer_id": "292",
+      "id": "2018",
+      "AircraftManufacturer": { "name": "CESSNA" }
+    },
+    "AircraftLogReference": {
+      "total_time": "0.000",
+      "landings": "0"
+    },
+    "Base": { "id": "b1", "name": "Madrid Base" },
+    "User": {
+      "id": "123",
+      "UserDetail": { "name": "John", "surname": "Doe", "id": "123" }
+    }
+  }
+]
+```
+
+> `Aircraft.require_type_rating` is `true` when crew need a type rating for the aircraft's model (see [Type rating requirement](schedules.md#type-rating-requirement)); it is also returned by [View Aircraft](aircraft.md#view-aircraft).
+
+> `Aircraft.hours` and `Aircraft.landings` are the running totals from the aircraft logbook (decimal hours string and integer count). `Aircraft.log_reference` is a Unix timestamp of the last logbook entry. `AircraftLogReference.total_time` / `landings` are the baseline reference values (often `null` or `0.000` when no reference has been set). `User` is `null` when no default pilot is assigned.
+
+***
+
+## My Aircraft
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/my_aircraft.json`
+
+Retrieve the aircraft the authenticated user is a [manager](aircraft.md#aircraft-manager) of, within the current company. Returns an empty list for a user who manages none. Retired (`active: false`) aircraft are included — a manager keeps access to a parked aeroplane's history — deleted ones are not.
+
+#### Response
+
+```json
+{
+  "aircraft": [
+    {
+      "id": "45",
+      "active": true,
+      "title": "EC-ABC",
+      "photo": "https://...",
+      "manufacturer": "Cessna",
+      "model": "C172"
+    }
+  ]
+}
+```
+
+***
+
+## View Aircraft
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/view/{id}.json`
+
+Retrieve full details for a single aircraft, including maintenance, rates, logbook reference and the flight types the aircraft is attributed to (`FlightType`, an array of `{id, name, color}` — empty is the normal case and means the aircraft flies every unrestricted flight type; see [Flight-type attributions](aircraft.md#flight-type-attributions-optional)).
+
+#### Path Parameters
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| id        | string | Aircraft ID |
+
+#### Response
+
+```json
+{
+  "Aircraft": {
+    "id": "45",
+    "active": true,
+    "company_id": "42",
+    "base_id": "5",
+    "billing": true,
+    "auto_bill": false,
+    "serial": "172-12345",
+    "registration": "EC-ABC",
+    "photo": "https://...",
+    "multiengine": false,
+    "multipilot": false,
+    "simulator": false,
+    "hobbs": true,
+    "tach": false,
+    "adsb": "ABC123",
+    "self_schedule": true,
+    "maintenance": "enabled",
+    "fuel_tracking": "lbs",
+    "fuel_type": "JETA1",
+    "oil_tracking": false,
+    "hours": "12500",
+    "landings": "8900",
+    "flight_count": "4500",
+    "airworthiness_exp": "2026-06-15",
+    "insurance_exp": "2025-12-31",
+    "radio_exp": "2026-03-01",
+    "weight_exp": null,
+    "avionics_exp": null,
+    "registration_exp": "2026-09-30",
+    "created": "2020-01-15 10:00:00",
+    "modified": "2025-03-01 14:00:00"
+  },
+  "AircraftModel": {
+    "id": "10",
+    "name": "C172",
+    "icao": "C172",
+    "aircraft_manufacturer_id": "1",
+    "AircraftManufacturer": { "name": "Cessna" }
+  },
+  "AircraftLogReference": {
+    "total_time": "12000",
+    "landings": "8500",
+    "created": "2020-01-15"
+  },
+  "Base": { "name": "Madrid Base", "id": "5", "airport_id": "100" },
+  "User": {
+    "id": "123",
+    "UserDetail": { "name": "John", "surname": "Doe", "id": "123" }
+  },
+  "DefaultRate": {
+    "name": "Standard Rate",
+    "hourly_price": "150.00",
+    "id": "10"
+  },
+  "Rate": [
+    {
+      "id": "10",
+      "company_id": "42",
+      "deleted": false,
+      "name": "Standard Rate",
+      "description": "Per flight hour",
+      "hourly_price": "150.00",
+      "pack": false,
+      "hours": null,
+      "AircraftRate": { "id": "1", "rate_id": "10", "aircraft_id": "45", "created": "2020-01-15" }
+    }
+  ],
+  "Maintenance": {
+    "past": [],
+    "future": [
+      {
+        "Job": {
+          "id": "200",
+          "name": "100h Inspection",
+          "type": "hours",
+          "completed": false,
+          "hours_now": "12500",
+          "hours_added": "100",
+          "expiration": null
+        }
+      }
+    ],
+    "next": {
+      "status": "due",
+      "basis": "history",
+      "date": 1791100800,
+      "band": { "early": 1789804800, "late": 1794124800 },
+      "trigger": "hours",
+      "job": { "ref": "585", "name": "100h Inspection" },
+      "note": "100h Inspection at the blended 90/365-day utilisation.",
+      "remaining_hours": 42.5,
+      "due_hours": 12600,
+      "projected": { "hours": 12600, "landings": 10062 }
+    }
+  },
+  "AdsbHealth": {
+    "flights": { "found": 18, "not_found": 2, "pending": 1 },
+    "never_seen": false,
+    "last_seen": 1791631740,
+    "last_source": "fr24"
+  }
+}
+```
+
+#### `AdsbHealth`
+
+Paid plans, not simulators. Outcome of the ADS-B track lookups of the aircraft's last 30 confirmed flights (see [Flight ADS-B Track](flights.md#flight-ads-b-track)), and when any position of it was last stored. `never_seen` is `true` when its last 5 or more resolved lookups found nothing and none found a track: the aircraft probably does not transmit ADS-B positions, and its flights get a single lookup instead of three.
+
+#### `Maintenance.next`
+
+Estimated next maintenance for this aircraft — the same object documented under [Maintenance Jobs → Next maintenance forecast](../../API/maintenance-jobs.md#next-maintenance-forecast), minus the `planned` wrapper (booked work is already in `Maintenance.scheduled`).
+
+An aircraft with no maintenance history at all answers with `basis: "first_maintenance"` — a nominal first check, not a tracked interval. `null` only when the aircraft cannot be resolved at all. Deployments that predate the forecast answer with a **bare unix timestamp** instead of the object; clients should accept both, and must treat the value as advisory — it never limits a booking or a flight.
+
+Returned only on a **club**, **premium** or **unlimited** plan.
+
+#### Expiration Date Fields
+
+All `*_exp` fields use `YYYY-MM-DD` format. `null` means no expiration set.
+
+| Field              | Description                          |
+| ------------------ | ------------------------------------ |
+| airworthiness\_exp | Airworthiness certificate expiration |
+| insurance\_exp     | Insurance expiration                 |
+| radio\_exp         | Radio station license expiration     |
+| weight\_exp        | Weight & balance check expiration    |
+| avionics\_exp      | Avionics check expiration            |
+| registration\_exp  | Aircraft registration expiration     |
+
+***
+
+## Read Aircraft Document
+
+<mark style="color:green;">`POST`</mark> `/aircraft/read_document.json` (multipart)
+
+```
+data[file]=@/path/to/insurance.pdf
+data[aircraft_id]=2576
+```
+
+Reads an aircraft document and suggests the [expiry field](aircraft.md#expiration-date-fields) it belongs in, and for a weighing report the basic empty mass and arm. **Nothing is saved:** the aircraft form and the mass & balance profile apply and save as usual.
+
+```json
+{
+  "reading": {
+    "kind": "insurance",
+    "field": "insurance_exp",
+    "registration": "EC-SKA",
+    "registration_matches": true,
+    "serial": null,
+    "issue": "2026-10-01",
+    "expiration": "2027-09-30",
+    "weighing": null,
+    "confidence": 0.93
+  },
+  "reason": null
+}
+```
+
+| `kind`                 | `field`             |
+| ---------------------- | ------------------- |
+| `registration`         | `registration_exp`  |
+| `arc`, `airworthiness` | `airworthiness_exp` |
+| `insurance`            | `insurance_exp`     |
+| `radio`                | `radio_exp`         |
+| `weighing`             | `weight_exp`        |
+| `avionics`             | `avionics_exp`      |
+| `other`                | `null`              |
+
+* `registration_matches` is `false` when the registration printed is not this aircraft's (hyphens and case ignored), and `null` when either is unknown.
+* `weighing` is filled for a weighing report only: `{mass, mass_unit (kg|lb), arm, arm_unit (m|cm|mm|in), weighed_on, reference}`. A value without a known unit is `null`. The profile's units are never changed; NEO converts.
+* `reason` takes the same values as in Pilots → Read Certificate Document.
+* **Access:** same as editing the aircraft (`AircraftManagerPolicy::canEditAircraft`: staff editors and the aircraft's managers), company-scoped (`404`). One read every 3 seconds per session.
+
+***
+
+## Aircraft Logbook
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/logbook/{aircraftId}/limit:{limit}/page:{page}.json`
+
+Retrieve the aircraft technical logbook with pagination.
+
+For an aircraft that tracks fuel, each flight carries `fuel` (its own uplift), `fuel_start` / `fuel_end` (on board, gauge unit), and two server-computed values: `fuel_uplift` (its own uplift plus the uplifts after its legs) and `fuel_used` (start + uplifts between legs − end, see [Flight legs → Fuel](flight-legs.md#fuel); null when it cannot be worked out), both in the uplift unit. The top-level `fuel` gives the units (`gauge`, `uplift`); it is `null` when the aircraft tracks no fuel.
+
+#### Path Parameters
+
+| Parameter  | Type   | Description                    |
+| ---------- | ------ | ------------------------------ |
+| aircraftId | string | Aircraft ID                    |
+| limit      | number | Records per page (default: 10) |
+| page       | number | Page number                    |
+
+#### Response
+
+```json
+{
+  "logbook": [
+    {
+      "AircraftLog": {
+        "id": "1000",
+        "user_id": "123",
+        "aircraft_id": "45",
+        "time": "3600",
+        "total_time": "12500",
+        "landings": "1",
+        "total_landings": "8900",
+        "type": "flight",
+        "foreign_key": "5678",
+        "created": "2025-03-10 09:30:00",
+        "modified": "2025-03-10 09:30:00"
+      },
+      "Flight": {
+        "id": "5678",
+        "date": "2025-03-10",
+        "callsign": "EC-ABC",
+        "departure_airport": "LEMD",
+        "landing_airport": "LEBL",
+        "offblocks_time": "08:00:00",
+        "onblocks_time": "09:25:00",
+        "rules": "VFR",
+        "landings": "1",
+        "fuel": "40.00",
+        "fuel_start": "1500.00",
+        "fuel_end": "1100.00",
+        "fuel_uplift": 440,
+        "fuel_used": 625.67,
+        "Pic": {
+          "id": "123",
+          "UserDetail": { "name": "John", "surname": "Doe" }
+        }
+      }
+    }
+  ],
+  "fuel": { "gauge": "lbs", "uplift": "l" },
+  "paging": {
+    "page": 1,
+    "current": 1,
+    "count": 4500,
+    "prevPage": false,
+    "nextPage": true,
+    "pageCount": 450,
+    "limit": 10
+  }
+}
+```
+
+***
+
+## Export Logbook (XLS)
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/logbook/{aircraftId}/limit:10000/logbook.xls`
+
+Download the aircraft logbook as an Excel file. Token passed as query parameter: `?token=<token>`
+
+***
+
+## Fuel & Oil Consumptions
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/consumptions/{id}.json`
+
+Retrieve monthly fuel and oil consumption rates, per block hour of confirmed flights. Defaults to last 12 months. Fuel is in the uplift unit (`CompanySetting.fuel_uplift_unit`, else the aircraft's `fuel_tracking`), from two sources that are never added together:
+
+* **Measured** — flights whose fuel used can be worked out from fuel on board (see [Flight legs → Fuel](flight-legs.md#fuel)). A month with any such flight gets its own `measured_fuel_per_block_hour`. A negative burn (mis-keyed reading) or an unconvertible one is left out.
+* **Uplift** — every uplift of the flights (`Flight.fuel` plus the legs' `fuel`) over all block hours, pooled over a trailing 6 months (`trailing_fuel_per_block_hour`): an uplift refills fuel burned on earlier flights, so it is only meaningful averaged.
+
+`fuel_per_block_hour` is the value to plot: the measured rate where the month has one, else the trailing uplift rate, with `fuel_source` naming which. `rolling_fuel_per_block_hour` (same on every row) is the measured rate over the window's measured hours when there are any, else total uplift / total hours, with `rolling_fuel_source`. Oil is always uplift-based.
+
+#### Path Parameters
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| id        | string | Aircraft ID |
+
+#### Query Parameters
+
+| Parameter | Type    | Description                                                        |
+| --------- | ------- | ------------------------------------------------------------------ |
+| months    | integer | Optional. Number of months to look back. Range: 1–120. Default: 12 |
+
+#### Response
+
+```json
+[
+  [
+    {
+      "month_unix": "1709251200",
+      "month": "2025 Mar",
+      "trailing_fuel_per_block_hour": "34.1",
+      "trailing_oil_per_block_hour": "0.2",
+      "measured_fuel_per_block_hour": "31.8",
+      "measured_hours": "42.5",
+      "fuel_per_block_hour": "31.8",
+      "fuel_source": "measured",
+      "rolling_fuel_per_block_hour": "32.2",
+      "rolling_fuel_source": "measured",
+      "rolling_measured_hours": "310.4",
+      "rolling_oil_per_block_hour": "0.21"
+    }
+  ]
+]
+```
+
+`fuel_source` is `"measured"`, `"uplift"`, or `null` when there is nothing to show.
+
+***
+
+## Fleet ADSB Positions
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/adsb.json`
+
+Retrieve real-time ADSB positions for all aircraft in the fleet with ADSB transponders configured.
+
+#### Response
+
+```json
+[
+  {
+    "Aircraft": {
+      "id": "45",
+      "adsb": "ABC123",
+      "registration": "EC-ABC",
+      "hours": "12500",
+      "landings": "8900"
+    },
+    "AircraftModel": {
+      "name": "C172",
+      "icao": "C172",
+      "manufacturer": "Cessna"
+    },
+    "AircraftPosition": [
+      {
+        "id": "9999",
+        "aircraft_id": "45",
+        "lat": "40.4719",
+        "lon": "-3.5626",
+        "speed": "120",
+        "alt": "5500",
+        "ground": false,
+        "track": "090",
+        "created": "2025-03-10 12:00:00"
+      }
+    ],
+    "lastKnownPosition": [
+      {
+        "AircraftPosition": {
+          "id": "9999",
+          "lat": "40.4719",
+          "lon": "-3.5626",
+          "speed": "120",
+          "alt": "5500",
+          "ground": false,
+          "track": "090",
+          "created": "2025-03-10 12:00:00"
+        }
+      }
+    ]
+  }
+]
+```
+
+***
+
+## Aircraft ADSB History
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/adsb/{aircraftId}/{start}/{end}.json`
+
+Retrieve ADSB position history for a specific aircraft within a date range.
+
+#### Path Parameters
+
+| Parameter  | Type   | Description                |
+| ---------- | ------ | -------------------------- |
+| aircraftId | string | Aircraft ID                |
+| start      | int    | Window start, Unix seconds |
+| end        | int    | Window end, Unix seconds   |
+
+For a flight, prefer [Flight ADS-B Track](flights.md#flight-ads-b-track), which also returns the lookup status and the matched legs.
+
+***
+
+## Manufacturers
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/manufacturers.json`
+
+List all aircraft manufacturers.
+
+***
+
+## Models by Manufacturer
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/model/{manufacturerId}.json?q={search}`
+
+Search aircraft models by manufacturer.
+
+#### Query Parameters
+
+| Parameter | Type   | Description                 |
+| --------- | ------ | --------------------------- |
+| q         | string | Search query for model name |
+
+***
+
+## Pilot Aircraft Prices
+
+<mark style="color:green;">`GET`</mark> `/manager/aircraft/pilot_prices/{pilotId}.json`
+
+<mark style="color:orange;">`POST`</mark> `/manager/aircraft/pilot_prices/{pilotId}.json`
+
+Custom hourly price a pilot is billed for each aircraft. When one exists it replaces the aircraft's default rate and any rate chosen on the flight when a flight is billed to that pilot. Restricted to `user_group_id ≤ 130` (Financial Manager and above); any other caller gets `404`. The pilot must belong to the caller's company and have billing enabled, otherwise `404`.
+
+#### Path Parameters
+
+| Parameter | Type   | Description   |
+| --------- | ------ | ------------- |
+| pilotId   | string | Pilot user ID |
+
+#### GET response
+
+```json
+{
+  "aircraft": [
+    {
+      "Aircraft": { "id": "12", "registration": "EC-KHZ" },
+      "AircraftModel": { "name": "C172", "AircraftManufacturer": { "name": "Cessna" } },
+      "DefaultRate": { "hourly_price": "275.00" },
+      "PilotAircraftPrice": [{ "id": "2558", "hourly_price": "225.00" }]
+    }
+  ],
+  "history": [
+    {
+      "id": "41",
+      "registration": "EC-KHZ",
+      "old_price": "215.00",
+      "new_price": "225.00",
+      "changed_by": "Amparo Moreno",
+      "created": "1792055597"
+    }
+  ]
+}
+```
+
+`history` lists the latest 100 changes to this pilot's custom prices, newest first. `old_price` is `null` when a custom price was added and `new_price` is `null` when it was removed. `changed_by` is the manager's name, or `null` if the user no longer exists. `created` is a Unix timestamp. Changes made before October 2026 were not recorded, so the history starts empty.
+
+#### POST request body
+
+| Field                 | Type             | Required | Description                                                                                     |
+| --------------------- | ---------------- | -------- | ----------------------------------------------------------------------------------------------- |
+| prices\[{aircraftId}] | number \| string | Yes      | Custom hourly price for that aircraft. An empty string leaves the aircraft without custom price |
+
+The submitted list **replaces** all of the pilot's custom prices: aircraft not sent, or sent empty, lose their custom price. Each added, changed or removed price is recorded in the history with the caller as author; resubmitting identical values records nothing.
+
+#### POST response
+
+```json
+{
+  "result": true,
+  "prices": [{ "PilotAircraftPrice": { "id": "2559", "aircraft_id": "12", "user_id": "8226", "hourly_price": "225.00" } }]
+}
+```
+
+***
+
+## Create Aircraft
+
+<mark style="color:green;">`POST`</mark> `/aircraft/add.json`
+
+Add a new aircraft to the fleet. Admin access required.
+
+When `Aircraft.require_type_rating` is `1` the response carries `type_rating_uncovered` (see [Requires a type rating](aircraft.md#requires-a-type-rating)); otherwise it is `null`.
+
+***
+
+## Edit Aircraft
+
+<mark style="color:green;">`POST`</mark> `/aircraft/edit.json`
+
+Update aircraft details. Requires `canEditAircraft`: `user_group_id` in 1, 100, 105, 110, 150, 300, or being one of the [aircraft's managers](aircraft.md#aircraft-manager). A manager's request has the `Manager` key and `Aircraft.company_id`, `Aircraft.active`, `Aircraft.deleted` and `Aircraft.require_type_rating` stripped before the save, so the manager list and those columns can only be changed by staff.
+
+#### Requires a type rating
+
+| Field                          | Type  | Description                                                                                                                                                                                                       |
+| ------------------------------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Aircraft.require\_type\_rating | 0 / 1 | Crew can only be booked or dispatched on this aircraft with a valid Type Rating, TRI or TRE linked to its model. Off by default. Staff only. See [Type rating requirement](schedules.md#type-rating-requirement). |
+
+When a save switches it **on**, the response carries `type_rating_uncovered`: the active flying users of the company who hold no valid linked rating for the model today, so nobody is locked out unknowingly. `null` on every other save.
+
+```json
+{
+  "result": true,
+  "message": "The changes were saved!",
+  "type_rating_uncovered": {
+    "count": 3,
+    "total": 12,
+    "pilots": [ { "id": 178, "name": "Antonio Oreilly" } ]
+  }
+}
+```
+
+`pilots` holds the first 20 by name; `count` is the full number.
+
+#### Fuel units
+
+The **uplift** unit (the unit fuel is bought in) is a company setting, `CompanySetting.fuel_uplift_unit` (see [Company](company.md)), not a field of the aircraft. Uplifts (`Flight.fuel`, `FlightLeg.fuel`, refuellings) and fuel used are in that unit, or in the aircraft's `fuel_tracking` unit when the company has none set. `Aircraft.fuel_uplift_unit` (November 2026) no longer exists; a posted value is ignored.
+
+| Field                   | Type           | Description                                                                                                                                                                                                                                                                                      |
+| ----------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Aircraft.fuel\_tracking | string \| null | **Gauge** unit: `l`, `usgal`, `impgal`, `kgs`, `lbs`; `null` = fuel not tracked. Fuel on board (`Flight.fuel_start` / `fuel_end`, `FlightLeg.fuel_start` / `fuel_end`) is in this unit.                                                                                                          |
+| Aircraft.fuel\_type     | string \| null | `AVGAS100LL`, `JETA1`, `JETA`, `MOGAS`, `SAF`, `OTHER`. **Required** when the gauge unit and the company's uplift unit are a weight (`kgs`, `lbs`) and a volume: the save is refused with a field error under `errors.Aircraft.fuel_type` unless the type has a known density (any but `OTHER`). |
+
+#### Clocks
+
+Two fields choose which clock drives a computation. Both accept the same vocabulary and are validated: an unknown value answers `400` with a field error under `errors.Aircraft.<field>` (it used to reach the database and fail with a `500`).
+
+| Value   | Meaning                                                                       |
+| ------- | ----------------------------------------------------------------------------- |
+| `btime` | Block time (off-blocks → on-blocks)                                           |
+| `ftime` | Flight time (take-off → landing)                                              |
+| `ttime` | Tach: `abs(tach_end − tach_start)` from the readings entered on the flight    |
+| `htime` | Hobbs: `abs(hobbs_end − hobbs_start)` from the readings entered on the flight |
+
+| Field                   | Type   | Description                                                                                                                                                                                                                                  |
+| ----------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Aircraft.maintenance    | string | Clock that advances the airframe hours. `htime` treats the Hobbs end reading as the airframe's absolute value (see [Maintenance Jobs](../../API/maintenance-jobs.md)).                                                                       |
+| Aircraft.billing\_timer | string | Clock a flight is billed on when billing is enabled for the aircraft. For `ttime` and `htime` a flight missing either reading, or whose readings differ by more than 24 h, is **not** auto-billed. Only read when `Aircraft.billing` is `1`. |
+
+`ttime` / `htime` need the matching `Aircraft.tach` / `Aircraft.hobbs` timer enabled, otherwise the flight form never collects the readings; the NEO client switches the Hobbs timer on for you when either clock is set to `htime`.
+
+#### Flight-type attributions (optional)
+
+The aircraft end of the fleet restriction that flight types own (see [Flight Types → Aircraft restriction](../../API/flight-types.md#aircraft-restriction-optional)). The rows are the same rows; only the direction of editing differs, so an empty set is read the flight type's way:
+
+| Links           | Meaning                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------- |
+| **none**        | The aircraft flies every flight type that itself names **no** aircraft. It is not grounded.  |
+| **one or more** | Those flight types are restricted to this aircraft (plus whatever other aircraft they name). |
+
+| Field                    | Type  | Required | Description                                                                                                                                                                                                                                                                                                                      |
+| ------------------------ | ----- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| FlightType.FlightType\[] | array | No       | Flight type ids this aircraft is attributed to. When the key is present it **replaces** the whole set; an empty value detaches the aircraft from every flight type. When the key is **absent**, existing links are left untouched — so an older client posting an aircraft edit cannot wipe restrictions it knows nothing about. |
+
+Ids outside the authenticated company are dropped silently. Detaching the last aircraft from a flight type makes that flight type unrestricted again, which reopens it to the whole fleet — that is the empty-set rule, not a special case.
+
+`POST /aircraft/add.json` does **not** accept these: it saves the `Aircraft` fields alone and would drop the links silently. Attribute the aircraft in a follow-up edit.
+
+Example (form-encoded):
+
+```
+data[Aircraft][id]=45
+data[FlightType][FlightType][]=524
+data[FlightType][FlightType][]=368
+```
+
+Detach from everything:
+
+```
+data[Aircraft][id]=45
+data[FlightType][FlightType][]=
+```
+
+***
+
+## Upload Aircraft Photo
+
+<mark style="color:green;">`POST`</mark> `/aircraft/photo/{id}.json`
+
+Upload or replace the aircraft's photo. Requires being the aircraft's assigned manager, or an Admin / Operations Manager role.
+
+#### Path Parameters
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| id        | string | Aircraft ID |
+
+#### Request Body
+
+Multipart form data, field `logo`: image file (JPG, PNG or GIF, max 8MB).
+
+#### Response
+
+```json
+{
+  "result": true,
+  "file": "9XRSP.1731000000.jpg",
+  "error": null
+}
+```
+
+***
+
+## Remove Aircraft Photo
+
+<mark style="color:green;">`POST`</mark> `/aircraft/removePhoto/{id}.json`
+
+Clear the aircraft's photo. Requires being the aircraft's assigned manager, or an Admin / Operations Manager role.
+
+#### Path Parameters
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| id        | string | Aircraft ID |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "error": null
+}
+```
+
+***
+
+## Delete Aircraft
+
+<mark style="color:blue;">`GET`</mark> `/aircraft/delete/{id}.json`
+
+Remove an aircraft from the fleet. Admin access required.
+
+#### Path Parameters
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| id        | string | Aircraft ID |
