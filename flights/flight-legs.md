@@ -81,7 +81,7 @@ Fuel used is shown in the uplift unit, on the form while you type, on the flight
 
 Many turbine aircraft read fuel in pounds but buy it in litres. Two settings cover it:
 
-* **Uplift unit**, once for the whole company (**Company Settings → Flights → Fuel**): the unit your company buys fuel in, for example **Litres**. Leave it on "Same as each aircraft's fuel tracking unit" when every aircraft is refuelled in the unit its gauge reads.
+* **Uplift unit**, once for the whole company (**Company Settings → Aircraft → Fuel**): the unit your company buys fuel in, for example **Litres**. Leave it on "Same as each aircraft's fuel tracking unit" when every aircraft is refuelled in the unit its gauge reads.
 * **Fuel tracking**, on each aircraft (**Aircraft → Edit**, card **Logbook and Maintenance**): the gauge unit, for example **Pounds**. The aircraft form shows the company's uplift unit next to it.
 * **Fuel type**, on each aircraft: required when the gauge unit and the uplift unit are a weight and a volume, because converting pounds to litres needs the fuel's density (Jet A-1 is 0.804 kg/l, AVGAS 0.72 kg/l). Without it Flylogs shows "Set the aircraft's fuel type" instead of a figure, never a guess.
 

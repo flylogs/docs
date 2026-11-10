@@ -753,6 +753,86 @@ Company-scoped (`404 Flight not found` otherwise). The caller must be the flight
 
 ---
 
+## Preflight Signature
+
+<mark style="color:green;">`POST`</mark> `/flights/preflight_sign/{id}.json`
+
+Technical log (see [Technical log](../aircraft/technical-log.md)): the pilot-in-command
+accepts the aircraft after the flight is dispatched. A separate step from
+[Dispatch Flight](#dispatch-flight). The server stores a snapshot of what was accepted
+(open defects and MEL/CDL items, CRS validity, aircraft hours) and a SHA-256 hash of the
+flight id, signer, time and snapshot, and records a `FlightChange` row with action
+`preflight`. Online, the client never sends the snapshot.
+
+**Offline replay.** NEO stores a signature given without signal and sends it later with
+`offline: 1`, `signed` (the device's unix signing time) and `device_snapshot` (the cached
+[Technical log status](aircraft.md#technical-log-status) the pilot saw). The signature's
+`created` is then the device time and the row is marked `offline`; the snapshot gains an
+`offline` block (`signed`, `received`, `device`, `hard_block_on_receipt`). An offline replay
+is not refused for an expired MEL item or a grounded aircraft (that is recorded in
+`hard_block_on_receipt` instead), and it is accepted on a flight that is `LANDED` or
+`CANCELED` by then. `signed` must be no more than 5 minutes ahead of the server and no
+older than 7 days. A company with `require_flight_password` never accepts offline
+signatures.
+
+When the technical log is on, [View Flight](#view-flight) returns `flight.PreflightSignature`
+(`user_id`, `created`, `hash`, `offline`, `name`, `surname`), or `null` while unsigned. Confirming the
+flight is the post-flight signature; [Confirm Flight](#confirm-flight) is unchanged.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Flight UUID |
+
+#### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| pass | string | conditional | The signer's password, when the company has **Require password to confirm flights** (`require_flight_password`) on |
+| offline | bool | no | `1` for a signature given offline and sent now |
+| signed | int | with `offline` | Unix time the signature was given on the device |
+| device_snapshot | object | no | What the device showed the pilot (offline only) |
+
+#### Access
+
+- The company has `CompanySetting.techlog` on, otherwise `400`.
+- Only the flight's PIC (`pic_id`). Any user group, so a student who is PIC of a solo flight signs it.
+- Flight company-scoped and live, otherwise `404`.
+
+#### Errors (`400`)
+
+| Condition | Message |
+|-----------|---------|
+| Already signed | "This flight already has its preflight signature." |
+| Flight not `DISPATCHED` (offline: not `DISPATCHED`, `LANDED` or `CANCELED`) | "Only a dispatched flight can be signed. Dispatch it first." |
+| Offline: `signed` missing, in the future or older than 7 days | "The signing time recorded on the device is not valid." |
+| Offline and the company requires the password | "Your company requires a password, so the preflight signature must be given online." |
+| Caller is not the PIC | "Only the pilot-in-command can give the preflight signature." |
+| Password missing or wrong | "Password is required" / "The entered password was not correct" |
+| Expired MEL/CDL item | "ATA 32 blocks the preflight signature — MEL Category C expired." |
+| Grounded aircraft | "TF-ABC is grounded (…) and cannot be signed for until maintenance releases it back to service." |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "signature": {
+    "user_id": 618,
+    "created": 1794295859,
+    "hash": "12971d89e3631a2c5a2e43b1c96e38b171f187ad1c097428b7cde37d0488eb3e",
+    "snapshot": {
+      "aircraft_hours": 3330.62,
+      "crs": { "job_id": "be6ace9a-…", "name": "50 Hour check", "until_hours": 3335, "until_date": null },
+      "defects": []
+    }
+  }
+}
+```
+
+---
+
 ## Audit: Edits After Confirmation
 
 <mark style="color:green;">`POST`</mark> `/manager/flights/audit.json`

@@ -28,7 +28,7 @@ Two things are never asked for on any form, because they are already set elsewhe
 
 | Inherited | Comes from |
 | --------- | ---------- |
-| **Unit** (litres, US gallons, imperial gallons, kg, lb) | Your company's uplift unit (**Company Settings → Flights → Fuel**), or the aircraft's fuel tracking unit when the company has none set |
+| **Unit** (litres, US gallons, imperial gallons, kg, lb) | Your company's uplift unit (**Company Settings → Aircraft → Fuel**), or the aircraft's fuel tracking unit when the company has none set |
 | **Fuel type** (AVGAS 100LL, Jet A-1, Jet A, MOGAS, SAF, other) | The aircraft's fuel type |
 
 Both are stored with each refuelling as they were on the day. Changing an aircraft's fuel type later corrects it going forward and leaves your filed history alone.

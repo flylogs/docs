@@ -33,7 +33,7 @@ aircraft, or with no flight planned at all? Use **Report defect**. You find it:
 
 Every user can file a defect this way, including pilots and students. No block or flight
 times are asked for. A company can keep it to managers, mechanics and the aircraft's managers
-with **Company Settings → Flights → Aircraft defects → Report defects without a flight**; the
+with **Company Settings → Aircraft → Aircraft defects → Report defects without a flight**; the
 button is then hidden from everyone else. You can still file a report from a logged flight, as before. Managers
 and maintenance staff also have **Aircraft → Reports**.
 
@@ -45,7 +45,7 @@ Set **Aircraft status** (or **Dispatch condition**) to **Grounded** when the air
 not fly. While at least one open report grounds it:
 
 {% hint style="info" %}
-This is on by default and can be switched off in **Company Settings → Flights → Aircraft
+This is on by default and can be switched off in **Company Settings → Aircraft → Aircraft
 defects → Grounded aircraft cannot be booked or dispatched**. Switched off, Grounded is
 shown on the report only and none of the restrictions below apply.
 {% endhint %}

@@ -16,12 +16,13 @@ You will find it in the manager menu under **Company → Settings**. Only compan
 
 ### The settings tabs
 
-The page is organized in eight tabs. Each one is described in detail on its own page:
+The page is organized in ten tabs. Each one is described in detail on its own page:
 
 | Tab | What it controls |
 | --- | --- |
 | [General](general.md) | Date, time, duration and unit formats, start of the week, and the emergency login switch |
 | [Flights](flights.md) | Logbook locking, file retention, flight form options, pre-dispatch gates and flight permissions per user type |
+| [Aircraft](aircraft.md) | Technical log, aircraft defects and grounding, and the fleet fuel uplift unit |
 | [Schedule](schedule.md) | Who can see and manage the schedule, calendar colors, operating hours, self-scheduling limits and cancellation windows |
 | [Pilots](pilots.md) | Pilot currency requirements and documentation compliance rules |
 | [Duty Limits](duty-limits.md) | Duty time and flight time limitations, rest requirements and duty record policies |
@@ -36,7 +37,7 @@ Some tabs are only available on certain subscription plans. When a tab is not in
 
 | Tab | Free | Club | Premium | Unlimited |
 | --- | --- | --- | --- | --- |
-| General, Flights, Pilots | ✓ | ✓ | ✓ | ✓ |
+| General, Flights, Aircraft, Pilots | ✓ | ✓ | ✓ | ✓ |
 | Schedule | — | — | ✓ | ✓ |
 | Duty Limits | — | — | ✓ | ✓ |
 | Billing | — | ✓ | ✓ | ✓ |

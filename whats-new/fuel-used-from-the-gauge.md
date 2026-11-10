@@ -33,7 +33,7 @@ Every uplift after a leg is added to the flight's refuelling on **Billing → Fu
 
 ### Pounds on the gauge, litres at the pump
 
-Your company can now set an **uplift unit** in **Company Settings → Flights → Fuel**, separate from each aircraft's fuel tracking (gauge) unit: gauges in pounds refuelled in litres, for example. It is one setting for the whole fleet, because fuel is bought in the same unit whatever the aircraft. Set each such aircraft's **fuel type** too, so pounds convert to litres with the right density (Jet A-1 0.804 kg/l). Without it Flylogs says so instead of guessing.
+Your company can now set an **uplift unit** in **Company Settings → Aircraft → Fuel**, separate from each aircraft's fuel tracking (gauge) unit: gauges in pounds refuelled in litres, for example. It is one setting for the whole fleet, because fuel is bought in the same unit whatever the aircraft. Set each such aircraft's **fuel type** too, so pounds convert to litres with the right density (Jet A-1 0.804 kg/l). Without it Flylogs says so instead of guessing.
 
 <figure><img src="../.gitbook/assets/company-settings-fuel-uplift-unit.png" alt="Company Settings, Flights tab: the Fuel uplift unit set to Litres"><figcaption><p>One uplift unit for the whole fleet.</p></figcaption></figure>
 

@@ -414,6 +414,80 @@ For an aircraft that tracks fuel, each flight carries `fuel` (its own uplift), `
 
 ---
 
+## Technical Log
+
+The technical log (see [Technical log](../aircraft/technical-log.md)). Every call needs
+`CompanySetting.techlog` on (`400` otherwise). Any active user of the company; the aircraft
+is company-scoped (`404`). Dates and times are in the flight timezone
+(`CompanySetting.flight_timezone_id`), like the flights endpoints.
+
+### Technical log day
+
+<mark style="color:green;">`POST`</mark> `/techlog/day/{aircraftId}/{date}.json`
+
+Everything one page needs. `date` is `Y-m-d`, today at the latest (`400 Invalid date`).
+
+Page numbers are one per aircraft-day, consecutive within the company, never reused and in
+date order. An aircraft-day is numbered when it has a flight (any status except cancelled or
+deleted), when a `DEFECT`, `MEL` or `CDL` report is created on the aircraft that day, or on
+request with body `{"allocate": 1}` (an empty page; `400` unless the day is today, or
+yesterday while today has no number yet). Every quarter hour
+the server numbers each technical-log company's yesterday and today (flight timezone, else
+company timezone), in that order, for every active non-simulator aircraft with a flight that
+day, in fleet order. A day older than the newest numbered day is never numbered. This call is
+POST because it also numbers today or yesterday when the cron has not run yet. A day without
+a number returns `page: null`.
+
+- `page`: `{page_no, created}` or `null`.
+- `layout`: `log_rows`, `min_empty_rows` (the PDF is always one page; a busier day gets more,
+  shorter log rows).
+- `aircraft`: `registration`, `serial`, `manufacturer`, `model`.
+- `crs`: last signed CRS of the day (`date`, `reference`, `name`, `release_reference`) and
+  the earliest limits it left running (`until_hours`, `until_date`), from the latest sign-off
+  per maintenance plan.
+- `maintenance_due`: the maintenance statement, up to 5 tasks due next, each `name`,
+  `reference`, `due_hours`, `due_landings`, `due_date`, soonest first.
+- `camo`: the company is a CAMO / Part-M operator (`CompanySetting.techlog_camo`).
+- `company`: `name`, `phone`, `address`, `zip`, `city`, `state`, `country`, `logo`.
+- `flights`: the day's flights (`DRAFT`, `SCHEDULED`, `DELAYED`, `DISPATCHED`, `LANDED`, and
+  `CANCELED` only when it was preflight-signed first), each with times (unix), `block_time`
+  and `flight_time` (seconds), `crs_hours_left`, `crew` (`pic`, `sic`, `supervisor`),
+  `preflight` (the preflight signature, with `offline`) and `postflight` (the confirmation:
+  who and when).
+- `defects`: `DEFECT`, `MEL` and `CDL` reports open at some point of the day, with
+  `mel_reference`, `mel_category`, `operational` (O), `maintenance` (M), `valid_until`,
+  `released_by`, and `closed` / `closed_by` when closed during the day.
+
+### Technical log days
+
+<mark style="color:blue;">`GET`</mark> `/techlog/days/{aircraftId}.json?page=&date=`
+
+Days with flights or with a page number, newest first, 10 per page, each with `flights`
+(count) and `page_no` (null when never numbered). `paging`: `page`, `limit`, `count`, `pageCount`. With `date=Y-m-d`
+returns only that day, flights or not.
+
+### Technical log register
+
+<mark style="color:blue;">`GET`</mark> `/techlog/index.json?aircraft_id=&from=&to=&page_no=&origin=&page=`
+
+Every numbered page of the company, newest number first, 25 per page. `from` / `to` are
+`Y-m-d` (inclusive), `origin` is `FLIGHTS`, `DEFECT` or `MANUAL`. Each row: `page_no`,
+`date`, `origin`, `created`, `issued_by` (null when issued automatically), `aircraft`
+(`id`, `registration`), `flights` and `signed` (flights of that aircraft-day with a preflight
+signature). `paging`: `page`, `limit`, `count`, `pageCount`.
+
+### Technical log status
+
+<mark style="color:blue;">`GET`</mark> `/techlog/status/{aircraftId}.json`
+
+What a [preflight signature](flights.md#preflight-signature) accepts right now:
+`aircraft_hours`, `crs` (`name`, `until_hours`, `until_date`, `hours_left`,
+`release_reference`), `maintenance_due` (as above, each with `hours_left`) and the open
+`defects` (same fields as above). NEO keeps the last answer on the device so the preflight
+signature can be given offline.
+
+---
+
 ## Export Logbook (XLS)
 
 <mark style="color:blue;">`GET`</mark> `/aircraft/logbook/{aircraftId}/limit:10000/logbook.xls`
