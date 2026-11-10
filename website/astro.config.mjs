@@ -7,7 +7,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Flylogs Docs',
-      logo: { light: './src/assets/logo.svg', dark: './src/assets/logo-dark.svg', replacesTitle: true },
+      logo: { light: './src/assets/logo-dark.svg', dark: './src/assets/logo.svg', replacesTitle: true },
       favicon: '/favicon.svg',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/flylogs/docs' }],
       editLink: { baseUrl: 'https://github.com/flylogs/docs/edit/master/' },
