@@ -441,7 +441,8 @@ a number returns `page: null`.
 - `page`: `{page_no, created}` or `null`.
 - `layout`: `log_rows`, `min_empty_rows` (the PDF is always one page; a busier day gets more,
   shorter log rows).
-- `aircraft`: `registration`, `serial`, `manufacturer`, `model`.
+- `aircraft`: `registration`, `serial`, `manufacturer`, `model`, `fuel_unit` (the aircraft's
+  fuel tracking unit, which `fuel_start` / `fuel_end` are in).
 - `crs`: last signed CRS of the day (`date`, `reference`, `name`, `release_reference`) and
   the earliest limits it left running (`until_hours`, `until_date`), from the latest sign-off
   per maintenance plan.
@@ -450,13 +451,16 @@ a number returns `page: null`.
 - `camo`: the company is a CAMO / Part-M operator (`CompanySetting.techlog_camo`).
 - `company`: `name`, `phone`, `address`, `zip`, `city`, `state`, `country`, `logo`.
 - `flights`: the day's flights (`DRAFT`, `SCHEDULED`, `DELAYED`, `DISPATCHED`, `LANDED`, and
-  `CANCELED` only when it was preflight-signed first), each with times (unix), `block_time`
+  `CANCELED` only when it was preflight-signed first), each with `departure_airport`,
+  `landing_airport`, `flight_type` (name), `fuel_start`, `fuel_end`, times (unix), `block_time`
   and `flight_time` (seconds), `crs_hours_left`, `crew` (`pic`, `sic`, `supervisor`),
   `preflight` (the preflight signature, with `offline`) and `postflight` (the confirmation:
   who and when).
 - `defects`: `DEFECT`, `MEL` and `CDL` reports open at some point of the day, with
   `mel_reference`, `mel_category`, `operational` (O), `maintenance` (M), `valid_until`,
-  `released_by`, and `closed` / `closed_by` when closed during the day.
+  `released_by`, `work_order` (`id`, `number`, `completed`; the maintenance job the item is
+  assigned to or was closed with, null when none), and `closed` / `closed_by` when closed
+  during the day.
 
 ### Technical log days
 
