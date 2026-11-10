@@ -66,7 +66,7 @@ When operations publishes a flight you are assigned to, your confirmation is req
 
 * The flight appears with an **amber pending dot** and the detail window shows the banner **“Your confirmation is required”** with **Accept** and **Reject** buttons.
 * You can confirm each flight individually, or use the **Accept All** button at the top of the Upcoming Flights panel to accept every pending assignment at once.
-* If you do not confirm before the scheduled departure time, the record is marked as **Confirmation missed**.
+* If you do not confirm before the scheduled departure time, the record is marked as **Confirmation missed** and Accept/Reject are no longer offered. As PIC you can still dispatch the flight: dispatching it counts as your acceptance (see [Dispatching a flight from the schedule](#dispatching-a-flight-from-the-schedule)).
 
 Rejecting a flight notifies the schedule managers so they can reassign the crew.
 
@@ -100,14 +100,17 @@ The **Dispatch** button appears on the schedule view page when the schedule is i
 
 | Role on the flight | When can you dispatch? | Time restriction |
 |---|---|---|
-| **PIC** | As soon as you have accepted the flight | None |
+| **PIC** | Any time, unless you rejected the flight. If your confirmation is still pending or was missed, dispatching accepts the flight for you | None |
 | **SIC** | Only after **both** PIC and SIC have accepted | From **6 hours before** until **2 hours after** the scheduled start |
 | **Supervisor** | **Always** — no confirmation required | None |
 
 Additional notes:
 
 * PIC and SIC also need an active account with permission to create flights. The **Supervisor of the flight is always allowed to dispatch**, regardless of confirmations, time window, or flight creation permission.
+* Users in the Flight Dispatcher group and above can dispatch any booking, without waiting for the crew to confirm.
 * On dispatch, Flylogs checks the required pilot certificates (medical, license, ratings). If any required certificate is missing or expired, the dispatch is rejected.
+
+<figure><img src="../.gitbook/assets/schedule-dispatch-confirmation-missed.png" alt="Schedule view page: the PIC shows Confirmation missed and the Dispatch Flight button is available"><figcaption><p>The PIC missed the confirmation but can still dispatch the flight</p></figcaption></figure>
 
 Once dispatched, the schedule switches to **Dispatched** status and the detail window shows a confirmation banner with a direct link to the created flight:
 

@@ -7,6 +7,8 @@ description: >-
 
 # Safety Assurance dashboard
 
+{% embed url="https://youtu.be/fswMngyNMsc" %}
+
 The **Safety Assurance** dashboard is the first tab of **Safety > Analytics**. It is designed to be put in front of an inspector or an auditor, whatever type of operation you run (AOC, SPO, ATO, CAMO or general aviation), and it supports the safety assurance processes of ICAO Annex 19 and Doc 9859 (safety performance monitoring and measurement).
 
 It answers four questions:

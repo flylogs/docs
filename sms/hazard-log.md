@@ -6,6 +6,8 @@ description: >-
 
 # Hazard log
 
+{% embed url="https://youtu.be/fswMngyNMsc" %}
+
 The **Hazard log** (**Safety > Hazard log**) is where your organisation records hazards as records of their own, separate from the reports that revealed them. A hazard can be linked to many reports, has an owner, an initial and a residual risk, a review interval and an append-only review history. It supports the hazard identification and risk management processes of ICAO Annex 19 and Doc 9859.
 
 The page has two tabs: **Hazards** (opens first) and **Review register**, the list of closed reports that used to be the Register page, unchanged.

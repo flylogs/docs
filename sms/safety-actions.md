@@ -6,6 +6,8 @@ description: >-
 
 # Safety actions
 
+{% embed url="https://youtu.be/fswMngyNMsc" %}
+
 A **safety action** is a tracked corrective or preventive measure with an owner, a due date and a lifecycle that ends with a check that it worked. Actions attach to a [safety report](create-a-safety-report.md) or to a [hazard](hazard-log.md). The free-text *corrective measures* field of a report still exists and is still shown; it is not converted into actions.
 
 ## Who can do what
