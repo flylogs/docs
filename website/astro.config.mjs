@@ -9,8 +9,8 @@ export default defineConfig({
       title: 'Flylogs Docs',
       logo: { light: './src/assets/logo-dark.svg', dark: './src/assets/logo.svg', replacesTitle: true },
       favicon: '/favicon.svg',
-      social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/flylogs/docs' }],
-      editLink: { baseUrl: 'https://github.com/flylogs/docs/edit/master/' },
+      // News / Contact / Log in replace the social icons (no GitHub link, no "Edit page" link).
+      components: { SocialIcons: './src/components/HeaderLinks.astro' },
       customCss: ['./src/styles/custom.css'],
       lastUpdated: true,
       head: [

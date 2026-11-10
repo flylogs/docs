@@ -1,0 +1,36 @@
+---
+// Replaces Starlight's SocialIcons slot (desktop header + mobile menu footer) with links back to flylogs.com and the app.
+const links = [
+  { label: 'News', href: 'https://flylogs.com/news' },
+  { label: 'Contact', href: 'https://flylogs.com/contact' },
+];
+---
+
+{links.map(({ label, href }) => <a {href} class="header-link">{label}</a>)}
+<a href="https://neo.flylogs.com" class="header-login">Log in</a>
+
+<style>
+  .header-link {
+    color: var(--sl-color-gray-2);
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .header-link:hover {
+    color: var(--sl-color-white);
+  }
+  .header-login {
+    background: var(--sl-color-accent);
+    color: #fff;
+    font-size: var(--sl-text-sm);
+    font-weight: 600;
+    padding: 0.35rem 0.9rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .header-login:hover {
+    filter: brightness(1.1);
+  }
+</style>
