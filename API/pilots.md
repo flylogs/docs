@@ -1120,7 +1120,7 @@ Per-pilot daily breakdown of duty / FDP / work time for a single month. **Premiu
 }
 ```
 
-`Flight.block_time` is total block time in seconds for the selected month, computed via `Flight->__getPilotFlightTime()` (respects company `FlightType` PIC/SIC rules).
+`Flight.block_time` is total block time in seconds for the selected month, computed via `Flight->__getPilotsBlockTime()` on non-simulator aircraft (respects company `FlightType` PIC/SIC rules). Only the PIC and SIC seats count: flights where the pilot is the supervisor are excluded even when the flight type credits supervisor time, matching the per-day `PdfDaily.block_time`.
 
 `/manager/pilots/duties/{export}.json` with a truthy `export` segment renders the XLS view instead.
 

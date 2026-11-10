@@ -85,6 +85,16 @@ If any record is over the configured MAX DUTY TIME, the time will appear highlig
 
 Each pilot row has a **download** icon that generates a PDF version of the same report for that pilot and month. The PDF's duty time column is highlighted in red under the same rule as the overview.
 
+The **Block Time** column, the **Top Pilots by Block Time** chart and the monthly flight time warning add up the block time of the flights the pilot **operated** in the month — as CM1 or CM2 (PIC or SIC), on real aircraft. Simulator sessions and flights the pilot only **supervised** are left out, even when the flight type credits the supervisor with time in the logbook: supervision is duty, not flight time. The same total appears as *Block time* at the bottom of the pilot's PDF.
+
+<figure><img src="../.gitbook/assets/duty-times-block-time.png" alt="Duty Times page for October: daily duty chart, Top Pilots by Block Time chart and the Block Time column next to each pilot"><figcaption><p>The Block Time column and the Top Pilots by Block Time chart count only the flights each pilot operated.</p></figcaption></figure>
+
+Block time, flight period and duty measure different things, so their monthly totals differ:
+
+* **Block time** — the sum of each operated flight's block time.
+* **Flight period** — first off-blocks to last on-blocks of each day, so it also includes the time on the ground between two flights of the same day.
+* **Duty** — the flight period plus the commute times, plus any supervision or simulator session that counts as duty (see the table above). A day with only supervised flights can show duty and no block time.
+
 
 
 
