@@ -134,6 +134,7 @@
 * [Pilot availability records](schedules/pilot-availability-records.md)
 * [Schedule notifications](schedules/schedule-notifications.md)
 * [Schedule cancellations](schedules/schedule-cancellations.md)
+* [Schedules and classes offline](schedules/offline-schedules-and-classes.md)
 * [Self scheduling](schedules/self-scheduling.md)
 * [Flight Dispatch Function](schedules/flight-dispatch-function.md)
 * [Flight Risk Assessment (FRAT)](schedules/flight-risk-assessment-frat.md)

@@ -1246,6 +1246,7 @@ List scheduled class sessions in a date range. Company-scoped via `Training.comp
       "duration_minutes": 90,
       "kind": "LESSON",
       "activity": "Takeoff Performance",
+      "training_id": "t-3",
       "training": "B737 Recurrent",
       "teacher": { "id": "u-9", "name": "Jane", "surname": "Doe" },
       "location": "Classroom A"
@@ -1266,6 +1267,7 @@ List scheduled class sessions in a date range. Company-scoped via `Training.comp
 - `start` / `end` — ISO 8601 with offset, formatted in the supplied `timeZone`. `end = start + duration_minutes`.
 - `kind` — `LESSON` or `EXAM` from the bound `TrainingActivity`.
 - `activity` — the `Lesson.name` (kind=LESSON) or `Exam.name` (kind=EXAM).
+- `training_id` — `Training.id` of the session's subject (the value the `training` filter matches).
 - `training` — `Training.name`.
 - `teacher` — `Teacher.UserDetail.name` / `surname`; `id` is the user id.
 - `location` — `Location.name`, empty string if the session has no location.

@@ -54,6 +54,8 @@ A **continuous internet connection is required**. Flylogs is not an offline-capa
 
 If your connection drops while you are editing a flight or a schedule, finish editing once the connection returns — your draft is **not** kept between sessions.
 
+A few things do work without a connection: flights and safety reports can be logged offline and synced later ([Offline flight data](../flights/offline-flight-data.md), [Offline safety reports](../sms/offline-safety-reports.md)). You can also read the next 7 days of bookings, pilot availability and training classes ([Schedules and classes offline](../schedules/offline-schedules-and-classes.md)).
+
 ## Dark mode
 
 Flylogs can be displayed with a light or a dark colour scheme.

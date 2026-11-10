@@ -71,3 +71,7 @@ Pilots who marked **Maybe**, **Not available**, or who submitted nothing appear 
 {% hint style="info" %}
 Pilots booking themselves (self-booking) are not affected. When editing an existing booking, only crew who are newly added, or whose time frame changed, are checked.
 {% endhint %}
+
+{% hint style="info" %}
+The availability of the next 7 days is kept on your device, so the Pilot availabilities page can still be read without a connection. See [Schedules and classes offline](offline-schedules-and-classes.md).
+{% endhint %}

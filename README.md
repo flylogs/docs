@@ -109,7 +109,7 @@ If you are new to Flylogs, follow these steps in order:
 ## Good to know
 
 * **Your role decides what you can see and do.** If a menu or button is missing, your account may not have that permission. Ask a company administrator. See [Account types](company-management/account-types.md).
-* **Flylogs needs an internet connection.** It runs in your browser. Some forms can be filled in without a connection and synced later, see [Offline flight data](flights/offline-flight-data.md) and [Offline safety reports](sms/offline-safety-reports.md).
+* **Flylogs needs an internet connection.** It runs in your browser. Some forms can be filled in without a connection and synced later, see [Offline flight data](flights/offline-flight-data.md) and [Offline safety reports](sms/offline-safety-reports.md). The next 7 days of bookings, pilot availability and training classes can be read offline, see [Schedules and classes offline](schedules/offline-schedules-and-classes.md).
 * **Time zones and formats are set per company.** Check them in Company settings before entering data, so flights, duty times and reports are calculated and shown correctly. See [Quick start guide](first-steps/quick-start-guide.md).
 * **Dark mode follows your device** by default, and you can pin light or dark in your account settings. See [Usage requirements and tips](first-steps/usage-tips.md).
 

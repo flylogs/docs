@@ -61,3 +61,7 @@ Dispatching turns a schedule record into a flight draft. The form pre‑fills de
 ### Publish to pilots (bulk)
 
 Top‑level managers see a **Publish to pilots** button in the header. It opens a modal where you select a date range and choose whether to notify **only newly added/pending** records or everyone in range, then sends the roster notifications in one step. See [Publishing multiple schedule records](publishing-multiple-schedule-records.md) and [Schedule notifications](schedule-notifications.md).
+
+### Offline
+
+The bookings of the next 7 days are kept on your device, so this page still lists them, read-only, without a connection. See [Schedules and classes offline](offline-schedules-and-classes.md).

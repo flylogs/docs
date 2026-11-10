@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**Schedules and classes offline for 7 days** · Schedules & Trainings\
+The bookings, pilot availability and training classes of the next 7 days are now kept on your device (it was 48 hours, without classes), so you can read them with no connection, class pages included.\
+[Manual →](../schedules/offline-schedules-and-classes.md)
+
 **[Billing on the meter you read](tach-billing-readings.md)** · Billing & Flights\
 On aircraft billed on tach or Hobbs time, the end reading is no longer estimated from block time: pilots enter it from the aircraft and the bill charges the exact difference. Readings also accept a decimal comma.\
 [Manual →](../flights/create-a-flight.md#hobbs-and-tach-readings)
