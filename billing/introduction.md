@@ -12,7 +12,9 @@ Your customer will receive a notification of the new bill and the amount billed 
 
 This is a great tool, because not only you have a single click billing solution in a single place, but also, your customers have full view of their expenses linked to their flights, creating a satisfying sensation of payment for a great service received.
 
-<figure><img src="../.gitbook/assets/flight-billing-panel.png" alt="Flight Billing Panel"><figcaption><p>Flight Billing Panel</p></figcaption></figure>
+Under **Bill to**, the panel shows the selected pilot's current **Account Balance** (green when in credit, red when owing), so you can see where the pilot stands before you create or edit the bill. It updates as soon as you pick a different pilot.
+
+<figure><img src="../.gitbook/assets/flight-billing-panel.png" alt="Flight Billing Panel"><figcaption><p>Flight Billing Panel, with the pilot's account balance under Bill to</p></figcaption></figure>
 
 If set in your company settings, your customer receives an instant email notification with the bill information and link. The balance is updated immediately and the bill — along with the customer's full running balance and transaction history — is available on their profile's Billing tab too.
 

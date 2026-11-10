@@ -49,6 +49,16 @@ The process takes into consideration all billing rates, company settings and ava
 
 
 
+### Pilot balance in the transaction window
+
+When you create or edit a manual transaction for a single pilot, the top of the window shows who is billed (**Bill to**) and that pilot's current **Account Balance**. Once you change the amount or the date, a **Balance after this transaction** line under the total shows what the balance will be once you save. A positive amount (a payment received) increases the balance, a negative amount (a charge) reduces it. Transactions dated in the future do not count towards today's balance, so they do not change this figure.
+
+When a transaction goes to several pilots at once, each pilot's balance is shown next to their name in the recipients list. Pilot groups show no balance.
+
+<figure><img src="../.gitbook/assets/bill-transaction-balance.png" alt="Edit Transaction window showing the billed pilot, their account balance and the balance after the transaction"><figcaption><p>Edit Transaction: billed pilot, current balance and balance after saving</p></figcaption></figure>
+
+The transaction window is available to managers who can edit billing, from the manager **Bills** page and from a pilot's **Billing** tab.
+
 ### Bill numbers and receipts
 
 Every bill, whether it comes from a flight or from a manual transaction, receives a **bill number**. Flight bills and manual bills each have their own consecutive sequence within your company. By default the sequence never restarts; if your company enables **Restart bill numbers every year** in its billing settings, numbering starts again at 1 every 1 January and bills show the year first, for example `2026/1`.
