@@ -13,6 +13,22 @@ export default defineConfig({
       editLink: { baseUrl: 'https://github.com/flylogs/docs/edit/master/' },
       customCss: ['./src/styles/custom.css'],
       lastUpdated: true,
+      head: [
+        // Plausible (self-hosted), same instance as flylogs.com and neo.flylogs.com
+        {
+          tag: 'script',
+          attrs: {
+            defer: true,
+            'data-domain': 'docs.flylogs.com',
+            src: 'https://radar.flylogs.com/js/script.hash.outbound-links.js',
+          },
+        },
+        {
+          tag: 'script',
+          content:
+            'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',
+        },
+      ],
       sidebar,
     }),
   ],
