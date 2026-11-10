@@ -1,0 +1,1137 @@
+# Pilots
+
+> Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
+
+## Pilots List (Dropdown)
+
+<mark style="color:blue;">`GET`</mark> `/pilots/list[/active:{1|0|all}][/pilot:{1|0|all}].json`
+
+Minimal, non-paginated list of users in the caller's company. Designed for dropdowns / selection fields. Soft-deleted users (`deleted=1`) are always excluded.
+
+#### Named Parameters
+
+| Parameter | Type                | Default | Description                                            |
+| --------- | ------------------- | ------- | ------------------------------------------------------ |
+| active    | `1` \| `0` \| `all` | `1`     | `1` only active; `0` only inactive; `all` both         |
+| pilot     | `1` \| `0` \| `all` | `1`     | `1` only flying users; `0` only non-flying; `all` both |
+
+#### Response
+
+```json
+{
+  "pilots": [
+    { "id": "123", "name": "John", "surname": "Doe", "user_group_id": "150", "active": true, "pilot": true },
+    { "id": "124", "name": "Jane", "surname": "Smith", "user_group_id": "190", "active": true, "pilot": true }
+  ]
+}
+```
+
+Sorted by `User.user_group_id ASC, UserDetail.name ASC, UserDetail.surname ASC` — managers first, then instructors, then pilots, then students.
+
+Use this in preference to `/pilots/index` when you only need `{id, name, surname}` for dropdowns: it is a single non-paginated query and is much cheaper than walking the paginated index. Examples:
+
+* `/pilots/list.json` — active flying users (audit-grade dropdown, default)
+* `/pilots/list/active:all.json` — all flying users including inactive (logbook audit pilot filter)
+* `/pilots/list/pilot:all.json` — all active users including non-flying (e.g. crew pickers that must include instructors with `pilot=0`)
+
+***
+
+## Pilots Index (Paginated)
+
+<mark style="color:blue;">`GET`</mark> `/pilots/index/page:{page}/search:{search}/user_group_id:{groupId}/pilot_group:{groupId}/base_id:{baseId}/active:{active}/pilot:{pilot}/limit:{limit}.json`
+
+Retrieve a paginated, filterable list of pilots with full details. Must be a JSON or AJAX request unless `excel:1` is set.
+
+#### Path Parameters
+
+All filter parameters are optional — use empty string to skip.
+
+| Parameter       | Type    | Description                                                                                                  |
+| --------------- | ------- | ------------------------------------------------------------------------------------------------------------ |
+| page            | number  | Page number (starts at 1)                                                                                    |
+| search          | string  | Matches name, surname, name+surname, surname+name, `companyid`, `passport`, email prefix, or exact `User.id` |
+| user\_group\_id | string  | Filter by user group/role. `150` is treated as `<= 150` (Chief Pilot and above)                              |
+| pilot\_group    | string  | Filter by pilot group ID                                                                                     |
+| base\_id        | string  | Filter by base                                                                                               |
+| active          | boolean | Filter active/inactive users (`active:false` to include only inactive)                                       |
+| pilot           | boolean | Filter pilot vs non-pilot accounts                                                                           |
+| limit           | number  | Page size (default `50`, max `100000`)                                                                       |
+| excel           | boolean | Render the XLS export view (limit forced to `100000`)                                                        |
+
+#### Permissions & Field Visibility
+
+* Viewers with `user_group_id > 170` — Captain and below (e.g. students) get a reduced field set and the result is restricted to users with `user_group_id <= 170` — Flight Instructor and above (i.e. they cannot see other students/clients).
+* Billing fields (`User.billing`, `UserBill`, `UserBillPackage`) are only included when the company plan is **not** `free` and billing is enabled. They are flattened into `UserDetail.billing_balance` and `UserDetail.package_balance`.
+
+#### Response
+
+```json
+{
+  "pilots": [
+    {
+      "User": {
+        "id": "123",
+        "active": true,
+        "pilot": true,
+        "email": "john@example.com",
+        "email_status": "confirmed",
+        "user_group_id": "110",
+        "created": "2023-01-15",
+        "billing": true
+      },
+      "UserDetail": {
+        "name": "John",
+        "surname": "Doe",
+        "photo": "https://...",
+        "phone": "600123456",
+        "passport": "AB123456",
+        "city": "Madrid",
+        "address": "123 Airport Road",
+        "pc": "28001",
+        "companyid": "EMP-001",
+        "Country": { "name": "Spain" },
+        "billing_balance": 125.50,
+        "package_balance": 300.00
+      },
+      "UserGroup": { "name": "Pilot" },
+      "Base": { "id": "5", "name": "Madrid Base", "airport_id": "100" },
+      "PilotGroup": { "#3498db": "Instructors" }
+    }
+  ],
+  "paginate": {
+    "page": 1,
+    "current": 1,
+    "count": 45,
+    "prevPage": false,
+    "nextPage": true,
+    "pageCount": 2,
+    "limit": 50
+  }
+}
+```
+
+`PilotGroup` is reshaped to `{ color: name }`. `email_status` reflects `User.checkConfirmedEmail` outcomes (e.g. `confirmed`, `pending`).
+
+***
+
+## Create Pilot
+
+There is no `/pilots/create.json` endpoint. Pilot, student and staff accounts are all created with [`POST /manager/users/create.json`](manager-users.md#create-user), which is restricted to `user_group_id` ∈ {1, 100, 105, 110, 120} (Company Administrators, Operations Managers, Compliance & Safety Managers and Human Resources Managers). Chief Pilots and every other group get `403`.
+
+***
+
+## My Pilot View
+
+<mark style="color:blue;">`GET`</mark> `/pilots/view.json`
+
+Retrieve the authenticated user's own pilot profile. Same payload as [View Pilot](pilots.md#view-pilot) below.
+
+> Note: passing `userId = 3` is treated as "view self" for legacy reasons.
+
+***
+
+## View Pilot
+
+<mark style="color:blue;">`GET`</mark> `/pilots/view/{id}.json`
+
+Retrieve full pilot details including certificates, pilot groups, attributed aircraft, and flight types. Scoped to the viewer's company.
+
+#### Path Parameters
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| id        | string | User ID     |
+
+#### Permissions & Field Visibility
+
+* Viewer `user_group_id > 150` (Flight Instructor and below) viewing another pilot: `User.email`, `User.user_group_id`, `User.user_login_count`, `User.email_status`, `User.expiration`, `UserDetail.phone`, and the entire `UserCertificate` array are stripped.
+* Viewer `user_group_id > 150` (Flight Instructor and below): `UserDetail.notes` and `UserDetail.billing_balance` are always stripped.
+* Viewer `user_group_id < 151` (Chief Pilot and above): gets `UserDetail.notes`, `address`, `pc`, `city`, `emergency_contact`, latest `UserLogin`, and (when billing is enabled) `billing_balance` / `package_balance`.
+* Viewer `user_group_id < 151` (Chief Pilot and above): also gets the notification preferences `User.alerts`, `User.message_alerts`, `User.newsletter` and `User.whatsapp`, read from the shared `user_credentials` row. They are absent for any other viewer.
+
+#### Response
+
+```json
+{
+  "user": {
+    "User": {
+      "id": "123",
+      "user_group_id": "110",
+      "email": "john@example.com",
+      "email_status": "confirmed",
+      "billing": true,
+      "pilot": true,
+      "active": true,
+      "api": false,
+      "expiration": null,
+      "user_login_count": "42",
+      "created": "2023-01-15"
+    },
+    "UserDetail": {
+      "id": "123",
+      "name": "John",
+      "surname": "Doe",
+      "photo": "https://...",
+      "dob": "1990-05-20",
+      "passport": "AB123456",
+      "phone": "600123456",
+      "phone2": "600654321",
+      "address": "123 Airport Road",
+      "city": "Madrid",
+      "pc": "28001",
+      "country_id": "195",
+      "birthcountry_id": "195",
+      "nationality": "Spanish",
+      "companyid": "EMP-001",
+      "color": "#3498db",
+      "public_phone": true,
+      "notes": null,
+      "emergency_contact": null,
+      "billing_balance": 125.50,
+      "package_balance": 300.00,
+      "Country": { "name": "Spain" },
+      "Timezone": { "name": "Europe/Madrid" },
+      "CountryOfBirth": { "name": "Spain" }
+    },
+    "UserGroup": { "name": "Pilot" },
+    "Company": { "name": "Acme Flight School" },
+    "Base": { "id": "5", "name": "Madrid Base", "airport_id": "100" },
+    "Supervisor": {
+      "id": "101",
+      "UserDetail": { "name": "Maria", "surname": "Garcia" }
+    },
+    "UserCertificate": [
+      {
+        "id": "300",
+        "user_id": "123",
+        "type": "medical_class_1",
+        "name": "Class 1 Medical",
+        "issue": "2024-06-01",
+        "expiration": "2025-06-01",
+        "comments": "",
+        "Upload": {
+          "id": "501",
+          "filename": "med_class1_2024.pdf",
+          "type": "document",
+          "mime": "application/pdf",
+          "size": "245678"
+        }
+      }
+    ],
+    "PilotGroup": [
+      { "id": "1", "name": "Instructors", "color": "#3498db" }
+    ],
+    "AttributedAircraft": { "45": "EC-ABC", "46": "EC-DEF" },
+    "FlightType": [],
+    "UserLogin": [
+      { "id": "9001", "modified": "2026-04-30 08:12:11" }
+    ]
+  }
+}
+```
+
+Returns `404` if the pilot is not in the viewer's company.
+
+***
+
+## Edit Pilot
+
+<mark style="color:green;">`POST`</mark> `/pilots/edit.json`
+
+Update pilot profile details. Restricted to `user_group_id` ∈ {1, 100, 105, 110, 120, 150} (Company Administrators, Operations Managers, Compliance & Safety Managers, Human Resources Managers and Chief Pilots).
+
+#### Request Body
+
+```json
+{
+  "User": {
+    "id": "123",
+    "user_group_id": "190",
+    "email": "newemail@example.com",
+    "active": true,
+    "send_email": true
+  },
+  "UserDetail": {
+    "name": "John",
+    "surname": "Doe"
+  },
+  "AttributedAircraft": { "45": true, "46": true },
+  "FlightType": { "1": true, "2": true },
+  "PilotGroup": { "3": true }
+}
+```
+
+* `User.id` is required.
+* `AttributedAircraft`, `FlightType`, and `PilotGroup` are passed as `{ id: truthy }` maps; only the keys are used. Existing pilot ↔ aircraft / flight-type / pilot-group joins are wiped before re-saving.
+* A `user_group_id` change to `< 150` requires the editor to have `user_group_id <= 120` (Human Resources Manager and above).
+* Self-edits cannot demote yourself away from `user_group_id = 100` or below (Company Administrator and above).
+* When `email` changes, `email_status` is recomputed and a `confirm` mail is sent if the user is active and `send_email` is true.
+* When `user_group_id` actually changes, all of the edited user's active sessions are deleted server-side, forcing them to re-authenticate on their next request. This avoids the cached `Auth.User('user_group_id')` from continuing to grant the previous role until the session naturally expires.
+* `User.alerts`, `User.message_alerts` and `User.newsletter` are notification preferences. They are not columns of `users`: they are saved on the `user_credentials` row shared by every company account of that email address, so setting them here changes them for all of that person's accounts. Omit a key to leave it untouched.
+* `User.created` is the account creation date, as a unix timestamp in seconds. It is only writable by editors with `user_group_id <= 150` (Chief Pilot and above); for anybody else, and for any non-numeric, non-positive or more-than-48h-in-the-future value, the key is silently dropped and the stored date is left untouched. The change is recorded in the account history (`GET /pilots/changes/{userId}.json`) under the `created` field.
+* `User.whatsapp` is only honoured when `false`, which switches WhatsApp notifications off. It can never be enabled from here: turning it on requires the verification code sent to the pilot's phone, entered by the pilot from `POST /users/whatsapp.json`.
+
+#### Response
+
+```json
+{
+  "id": "123",
+  "result": true,
+  "errors": []
+}
+```
+
+On failure, `errors` is the flattened `User.invalidFields()`.
+
+***
+
+## Pilot Totals
+
+<mark style="color:blue;">`GET`</mark> `/pilots/totals/{userId}.json`
+
+Cumulative flight hour totals (in seconds) for a pilot, broken down by function and rule.
+
+#### Path Parameters
+
+| Parameter | Type   | Description                                  |
+| --------- | ------ | -------------------------------------------- |
+| userId    | string | User ID. Defaults to the authenticated user. |
+
+#### Response
+
+```json
+{
+  "user": {
+    "id": "123",
+    "previous_time": 36000,
+    "other_companies": 7200
+  },
+  "average": 5400,
+  "total_time": 540000,
+  "flight_time": 504000,
+  "flight_types": { "Training": 180000, "Charter": 90000 },
+  "functions": {
+    "FI":         { "icon": "fa fa-user-tie",             "time": 72000 },
+    "PIC":        { "icon": "fa fa-user-astronaut",       "time": 360000 },
+    "SIC":        { "icon": "fa fa-people-carry",         "time": 36000 },
+    "DUAL":       { "icon": "fa fa-user-friends",         "time": 90000 },
+    "PICUS":      { "icon": "fa fa-user-shield",          "time": 0 },
+    "CRI":        { "icon": "fa fa-chalkboard-teacher",   "time": 0 },
+    "IRI":        { "icon": "fa fa-compass",              "time": 0 },
+    "FIFI":       { "icon": "fa fa-user-graduate",        "time": 0 },
+    "SFI":        { "icon": "fa fa-keyboard",             "time": 0 },
+    "TRI":        { "icon": "fa fa-plane-circle-check",   "time": 0 },
+    "EXA":        { "icon": "fa fa-user-check",           "time": 0 },
+    "SUPERVISOR": { "icon": "fa fa-user-cog",             "time": 0 }
+  },
+  "rules": {
+    "VFR":          { "icon": "fa fa-sun",        "time": 432000 },
+    "IFR":          { "icon": "fa fa-compass",    "time": 72000 },
+    "SIM":          { "icon": "fa fa-keyboard",   "time": 36000 },
+    "Cross Country":{ "icon": "fa fa-map",        "time": 180000 },
+    "Night":        { "icon": "fa fa-moon",       "time": 18000 },
+    "Multi Engine": { "icon": "fa fa-ellipsis-h", "time": 90000 }
+  }
+}
+```
+
+`other_companies` aggregates time from other companies that share the same email. `previous_time` is `UserDetail.flight_hours * 3600`. All times are in **seconds**. `flight_time = total_time − rules.SIM.time`.
+
+**`PIC` total includes** `FI` time plus all instructor/examiner/PICUS classifications: `PICUS`, `CRI`, `IRI`, `FIFI`, `SFI`, `TRI`, `EXA`. **`FI` total includes** the instructor/examiner classes (`CRI`, `IRI`, `FIFI`, `SFI`, `TRI`, `EXA`) — but _not_ `PICUS`, which is PIC time only. Each class is _also_ returned as its own line so the time worked in each function can be seen separately — these lines break down what is already inside `PIC`/`FI`, they are not additional totals.
+
+`SIC` time is only credited on multipilot aircraft (legacy copic semantics; `copic` was migrated to `sic`). `SUPERVISOR` (`sup`) is reported separately only and is **not** rolled into `PIC`. The former `COPILOT` line is removed.
+
+***
+
+## Pilot Currency
+
+<mark style="color:blue;">`GET`</mark> `/pilots/get_currency/{userId}/{d1}/{d2}/{d3}.json`
+
+Check pilot landings/hours within rolling day windows against the company-configured currency requirements.
+
+#### Path Parameters
+
+| Parameter | Type   | Description                                                                                                   |
+| --------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| userId    | string | User ID. Forced to the authenticated user when null or when caller `user_group_id > 170` (Captain and below). |
+| d1        | number | First window in days (default `30`, max `999`).                                                               |
+| d2        | number | Second window in days (default `90`, max `999`).                                                              |
+| d3        | number | Third window in days (default `null`/disabled).                                                               |
+
+#### Response
+
+```json
+{
+  "result": {
+    "day": {
+      "landings1": 8, "landings2": 21, "landings3": 0,
+      "hours1": 14400, "hours2": 36000, "hours3": 0
+    },
+    "night": {
+      "landings1": 1, "landings2": 4, "landings3": 0,
+      "hours1": 1800, "hours2": 7200, "hours3": 0
+    },
+    "ifr": {
+      "landings1": 2, "landings2": 9, "landings3": 0,
+      "hours1": 3600, "hours2": 18000, "hours3": 0
+    },
+    "requirements": {
+      "hours1": 0, "hours2": 0, "hours3": 0,
+      "landings1": 3, "landings2": 6, "landings3": null
+    }
+  }
+}
+```
+
+Hours are in seconds. `requirements` mirrors `CompanySetting.currency{1,2,3}_{flighttime,landings}`.
+
+***
+
+## Pilot Time Limits
+
+<mark style="color:green;">`POST`</mark> `/pilots/get_time_limits.json`
+
+Daily breakdown plus period/year totals of block flight time and duty time for a given user, anchored to a Unix timestamp.
+
+Two modes: by default the endpoint reports the **calendar month** the timestamp falls in. Pass `days` to get a **rolling window** of the last N days instead — the window ends on the timestamp's own day and can span more than one month (e.g. `days: 28` for the EASA FTL cumulative window).
+
+#### Request Body
+
+| Field     | Type   | Required | Description                                                                                                                  |
+| --------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| timestamp | number | Yes      | Unix timestamp anchoring the period. In month mode it selects the month; in window mode it is the **last day** of the window |
+| user\_id  | number | Yes      | Target user ID                                                                                                               |
+| days      | number | No       | Rolling window length in days, `1`–`366`. Omit for calendar-month mode                                                       |
+
+`timestamp` and `user_id` must be numeric and non-empty; `days`, when present, must be numeric and within range, or the request is rejected with `400 Invalid values`.
+
+> Dates are resolved server-side in **GMT** (`date_default_timezone_set('GMT')`), not the company timezone. A client that wants the window to end on the pilot's own local date should send a timestamp at **midday UTC** of that date, so no company offset can push it onto the neighbouring day.
+
+#### Response — month mode (no `days`)
+
+```json
+{
+  "timestamp": 1714521600,
+  "flight": {
+    "month": { "2026-04-01": 4.5, "2026-04-02": 3.0 },
+    "totals": { "month": "42.50", "year": "210.75" }
+  },
+  "duty": {
+    "month": { "2026-04-01": 6.0, "2026-04-02": 5.5 },
+    "totals": { "month": "78.00", "year": "412.50" }
+  }
+}
+```
+
+#### Response — window mode (`days` sent)
+
+The daily dictionary and its total move from the `month` key to a `period` key, so the two modes can never be mistaken for one another. `from`/`to` give the exact window the server used.
+
+```json
+{
+  "timestamp": 1787009400,
+  "days": 28,
+  "from": "2026-07-21",
+  "to": "2026-08-17",
+  "flight": {
+    "period": { "2026-07-30": 4.5, "2026-08-02": 3.0 },
+    "totals": { "period": "42.50", "year": "210.75" }
+  },
+  "duty": {
+    "period": { "2026-07-30": 6.0 },
+    "totals": { "period": "78.00", "year": "412.50" }
+  }
+}
+```
+
+Flight totals are in **hours** (formatted strings). Duty `totals` come from `PilotDutyRecord::__total`. Daily values are summed by date. `year` is always the calendar year of `timestamp` in both modes.
+
+> The daily dictionary is **sparse** — days with no flight/duty time are absent entirely, not present as `0`. Clients drawing a per-day chart must fill the gaps themselves by walking `from`..`to` (or the month) rather than iterating the dictionary's keys. An empty dictionary is serialised by PHP as `[]`, not `{}`.
+
+> The daily dictionary and the totals come from **different queries**: the daily values are raw `block_time` summed for flights where the user is PIC or SIC, while `totals` runs through `Flight::__getPilotFlightTime`, which applies each flight type's per-seat flight-time rules. The daily values will therefore not always add up to the total — show the total, don't compute it client-side.
+
+***
+
+## Duty and FTL limits
+
+<mark style="color:blue;">`GET`</mark> `/pilots/ftl_status/{user}.json?from=YYYY-MM-DD&to=YYYY-MM-DD`
+
+Day-by-day FTL legality of one crew member against the company's active FTL profile: cumulative duty (7/14/28 days), flight time (28/365 days), FDP against its maximum, rest before each duty, time since the last weekly rest and consecutive duty days. Every day row is evaluated **as of the end of that day**, and keeps the **recorded** share (`a`) apart from the **scheduled, not flown yet** share (`s`). Backs NEO's _Duty & FTL limits_ page and the _Duty & Rest_ widget.
+
+#### Access
+
+| Caller                           | Result                                                                                |
+| -------------------------------- | ------------------------------------------------------------------------------------- |
+| Crew (`user_group_id` ≥ 170)     | Always their **own** figures — `{user}` is ignored. Check `pilot.id` in the response. |
+| Managers (`user_group_id` < 170) | Any user of their own company. Another company's user → `404`.                        |
+
+Plan gate: **Premium / Unlimited** with FTL compliance enabled (`company_ftl_settings.enabled`) and an active FTL profile. Otherwise the response is `200` with `"enabled": false` and no `limits`/`days`.
+
+#### Query parameters
+
+| Param | Default         | Description                                                          |
+| ----- | --------------- | -------------------------------------------------------------------- |
+| from  | today − 60 days | First day reported (`YYYY-MM-DD`, company timezone)                  |
+| to    | today + 30 days | Last day reported. Spans longer than 400 days are cut from the start |
+
+Windows that reach before `from` are filled from the database (up to 365 days earlier for flight time), so the first day's totals are complete.
+
+#### Response
+
+```json
+{
+  "enabled": true,
+  "pilot": { "id": 18149, "name": "James", "surname": "Whitfield" },
+  "today": "2026-10-14",
+  "now": 1792000000,
+  "timezone": "Europe/Madrid",
+  "from": "2026-10-01",
+  "to": "2026-10-31",
+  "profile": { "name": "EASA ORO.FTL", "scheme": "oro_ftl" },
+  "limits": {
+    "duty_7d": 216000, "duty_14d": 396000, "duty_28d": 684000,
+    "flight_28d": 360000, "flight_365d": 3240000,
+    "rest_home_min": 43200, "weekly_rest": 129600, "weekly_rest_max_gap": 604800,
+    "max_consecutive_duty_days": 0, "standby_fraction": 0.25
+  },
+  "days": [
+    {
+      "date": "2026-10-15",
+      "source": "scheduled",
+      "start": 1792044900,
+      "end": 1792088100,
+      "duty":    { "a": 0, "s": 43200 },
+      "standby": { "a": 0, "s": 0 },
+      "flight":  { "a": 0, "s": 27900 },
+      "fdp": { "start": 1792044900, "end": 1792086300, "sec": 41400, "limit": 43200, "sectors": 4, "wocl": false },
+      "rest_before": 135000,
+      "rest_required": 43200,
+      "since_weekly_rest": 0,
+      "consecutive_days": 1,
+      "totals": {
+        "duty_7d":     { "a": 180000, "s": 43200 },
+        "duty_14d":    { "a": 258600, "s": 43200 },
+        "duty_28d":    { "a": 481380, "s": 43200 },
+        "flight_28d":  { "a": 262080, "s": 27900 },
+        "flight_365d": { "a": 970680, "s": 27900 }
+      },
+      "violations": [ { "key": "duty_7d", "projected": true } ]
+    }
+  ]
+}
+```
+
+All durations are **whole seconds**; `start`/`end`/`now` are Unix timestamps. `limits` of `0` mean the profile does not set that limit, and no violation is raised for it.
+
+| Field                           | Description                                                                                                                                                                                                             |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `source`                        | `actual` (duty record / logged flights), `scheduled` (bookings, rostered duty or standby still ahead), `mixed` (both on the same day), or `null` (no activity)                                                          |
+| `duty`                          | Duty of the day: the duty period joined with the record's work times, overlaps counted once                                                                                                                             |
+| `standby`                       | Standby counted towards duty: `standby_fraction` of the standby not covered by duty                                                                                                                                     |
+| `flight`                        | Block time of flights operated as PIC/SIC on non-simulator aircraft                                                                                                                                                     |
+| `fdp`                           | `null` when no flight was operated. Recorded days use the values stored on the duty record; scheduled days are projected from the bookings (commute before duty included); `mixed` days are recomputed with all sectors |
+| `rest_before` / `rest_required` | Gap since the previous duty (looked up to 14 days back) and the rest required after it: the profile minimum, or the preceding duty when longer. `null` when there is no duty this day or no previous duty in 14 days    |
+| `since_weekly_rest`             | Time since the last qualifying weekly rest ended (14-day look-back), `null` without duty                                                                                                                                |
+| `totals.<window>`               | Rolling total of the window **ending on this day**                                                                                                                                                                      |
+| `violations[].key`              | `duty_7d`, `duty_14d`, `duty_28d`, `flight_28d`, `flight_365d`, `fdp`, `rest`, `weekly_rest`, `consecutive_days`                                                                                                        |
+| `violations[].projected`        | `true` when only scheduled activity takes the limit over; `false` when the recorded figures alone already break it                                                                                                      |
+
+Bookings count when their status is `PENDING`, `SCHEDULED`, `DISPATCHED`, `DEPARTED` or `DELAYED`, they have no logged flight yet, they end today or later, and the crew member has not declined the seat. Rostered `DUTY` blocks count from today; `STANDBY` blocks count in the past and the future.
+
+***
+
+## Duty Records
+
+<mark style="color:blue;">`GET`</mark> `/pilots/duty/{days}/{user}.json`
+
+<mark style="color:green;">`POST`</mark> `/pilots/duty/{days}/{user}.json`
+
+#### GET — last N days of duty records
+
+| Parameter | Type   | Description                                                                                                              |
+| --------- | ------ | ------------------------------------------------------------------------------------------------------------------------ |
+| days      | number | Number of trailing days to return, counting back from today (default `3`). No maximum — e.g. pass `31` for a full month. |
+| user      | string | Present in the route but **ignored on GET** — see note below.                                                            |
+
+> **Access control / behaviour notes (GET):**
+>
+> * The record lookup is hardcoded to the authenticated user (`Auth->User('id')`). The `{user}` path parameter is **ignored** on GET, so the endpoint always returns the **caller's own** duty records regardless of the value passed — cross-user reads are not supported here. For another pilot's totals use [Pilot Time Limits](pilots.md#pilot-time-limits) (`get_time_limits`) or the manager duty endpoints.
+> * Records are built one day at a time, with **one database query per day** (N+1). Large `days` ranges are proportionally slower; prefer `get_time_limits` when you only need monthly/yearly totals.
+> * Days with no saved record are returned with empty-string time fields.
+
+```json
+{
+  "duty": [
+    {
+      "date": "2026-05-03",
+      "label": "03 May",
+      "id": "910",
+      "in_duty": "08:00:00",
+      "out_duty": "16:30:00",
+      "in_work": "08:30:00",
+      "out_work": "16:00:00"
+    }
+  ]
+}
+```
+
+#### POST — bulk save duty records
+
+Body is a numerically-indexed array of `PilotDutyRecord` objects (flat, no model alias). Each record needs `date`; `in_duty`/`out_duty`/`in_work`/`out_work`/`in_flight`/`out_flight` are optional time fields (`HH:MM` or `HH:MM:SS`). `user_id` and `company_id` are auto-filled from the session when omitted. Existing row for `(company, user, date)` is replaced.
+
+Each record is validated and saved independently in a loop; an invalid record does not block the rest.
+
+```json
+{
+  "save": [true, true, true, false, true],
+  "errors": {
+    "3": {
+      "in_work": ["Must be a valid time"],
+      "out_work": ["Must be a valid time"]
+    }
+  }
+}
+```
+
+* `save[i]` — `true` if record `i` was persisted, `false` if it failed validation.
+* `errors[i]` — per-field validation errors for failed records.
+
+Valid time strings only. Literal `"null"` is rejected; send an empty string or omit the field to clear/leave unchanged. Empty string overwrites the existing column with `NULL`.
+
+***
+
+## Certificates
+
+### Certificate Types
+
+<mark style="color:blue;">`GET`</mark> `/pilots/certificate_types.json`
+
+Returns the canonical certificate type catalogue used across the app.
+
+#### Response
+
+```json
+{
+  "certificateTypes": {
+    "licence": {
+      "type": "licence", "validity": null, "name": "Licence", "abbr": "LIC",
+      "icon": "fa fa-id-card",
+      "requires_expiration": false, "requires_issue": true,
+      "mandatory": true, "order": 10, "group_role": "pilot"
+    },
+    "medical_class_1": {
+      "type": "medical", "validity": 12, "name": "Medical Class 1", "abbr": "M1",
+      "icon": "fa fa-heartbeat",
+      "requires_expiration": true, "requires_issue": true,
+      "mandatory": true, "order": 30, "group_role": "pilot"
+    }
+  }
+}
+```
+
+| Field                | Type           | Description                                                                                                                                                                                                                                         |
+| -------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type                 | string         | Category — one of `licence`, `rating`, `medical`, `training`, `document`, `language` (the `language_proficiency` type), `course` (`mcc`, `auprt`), `instructor` (`tri`, `cri`, `iri`, `sfi`, `mcci`), `examiner` (`tre`, `fe`, `cre`, `ire`, `sfe`) |
+| validity             | number \| null | Default validity window in **months**. `null` = no expiry.                                                                                                                                                                                          |
+| name                 | string         | Display name                                                                                                                                                                                                                                        |
+| abbr                 | string         | Short code for compact tables                                                                                                                                                                                                                       |
+| icon                 | string         | Font Awesome class                                                                                                                                                                                                                                  |
+| requires\_expiration | boolean        | Whether an expiration date should be required at input                                                                                                                                                                                              |
+| requires\_issue      | boolean        | Whether an issue date should be required at input                                                                                                                                                                                                   |
+| mandatory            | boolean        | Counts toward the `valid` certificate result                                                                                                                                                                                                        |
+| order                | number         | Display sort order                                                                                                                                                                                                                                  |
+| group\_role          | string         | `pilot` \| `all` — restricts which user roles see this type                                                                                                                                                                                         |
+| aircraft\_models     | boolean        | `true` for the types that name the aircraft models they cover (`type_rating`, `tri`, `tre`). See [Aircraft models](pilots.md#aircraft-models).                                                                                                      |
+
+### List Certificates
+
+<mark style="color:blue;">`GET`</mark> `/pilots/certificates/{userId}.json`
+
+Retrieve all certificates for a pilot plus the validity summary. JSON-only.
+
+{% hint style="info" %}
+**Callers with `user_group_id` 250 (External Auditor)** get the full certificate list, but each `Uploads` entry has `url` (and `thumb_url` for photos) omitted — the file itself cannot be fetched, only its metadata (filename, mime, size). This applies to this endpoint and to `GET /uploads/index/UserCertificate/{certId}.json`.
+{% endhint %}
+
+`PilotLimitation` (the medical limitations of each certificate) is present only when the caller is the pilot themselves or has `user_group_id <= 170` (Flight Instructor and above, the people who can edit the pilot's certificates). Other colleagues get the list without it.
+
+`AircraftModel` (the aircraft models a Type Rating, TRI or TRE covers) is present on every certificate, for everyone who can read the list. It is `[]` for the other types. See [Aircraft models](pilots.md#aircraft-models).
+
+#### Response
+
+```json
+{
+  "UserCertificate": [
+    {
+      "id": "300",
+      "user_id": "123",
+      "type": "medical_class_1",
+      "name": "Class 1 Medical",
+      "issue": "2024-06-01",
+      "expiration": "2025-06-01",
+      "Uploads": [
+        { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678", "url": "https://cdn.../signed..." }
+      ],
+      "PilotLimitation": [
+        { "id": "8c1a…", "code": "VML", "detail": null },
+        { "id": "f575…", "code": "SSL", "detail": "Not valid for aerobatic flight" }
+      ],
+      "AircraftModel": []
+    },
+    {
+      "id": "301",
+      "user_id": "123",
+      "type": "type_rating",
+      "name": "A320 family",
+      "issue": "2026-03-01",
+      "expiration": "2027-03-01",
+      "Uploads": [],
+      "AircraftModel": [
+        { "id": "571", "name": "A-319", "icao": "A319", "manufacturer": "AIRBUS" },
+        { "id": "573", "name": "A-320", "icao": "A320", "manufacturer": "AIRBUS" },
+        { "id": "574", "name": "A-321", "icao": "A321", "manufacturer": "AIRBUS" }
+      ]
+    }
+  ],
+  "valid": {
+    "result": true,
+    "licence": true,
+    "rating": true,
+    "medical": true,
+    "training": true,
+    "sep_land_rating": null,
+    "sep_sea_rating": null,
+    "mep_rating": null,
+    "set_rating": null,
+    "type_rating": null,
+    "night_rating": null,
+    "ir_rating": null,
+    "medical_class_1": null,
+    "medical_class_2": null,
+    "medical_class_3": null,
+    "limit": 1735689600
+  }
+}
+```
+
+#### Validity Check
+
+`valid` is produced by `UserCertificate::checkValidLicence($userGroupId, $UserCertificate)`:
+
+| Field    | Type            | Description                                                                                                                                    |
+| -------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| result   | boolean         | Overall validity. `true` iff licence + rating + medical + training are all valid (or, for ground roles, just the relevant subset — see below). |
+| licence  | boolean \| null | At least one valid licence cert.                                                                                                               |
+| rating   | boolean \| null | All rating certs valid (any single invalid rating fails).                                                                                      |
+| medical  | boolean \| null | At least one valid medical cert.                                                                                                               |
+| training | boolean \| null | All training certs valid.                                                                                                                      |
+| limit    | number \| null  | Earliest expiry timestamp (epoch seconds) across all certs with an expiration.                                                                 |
+
+Special cases:
+
+* `user_group_id == 200` (Student Pilot): `result` only requires `medical`.
+* `user_group_id == 300` (Mechanic — a non-flying role): `result` only requires `licence`.
+
+### View Certificate
+
+<mark style="color:blue;">`GET`</mark> `/pilots/certificate/{certId}.json`
+
+Retrieve a single certificate with up to 5 attached uploads. The certificate must belong to a user of the caller's company (`404` otherwise). `PilotLimitation` (its medical limitations) is included only for the certificate's owner and callers with `user_group_id <= 170`. `AircraftModel` (the models a Type Rating, TRI or TRE covers) is always included, `[]` for other types.
+
+```json
+{
+  "cert": {
+    "UserCertificate": { "id": "300", "name": "Class 1 Medical", "...": "..." },
+    "Uploads": [
+      { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678" }
+    ],
+    "PilotLimitation": [ { "id": "8c1a…", "code": "VML", "detail": null } ],
+    "AircraftModel": []
+  }
+}
+```
+
+### Aircraft models
+
+Type ratings, and the TRI and TRE certificates built on them, apply to specific aircraft types. A certificate of type `type_rating`, `tri` or `tre` (the types flagged `aircraft_models: true` in [Certificate Types](pilots.md#certificate-types)) stores the aircraft models it covers: one or more ids from the global aircraft model catalogue (`GET /aircraft/manufacturers.json`, then `GET /aircraft/model/{manufacturerId}.json`). One certificate can cover several models, for example an A320 family rating covering the A319, A320 and A321.
+
+Each entry of `AircraftModel` is:
+
+| Field        | Type   | Description                                                                           |
+| ------------ | ------ | ------------------------------------------------------------------------------------- |
+| id           | string | Aircraft model id (`aircraft_models.id`, the same id as `Aircraft.aircraft_model_id`) |
+| name         | string | Model name                                                                            |
+| icao         | string | ICAO type designator                                                                  |
+| manufacturer | string | Manufacturer name                                                                     |
+
+Entries are sorted by manufacturer, then model name. The models are written with [Add / Edit Certificate](pilots.md#add--edit-certificate) and removed with the certificate.
+
+### Medical Limitations (dispatch)
+
+<mark style="color:blue;">`GET`</mark> `/pilots/limitations.json?schedule_id={id}&date=2026-10-18` <mark style="color:blue;">`GET`</mark> `/pilots/limitations.json?flight_id={id}&date=2026-10-18`
+
+The medical limitations of the crew (PIC, SIC, supervisor) of one booking or flight on `date` (`Y-m-d`; defaults to today), meaning those stored on a medical-type certificate that has not expired on that date. The crew is read from the booking or flight, never from the request. Used by the dispatch box. Read-only.
+
+```json
+{
+  "limitations": {
+    "12": [
+      { "id": "8c1a…", "code": "OPL", "detail": null,
+        "certificate": { "id": "923a…", "type": "medical_class_2", "name": "Class 2 medical", "expiration": "2028-10-02" } }
+    ]
+  },
+  "pilots": { "12": "Daniel Ortega" },
+  "crew": { "pic": "12", "sic": null, "supervisor": null },
+  "date": "2026-10-18"
+}
+```
+
+* `RXO` and `SIC` (follow-up examinations) are left out. Crew members with no limitations are absent; `limitations` and `pilots` are `{}` when there is nothing.
+* **Access:** the same rule as dispatching. The caller must be on that crew, or have `user_group_id <= 150` (can dispatch any flight). Anyone else gets `403`. The booking or flight must belong to the caller's company (`404` otherwise). Sending neither id gives `400`.
+
+**Limitation codes** (EASA AMC2 MED.B.001), stored one row per code per certificate:
+
+| Code | Limitation                                                                     |
+| ---- | ------------------------------------------------------------------------------ |
+| TML  | Limited period of validity of the medical certificate                          |
+| VDL  | Valid only with correction for defective distant vision                        |
+| VML  | Valid only with correction for defective distant, intermediate and near vision |
+| VNL  | Valid only with correction for defective near vision                           |
+| CCL  | Correction by means of contact lenses                                          |
+| VCL  | Valid by day only                                                              |
+| RXO  | Specialist ophthalmological examination(s)                                     |
+| SIC  | Specific medical examination(s)                                                |
+| HAL  | Valid only when hearing aids are worn                                          |
+| APL  | Valid only with approved prosthesis                                            |
+| AHL  | Valid only with approved hand controls                                         |
+| OML  | Valid only as, or with, a qualified co-pilot                                   |
+| OCL  | Valid only as a qualified co-pilot                                             |
+| OSL  | Valid only with a safety pilot and in aircraft with dual controls              |
+| OPL  | Valid only without passengers                                                  |
+| ORL  | Valid only with a safety pilot if passengers are carried                       |
+| OAL  | Restricted to demonstrated aircraft type                                       |
+| SSL  | Special restriction(s) as specified                                            |
+
+### Read Certificate Document
+
+<mark style="color:green;">`POST`</mark> `/pilots/read_certificate.json`
+
+Reads an uploaded certificate (PDF or photo) and suggests what to put in the [Add Certificate](pilots.md#add-certificate) form. **Nothing is saved**: the file is not stored and no certificate is created. Send it with `multipart/form-data`.
+
+#### Request Body
+
+```
+data[file]=@/path/to/medical.pdf
+data[user_id]=123            (optional, defaults to the caller)
+data[type]=medical_class_2   (optional: the type already chosen; for a licence listing several ratings, the matching one is read)
+```
+
+Accepted: `application/pdf`, `image/jpeg`, `image/png`, `image/webp`, up to 10 MB. The type is detected from the file content, not from the name or the client's MIME type.
+
+#### Response
+
+```json
+{
+  "reading": {
+    "type": "medical_class_2",
+    "name": "Class 2 medical",
+    "issue": "2026-09-02",
+    "expiration": "2031-09-02",
+    "holder": "ORTEGA, Daniel",
+    "specimen": false,
+    "confidence": 0.92,
+    "holder_matches": true,
+    "limitations": [ { "code": "VML", "detail": null } ],
+    "identity": { "document_number": null, "nationality": null, "dob": "1978-05-12" },
+    "ratings": [],
+    "model": "gpt-6-luna"
+  },
+  "reason": null
+}
+```
+
+On a licence, `ratings` lists what it endorses, each one a certificate the form can create or update:
+
+```json
+"ratings": [
+  { "type": "sep_land_rating", "name": "SEP(land)", "issue": "2026-11-20", "expiration": "2028-11-30" },
+  { "type": "language_proficiency", "name": "English — Level 4", "issue": "2025-03-15", "expiration": "2029-03-15" }
+]
+```
+
+| Field                      | Description                                                                                                                                                                                                                        |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| reading.type               | A certificate type key, or `null` when unsure (below 0.6)                                                                                                                                                                          |
+| reading.issue / expiration | `Y-m-d`, or `null` when not printed or not a valid date. An expiry before the issue date is dropped                                                                                                                                |
+| reading.specimen           | The document is marked as a specimen, sample, void or not valid                                                                                                                                                                    |
+| reading.holder\_matches    | Whether the name on the document is the pilot's (`null` when either is unknown)                                                                                                                                                    |
+| reading.limitations        | On a medical: its limitation codes (see [Medical Limitations](pilots.md#medical-limitations-dispatch)); `[]` otherwise                                                                                                             |
+| reading.identity           | `document_number` (passport/ID number, or the licence number on a licence), `nationality` (ISO 3166-1 alpha-3) and `dob` (`Y-m-d`), each `null` when not printed or implausible. For [Update Identity](pilots.md#update-identity)  |
+| reading.ratings            | On a licence: up to 20 `{type, name, issue, expiration}`, known types only (never `licence`, `id`, `passport`, `logbook`, `other`), each type and name once                                                                        |
+| reason                     | When `reading` is `null`: `type` (file type not accepted), `size` (empty or over 10 MB), `disabled` (feature not enabled on the installation), `unavailable` (the AI provider did not answer, e.g. an expired key) or `unreadable` |
+
+#### Authorization
+
+Same audience as [Add Certificate](pilots.md#add-certificate): anyone for their own profile; Flight Instructors and above (`user_group_id <= 170`) for any user of their company. Others get `403`, and a user outside the caller's company `404`. One read every 3 seconds per session (`400` otherwise).
+
+The document is sent to the installation's AI provider (OpenCode Zen, an OpenAI model) with `store: false`. Setting `documentModel` to `''` in `app/Config/ai.php` turns the endpoint off (`reason: "disabled"`).
+
+### Update Identity
+
+<mark style="color:green;">`POST`</mark> `/pilots/update_identity.json`
+
+Writes the identity fields the GenDec crew table prints, usually after a passport, ID or licence was read. Only the fields sent are written.
+
+```json
+{ "user_id": 123, "passport": "XDA482913", "nationality": "ESP", "dob": "1978-05-12", "licence_number": "SKY.FCL.0042" }
+```
+
+```json
+{ "result": true, "UserDetail": { "passport": "XDA482913", "nationality": "ESP", "dob": "1978-05-12", "licence_number": "SKY.FCL.0042" } }
+```
+
+* **Access:**
+  * On your own profile: `nationality`, `dob` and `licence_number`, plus `passport` for `user_group_id <= 150`.
+  * On another user of your company: `user_group_id <= 150` only.
+  * Sending a field you may not write is a `403` (never silently dropped). A user outside your company gives `404`.
+* **Validation:** `dob` must be a real past `Y-m-d` from 1900 on (empty clears it). `passport` and `licence_number` take up to 64 characters, `nationality` up to 128. Anything else is a `400`.
+
+### Read Logbook Page
+
+<mark style="color:green;">`POST`</mark> `/pilots/read_logbook.json` (multipart)
+
+```
+data[file]=@/path/to/logbook-page.pdf
+data[user_id]=123            (optional, defaults to the caller)
+```
+
+Reads the running totals at the bottom of a logbook page, to suggest the profile's previous flight time (`UserDetail.flight_hours`). **Nothing is saved.**
+
+```json
+{ "reading": { "total": 1485300, "pic": 1144800, "night": 74700, "ifr": 154800, "last_date": "2026-09-27", "holder": "ORTEGA, Daniel", "confidence": 0.9 }, "reason": null }
+```
+
+* Times are whole seconds. `total` is the grand total including previous pages. A column total above `total` is dropped.
+* `reason` takes the same values as in [Read Certificate Document](pilots.md#read-certificate-document).
+* **Access:** `user_group_id <= 150` (the only users who can write previous flight time), for themselves or a user of their company. Others get `403`.
+
+### Add / Edit Certificate
+
+<mark style="color:green;">`POST`</mark> `/pilots/add_certificate.json`
+
+Create a new certificate, or update an existing one by sending its `id`. Uses `multipart/form-data` for the optional file attachment.
+
+#### Request Body
+
+```
+UserCertificate[user_id]=123
+UserCertificate[type]=medical_class_1
+UserCertificate[name]=Class 1 Medical
+UserCertificate[issue]=2024-06-01
+UserCertificate[expiration]=2025-06-01
+UserCertificate[photo]=@/path/to/scan.pdf
+UserCertificate[limitations]=[{"code":"VML","detail":null},{"code":"SSL","detail":"Not valid for aerobatic flight"}]
+UserCertificate[aircraft_model_ids]=[571,573,574]
+```
+
+* **Limitations** (`UserCertificate[limitations]`, a JSON array): the medical's limitation codes, which replace the stored set for this certificate. Unknown codes and duplicates are dropped, and `detail` is cut to 255 characters. When the field is **omitted**, the stored limitations are left as they are. They are **always cleared** when the certificate type is not a medical. Rows that stay keep their `id`. The response's `result.PilotLimitation` holds the stored set.
+* **Aircraft models** (`UserCertificate[aircraft_model_ids]`, a JSON array of [aircraft model](pilots.md#aircraft-models) ids; a comma list or `aircraft_model_ids[]` form fields are also accepted): the models a `type_rating`, `tri` or `tre` covers. They replace the stored set for this certificate. Ids that are not in the aircraft model catalogue and duplicates are dropped, and at most 50 models are kept. When the field is **omitted**, the stored models are left as they are. They are **always cleared** when the certificate type is anything else. Models that stay are not rewritten. The response's `result.AircraftModel` holds the stored set.
+* **Ownership.** On an update (`id` sent) the owner is always the one stored on the certificate: the posted `user_id` is ignored, so a certificate can never be moved between users. On a create, callers with `user_group_id > 170` (Captain, Pilot, Student Pilot, Cabin Crew, Specialist, Auditor, Mechanic) always file on their own profile — the posted `user_id` is replaced with the authenticated user.
+* Managers, Chief Pilots and Flight Instructors (`user_group_id <= 170` — Flight Instructor and above) can file and edit certificates for any user in their own company. Everyone else gets `403` when editing a certificate that is not theirs, and `404` when the certificate belongs to another company.
+* `issue` and `expiration` must parse as `Y-m-d` or they are silently dropped. `issue` may be left empty for document types that do not require one.
+* `name` (the free-text description) is optional — `type` already identifies the document. When omitted it stores as an empty string, and the apps show the certificate type instead.
+* If `photo` is present and uploads cleanly, an `Upload` record is created (`type` is `photo`/`video`/`document` based on MIME) and the file is sent to S3.
+
+#### Response
+
+```json
+{
+  "result": { "UserCertificate": { "id": "301", "...": "..." }, "Upload": { "id": "502" } },
+  "errors": []
+}
+```
+
+`errors` is populated on validation failure or upload errors.
+
+### Delete Certificate
+
+<mark style="color:green;">`POST`</mark> `/pilots/delete_certificate/{id}.json`
+
+Delete a certificate. Callers with `user_group_id > 150` (Flight Instructor and below) can only delete their own certificates; managers can delete any certificate within their company.
+
+```json
+{ "result": true }
+```
+
+Returns `404` if the certificate is not found in the caller's scope.
+
+### Attributions
+
+<mark style="color:blue;">`GET`</mark> `/pilots/attributions/{userId}.json`
+
+Returns the aircraft and flight types attributed to a pilot. `{userId}` is optional; when omitted, the authenticated user is used. Callers with `user_group_id > 170` (Captain and below) can only query themselves.
+
+For each category, the response is an `id => label` map of the pilot's explicit attributions. If the pilot has no attribution set for a given category, the full active company list for that category is returned instead.
+
+```json
+{
+  "attributions": {
+    "aircraft": {
+      "12": "EC-ABC",
+      "15": "EC-XYZ"
+    },
+    "flight_types": {
+      "3": "Private",
+      "7": "Training"
+    }
+  }
+}
+```
+
+Returns `404` if the pilot is not in the caller's company and `403` when a non-manager queries another user.
+
+***
+
+## Manager-only Endpoints
+
+### Save Pilot Notes
+
+<mark style="color:green;">`POST`</mark> `/manager/pilots/notes.json`
+
+Persist a private (manager-only) note onto a pilot's `UserDetail.notes`. Requires `user_group_id <= 170` (Flight Instructor and above).
+
+#### Request Body
+
+| Field | Type   | Required | Description   |
+| ----- | ------ | -------- | ------------- |
+| pilot | string | Yes      | Pilot user ID |
+| notes | string | Yes      | Note body     |
+
+```json
+{ "result": true }
+```
+
+### Delete Pilot
+
+<mark style="color:green;">`POST`</mark> `/manager/pilots/delete/{id}.json`
+
+Soft-delete a pilot. The caller cannot delete themselves.
+
+```json
+{ "result": true }
+```
+
+### Recalculate Duties
+
+<mark style="color:blue;">`GET`</mark> `/manager/pilots/recalculate_duties/{date}.json`
+
+Re-runs `PilotDutyRecord::autoCalc` for every PIC/SIC/Supervisor on flights logged on `{date}` (format `YYYY-MM-DD`). Existing duty rows for that date are cleared first. Up to 100 flights are processed per call.
+
+```json
+{
+  "date": "2026-05-03",
+  "pilots": [/* autoCalc results */]
+}
+```
+
+### FI Assignments Tree
+
+<mark style="color:blue;">`GET`</mark> `/manager/pilots/fi_assignments.json`
+
+Returns instructor → supervised-pilot trees for the company in a tree-view friendly shape (icon, color, href, text, nodes). Branches with more than 6 supervised pilots are flagged with `backColor = "#ff9900"`.
+
+For caller `user_group_id <= 150` (Chief Pilot and above), also returns `unAssignedStudents` — students whose `supervisor_id` is empty or points to an inactive instructor.
+
+```json
+{
+  "pilots": [
+    {
+      "icon": "fa fa-user-graduate",
+      "text": "Maria Garcia",
+      "backColor": "#fff",
+      "tags": [3],
+      "nodes": [
+        { "icon": "fa fa-user-graduate", "color": "#339966", "href": "/pilots/view/200", "text": "Alex Rivera (Student)", "selectable": false }
+      ],
+      "selectable": false
+    }
+  ],
+  "unAssignedStudents": [
+    { "User": { "id": "201" }, "UserDetail": { "name": "Sam", "surname": "Lee" } }
+  ]
+}
+```
+
+### Audit
+
+<mark style="color:blue;">`GET`</mark> `/manager/pilots/audit/from:{from}/to:{to}/group:{group}/pilot_group:{pilot_group}/pilot:{pilot}/all_certs:{all_certs}.json`
+
+Paginated audit view of pilots and instructors with their latest flight, training status, certificates, and supervisor.
+
+#### Path Parameters
+
+| Parameter    | Description                                                                          |
+| ------------ | ------------------------------------------------------------------------------------ |
+| from         | Lower bound on `latest_flight_date` (`YYYY-MM-DD` or epoch seconds)                  |
+| to           | Upper bound on `latest_flight_date`                                                  |
+| group        | `user_group_id` (or `150` for `<= 150`, i.e. Chief Pilot and above)                  |
+| pilot        | Truthy to restrict to pilots only                                                    |
+| pilot\_group | Pilot group ID                                                                       |
+| all\_certs   | If absent or false, certificates are filtered to `licence`, `rating`, `medical` only |
+
+JSON or AJAX requests return:
+
+```json
+{
+  "pilots": [/* paginated User rows with UserDetail, UserGroup, PilotGroup, Supervisor, UserCertificate, MyFlight, Training */],
+  "filters": { "from": "", "to": "", "groups": [], "user_types": [] }
+}
+```
+
+The HTML version of this endpoint also returns `userGroups` and `pilotGroups` for filter dropdowns.
+
+### Monthly Duties Report
+
+<mark style="color:blue;">`GET`</mark> `/manager/pilots/duties/month:{month}/year:{year}/group:{group}/data:{data}.json`
+
+Per-pilot daily breakdown of duty / FDP / work time for a single month. **Premium and unlimited plans only**; lower plans return the upgrade view.
+
+| Parameter | Description                                                                                                                        |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| month     | 1–12 (default current month)                                                                                                       |
+| year      | YYYY (default current year)                                                                                                        |
+| group     | `user_group_id` (`150` for `<= 150`, i.e. Chief Pilot and above)                                                                   |
+| data      | `duty` (default), `flight` (flight period: first off-blocks → last on-blocks), `fdp` (FTL FDP: report → last on-blocks), or `work` |
+
+```json
+{
+  "pilots": [
+    {
+      "User": { "id": "123", "email": "..." },
+      "UserDetail": { "name": "John", "surname": "Doe" },
+      "PilotDutyRecord": [
+        { "date": "2026-05-01", "start": "08:00:00", "end": "16:00:00", "total": 28800 }
+      ],
+      "Flight": { "block_time": 54000 }
+    }
+  ],
+  "type": "Duty",
+  "ftl_enabled": true
+}
+```
+
+`Flight.block_time` is total block time in seconds for the selected month, computed via `Flight->__getPilotFlightTime()` (respects company `FlightType` PIC/SIC rules).
+
+`/manager/pilots/duties/{export}.json` with a truthy `export` segment renders the XLS view instead.
+
+### Manager — Pilot Duty PDF
+
+<mark style="color:blue;">`GET`</mark> `/manager/pilots/duty/{user}/{year}/{month}`
+
+Renders a duty/flight report as a PDF (not JSON). Listed here for completeness.
+
+***
+
+## Notes on Removed Endpoints
+
+`POST /pilots/reminder.json` (resend activation email) was **removed**. Use the standard email-confirmation flow triggered automatically by `create` / `edit` when `send_email = true` and the email changes or the account is newly activated.

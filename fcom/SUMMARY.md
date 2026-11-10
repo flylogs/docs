@@ -1,0 +1,198 @@
+# Table of contents
+
+* [Flylogs FCOM](README.md)
+
+## What's new
+
+* [Latest updates](whats-new/whats-new/README.md)
+  * [Auto Pilot criteria and supervisors](whats-new/whats-new/auto-pilot-criteria.md)
+  * [Fuel used, worked out from the gauge](whats-new/whats-new/fuel-used-from-the-gauge.md)
+  * [Grounded aircraft and defect reporting](whats-new/whats-new/grounded-aircraft-and-defect-reporting.md)
+  * [Flight legs](whats-new/whats-new/flight-legs.md)
+  * [Suggestions while you work](whats-new/whats-new/flylogs-assistant.md)
+  * [Sunrise and sunset operating hours](whats-new/whats-new/operating-hours-sunrise-sunset.md)
+  * [Sign in with a passkey](whats-new/whats-new/passkeys-and-two-factor.md)
+  * [Multi-leg and repeating bookings](whats-new/whats-new/multi-leg-and-repeating-bookings.md)
+  * [Push-first notifications](whats-new/whats-new/push-first-notifications.md)
+  * [Class work and homework](whats-new/whats-new/class-work-and-homework.md)
+  * [Course revisions and approvals](whats-new/whats-new/course-revisions-and-approvals.md)
+  * [Exam sitting entry requirements](whats-new/whats-new/exam-sitting-entry-requirements.md)
+  * [Aircraft managers](whats-new/whats-new/aircraft-managers.md)
+  * [Hobbs and tach readings](whats-new/whats-new/airframe-meter-readings.md)
+  * [Fuel and excise tracking](whats-new/whats-new/fuel-and-excise-tracking.md)
+  * [Track your support reports](whats-new/whats-new/support-report-tracking.md)
+  * [Mass & Balance loadsheets](whats-new/whats-new/mass-and-balance-loadsheets.md)
+  * [Flight remark findings](whats-new/whats-new/flight-remark-findings.md)
+  * [Draft a mission comment](whats-new/whats-new/draft-mission-comment.md)
+  * [Student attendance signatures](whats-new/whats-new/student-attendance-signatures.md)
+  * [Certificate preview and withdrawal](whats-new/whats-new/certificate-preview-and-withdrawal.md)
+  * [Aircraft reserved for selected pilots](whats-new/whats-new/aircraft-reserved-for-selected-pilots.md)
+  * [Next maintenance forecast](whats-new/whats-new/next-maintenance-forecast.md)
+  * [Flight type aircraft restriction](whats-new/whats-new/flight-type-aircraft-restriction.md)
+  * [Missed-class follow-up](whats-new/whats-new/missed-class-follow-up.md)
+  * [Overnight duty time fix](whats-new/whats-new/duty-time-overnight-calculation-fix.md)
+  * [Flight Risk Assessment (FRAT)](whats-new/whats-new/flight-risk-assessment-frat.md)
+
+## First Steps
+
+* [Company Sign Up](first-steps/company-sign-up.md)
+* [User Login](first-steps/how-to-login.md)
+* [Getting Started - Pilots](first-steps/getting-started-pilots.md)
+* [FAQ pilots and students](first-steps/faq-pilots-and-students.md)
+* [FAQ company managers](first-steps/faq-company-managers.md)
+* [Account security](first-steps/account-security.md)
+* [Notifications](first-steps/notifications.md)
+* [Quick start guide](first-steps/quick-start-guide.md)
+* [Usage requirements and tips](first-steps/usage-tips.md)
+* [Contacting Support](first-steps/contacting-support.md)
+
+## Company Management
+
+* [Your Flylogs dashboard](company-management/your-flylogs-dashboard.md)
+* [Company Settings](company-management/company-settings/README.md)
+  * [General](company-management/company-settings/general.md)
+  * [Flights](company-management/company-settings/flights.md)
+  * [Schedule](company-management/company-settings/schedule.md)
+  * [Pilots](company-management/company-settings/pilots.md)
+  * [Duty Limits](company-management/company-settings/duty-limits.md)
+  * [Billing](company-management/company-settings/billing.md)
+  * [Integrations](company-management/company-settings/integrations.md)
+  * [Cloud storage](company-management/company-settings/cloud-storage.md)
+  * [API](company-management/company-settings/api.md)
+* [Billing System](company-management/billing-system.md)
+* [Base management](company-management/base-management.md)
+* [Custom forms](company-management/custom-forms.md)
+* [Account limitations](company-management/account-limitations.md)
+* [Account types](company-management/account-types.md)
+
+## Crew management
+
+* [Pilot accounts](crew-management/pilot-accounts.md)
+* [Flight Instructor & Chief Pilot](crew-management/flight-instructor-and-chief-pilot.md)
+* [Create Pilots or Students](crew-management/create-pilots-or-students.md)
+* [Messaging System](crew-management/messaging-system.md)
+* [Base management](crew-management/base-management.md)
+* [Pilot currency checks](crew-management/pilot-currency-checks.md)
+* [Pilot Attributions](crew-management/pilot-attributions.md)
+* [Duty and Flight time storage](crew-management/duty-and-flight-time-storage.md)
+* [Document & Certificates](crew-management/document-and-certificates.md)
+* [Document & Certificate Requirements](crew-management/document-and-certificate-requirements.md)
+
+## Aircraft
+
+* [Aircraft management](aircraft/aircraft-basics.md)
+* [Aircraft manager](aircraft/aircraft-manager.md)
+* [Type rating requirement](aircraft/type-rating-requirement.md)
+* [Create your aircraft](aircraft/create-your-aircraft.md)
+* [ADSB surveillance](aircraft/adsb-surveillance.md)
+* [Aircraft logbook](aircraft/aircraft-logbook.md)
+* [Mass & Balance](aircraft/mass-and-balance.md)
+* [Aircraft maintenance](aircraft/aircraft-maintenance/README.md)
+  * [Aircraft reports](aircraft/aircraft-maintenance/aircraft-reports.md)
+  * [MEL / CDL items](aircraft/aircraft-maintenance/mel-cdl-items.md)
+  * [Workorders](aircraft/aircraft-maintenance/workorders.md)
+  * [Maintenance plans](aircraft/aircraft-maintenance/maintenance-plans.md)
+  * [Inventory](aircraft/aircraft-maintenance/inventory.md)
+  * [Next maintenance forecast](aircraft/aircraft-maintenance/next-maintenance-forecast.md)
+* [Scheduled maintenance windows](aircraft/schedule-maintenance-windows.md)
+
+## Flights
+
+* [Flight records](flights/flight-records.md)
+* [Flight types](flights/flight-types.md)
+* [Create a flight](flights/create-a-flight.md)
+* [Draft a mission comment](flights/draft-mission-comment.md)
+* [Offline flight data](flights/offline-flight-data.md)
+* [Flight legs](flights/flight-legs.md)
+* [Flight audit and reporting](flights/flight-audit-and-reporting.md)
+* [Audit trails](flights/audit-trails.md)
+
+## Billing
+
+* [Introduction](billing/introduction.md)
+* [Billing setup](billing/billing-setup.md)
+* [Billing Rates](billing/billing-rates.md)
+* [Prepaid packages](billing/prepaid-packages.md)
+* [Online payments](billing/online-payments.md)
+* [Fuel & Excise](billing/fuel-and-excise.md)
+
+## Schedules
+
+* [Flight Schedule Records](schedules/flight-schedule-records.md)
+* [Schedule Edit page (Schedule Manager)](schedules/schedule-edit-page.md)
+* [Auto Pilot](schedules/auto-pilot.md)
+* [Schedule Review page](schedules/schedule-review-page.md)
+* [Publishing multiple schedule records](schedules/publishing-multiple-schedule-records.md)
+* [Schedule Views](schedules/schedule-views.md)
+* [Schedules for Pilots & Flight Instructors](schedules/schedules-for-pilots-and-flight-instructors.md)
+* [Pilot availability records](schedules/pilot-availability-records.md)
+* [Schedule notifications](schedules/schedule-notifications.md)
+* [Schedule cancellations](schedules/schedule-cancellations.md)
+* [Self scheduling](schedules/self-scheduling.md)
+* [Flight Dispatch Function](schedules/flight-dispatch-function.md)
+* [Flight Risk Assessment (FRAT)](schedules/flight-risk-assessment-frat.md)
+* [FTL Compliance & Forecast](schedules/ftl-compliance-forecast.md)
+* [Duty & FTL limits](schedules/duty-and-ftl-limits.md)
+
+## Training courses
+
+* [Training basics](training-courses/training-basics.md)
+* [Create a training](training-courses/create-a-training.md)
+* [Edit a training](training-courses/edit-a-training.md)
+* [Open trainings](training-courses/open-trainings.md)
+* [Exam sittings](training-courses/exam-sittings.md)
+* [Question bank and recovery exams](training-courses/question-bank-and-recovery-exams.md)
+* [Subject Bank (linked subjects)](training-courses/subject-bank.md)
+* [Course pathways (LAPL to PPL)](training-courses/course-pathways.md)
+* [Flight Training](training-courses/flight-training.md)
+* [Stage Checks](training-courses/stage-checks.md)
+* [Mission Authorizations](training-courses/mission-authorizations.md)
+* [Course Approvals](training-courses/course-approvals.md)
+* [Schedule a class or an exam](training-courses/schedule-a-class-or-an-exam.md)
+* [Student evaluation](training-courses/student-evaluation.md)
+* [Competency-Based Evaluation (KSA)](training-courses/competency-based-evaluation-ksa.md)
+* [Teacher tools](training-courses/teacher-tools.md)
+* [Missed classes and class work](training-courses/missed-classes-and-class-work.md)
+* [Student management](training-courses/student-management.md)
+
+## Documents
+
+* [Document Library](documents/document-library.md)
+* [View Document](documents/view-document.md)
+* [Manager tools](documents/manager-tools.md)
+* [Document Stats](documents/document-stats.md)
+
+## SMS
+
+* [Safety Reports](sms/safety-reports.md)
+* [Create a Safety Report](sms/create-a-safety-report.md)
+* [Offline safety reports](sms/offline-safety-reports.md)
+* [ICAO 8951 Risk Matrix](sms/icao-8951-risk-matrix.md)
+* [Safety report analytics](sms/safety-report-analytics.md)
+* [Flight remark findings](sms/flight-remark-findings.md)
+
+## Security & Compliance
+
+* [Data security and continuity](security-and-compliance/data-security-and-continuity.md)
+
+## 🤖 API
+
+* [Description](api/description.md)
+* [Usage](api/usage.md)
+* [Quick Start](api/quick-start.md)
+* [Authentication](api/authentication.md)
+* [Users](api/users.md)
+* [Company](api/company.md)
+* [Flights](api/flights.md)
+* [Flight legs](api/flight-legs.md)
+* [Aircraft](api/aircraft.md)
+* [Pilots](api/pilots.md)
+* [Schedules](api/schedules.md)
+* [Messages](api/messages.md)
+* [Trainings](api/trainings.md)
+* [Safety Reports](api/safety-reports.md)
+* [Documents](api/documents.md)
+* [News](api/news.md)
+* [Reports](api/reports.md)
+* [Manager Users](api/manager-users.md)
+* [Custom Forms](api/custom-forms.md)
