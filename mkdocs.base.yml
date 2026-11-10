@@ -1,0 +1,44 @@
+site_name: Flylogs FCOM
+site_url: https://docs.flylogs.com/fcom/
+repo_url: https://github.com/flylogs/docs
+edit_uri: edit/master/
+# Keep GitBook-style URLs: /fcom/flights/flight-types -> flights/flight-types.html
+# (GitHub Pages serves foo.html for /foo). Also keeps raw-HTML <img src="../..."> paths valid.
+use_directory_urls: false
+
+theme:
+  name: material
+  features:
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.action.edit
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: { icon: material/brightness-7, name: Dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: { icon: material/brightness-4, name: Light mode }
+
+extra_css:
+  - gitbook-compat.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tasklist
+
+plugins:
+  - search
+
+validation:
+  nav: { omitted_files: ignore }
+  links: { not_found: warn, unrecognized_links: ignore, anchors: ignore }
