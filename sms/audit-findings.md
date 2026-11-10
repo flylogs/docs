@@ -25,11 +25,11 @@ An **audit finding** records something an [audit](audits.md) found, from an inte
 
 * Requires the **Premium** or **Unlimited** plan.
 * The owner must be an active user of your company and cannot be an auditor.
-* A closed finding can no longer be changed by its owner.
+* Once a finding is **closed** (or **closed by decision**), its owner can no longer change the root cause, propose authority decisions or propose new corrective actions: only a manager can add actions to it. The owner can still attach evidence and mark their own actions done.
 
 ## Recording a finding
 
-A manager records a finding from the audit page (**Add finding**) or from **Safety > Audit findings > New finding**, or from the **Create finding** prompt of a *non-compliance* assessment.
+A manager records a finding from the audit page (**Add finding**) or from **Safety > Audits > Findings > New finding**, or from the **Create finding** prompt of a *non-compliance* assessment.
 
 | Field | Meaning |
 | --- | --- |
@@ -117,7 +117,7 @@ The owner (or a manager) writes the **root cause** and picks a **category**, whi
 
 ## Corrective actions
 
-Corrective actions are [safety actions](safety-actions.md) attached to the finding. Use **Add action** on the finding page: managers assign the owner and due date directly; the finding owner **proposes** actions, created open. Actions follow the usual lifecycle (open, done, verified as effective or not effective, cancelled) and appear in **My safety actions** and in the *overdue safety actions* indicator. A reminder email goes to the action owner 3 days before and on the due date.
+Corrective actions are [safety actions](safety-actions.md) attached to the finding. Use **Add action** on the finding page. Managers and the finding owner can both add actions, and whoever adds an action sets its owner and due date; a new action always starts **open**. On a closed finding only a manager can add actions. Actions follow the usual lifecycle (open, done, verified as effective or not effective, cancelled) and appear in **My safety actions** and in the *overdue safety actions* indicator. A reminder email goes to the action owner 3 days before and on the due date.
 
 Attach **evidence** (documents or photos showing the corrective work) in the finding's evidence area. Owners can add evidence and remove only the files they uploaded; managers can remove any. Auditors and the accountable manager can only open them.
 
@@ -157,7 +157,7 @@ The finding page has a **Risk links** panel, managers only, so that the causes o
 * **Link existing hazard**: link an open hazard. A hazard can be linked to many findings and a finding to many hazards.
 * **Link safety report**: link a submitted safety report (managers can search by number or name) to bring its risk assessment into the finding.
 * **Flag control as not effective**: mark a linked hazard's existing risk control as ineffective, with a note naming the control or action. The flag can be cleared.
-* **Request reassessment**: the hazard's next review becomes due **today** (so it shows as due in the hazard log and counts as an *untracked risk* on the Assurance dashboard until reviewed) and the hazard owner is notified. A closed hazard cannot be reassessed: reopen it first.
+* **Request reassessment**: the hazard's next review date is set to **today** and the hazard owner is notified. From the next day, until a review is recorded, the hazard shows as overdue for review in the hazard log and counts as an *untracked risk* on the Assurance dashboard. A closed hazard cannot be reassessed: reopen it first.
 
 Removing a link does not change the hazard or the report.
 
@@ -172,12 +172,12 @@ Issued versions are immutable and listed in the finding's **Issued documents** p
 
 ## The findings list
 
-**Safety > Audit findings** lists the findings of a year (by raised date). Filter by:
+**Safety > Audits > Findings** opens on **Open, all years**: every finding that is not closed, whatever year it was raised in, so nothing still open drops out of view when the year changes. Pick a year instead to see all the findings raised in that year (by raised date), closed ones included. Filter by:
 
-* **Year**, **audit type** (internal or authority), **classification**, **status**, **area** (an area includes its sub-areas) and **owner**;
+* **Open, all years** or a **year**, **audit type** (internal or authority), **classification**, **status**, **area** (an area includes its sub-areas) and **owner**;
 * **Root cause category**;
 * **Repeat findings only** or **Not repeat**;
-* **Overdue**: every unfinished finding raised up to the end of the selected year that is past its dates.
+* **Overdue**: every unfinished finding past its dates, of any year with **Open, all years**, or raised up to the end of the selected year.
 
 ![Audit findings list](../.gitbook/assets/audits-findings-list.png)
 
@@ -197,7 +197,7 @@ They can write the root cause and category, propose corrective actions and autho
 
 ### My findings
 
-**Safety > My findings** is available to every active user except auditors. It lists the findings you own that are **not closed**, of **any year**, so an open finding never disappears when the year changes. Use **Include closed** to see the closed ones too. Open a finding to add the root cause, propose corrective actions or attach evidence.
+**Safety > Audits > My findings** is available to every active user except auditors; users who are not managers land on it when they open **Safety > Audits**. It lists the findings you own that are **not closed**, of **any year**, so an open finding never disappears when the year changes. Use **Include closed** to see the closed ones too. Open a finding to add the root cause, propose corrective actions or attach evidence.
 
 ![My findings](../.gitbook/assets/audits-my-findings.png)
 

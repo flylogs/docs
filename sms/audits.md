@@ -7,14 +7,18 @@ description: >-
 
 # Audit programme
 
-**Safety > Audit programme** is where you plan and record the audits of your organisation: your own **internal audits** (compliance monitoring) and the audits carried out by your **competent authority**. It is built for any type of operation (AOC, SPO, ATO, CAMO or general aviation) and **supports** your compliance monitoring and safety assurance activities. It does not make an operator compliant by itself: it keeps the plan, the evidence, the findings and the decisions in one place so you can show them.
+**Safety > Audits** is where you plan and record the audits of your organisation: your own **internal audits** (compliance monitoring) and the audits carried out by your **competent authority**. It is built for any type of operation (AOC, SPO, ATO, CAMO or general aviation) and **supports** your compliance monitoring and safety assurance activities. It does not make an operator compliant by itself: it keeps the plan, the evidence, the findings and the decisions in one place so you can show them.
 
-The audit tools have four parts, each with its own page:
+The Safety menu has one **Audits** entry. The audit pages share a tab bar at the top:
 
-* **Audit programme** (this page): the yearly plan, the audited areas and the audits themselves.
-* [Audit findings](audit-findings.md): every finding tracked to closure, with root cause, corrective actions and authority decisions.
-* [Management review](management-review.md): the management audit report and the accountable manager's review of it.
-* **Audit settings**: the classifications, deadlines and references that make the tool match your own procedures.
+* **Programme** (this page): the yearly plan, the audited areas' coverage and the audits themselves.
+* **Findings** ([Audit findings](audit-findings.md)): every finding tracked to closure, with root cause, corrective actions and authority decisions.
+* **My findings** ([My findings](audit-findings.md#my-findings)): the findings you own. Every user except auditors has this tab.
+* **Areas** ([Audit areas](#audit-areas)): the processes you audit and how often.
+* **Management reviews** ([Management review](management-review.md)): the management audit report and the accountable manager's review of it.
+* **Settings** ([Audit settings](#audit-settings), managers only): the classifications, deadlines and references that make the tool match your own procedures.
+
+Managers and auditors land on **Programme** when they open **Safety > Audits**. Everyone else lands on **My findings** and only sees that tab.
 
 ![Audit programme page](../.gitbook/assets/audits-programme.png)
 
@@ -34,11 +38,11 @@ Audit frequencies, finding classifications and finding deadlines are **company c
 
 * Requires the **Premium** or **Unlimited** plan. On other plans the pages show the usual "disabled on your subscription" message. Files already attached stay readable after a downgrade; nothing new can be written.
 * Read-only auditors do not stop you from using **external auditors**: a manager enters the external auditor's name as lead auditor, records their findings (raised by = the auditor's name) and attaches their report.
-* The **accountable manager** has no entry in the Safety menu. They reach the audit pages from the notification they receive when a management report is issued, or by the address of the page.
+* The **accountable manager** opens **Safety > Audits** like everyone else. If they are not a manager or an auditor, it opens on **My findings**, and the programme tabs are not shown to them there. They reach the programme and the review from the notification they receive when a management report is issued, or by the address of the page.
 
 ## Audit areas
 
-**Safety > Audit areas** lists the processes you audit, as a tree: an **area** can have one level of **sub-areas** (for example *Operational control* with *Flight planning* below it).
+**Safety > Audits > Areas** lists the processes you audit, as a tree: an **area** can have one level of **sub-areas** (for example *Operational control* with *Flight planning* below it).
 
 ![Audit areas tree](../.gitbook/assets/audits-areas.png)
 
@@ -90,12 +94,12 @@ The next due date of an area is the date of its **last completed internal audit*
 
 ## The programme page
 
-**Safety > Audit programme** opens the programme of one year (year selector at the top).
+**Safety > Audits > Programme** opens the programme of one year (year selector at the top).
 
 ![Audit programme: audits of the year and area coverage](../.gitbook/assets/audits-programme.png)
 
 * **Audits of the year**: internal and authority audits by planned date, with kind, areas, lead auditor, status and the number of findings. An audit that was postponed out of the year stays listed with its original and new dates, so the postponement stays visible.
-* **Area coverage**: for each area its criticality, chosen frequency, suggested frequency, last conclusion, open findings and next due date, with overdue areas flagged.
+* **Area coverage**: for each area its criticality, chosen frequency, suggested frequency, last conclusion, open findings and next due date, with overdue areas flagged. The last conclusion comes from the latest completed internal audit that assessed the area. If that audit has several assessments for the area, the worst conclusion is shown.
 * **Procedures and notes**: the audit procedure, the reporting procedure and the follow-up and corrective action procedure, picked from your [document library](../documents/document-library.md) in Audit settings, plus free programme notes.
 * **Issue programme PDF**: see [Issued documents](#issued-documents-and-versions).
 
@@ -168,7 +172,7 @@ Once the audit is **completed**, a manager can **approve the report**. Approval 
 * the audit to be completed, and
 * the **independence declaration confirmed** and the **competence field filled in** (not needed for an authority audit marked *not applicable*).
 
-Approval is **cleared automatically** if the audit is changed afterwards (including its areas, assessments or status), so an approved report always matches what was approved. Approve it again after a correction.
+Approval is **cleared automatically** if the audit is changed afterwards (including its areas, assessments or status), or if one of its findings is added, changed or moves to another status (the report includes its findings), so an approved report always matches what was approved. The audit's history records each of these. Approve it again after a correction.
 
 ### Issued documents and versions
 
@@ -176,7 +180,7 @@ Documents you send to the authority or keep as the record of a period are issued
 
 | Document | Where | Needs |
 | --- | --- | --- |
-| Programme PDF | Audit programme page | Nothing |
+| Programme PDF | Programme tab | Nothing |
 | Audit report PDF | Audit page | The audit report approved |
 | Corrective action response and decision proposal PDFs | [Finding page](audit-findings.md#documents-for-the-authority) | Nothing |
 | Management report PDF | [Management review](management-review.md) | A management review |
@@ -195,11 +199,11 @@ Flylogs does not send documents to the authority: download the issued PDF and se
 
 ## Audit settings
 
-**Safety > Audit settings** (managers only) holds the configuration of the audit tools.
+**Safety > Audits > Settings** (managers only) holds the configuration of the audit tools.
 
 ![Audit settings](../.gitbook/assets/audits-settings.png)
 
-* **Finding classifications**: a set of classes with a name, a rank (critical, major, minor or observation, which drives colours and indicators), whether it is a **non-compliance** (observations are not), and the default number of days to submit the corrective action plan and to implement it. Flylogs creates an editable starter set the first time you open the page: *Level 1* (critical, action plan due immediately), *Level 2* (major, 90 days to implement) and *Observation*. These are **your company defaults, not ICAO values**: change the names and deadlines to match your own procedures. A deadline left empty is set per finding. A classification that findings already use is **deactivated** instead of removed.
+* **Finding classifications**: a set of classes with a name, a rank (critical, major, minor or observation, which drives colours and indicators), whether it is a **non-compliance** (observations are not), and the default number of days to submit the corrective action plan and to implement it. Flylogs creates an editable starter set the first time a manager opens the audit pages (until then auditors see the classifications as not configured yet): *Level 1* (critical, action plan due immediately), *Level 2* (major, 90 days to implement) and *Observation*. These are **your company defaults, not ICAO values**: change the names and deadlines to match your own procedures. A deadline left empty is set per finding. A classification that findings already use is **deactivated** instead of removed.
 * **Accountable manager**: the active user who can read all audit data and records the [management review](management-review.md). Any group except auditors.
 * **Procedure documents**: the audit procedure, the reporting procedure and the follow-up and corrective action procedure, chosen from the document library and shown on the programme page and on the programme PDF.
 * **Programme notes**: anything else that describes your audit programme.

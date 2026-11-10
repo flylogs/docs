@@ -9,7 +9,7 @@ description: >-
 
 The **management audit report** gives the accountable manager one view of how the audit programme, the findings and the corrective actions performed over a period. The **management review** records that the accountable manager read it, what they decided, and the actions that follow. Both **support** your compliance monitoring and safety assurance; they are evidence you can show, not a statement that the operator is compliant.
 
-**Safety > Management reviews** lists the reviews, newest period first, with their status.
+**Safety > Audits > Management reviews** lists the reviews, newest period first, with their status.
 
 ![Management reviews list](../.gitbook/assets/audits-reviews-list.png)
 
@@ -23,12 +23,12 @@ The **management audit report** gives the accountable manager one view of how th
 | Everyone else | No access |
 
 * Requires the **Premium** or **Unlimited** plan.
-* The accountable manager has no entry in the Safety menu. They receive an in-app message and an email when a report is issued for their review, with a link to the review page.
+* The accountable manager opens **Safety > Audits** like every user. Unless they are a manager or an auditor, it opens on their own findings. They receive an in-app message and an email when a report is issued for their review, with a link to the review page.
 * If no accountable manager is chosen in Audit settings, nobody can record a review.
 
 ## The report
 
-A review covers a **period** (from and to). The report has nine sections, generated from your audit programme, findings and corrective actions:
+A review covers a **period** (from and to). The period cannot end after today: the report describes what has already happened. The report has nine sections, generated from your audit programme, findings and corrective actions:
 
 | # | Section | What it shows |
 | --- | --- | --- |
@@ -42,7 +42,7 @@ A review covers a **period** (from and to). The report has nine sections, genera
 | 8 | Areas where risk controls are ineffective | Assessments concluded *meets requirements, not effective* in the period, plus the risk controls flagged as not effective on findings |
 | 9 | Recommendations requiring management decisions | The free text written by the person preparing the review, one recommendation per line |
 
-Counts that describe what happened (audits, findings raised, actions verified, root causes) use the dates inside the period. Counts that describe a backlog (overdue findings, actions awaiting verification) are taken as of the end of the period.
+Counts that describe what happened (audits, findings raised, actions verified, root causes) use the dates inside the period. Counts that describe a backlog (overdue findings, actions awaiting verification) are taken as of the end of the period. Overdue findings compare each finding's dates with the end of the period but use its **current** status, so a finding closed after the period ended is not counted.
 
 ![Management audit report sections](../.gitbook/assets/audits-review-report.png)
 

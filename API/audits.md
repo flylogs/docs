@@ -17,7 +17,7 @@ Every endpoint requires a **premium** or **unlimited** company plan. On any othe
 | Manager: `user_group_id` ≤ 110 (Compliance & Safety Manager and above) | read | read all | everything, except recording the management review |
 | **Accountable manager**: the user stored in the company settings (`accountable_manager_user_id`), any group except 250 | read | read all | records the management review ([Review](#record-the-review)); adds actions to a management review |
 | Auditor: `user_group_id` = 250 | **read-only** | **read-only** | **never** |
-| Finding owner, any group | no | own findings only: list (`mine`), view (audit header only), root cause, authority decision proposals, corrective actions on that finding, evidence uploads | limited to those |
+| Finding owner, any group | no | own findings only: list (`mine`), view (audit header only), root cause, authority decision proposals, corrective actions on that finding, evidence uploads | limited to those; on a closed finding only evidence uploads (no root cause, decision proposals or new actions) |
 | Everyone else | `403` | list: only their own findings (an empty list if they own none); view: `403` | `403` |
 
 * The rules are enforced in the controllers, object by object (company scope plus the rules above), not only by the ACL. **Every write endpoint rejects auditors with `403` (`Auditors have read-only access.`) before anything else runs**, so a group 250 key can never write, independent of the ACL. This includes uploads under the audit tags.
@@ -71,7 +71,7 @@ Company configuration of the audit tools: finding classifications, the accountab
 
 <mark style="color:blue;">`GET`</mark> `/audit_settings/index.json`
 
-Access: managers, auditors and the accountable manager. The first call seeds the default classifications when the company has none.
+Access: managers, auditors and the accountable manager. A **manager's** first call seeds the default classifications when the company has none; a read by an auditor or the accountable manager never writes, so they get `"classifications": []` until a manager has opened the settings (shown as "not configured yet").
 
 ```json
 {
@@ -146,7 +146,7 @@ An area is a process you audit. Areas form a tree with **one level** of sub-area
   "parent_id": null,
   "name": "Operational control",
   "description": null,
-  "requirements": "ORO.GEN.200",
+  "requirements": "REQ-OPS-01",
   "safety_report_department_id": 2,
   "criticality": "high",
   "frequency_months": 3,
@@ -236,7 +236,7 @@ An audit is the plan and the executed audit in one record. `idn` is `AU-YYYY-NNN
   "kind": "internal",
   "authority_name": null,
   "title": "Operational control audit",
-  "scope": "…", "criteria": "…", "requirements": "Reg. (EU) 965/2012 ORO.GEN, consolidated 2025-03",
+  "scope": "…", "criteria": "…", "requirements": "Company operations manual part A, rev. 2025-03",
   "methodology_document_id": "8f0c…", "methodology_note": null,
   "planned_date": "2026-06-12", "original_planned_date": null,
   "start_date": null, "end_date": null,
@@ -344,7 +344,7 @@ Any other move is `400`. Response: `{ "result": true, "audit": { … } }`.
 
 <mark style="color:green;">`POST`</mark> `/audits/approve/{id}.json`
 
-Access: managers. Sets `approved_by` and `approved_at`. Refused with `400` and `blockers` (a list of `not_completed`, `independence`, `competence`) when the audit is not `completed`, or the independence declaration is not confirmed or the competence is blank. An authority audit with `auditor_declaration_na` skips the two declarations. Approving an approved audit is `400` with `error: "already_approved"`. Approval is cleared by any later real change to the audit or its assessments.
+Access: managers. Sets `approved_by` and `approved_at`. Refused with `400` and `blockers` (a list of `not_completed`, `independence`, `competence`) when the audit is not `completed`, or the independence declaration is not confirmed or the competence is blank. An authority audit with `auditor_declaration_na` skips the two declarations. Approving an approved audit is `400` with `error: "already_approved"`. Approval is cleared by any later real change to the audit or its assessments, and when one of its findings is created, really changed (edit, including the owner's root cause), moves status (status, convert) or is changed by an accepted decision; each of these is logged in the audit's history as `approval_revoked`.
 
 ### Save an Assessment
 
@@ -375,7 +375,7 @@ Response: `{ "result": true, "assessment": { … }, "prompt": "create_finding" }
   "assessment_id": null,
   "number": "AU-2026-004-1",
   "classification_id": 2,
-  "requirement": "ORO.FTL.110 (rev. 2025-03)",
+  "requirement": "REQ-FTL-04 (rev. 2025-03)",
   "title": "Duty periods not recorded",
   "details": "…",
   "area_id": 4,
@@ -403,9 +403,10 @@ Managers, auditors and the accountable manager see every finding of the company.
 | Parameter | Description |
 |-----------|-------------|
 | `year` | Four digits, default the current year. Findings **raised** in that year. |
+| `open` | `1`: **Open, all years** (the NEO list's default): every finding that is not `closed` / `closed_by_decision`, raised in **any year**; `year` is ignored. Same company scope and viewer rules. |
 | `mine` | `1`: **My findings**, for any caller: only the findings the caller owns, **of any year**, closed ones left out unless `include_closed=1`. `year` is ignored. |
 | `include_closed` | `1` with `mine=1`. |
-| `overdue` | `1`: every finding raised up to the end of `year` that is **overdue** (instead of the year's findings). |
+| `overdue` | `1`: every finding raised up to the end of `year` that is **overdue** (instead of the year's findings). With `open=1`: the overdue findings of any year. |
 | `kind` | `internal` or `authority` (the audit's kind). |
 | `classification_id`, `status`, `root_cause_category` | Exact match. |
 | `area_id` | The area and its sub-areas. |
@@ -456,7 +457,7 @@ Access: managers. The audit must not be cancelled. Created `open`.
 | `area_id` | no | A live area of the company. |
 | `assessment_id` | no | An assessment of the same audit. |
 | `raised_by_user_id` | no | A user of the company. |
-| `owner_user_id` | no | An active user of the company who is not an auditor. The owner is notified in-app. |
+| `owner_user_id` | no | An active user of the company who is not an auditor. The owner is notified in-app and by email. |
 | `root_cause_category` | no | |
 | `repeat_of_finding_id` | no | Another live finding of the company; manager-confirmed. |
 
@@ -571,7 +572,7 @@ Links from a finding to risk management. Access: managers only for every endpoin
 | <mark style="color:green;">`POST`</mark> `/audit_finding_links/report_link/{findingId}/{reportId}.json` | Links a submitted safety report (and its risk assessment). Idempotent; a follow-up statement cannot be linked (`400`). |
 | <mark style="color:green;">`POST`</mark> `/audit_finding_links/report_unlink/{findingId}/{reportId}.json` | Removes the link. |
 | <mark style="color:green;">`POST`</mark> `/audit_finding_links/ineffective/{findingId}/{hazardId}.json` | Body `{ "ineffective_control": true, "control_note": "…" }`. Flags or clears an ineffective existing risk control on the link; flagging needs a note naming the control or action (`400` `note_required`). |
-| <mark style="color:green;">`POST`</mark> `/audit_finding_links/reassess/{findingId}/{hazardId}.json` | Body `{ "note": "…" }` (optional). Makes the hazard's `next_review_date` **today** in the company timezone (unless it is already due earlier), so it shows as due in the hazard log and as an *untracked* risk on the dashboard until reviewed, and notifies the hazard owner. A closed hazard is `400` `hazard_closed`. |
+| <mark style="color:green;">`POST`</mark> `/audit_finding_links/reassess/{findingId}/{hazardId}.json` | Body `{ "note": "…" }` (optional). Makes the hazard's `next_review_date` **today** in the company timezone (unless it is already due earlier) and notifies the hazard owner. From the next day, until a review is recorded, the hazard is overdue for review in the hazard log and counts as an *untracked* risk on the dashboard. A closed hazard is `400` `hazard_closed`. |
 
 The hazard returned by [View Hazard](safety-assurance.md#view-hazard) includes a `findings` list (`id`, `number`, `title`, `status`) of the findings linked to it.
 
@@ -699,7 +700,7 @@ The snapshot `data` of a management report contains the review and nine sections
 | `completed_vs_planned` | Audits planned, completed, in progress, not started and cancelled in the period (an audit whose planned or original planned date is in the period belongs to it), with `by_kind` and the audit list. |
 | `findings_by_class_area` | Findings raised in the period by classification, by area and as a matrix. |
 | `repeat_findings` | Findings raised in the period with a repeat link. |
-| `overdue_findings` | Findings overdue **as of `period_to`**; findings awaiting verification or the authority are not counted. |
+| `overdue_findings` | Findings overdue **as of `period_to`** (their dates compared with `period_to`, their **current** status: a finding closed since is not counted); findings awaiting verification or the authority are not counted. |
 | `actions_awaiting_verification` | Corrective actions done and not yet verified as of `period_to`. |
 | `action_effectiveness` | Actions verified in the period: `effective`, `not_effective` and the list. |
 | `root_cause_trends` | Root-cause categories of the period against the previous period of the same length. |
@@ -722,7 +723,7 @@ Access: managers. Created as `draft`.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `period_from`, `period_to` | **yes** | `YYYY-MM-DD`; the start cannot be after the end. |
+| `period_from`, `period_to` | **yes** | `YYYY-MM-DD`; the start cannot be after the end (`400`). `period_to` cannot be later than today in the company timezone: `400` with `error: "period_in_future"`. |
 | `recommendations` | no | Free text, one recommendation per line. |
 
 Response: `{ "result": true, "review": { … } }`.
@@ -731,7 +732,7 @@ Response: `{ "result": true, "review": { … } }`.
 
 <mark style="color:green;">`POST`</mark> `/management_reviews/edit/{id}.json`
 
-Access: managers. Changes `period_from`, `period_to` and `recommendations`, **only while the review is a draft** (`400` `not_draft` afterwards). Response: `{ "result": true, "review": { … } }`.
+Access: managers. Changes `period_from`, `period_to` and `recommendations`, **only while the review is a draft** (`400` `not_draft` afterwards). The same period rules as on create apply, including `400` `period_in_future`. Response: `{ "result": true, "review": { … } }`.
 
 ### Issue the Report
 
@@ -766,7 +767,7 @@ Refusals (`400`): `not_issued` (nothing to review yet), `already_reviewed`, `sta
 
 | Endpoint | Rule for these sources |
 |----------|------------------------|
-| `POST /safety_actions/add.json` | `AuditFinding`: a manager or the finding's owner. `ManagementReview`: a manager or the accountable manager. Always created `open`; auditors never. |
+| `POST /safety_actions/add.json` | `AuditFinding`: a manager or the finding's owner; on a `closed` / `closed_by_decision` finding a manager only (the owner gets `400` with `error: "finding_closed"`). `ManagementReview`: a manager or the accountable manager. Whoever may add sets `owner_user_id` and `due_date`; always created `open`; auditors never. |
 | `GET /safety_actions/index.json?source_model=…&source_id=…` | `AuditFinding`: managers, auditors, the accountable manager and the finding's owner see every action on it. `ManagementReview`: managers, auditors and the accountable manager. Anyone else sees only their own actions. |
 | `POST /safety_actions/status/{id}.json` | As for any action. For an `AuditFinding` action the finding is updated in the same transaction (automatic status and dates). |
 
@@ -836,7 +837,7 @@ Finding items have `kind: "finding"`, `idn` (the finding number), `title`, `audi
 
 | Who | When |
 |-----|------|
-| Finding owner | Assigned or changed (in-app message with a link to the finding). Reminders 14 days before, 3 days before and on `cap_due_date` (only while `open`) and `target_date` (while `open`, `cap_submitted`, `cap_accepted` or `in_progress`) |
+| Finding owner | Assigned or changed (in-app message and email, with a link to the finding). Reminders 14 days before, 3 days before and on `cap_due_date` (only while `open`) and `target_date` (while `open`, `cap_submitted`, `cap_accepted` or `in_progress`) |
 | Managers | 30 days before an accepted decision's `review_date` or `expiry_date`, and 30 days before an active area's next due date |
 | Hazard owner | A reassessment is requested from a finding |
 | Accountable manager | A management report is issued (in-app and email) |

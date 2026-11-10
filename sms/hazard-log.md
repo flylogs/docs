@@ -40,7 +40,9 @@ Hazards are also how the causes of non-compliance found in [audits](audits.md) r
 
 * **create a hazard** prefilled from the finding (title, details and root cause, and the department of the finding's audit area). It is added to the log as a manual hazard and linked to the finding;
 * **link an existing open hazard** to the finding. A hazard can be linked to many findings and a finding to many hazards;
-* **flag an existing risk control as not effective**, with a note naming the control, and **request a reassessment**: the hazard's next review becomes due today, so it shows as due in the list and counts as an *untracked risk* on the [Safety Assurance dashboard](safety-assurance.md) until you record a review, and the hazard owner is notified.
+* **flag an existing risk control as not effective**, with a note naming the control, and **request a reassessment**: the hazard's next review date is set to today and the hazard owner is notified. From the next day, until you record a review, it shows as overdue for review in the list and counts as an *untracked risk* on the [Safety Assurance dashboard](safety-assurance.md).
+
+The hazard page lists its **linked audit findings** with their number, title and status. Safety managers and auditors can open each finding from there.
 
 A hazard is also what keeps an **accepted authority variation or alternative means** under review: it must be linked to the finding and its next review must fall on or before the decision's review or expiry date. While it covers an accepted decision, the hazard cannot be unlinked from that finding. Closed hazards cannot be linked to findings or reassessed (reopen them first).
 

@@ -128,7 +128,7 @@ For each reviewer: reports assigned in the year, how many of those are closed an
 
 ## Audits and findings
 
-The **Audits and findings** section sits under the safety sections of the Assurance tab. It summarises the [audit programme](audits.md), the [findings](audit-findings.md) and the [management review](management-review.md), and supports the monitoring of your compliance monitoring function itself. Companies that do not use the audit tools see **No audit data yet** and a link to the programme.
+The **Audits and findings** section sits under the safety sections of the Assurance tab. It summarises the [audit programme](audits.md), the [findings](audit-findings.md) and the [management review](management-review.md), and helps you check that compliance monitoring itself is working: audits done on time, findings closed and areas covered. Companies that do not use the audit tools see **No audit data yet** and a link to the programme.
 
 ![Audits and findings on the Assurance tab](../.gitbook/assets/audits-assurance-section.png)
 
