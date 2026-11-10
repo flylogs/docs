@@ -34,6 +34,7 @@
 * [Pilots](reference/pilots.md)
 * [Reports](reference/reports.md)
 * [Safety Reports](reference/safety-reports.md)
+* [Audits](audits.md)
 * [Schedules](reference/schedules.md)
 * [Trainings](reference/trainings.md)
 * [Uploads](reference/uploads.md)

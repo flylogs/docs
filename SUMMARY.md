@@ -180,6 +180,9 @@
 * [Safety Assurance dashboard](sms/safety-assurance.md)
 * [Hazard log](sms/hazard-log.md)
 * [Safety actions](sms/safety-actions.md)
+* [Audit programme](sms/audits.md)
+* [Audit findings](sms/audit-findings.md)
+* [Management review](sms/management-review.md)
 * [Flight remark findings](sms/flight-remark-findings.md)
 
 ## Security & Compliance
@@ -203,6 +206,7 @@
 * [Trainings](API/trainings.md)
 * [Safety Reports](API/safety-reports.md)
 * [Safety Assurance](API/safety-assurance.md)
+* [Audits](API/audits.md)
 * [Documents](API/documents.md)
 * [News](API/news.md)
 * [Reports](API/reports.md)

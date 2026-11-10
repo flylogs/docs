@@ -126,9 +126,33 @@ Median times for reports that existed before this feature are approximate, becau
 
 For each reviewer: reports assigned in the year, how many of those are closed and the median days to close; plus every report assigned to them in or before the year that is still open, and how many of those are overdue. A reviewer who only has older open reports is listed with 0 assigned. Reassigning a report credits the current reviewer.
 
+## Audits and findings
+
+The **Audits and findings** section sits under the safety sections of the Assurance tab. It summarises the [audit programme](audits.md), the [findings](audit-findings.md) and the [management review](management-review.md), and supports the monitoring of your compliance monitoring function itself. Companies that do not use the audit tools see **No audit data yet** and a link to the programme.
+
+![Audits and findings on the Assurance tab](../.gitbook/assets/audits-assurance-section.png)
+
+| Tile | What it counts |
+| --- | --- |
+| **Overdue findings** | Findings still being worked on (open, action plan submitted or accepted, in progress) that are past their target date, or still open and past their action plan due date. Findings awaiting verification or the authority are not overdue |
+| **Awaiting authority** | Findings whose corrective actions are verified and that wait for the authority to close them |
+| **Awaiting verification** | Findings whose corrective actions are all done and need to be verified |
+| **Areas overdue for audit** | Active audit areas past their next due date, or never audited |
+| **Programme progress** | Audits completed out of audits planned in the selected year, and how many planned audits are overdue |
+| **Last management review** | Date of the last recorded [management review](management-review.md). Red when there is none, or the last one is older than 12 months (a display hint, not a deadline) |
+
+* **Overdue findings** is **red** when an overdue finding is critical or major, or when any critical finding is still open, even with nothing overdue; **amber** when anything is overdue; **green** otherwise. **Areas overdue** is amber when above zero.
+* **Open findings by classification** lists the open findings per class of your company's classifications.
+* Overdue findings and areas overdue also have a **monthly trend**, with the same rules as the other indicators: history starts when the feature is switched on.
+* Every tile opens the list of findings or areas behind it, with a link to the record. Lists never show who owns a finding.
+
+The year and department filters apply like everywhere else: open findings, overdue, awaiting and areas overdue are **pending work** (findings dated in or before the year, by their raised date; the department is that of the finding's audit area), and programme progress is **activity in the year**. The Occurrence/Information classification filter does not apply to audits.
+
+Auditors (group 250) read this section too; the finding owner and the accountable manager do not have the dashboard unless they are also managers or auditors, and use the audit pages instead.
+
 ## Drilling down and accepting risk
 
-Every number on the dashboard, except the built-in trend points, opens a list: type (report, hazard or action), ID, title, department, risk badge, status and age, with a link to the record. Lists can be filtered by band.
+Every number on the dashboard, except the built-in trend points, opens a list: type (report, hazard or action), ID, title, department, risk badge, status and age, with a link to the record. The audit tiles list findings and areas instead; see [Audits and findings](#audits-and-findings). Lists can be filtered by band.
 
 A **safety action** has no page of its own: in the list its title starts with the number of the report or hazard it belongs to (for example `HZ-2026-004 · Trim the grass near the threshold`), its risk badge is the current risk of that report or hazard, and the link opens that report or hazard, where the action is listed.
 
@@ -144,4 +168,4 @@ See [ICAO risk matrix (Doc 9859)](icao-8951-risk-matrix.md#risk-tolerability-and
 
 ## API
 
-All of this is available through the [Safety Assurance API](../API/safety-assurance.md).
+All of this is available through the [Safety Assurance API](../API/safety-assurance.md). The audit data itself is in the [Audits API](../API/audits.md).

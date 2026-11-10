@@ -34,6 +34,18 @@ Columns: ID (`HZ-YYYY-NNN`, numbered per company), title, department, owner, ini
 
 **Statuses:** Open, Mitigated, Monitoring, Closed. A closed hazard cannot be linked to new reports and is excluded from *Unmitigated risks*.
 
+## Hazards linked to audit findings
+
+Hazards are also how the causes of non-compliance found in [audits](audits.md) reach your risk management. From an [audit finding](audit-findings.md#links-to-risk-management) a manager can:
+
+* **create a hazard** prefilled from the finding (title, details and root cause, and the department of the finding's audit area). It is added to the log as a manual hazard and linked to the finding;
+* **link an existing open hazard** to the finding. A hazard can be linked to many findings and a finding to many hazards;
+* **flag an existing risk control as not effective**, with a note naming the control, and **request a reassessment**: the hazard's next review becomes due today, so it shows as due in the list and counts as an *untracked risk* on the [Safety Assurance dashboard](safety-assurance.md) until you record a review, and the hazard owner is notified.
+
+A hazard is also what keeps an **accepted authority variation or alternative means** under review: it must be linked to the finding and its next review must fall on or before the decision's review or expiry date. While it covers an accepted decision, the hazard cannot be unlinked from that finding. Closed hazards cannot be linked to findings or reassessed (reopen them first).
+
+The hazard view returns the findings linked to it (number, title and status), see the [API](../API/safety-assurance.md#view-hazard). Mapping an [audit area](audits.md#audit-areas) to the hazard's department also means a high-risk hazard in that department makes the area's **suggested audit frequency** more frequent.
+
 ## Two ways to create a hazard
 
 1. **From a report.** When a manager or the report's reviewer sets the reviewer outcome to *risk register* and saves, Flylogs offers **Create new hazard from this report** (title, description, department, classification and initial risk are prefilled) or **Link to an existing hazard**. The same options are always available from the report's manage actions (**Create / link hazard**). A report can be linked to more than one hazard, and the report view lists its linked hazards.

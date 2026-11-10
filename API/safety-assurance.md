@@ -2,7 +2,7 @@
 
 > Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).
 
-The Safety Assurance endpoints back the SMS **Safety Assurance** dashboard, the **hazard log**, **safety actions** and **company-defined safety indicators**. They support the ICAO Annex 19 / Doc 9859 safety performance and risk management processes. For safety reports themselves see [Safety Reports](safety-reports.md). End-user description: [Safety Assurance dashboard](../sms/safety-assurance.md), [Hazard log](../sms/hazard-log.md), [Safety actions](../sms/safety-actions.md).
+The Safety Assurance endpoints back the SMS **Safety Assurance** dashboard, the **hazard log**, **safety actions** and **company-defined safety indicators**. They support the ICAO Annex 19 / Doc 9859 safety performance and risk management processes. For safety reports themselves see [Safety Reports](safety-reports.md). Audit programme, findings and management review: [Audits](audits.md). End-user description: [Safety Assurance dashboard](../sms/safety-assurance.md), [Hazard log](../sms/hazard-log.md), [Safety actions](../sms/safety-actions.md).
 
 Every endpoint requires a **premium** or **unlimited** company plan. On any other plan the call fails with `400` and the message `Not a premium account`.
 
@@ -105,7 +105,8 @@ Returns everything shown on the Assurance tab for the selected filters. Access: 
   "reviewers": [
     { "reviewer_id": "123", "name": "Jane Doe", "assigned": 5, "closed": 3, "open": 2, "overdue": 1, "median_days_to_close": 12 }
   ],
-  "settings": { "assessment_days": 14, "closure_days": 30 }
+  "settings": { "assessment_days": 14, "closure_days": 30 },
+  "audits": { "has_data": true, "…": "see Audits" }
 }
 ```
 
@@ -120,6 +121,7 @@ Returns everything shown on the Assurance tab for the selected filters. Access: 
 * **`emerging`**: hazards created in the year, report categories whose count exceeds the previous year's same period, and new high or frequent items. Items have the [item shape](#item-shape).
 * **`handling`**: report status counts, age buckets of open reports in days, open reports without a reviewer, overdue reports, and median days from submission to first risk assessment and to closure (`null` when there is nothing to measure). Linked reports are included; see [Year filter](#year-filter) for which numbers are in-year and which are in-or-before. Medians for reports older than the feature are approximate.
 * **`reviewers`**: one row per current reviewer. `assigned`, `closed` and `median_days_to_close` cover reports whose current assignment (`reviewer_assigned_at`, or the report's creation date when null) falls in the selected year; `open` and `overdue` cover reports assigned in or before it that are still open, so a reviewer with only an older backlog appears with `assigned: 0`. `name` is `null` when the reviewer is no longer in the company.
+* **`audits`**: the audits and findings block of the Assurance tab (open findings by classification, overdue findings, awaiting authority and verification, programme progress, areas overdue, last management review). Described in [Audits](audits.md#dashboard-and-drill-down).
 * **`settings`**: the two company deadlines, `safety_assessment_days` (default 14) and `safety_closure_days` (default 30), set in the company settings.
 
 ---
@@ -134,7 +136,7 @@ The drill-down: the records behind a tile, heat-map cell, handling number, revie
 
 | Parameter | Required with | Description |
 |-----------|---------------|-------------|
-| `key` | always | `untracked`, `unmitigated`, `actions_overdue`, `reports_overdue`, `cell`, `status`, `age`, `unassigned`, `assessed`, `closed`, `reviewer`, `category` or `custom`. Anything else is `400`. |
+| `key` | always | `untracked`, `unmitigated`, `actions_overdue`, `reports_overdue`, `cell`, `status`, `age`, `unassigned`, `assessed`, `closed`, `reviewer`, `category`, `custom`, or one of the audit keys `findings_overdue`, `awaiting_authority`, `awaiting_verification`, `areas_overdue` (see [Audits](audits.md#dashboard-and-drill-down)). Anything else is `400`. |
 | `cell` | `key=cell` | `"<probability>|<severity>"`, each 1–5, for example `4|4`. |
 | `mode` | `key=cell` | `initial` or `current` (default `current`). |
 | `status` | `key=status` | A report status, for example `open`. |
@@ -167,9 +169,9 @@ The drill-down: the records behind a tile, heat-map cell, handling number, revie
 }
 ```
 
-<a name="item-shape"></a>`kind` is `report`, `hazard` or `action`. `band` is `unassessed` when no risk is recorded. `age_days` is the age since creation (`null` when unknown). Items are sorted oldest first. The reporter of a report is never included.
+<a name="item-shape"></a>`kind` is `report`, `hazard` or `action` (`finding` or `area` for the [audit keys](audits.md#dashboard-and-drill-down)). `band` is `unassessed` when no risk is recorded. `age_days` is the age since creation (`null` when unknown). Items are sorted oldest first. The reporter of a report is never included.
 
-An **action** item has `idn: null`; its `title` is prefixed with the number of its source (`"HZ-2026-004 · Trim the grass"`), its `band` is the source's current band, and its `link` is the source page: `/safety_reports/view/{source_id}` for a report, `/safety_reports/hazards/view/{source_id}` for a hazard.
+An **action** item has `idn: null`; its `title` is prefixed with the number of its source (`"HZ-2026-004 · Trim the grass"`), its `band` is the source's current band, and its `link` is the source page: `/safety_reports/view/{source_id}` for a report, `/safety_reports/hazards/view/{source_id}` for a hazard, `/audits/findings/view/{source_id}` for an audit finding, `/audits/reviews/view/{source_id}` for a management review.
 
 ---
 
@@ -281,7 +283,7 @@ Access: managers and auditors.
 }
 ```
 
-`reviews` is the append-only history, newest first. `actions` holds the raw action rows; use [Safety Actions](#safety-actions) for the full shape. `owner_name` and `risk_accepted_by_name` are looked up inside the company (`null` when the user is no longer in it).
+`findings` lists the [audit findings](audits.md#finding-links) linked to the hazard (`id`, `number`, `title`, `status`; empty when there are none). `reviews` is the append-only history, newest first. `actions` holds the raw action rows; use [Safety Actions](#safety-actions) for the full shape. `owner_name` and `risk_accepted_by_name` are looked up inside the company (`null` when the user is no longer in it).
 
 ### Create Hazard
 
@@ -346,7 +348,7 @@ The hazard's current values are updated, a snapshot is stored, and `next_review_
 
 ## Safety Actions
 
-An action belongs to a report (`source_model` `SafetyReport`) or a hazard (`SafetyHazard`) and has `status` `open`, `done`, `verified` or `cancelled`.
+An action belongs to a report (`source_model` `SafetyReport`), a hazard (`SafetyHazard`), an audit finding (`AuditFinding`, its corrective actions) or a management review (`ManagementReview`, the actions resulting from the accountable manager's decisions) and has `status` `open`, `done`, `verified` or `cancelled`.
 
 ### Action object
 
@@ -381,7 +383,7 @@ Returns `{ "actions": [ … ] }`, newest first. Managers and auditors see every 
 
 | Parameter | Description |
 |-----------|-------------|
-| `source_model` | `SafetyReport` or `SafetyHazard`. |
+| `source_model` | `SafetyReport`, `SafetyHazard`, `AuditFinding` or `ManagementReview`. |
 | `source_id` | UUID of the source. |
 
 ### My Actions
@@ -396,14 +398,14 @@ Any group. The caller's own actions, open ones first then by due date. Each entr
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `source_model` | **yes** | `SafetyReport` or `SafetyHazard`. |
-| `source_id` | **yes** | UUID of the report or hazard. |
+| `source_model` | **yes** | `SafetyReport`, `SafetyHazard`, `AuditFinding` or `ManagementReview`. |
+| `source_id` | **yes** | UUID of the report, hazard, finding or management review. |
 | `title` | **yes** | Up to 255 characters. |
 | `description` | no | Free text. |
 | `owner_user_id` | no | Active user of the same company; not an auditor. The owner is notified in-app and by email. |
 | `due_date` | no | `YYYY-MM-DD`. |
 
-Access: managers for both source types; for `SafetyReport` also the report's assigned reviewer or non-anonymous author (a *proposal*). The status is always `open`; completion and verification fields are server-side. Response: `{ "result": true, "action": { … } }`.
+Access: managers for every source type; for `SafetyReport` also the report's assigned reviewer or non-anonymous author (a *proposal*); for `AuditFinding` also the finding's owner; for `ManagementReview` also the accountable manager. See [Audits](audits.md#safety-actions-from-findings-and-reviews) for the audit sources. The status is always `open`; completion and verification fields are server-side. Response: `{ "result": true, "action": { … } }`.
 
 ### Edit Action
 
