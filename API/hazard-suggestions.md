@@ -6,6 +6,8 @@ The Hazard Suggestions endpoints back the **Possible hazards** section of the **
 
 Suggestions are generated automatically from text patterns and AI. They can be wrong or incomplete, so show them to a person who reviews each one before acting. The endpoints below only read and decide suggestions; they do not generate them.
 
+Generation is **off by default** per company: it sends the text of the company's safety reports and remark findings to an AI provider for processing, so a manager must switch on `ai_hazard_suggestions` in the company settings first (**Company settings → General → Safety management**; `data[CompanySetting][ai_hazard_suggestions]=1` on `/manager/companies/settings.json`). The list returns the current value as `enabled`.
+
 Every endpoint requires a **premium** or **unlimited** company plan. On any other plan the call fails with `400` and the message `Not a premium account`.
 
 ---
@@ -37,7 +39,7 @@ Every endpoint requires a **premium** or **unlimited** company plan. On any othe
 
 #### Response
 
-Newest first. An empty array when there is nothing to show (including before the first nightly run).
+Newest first. An empty array when there is nothing to show (including before the first nightly run). `pending` returns every pending suggestion; `accepted` and `dismissed` return the 200 most recent.
 
 ```json
 {
@@ -53,7 +55,7 @@ Newest first. An empty array when there is nothing to show (including before the
         { "id": "…", "idn": "SR-2026-014", "name": "Vehicle on apron", "status": "open" }
       ],
       "remark_refs": [
-        { "digest_id": "…", "flight_id": "…", "quote": "vehicle crossed without lights" }
+        { "ref": "R1", "digest_id": "…", "flight_id": "…", "quote": "vehicle crossed without lights", "flight_date": "2026-11-03", "aircraft": "EC-ABC" }
       ],
       "quote": "vehicle crossed without lights",
       "confidence": 0.82,
@@ -63,22 +65,24 @@ Newest first. An empty array when there is nothing to show (including before the
       "created_hazard": null,
       "created": 1794268800
     }
-  ]
+  ],
+  "enabled": true
 }
 ```
 
 | Field | Description |
 |-------|-------------|
 | `kind` | `new` (propose a hazard) or `link` (link the cited reports to an existing hazard). |
-| `hazard` | For `kind=link`: `{ "id", "idn", "title" }` of the target hazard, or `null` when it no longer exists. Always `null` for `new`. |
+| `hazard` | For `kind=link`: `{ "id", "idn", "title", "status" }` of the target hazard, or `null` when it no longer exists. A `closed` or `null` target cannot be accepted (`hazard_unavailable`). Always `null` for `new`. |
 | `department_id` | Suggested `safety_report_department_id`, or `null`. |
 | `reports` | The cited reports that are still live (not drafts, not deleted). |
-| `remark_refs` | Cited flight remarks (digest id, flight id, verbatim quote). Shape may carry extra keys. |
+| `remark_refs` | Cited flight remarks: `ref`, `digest_id`, `flight_id`, verbatim `quote`, and the flight's `flight_date` (`YYYY-MM-DD`) and `aircraft` registration (both `null` when the flight is no longer found in the company). |
 | `quote` | A passage copied verbatim from the cited text. |
 | `confidence` | 0.5 to 1. Suggestions below 0.5 are discarded and never stored. |
 | `decided_by_name`, `decided_at` | Set once accepted or dismissed (`decided_at` is a Unix timestamp). |
 | `created_hazard` | `{ "id", "idn" }` of the hazard an accepted suggestion produced or linked to, otherwise `null`. |
 | `created` | Unix timestamp. |
+| `enabled` | Top level: `true` when the company switched AI hazard suggestions on, `false` otherwise (default). No new suggestions are generated while `false`. |
 
 ---
 
@@ -86,7 +90,7 @@ Newest first. An empty array when there is nothing to show (including before the
 
 <mark style="color:green;">`POST`</mark> `/safety_hazard_suggestions/accept/{id}.json`
 
-* `kind=new`: creates a hazard prefilled from the suggestion and links every cited report that is still live. The hazard is recorded with source `report` when at least one report was linked, otherwise `manual`.
+* `kind=new`: creates a hazard prefilled from the suggestion and links every cited report that is still live. The hazard is recorded with source `report` when at least one report was linked, otherwise `manual`. When every report to be linked has the same classification, the hazard's `type` (`OCCURRENCE` / `INFORMATION`) is set to it. When there is no report to link (remark-only suggestion) and no `description` is sent, the description is the suggestion's text followed by each cited remark quote with its flight date, aircraft and flight id.
 * `kind=link`: links the cited reports that are still live and not yet linked to the target hazard.
 
 The whole decision runs in one transaction, so a double click decides once: the second call answers `already_decided`.

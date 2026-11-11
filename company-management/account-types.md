@@ -131,6 +131,7 @@ Auditor accounts have a few rules that always apply and cannot be turned off whe
 * **Email-based two-factor only.** Auditors always verify login with a code sent to their email — this can't be changed to an authenticator app or turned off.
 * **No personal contact details of other people.** An auditor never sees another user's email address, phone number or address — anywhere in the app. They see operational data (aircraft, maintenance, flights, trainings, student progress, safety reports, schedules, FTL, rosters) at a company-wide level. On an individual pilot's profile, an auditor can additionally view the Overview and Qualifications tabs — including the certificate list — but cannot open or download any uploaded certificate file, and cannot edit anything on the page.
 * **Read-only, including their own account.** The only thing an auditor can change about their own account is their password — everything else (email, name, 2FA method, etc.) is fixed by whoever created the account.
+* **No comments.** Auditors can read the comments on the records they can see, but cannot post a comment or delete one (including on safety reports, hazards and audits).
 * **No API access.** Auditor accounts never have an API key — only company managers can have one, always bound to their own account. See [API Keys](../API/api-keys.md).
 * **The expiration date is always emailed.** The welcome email sent when the account is created shows when it expires. This is true for any account you create with an expiration date set, not just auditors.
 

@@ -32,6 +32,12 @@ Use it when performing internal maintenance, migrating data, or if you need to t
 Users who belong to more than one company are only blocked from **your** company — they can still log in to their other operators.
 {% endhint %}
 
+### Safety management
+
+* **Days to assess a report** — reports still open after this many days are flagged as overdue for assessment in the safety assurance dashboard.
+* **Days to close a report** — reports still not closed after this many days are flagged as overdue for closure in the safety assurance dashboard.
+* **AI hazard suggestions** — **off by default.** When on, every night Flylogs sends the text of your safety reports (and of the safety-relevant flight remark findings) to an **AI provider**, which processes it to suggest possible hazards on **Safety → Remark Findings**. Reporter names and ids are never sent. Nothing is added to the hazard log until a manager accepts a suggestion. Requires the **Premium** or **Unlimited** plan. See [Flight remark findings → Possible hazards](../../sms/flight-remark-findings.md#possible-hazards).
+
 ### Training organisation
 
 These fields are printed on the **course completion certificate** so the document reads as issued by your organisation rather than by Flylogs. They are company-wide: one legal entity per Flylogs account. Leave a field empty and that line is simply left off the certificate.
