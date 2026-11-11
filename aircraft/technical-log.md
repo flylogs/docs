@@ -13,7 +13,7 @@ Turn it on in **Settings → Aircraft → Technical log** (Company Administrator
 | Action | Who |
 |---|---|
 | Turn the technical log on or off | Users who can edit company settings |
-| Give the preflight signature | The pilot-in-command of the flight only, after the flight is dispatched (also offline) |
+| Give the preflight signature | The pilot-in-command of the flight only, after the flight is dispatched (also offline). A flight already confirmed without one can still be signed with the time the paper technical log was signed, online only |
 | Give the post-flight signature (confirm the flight) | Whoever may confirm flights in your company, as before |
 | Release an aircraft after an inspection or a defect rectification (sign the CRS) | Managers, mechanics and the aircraft's named managers, as before |
 | Download the technical log PDF | Every active user of the company |
@@ -47,8 +47,22 @@ Flights are logged and confirmed offline as usual. The preflight signature can a
 * When the device is back online, the signature is sent with the time it was given on the device and what the device showed. Flylogs also records the aircraft's state at that moment. The flight and the technical log mark it as **signed offline**.
 * A signature given offline is accepted even if the flight was confirmed or cancelled in the meantime.
 * If your company requires a password to confirm flights, the preflight signature can only be given online: the device cannot check the password.
+* A flight confirmed without signal keeps the time it was confirmed on the device as its post-flight signature time, not the time the device synced.
 
 To fly without a device, print the technical log page beforehand, fill it in by hand and enter the flights in Flylogs later. The paper page is the record of that day.
+
+### Signed on paper, entered later
+
+When the paper technical log was signed at the aircraft and the flight is entered in Flylogs afterwards, give the times the paper was signed, so that the technical log does not show signatures given after the flight:
+
+1. **Preflight signature**: in the signing window, tick **I signed the paper technical log earlier** and enter the date and time you signed. It is pre-filled with the off-block time. If the flight was already confirmed without a preflight signature, the pilot-in-command can still press **Preflight signature**: the window then asks for this time and cannot be signed without it.
+2. **Post-flight signature**: in the **Sign and confirm** window, tick the same option and enter when you signed. It is pre-filled with the on-block time.
+
+<figure><img src="../.gitbook/assets/techlog-paper-preflight.png" alt="Preflight signature window with the option I signed the paper technical log earlier ticked and a date and time"><figcaption><p>The preflight signature with the time the paper technical log was signed.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/techlog-paper-postflight.png" alt="Sign and confirm window with the option I signed the paper technical log earlier ticked, pre-filled with the on-block time"><figcaption><p>The post-flight signature, pre-filled with the on-block time.</p></figcaption></figure>
+
+The technical log shows the times you entered, marked as **(offline)**. The flight's change log keeps both times: when the paper was signed and when it was entered in Flylogs. The time must be within the last 7 days and cannot be in the future. The password check, when your company requires it, and the aircraft checks of an online signature still apply. This option is only shown with a connection; offline, the device records the signing time itself.
 
 ### Post-flight signature
 
