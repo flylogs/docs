@@ -10,7 +10,7 @@ Pilots read the fuel gauge and know what went into the tank. Fuel used is arithm
 
 ### On every flight
 
-Aircraft that track fuel get two new fields on the flight form: **Fuel on board at start** and **Fuel on board at end**, read at engine start and shutdown. Fuel used appears under them as you type, and on the flight page, the flight PDF and the logbook export.
+Aircraft that track fuel get two new fields on the flight form: **Fuel start** and **Fuel end**, the fuel on board read at engine start and shutdown. Fuel used appears under them as you type, and on the flight page, the flight PDF and the logbook export.
 
 ### Uplifts between legs
 
@@ -18,9 +18,9 @@ For flights with [legs](../flights/flight-legs.md) — skydiving lifts, tows, su
 
 Every uplift after a leg is added to the flight's refuelling on **Billing → Fuel & Excise**, so nothing is typed twice.
 
-<figure><img src="../.gitbook/assets/flight-fuel-card.png" alt="Flight form fuel card: fuel on board at start 2400 lbs and at end 2110 lbs, fuel used 563.61 L with 400 L uplifted between legs" width="420"><figcaption><p>The fuel card on the flight form: gauge readings in pounds, fuel used worked out in litres.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-fuel-card.png" alt="Flight form fuel card: Fuel start 220 L, Fuel end 185 L, fuel used 95 L with 60 L uplifted between legs" width="420"><figcaption><p>The fuel card on the flight form: Fuel start and Fuel end read off the gauge, fuel used worked out.</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/flight-legs-view-fuel.png" alt="Legs table with a Fuel used column: each leg shows litres used, its gauge readings in lbs and, on leg 2, +400 L uplift" width="420"><figcaption><p>On an aircraft that tracks fuel, the Fuel used column carries each leg's gauge readings and the uplift after it.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-legs-view-fuel.png" alt="Legs table: each leg shows start to end with takeoff to landing and airborne time under it, and a Fuel used column with its gauge readings and, on leg 2, +60 L uplift; totals block 01:17 and airborne 00:47" width="420"><figcaption><p>On an aircraft that tracks fuel, the Fuel used column carries each leg's gauge readings and the uplift after it.</p></figcaption></figure>
 
 ### Better statistics
 

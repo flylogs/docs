@@ -9,8 +9,9 @@ Each leg has the same, fixed columns, whatever the operation:
 | Column | What goes in it |
 |---|---|
 | **#** | The leg number, 1, 2, 3… in the order you recorded them. |
-| **Start / End** | When the sortie started and ended. Tap the green **Now** to stamp the start, the red **Now** to stamp the end. |
-| **Airborne** | Worked out for you from Start and End. |
+| **Start / End** | Off-blocks and on-blocks of the sortie. Tap the green **Now** to stamp the start, the red **Now** to stamp the end. |
+| **Takeoff / Landing** | When the aircraft left the ground and touched down. Filled in for you: takeoff 5 minutes after the start, landing 5 minutes before the end. Each has its own **Now** button to stamp the real time. |
+| **Block / Airborne** | Worked out for you: block time from Start to End, airborne time from Takeoff to Landing. |
 | **Altitude** | In feet (**ft**) or as a flight level (**FL**), for example the exit altitude of a lift. |
 | **Persons** | The people for this leg, for example jumpers dropped. |
 | **Uplift after this leg** | Fuel added after this leg, in your company's uplift unit (for example litres). Shown when the aircraft tracks fuel. |
@@ -39,6 +40,7 @@ Legs have their own **Legs** card in the flight form, right above the flight tim
 1. Open the flight (or start a new one) and tap **+ Add leg**.
    * If the flight hasn't been saved yet, Flylogs saves it first. If something required is missing, the form shows what to complete and the leg is not added until the flight can be saved.
 2. Tap the green **Now** next to **Start** when the sortie begins, and the red **Now** next to **End** when it's over. You can also type the times.
+   * **Takeoff** fills in 5 minutes after the start, and **Landing** 5 minutes before the end when it is empty. Tap their own **Now** buttons (or type a time) to record the real takeoff and landing. Once you set one yourself, changing the start or end no longer moves it.
 3. Fill in altitude (pick **ft** or **FL**), persons, fuel and notes as needed.
 
 There is no Save button for legs: **every change is saved as you make it**, and a small message confirms it ("Leg 3 saved").
@@ -47,15 +49,15 @@ There is no Save button for legs: **every change is saved as you make it**, and 
 
 The form is built for phones and tablets in the cockpit: large buttons and number keypads, so a leg takes a few seconds at each ground stop.
 
-<figure><img src="../.gitbook/assets/flight-legs-editor-phone.png" alt="Two legs on a phone, each with a green Now button for the start and a red Now button for the end" width="390"><figcaption><p>Two legs on a phone.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-legs-editor-phone.png" alt="Two legs on a phone, each with Start, Takeoff, Landing and End times and a Now button for each; the header shows block and airborne time" width="390"><figcaption><p>Two legs on a phone.</p></figcaption></figure>
 
 ### Overlapping legs
 
-A leg can't start before the leg above it has ended. If you enter a start time that does, the leg shows a warning, for example "Starts at 08:35, before leg 2 ends (08:40)", with a button to fix it: **End leg 2 at 08:35** sets the end of the leg above to this leg's start. You can also correct either time yourself; the warning goes away once the times no longer overlap.
+A leg can't start before the leg above it has ended. If you enter a start time that does, the leg shows a warning, for example "Starts at 08:55, before leg 2 ends (09:00)", with a button to fix it: **End leg 2 at 08:55** sets the end of the leg above to this leg's start. You can also correct either time yourself; the warning goes away once the times no longer overlap.
 
 If a leg starts even before the leg above it started, the legs are out of order: the warning asks you to check the times, with no automatic fix.
 
-<figure><img src="../.gitbook/assets/flight-legs-overlap.png" alt="Leg 3 starts at 08:35 while leg 2 ends at 08:40; a warning offers End leg 2 at 08:35" width="390"><figcaption><p>Leg 3 starts before leg 2 ends. One tap ends leg 2 at 08:35.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-legs-overlap.png" alt="Leg 3 starts at 08:55 while leg 2 ends at 09:00; a warning offers End leg 2 at 08:55" width="390"><figcaption><p>Leg 3 starts before leg 2 ends. One tap ends leg 2 at 08:55.</p></figcaption></figure>
 
 ### Deleting a leg
 
@@ -67,14 +69,14 @@ Tap the bin icon on the leg. It disappears straight away and a message offers **
 
 While you edit the flight, the legs fill in its times and landings. Remember to **Save** the flight to keep these changes (legs themselves save on their own).
 
-* **Off-blocks and takeoff**, when empty, take the first leg's start. **Landing and on-blocks**, when empty, take the last leg's end. They keep following the legs until you type a time of your own.
-* **Block time** becomes the total airborne time of the legs every time that total changes. The off-blocks and on-blocks times are not changed. A notice under the times tells you each time it happens.
+* **Off-blocks**, when empty, takes the first leg's start, and **takeoff** the first leg's takeoff. **Landing**, when empty, takes the last leg's landing, and **on-blocks** the last leg's end. They keep following the legs until you type a time of your own; times already entered are never changed.
+* **Block time** becomes the sum of the legs' block times (start to end), and **flight time** the sum of their airborne times (takeoff to landing), every time those totals change. A notice under the times tells you each time it happens.
 * **Flight time** is never longer than the block time: if it is, it is set equal to the block time, and the notice says so.
 * **Landings:** each leg added with **+ Add leg** counts one landing. The first leg is the flight's own landing, so a flight with 3 legs has 3 landings. Deleting a leg does not change the landings.
 
 You can still change the block time, flight time and landings by hand at any time.
 
-<figure><img src="../.gitbook/assets/flight-legs-times-from-legs.png" alt="Flight times filled from the legs: off-blocks and takeoff 08:00, landing and on-blocks 08:52, block and flight time 00:47, with a notice that block time was set from the legs"><figcaption><p>Times filled in from the legs, and the notice after block time was set to the legs' total.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-legs-times-from-legs.png" alt="Flight times filled from the legs: off-blocks 08:00, takeoff 08:05, landing 09:32, on-blocks 09:37, block time 01:17 and flight time 00:47, with a notice that both were set from the legs"><figcaption><p>Times filled in from the legs, and the notice after block and flight time were set to the legs' totals.</p></figcaption></figure>
 
 Legs added through the API do not change the flight on their own; the times are filled in the next time someone edits the flight in Flylogs.
 
@@ -88,7 +90,7 @@ Pilots never type fuel used. They record what they read on the gauge and what th
 
 > **Fuel used = fuel on board at start + fuel uplifted between legs − fuel on board at end**
 
-* **Fuel on board at start / at end** are on the flight form, next to the fuel uplift. Read the gauge at engine start and at shutdown. They are in the aircraft's **gauge unit**.
+* **Fuel start / Fuel end** (fuel on board) are on the flight form, next to the fuel uplift. Read the gauge at engine start and at shutdown. They are in the aircraft's **gauge unit**.
 * **Uplift after this leg** is on each leg, in your company's **uplift unit**. Record every top-up between lifts on the leg it came after: "after leg 3, 400 litres".
 * Fuel added **before the first leg** is part of the start fuel: read the gauge after refuelling. Fuel added after the last leg is outside the flight; it is still billed (see below) but not counted as used on this flight.
 * If you leave the flight's start or end fuel empty, the first leg's start and the last leg's end are used instead.
@@ -96,9 +98,9 @@ Pilots never type fuel used. They record what they read on the gauge and what th
 
 Fuel used is shown in the uplift unit, on the form while you type, on the flight page, in the PDF and in the logbook export.
 
-<figure><img src="../.gitbook/assets/flight-fuel-card.png" alt="Flight form fuel card: fuel on board at start 2400 lbs and at end 2110 lbs, fuel used 563.61 L with 400 L uplifted between legs" width="420"><figcaption><p>The fuel card on the flight form: gauge readings in pounds, fuel used worked out in litres.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-fuel-card.png" alt="Flight form fuel card: Fuel start 220 L, Fuel end 185 L, fuel used 95 L with 60 L uplifted between legs" width="420"><figcaption><p>The fuel card on the flight form: Fuel start and Fuel end read off the gauge, fuel used worked out.</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/flight-legs-fuel-leg.png" alt="A leg with fuel on board 2150 to 1900 lbs and 400 L uplifted after it; fuel used 141.04 L in the header"><figcaption><p>Leg 2: fuel on board at its start and end, and the 400 L uplifted after it. Its own fuel used is in the header.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-legs-fuel-leg.png" alt="Leg 2 with fuel on board 190 to 160 L and 60 L uplifted after it; block, airborne time and fuel used 30 L in the header"><figcaption><p>Leg 2: fuel on board at its start and end, and the 400 L uplifted after it. Its own fuel used is in the header.</p></figcaption></figure>
 
 ### Gauge in pounds, refuelled in litres
 
@@ -128,11 +130,11 @@ Legs work without a connection. The message then says "Leg 3 saved offline", and
 
 ## On the flight page
 
-The flight page shows a **Legs** table with every leg and the totals: number of legs, total airborne time, persons, fuel used and fuel uplifted. Under each leg's fuel used are its gauge readings (start → end) and the uplift after it. The flight's details show fuel on board at start and end, the uplifts and the flight's fuel used.
+The flight page shows a **Legs** table with every leg and the totals: number of legs, total block and airborne time, persons, fuel used and fuel uplifted. Under each leg's start and end are its takeoff and landing times and its airborne time. Under each leg's fuel used are its gauge readings (start → end) and the uplift after it. The flight's details show fuel on board at start and end, the uplifts and the flight's fuel used.
 
 <figure><img src="../.gitbook/assets/flight-legs-view-table.png" alt=""><figcaption><p>The Legs table on the flight page, with totals.</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/flight-legs-view-fuel.png" alt="Legs table with a Fuel used column: each leg shows litres used, its gauge readings in lbs and, on leg 2, +400 L uplift" width="420"><figcaption><p>On an aircraft that tracks fuel, the Fuel used column carries each leg's gauge readings and the uplift after it.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-legs-view-fuel.png" alt="Legs table: each leg shows start to end with takeoff to landing and airborne time under it, and a Fuel used column with its gauge readings and, on leg 2, +60 L uplift; totals block 01:17 and airborne 00:47" width="420"><figcaption><p>On an aircraft that tracks fuel, the Fuel used column carries each leg's gauge readings and the uplift after it.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/flight-view-fuel-details.png" alt="Flight details: fuel on board at start 2400 LBS, at end 2110 LBS, uplifts after legs 400 L, fuel used 563.61 L"><figcaption><p>The flight's fuel in its details.</p></figcaption></figure>
 
@@ -144,9 +146,9 @@ When a flight has legs, the confirmation window is wider and lists every leg nex
 
 ## In the PDF and the logbook export
 
-* **Flight PDF** (Print on the flight page): legs are a **Legs** section with the same columns and totals (fuel start, fuel end, fuel used and uplift after each leg), before the remarks. The flight's fuel on board, uplifts and fuel used are in the aircraft and operations section.
+* **Flight PDF** (Print on the flight page): legs are a **Legs** section with the same columns and totals (start, takeoff, landing, end, airborne, fuel start, fuel end, fuel used and uplift after each leg), before the remarks. The flight's fuel on board, uplifts and fuel used are in the aircraft and operations section.
 * **Logbook export (XLS)** from the Flights list or Flights audit: when any exported flight has legs, the workbook gets two more sheets:
-  * **Legs**: one row per leg with the flight's date, aircraft and PIC, its fuel on board at start and end, fuel used and uplift after it, and the fuel units.
+  * **Legs**: one row per leg with the flight's date, aircraft and PIC, its start, takeoff, landing and end times, airborne time, fuel on board at start and end, fuel used and uplift after it, and the fuel units.
   * **Legs by day**: for each date and aircraft, the number of flights and legs, total airborne time, persons, fuel uplifted after legs and the flights' fuel used. For a skydiving operation that is lifts, jumpers and fuel per day.
 
 ## Change history

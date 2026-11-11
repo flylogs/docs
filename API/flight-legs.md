@@ -4,9 +4,9 @@
 
 A **leg** is one sortie inside a flight record: a skydiving lift, a banner or glider tow, a survey run. A flight can hold up to **99** legs, in the order they were recorded. Legs are detail under the flight: they never change the flight's own block times, landings, fuel fields or remarks, and the [Create or Update Flight](flights.md#create-or-update-flight) endpoint never reads or writes them. The fuel **uplifted** after a leg (`fuel`) is added to the flight's refuelling (see [Fuel](#fuel)).
 
-The API never derives flight fields from legs. The NEO flight form does, when someone edits the flight there: an empty off-blocks / takeoff time takes the first leg's start, an empty landing / on-blocks time the last leg's end, a change in the legs' total airborne time becomes the block time (off/on blocks unchanged, flight time capped at block time), and each leg added with **+ Add leg** counts one landing. If your integration adds legs, send the flight's own times, block time and landings with [Create or Update Flight](flights.md#create-or-update-flight) as well.
+The API never derives flight fields from legs. The NEO flight form does, when someone edits the flight there: an empty off-blocks time takes the first leg's `start_time`, an empty takeoff time the first leg's `takeoff_time`, an empty landing time the last leg's `landing_time` and an empty on-blocks time the last leg's `end_time` (takeoff / landing fall back to start / end on legs without them); a change in the legs' totals sets the flight's block time (sum of `end_time − start_time`) and flight time (sum of `landing_time − takeoff_time`, capped at block time), leaving the four times unchanged; and each leg added with **+ Add leg** counts one landing. If your integration adds legs, send the flight's own times, block time and landings with [Create or Update Flight](flights.md#create-or-update-flight) as well.
 
-Legs are listed as `FlightLeg` (ordered by `sequence`) in the flight's view payload (see [View Flight](flights.md#view-flight)) and in every row of the flight lists `GET /flights/index/…json` and `GET /manager/flights/audit.json`. In the lists each leg carries only `id, flight_id, sequence, start_time, end_time, altitude, altitude_unit, persons, fuel, fuel_start, fuel_end, notes`, and `Aircraft` carries `fuel_tracking` and `fuel_type` for the fuel arithmetic; the uplift unit is the company's `CompanySetting.fuel_uplift_unit`.
+Legs are listed as `FlightLeg` (ordered by `sequence`) in the flight's view payload (see [View Flight](flights.md#view-flight)) and in every row of the flight lists `GET /flights/index/…json` and `GET /manager/flights/audit.json`. In the lists each leg carries only `id, flight_id, sequence, start_time, takeoff_time, landing_time, end_time, altitude, altitude_unit, persons, fuel, fuel_start, fuel_end, notes`, and `Aircraft` carries `fuel_tracking` and `fuel_type` for the fuel arithmetic; the uplift unit is the company's `CompanySetting.fuel_uplift_unit`.
 
 ## Access
 
@@ -42,8 +42,10 @@ Branch on `code`, never on `message`.
 | id | string | **Client-generated UUID** (v4). The same `id` updates the same leg, so a retried request never creates a duplicate. |
 | flight_id | string | The flight the leg belongs to. |
 | sequence | number | Recorded order, assigned by the server (next number on create). **Read-only.** |
-| start_time | number \| null | Unix seconds. |
-| end_time | number \| null | Unix seconds. Airborne time is `end_time − start_time`; it is not stored. |
+| start_time | number \| null | Off-blocks, unix seconds. |
+| takeoff_time | number \| null | Takeoff, unix seconds. Added November 2026. |
+| landing_time | number \| null | Landing, unix seconds. Added November 2026. |
+| end_time | number \| null | On-blocks, unix seconds. Block time is `end_time − start_time` and airborne (flight) time `landing_time − takeoff_time`; neither is stored. On a leg with no `takeoff_time` and no `landing_time` (recorded before they existed), airborne time is `end_time − start_time`. |
 | altitude | number \| null | Feet, or the flight level number when `altitude_unit` is `FL` (`120` = FL120). 0–99999. |
 | altitude_unit | string | `FT` or `FL`. Anything else is stored as `FT`. FL is kept as FL, never converted to feet. |
 | persons | number \| null | People for this leg (e.g. jumpers dropped). 0–9999. |
@@ -63,7 +65,7 @@ Fuel used is **not a field**: it is worked out from the fields above, see [Fuel]
 
 <mark style="color:green;">`POST`</mark> `/flight_legs/save.json`
 
-Creates the leg, or updates it when a leg with this `id` already exists on the same flight. Sends the **whole leg** each time: a field left out is stored as empty — except `fuel_start` and `fuel_end`, which keep their stored value when left out (clients built before they existed do not send them).
+Creates the leg, or updates it when a leg with this `id` already exists on the same flight. Sends the **whole leg** each time: a field left out is stored as empty — except `takeoff_time`, `landing_time`, `fuel_start` and `fuel_end`, which keep their stored value when left out (clients built before they existed do not send them).
 
 #### Request Body
 
@@ -71,8 +73,10 @@ Creates the leg, or updates it when a leg with this `id` already exists on the s
 |---|---|---|
 | data[FlightLeg][id] | string | UUID (required) |
 | data[FlightLeg][flight_id] | string | Flight id (required) |
-| data[FlightLeg][start_time] | number | Unix seconds |
-| data[FlightLeg][end_time] | number | Unix seconds |
+| data[FlightLeg][start_time] | number | Off-blocks, unix seconds |
+| data[FlightLeg][takeoff_time] | number | Takeoff, unix seconds. Left out = unchanged |
+| data[FlightLeg][landing_time] | number | Landing, unix seconds. Left out = unchanged |
+| data[FlightLeg][end_time] | number | On-blocks, unix seconds |
 | data[FlightLeg][altitude] | number | |
 | data[FlightLeg][altitude_unit] | string | `FT` or `FL` |
 | data[FlightLeg][persons] | number | |
@@ -92,6 +96,8 @@ Creates the leg, or updates it when a leg with this `id` already exists on the s
     "flight_id": "84f4d019-ed4b-498f-b109-f29969bbb6d6",
     "sequence": "3",
     "start_time": "1793099700",
+    "takeoff_time": "1793100000",
+    "landing_time": "1793100960",
     "end_time": "1793101260",
     "altitude": "120",
     "altitude_unit": "FL",
