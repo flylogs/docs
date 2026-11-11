@@ -7,6 +7,8 @@ description: >-
 
 # Management review
 
+{% embed url="https://youtu.be/a1L2WyZRk1Q" %}
+
 The **management audit report** gives the accountable manager one view of how the audit programme, the findings and the corrective actions performed over a period. The **management review** records that the accountable manager read it, what they decided, and the actions that follow. Both **support** your compliance monitoring and safety assurance; they are evidence you can show, not a statement that the operator is compliant.
 
 **Safety > Audits > Management reviews** lists the reviews, newest period first, with their status.

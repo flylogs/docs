@@ -56,6 +56,44 @@ Setting up Google Authenticator is a quick and simple process.
 
 <figure><img src="../.gitbook/assets/2fa-authenticator-setup-modal.png" alt="Authenticator App Setup dialog showing QR code and manual secret" width="375"><figcaption><p>Scan the QR code with your authenticator app, or enter the secret manually</p></figcaption></figure>
 
+### Lost your phone or authenticator app?
+
+If you can no longer get codes from your authenticator app (for example, your phone was lost, stolen or reset), **ask a manager of your company to reset your two-factor authentication**. You do not need to contact Flylogs.
+
+Recovery always goes through a person who can confirm it is really you. An emailed link alone is never enough, because whoever finds your phone may also be able to read your email.
+
+When your two-factor authentication is reset:
+
+* Your authenticator app no longer works for your account, and sign-in goes back to **Email** codes.
+* You are **signed out on every device**, including the lost phone if the app was still signed in there.
+* You get an email telling you that your two-factor authentication was reset, and by whom. If you did not ask for it, contact your company administrator and change your password straight away.
+* The reset is recorded in your account history.
+
+Then sign in with your password and the emailed code. You can set up your authenticator app again on your new phone from your **Security Settings**.
+
+{% hint style="info" %}
+A reset applies to your login, so it also covers every other Flylogs company you belong to with the same email address.
+{% endhint %}
+
+#### For managers: resetting someone's two-factor authentication
+
+The company administrator, the Operations, Compliance & Safety and Human Resources managers and the Chief Pilot can reset two-factor authentication. The Chief Pilot can do this for pilots and students only, because the Staff page is not available to them.
+
+First confirm that the person asking is really the account owner, for example by phone or in person. Then:
+
+* **Pilots and students:** open **Flight Crew**, edit the person, open the **Account** tab and click **Reset to email 2FA** under **Account security**.
+* **Staff and other managers:** open **Home → Staff**, open the person and click **Reset to email 2FA** in **Account Settings**. The **Two-factor authentication** row shows their current method. The button only appears when they use an authenticator app or a passkey.
+
+<figure><img src="../.gitbook/assets/2fa-reset-pilot-account-security.png" alt="Account security card on the pilot edit page with the Reset to email 2FA button" width="563"><figcaption><p>Pilots and students: Account tab of the pilot edit page</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/2fa-reset-staff-account-settings.png" alt="Account Settings card of a staff member showing the Authenticator app method and the Reset to email 2FA button" width="563"><figcaption><p>Staff and managers: Account Settings card of the staff member</p></figcaption></figure>
+
+{% hint style="warning" %}
+Managers can only reset accounts at their own level or below. For example, an Operations Manager cannot reset the company administrator. **If you are a manager and nobody in your company can reset you, contact** [**Flylogs support**](contacting-support.md). After confirming who you are, we can reset your two-factor authentication for you.
+
+You cannot reset your own two-factor authentication this way. To change your own method, use your **Security Settings**.
+{% endhint %}
+
 ### Passkeys
 
 Passkeys are the **safest and most convenient** way to access your account. A passkey lets you sign in or unlock your account using your device's **fingerprint, Face ID, or screen lock**, instead of typing a password.

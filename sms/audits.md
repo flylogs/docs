@@ -7,6 +7,8 @@ description: >-
 
 # Audit programme
 
+{% embed url="https://youtu.be/a1L2WyZRk1Q" %}
+
 **Safety > Audits** is where you plan and record the audits of your organisation: your own **internal audits** (compliance monitoring) and the audits carried out by your **competent authority**. It is built for any type of operation (AOC, SPO, ATO, CAMO or general aviation) and **supports** your compliance monitoring and safety assurance activities. It does not make an operator compliant by itself: it keeps the plan, the evidence, the findings and the decisions in one place so you can show them.
 
 The Safety menu has one **Audits** entry. The audit pages share a tab bar at the top:

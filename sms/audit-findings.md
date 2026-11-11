@@ -6,6 +6,8 @@ description: >-
 
 # Audit findings
 
+{% embed url="https://youtu.be/a1L2WyZRk1Q" %}
+
 An **audit finding** records something an [audit](audits.md) found, from an internal audit or from your competent authority, and follows it until it is closed. Every finding has an owner, a full set of dates, a root cause, [corrective actions](safety-actions.md) that must be verified as effective, and, where your authority is involved, the authority's decisions. Findings feed the causes of non-compliance back into your [hazard log](hazard-log.md). The tools **support** your compliance monitoring; they do not make the operator compliant by themselves.
 
 ![Finding page](../.gitbook/assets/audits-finding-view.png)

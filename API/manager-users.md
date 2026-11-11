@@ -90,7 +90,8 @@ Retrieve full user details including login history and company context.
       "email": "john@example.com",
       "expiration": null,
       "user_login_count": "42",
-      "created": "2023-01-15"
+      "created": "2023-01-15",
+      "two_factor": "TOTP"
     },
     "UserDetail": {
       "id": "123",
@@ -137,6 +138,8 @@ Retrieve full user details including login history and company context.
   "bases": { "5": "Madrid Base", "6": "Barcelona Base" }
 }
 ```
+
+`User.two_factor` is the second sign-in step of the user's login: `OFF`, `EMAIL`, `TOTP` (authenticator app) or `PASSKEY`. The authenticator secret is never returned.
 
 ---
 
@@ -235,6 +238,51 @@ Delete a user account. Requires confirmation.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | confirm | boolean | Yes | Must be `true` to confirm deletion |
+
+---
+
+## Reset Two-Factor to Email
+
+<mark style="color:green;">`POST`</mark> `/manager/users/reset_2fa.json`
+
+Recovery for a user who lost the device holding their authenticator app (or passkey). Switches the user's sign-in back to emailed codes so they can log in and set up a new authenticator from their own profile.
+
+What a reset does:
+
+* Clears the authenticator app from the login and sets `two_factor` to `EMAIL`. The secret is never returned. Registered passkeys are kept, and the user can revoke them from their profile.
+* Ends every session of that login on every device, including API sessions. The session making the call is kept.
+* Emails the user that their two-factor authentication was reset, and by whom.
+* Records `2fa_reset_email` in the user's account history.
+
+The login is shared by every company the email address belongs to, so the reset applies to all of them.
+
+#### Permissions
+
+* Caller: **Company Administrator (100), Operations Manager (105), Compliance & Safety Manager (110), Human Resources Manager (120) or Chief Pilot (150)**. Anyone else gets `403`.
+* Target: a user of the caller's own company who does **not outrank** the caller (`user_group_id` greater than or equal to the caller's). Otherwise `403`.
+* A manager nobody in their company can reset contacts Flylogs support.
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| User.id | string | Yes | User ID |
+
+```json
+{ "User": { "id": "123" } }
+```
+
+#### Response
+
+```json
+{ "result": true }
+```
+
+| Status | When |
+|--------|------|
+| 400 | Not a `POST`/`PUT`, or `User.id` missing |
+| 403 | Caller's role not allowed, or the target outranks the caller |
+| 404 | No such user in the caller's company |
 
 ---
 
