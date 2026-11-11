@@ -50,6 +50,8 @@ Business refusals answer `200` with `{"result": false, "code": "<CODE>"}`.
 | `type`          | `text_block`, `checkbox`, `yes_no`, `choice`, `text`, `textarea`, `number`, `date`, `datetime`, `photo`, `pdf`                                                                       |
 | `condition`     | `null` or `{"field": "<earlier field key>", "equals": <value>}`. The source must be an earlier `checkbox` (`true`/`false`), `yes_no` (`"YES"`/`"NO"`) or `choice` (option key) field |
 | `filler_groups` | `null` (part of the main signature) or `user_group_id`s that sign this section separately                                                                                            |
+| `filler_users` | optional, omitted when empty: user ids that sign this section separately, whatever their group. Each must be an active user of the company (`UNKNOWN_USER`) |
+| `filler_subject` | optional, omitted when false: `true` = the copy's subject (`subject_user_id`) signs this section, once every shown unit above it is signed. When the form has an `is_subject` field, the section must come after it (`SUBJECT_SIGNS_BEFORE_NAMED`) |
 | `options`       | `choice` only: `[{"key": "o_dual01", "label": "Dual"}]`                                                                                                                              |
 | `unit`, `hhmm`  | `number` only                                                                                                                                                                        |
 
@@ -63,7 +65,9 @@ Business refusals answer `200` with `{"result": false, "code": "<CODE>"}`.
 
 ### Signing units
 
-A form signs in units: `form` (every section without `filler_groups`) plus one unit per section with `filler_groups`. A response is `SUBMITTED` when every unit with at least one shown section is signed.
+A form signs in units: `form` (every section that names no signers of its own) plus one unit per section with `filler_groups`, `filler_users` or `filler_subject`. A response is `SUBMITTED` when every unit with at least one shown section is signed.
+
+When every shown unit above a separately signed section is signed (or at once, when nothing is above it), its `filler_users` and, for `filler_subject`, the copy's subject get an in-app message linking to the copy, also emailed if their message alerts are on. This happens when the copy is started, requested or signed. `filler_groups` are not notified.
 
 ***
 
@@ -195,7 +199,7 @@ The bundle:
 | `response`                             | `id`, `status`, `origin`, subject, `subject_label`, `subject_ref`, `answers`, `due`, `created`, `submitted`, `submitted_by` |
 | `form`                                 | `id`, `name`, `description`, `require_password`, `retention_months`                                                         |
 | `revision`                             | the revision the copy is pinned to, with its `schema` and labels                                                            |
-| `units`, `unit_groups`                 | signing units and who signs each                                                                                            |
+| `units`, `unit_groups`                 | signing units and who signs each: `unit_groups[unit]` = `{subject, users, groups, waiting}`. `users` and `groups` are names. `waiting` = every unit above it is signed                                                                                            |
 | `signatures`                           | per unit: `user_id`, `name`, `group`, `time`                                                                                |
 | `fillable_units`                       | units the caller may still write and sign                                                                                   |
 | `files`                                | the copy's uploads with signed URLs                                                                                         |
@@ -324,7 +328,8 @@ When a course has a **MANDATORY** `ENROLMENT` form:
 | The creator of a copy               | delete it while it is a `DRAFT` with no signed unit                                                                      |
 | The person the copy is about        | see it; fill the `form` unit when `fill_mode` is `SUBJECT` or `SUBJECT_OR_GROUPS`                                        |
 | `FILL` groups                       | see copies of the form; start one about anyone; fill the `form` unit when `fill_mode` is `GROUPS` or `SUBJECT_OR_GROUPS` |
-| A section's `filler_groups`         | see the copy; fill and sign **only** that section (managers cannot sign it for them)                                     |
+| A section's `filler_groups` or `filler_users`         | see the copy; fill and sign **only** that section (managers cannot sign it for them)                                     |
+| The copy's subject, for a `filler_subject` section | once every shown unit above that section is signed: see the copy (even a `GROUPS` one) and fill and sign that section. Before that it is not theirs, and the copy stays hidden as above. Never when the copy has no `subject_user_id` |
 | `VIEW` groups, signers, the creator | see it                                                                                                                   |
 | `OPEN` groups                       | start a copy about themselves at any time                                                                                |
 

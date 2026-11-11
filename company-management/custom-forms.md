@@ -18,7 +18,8 @@ Custom forms are available on the **Premium** and **Unlimited** plans. If your c
 | --- | --- |
 | Build, publish, archive and delete forms; see every response; send forms to people; reopen a signed copy; delete any draft copy; waive a mandatory form | Flylogs Administrator, Company Administrator, Operations Manager, Compliance & Safety Manager (user groups 1, 100, 105, 110) |
 | Fill in and sign a form | Whoever the form says fills it in (see below) |
-| See a filled copy | Managers, the person it is about, whoever filled or signed it, and the user groups you add as viewers. When the form is filled by *selected user groups*, the person it is about sees it only once every part is signed |
+| Fill in and sign a section signed separately | Only the user groups, the people and/or the person the form is about named on that section. Managers cannot sign it for them |
+| See a filled copy | Managers, the person it is about, whoever filled or signed it, the groups and people a section names as its signers, and the user groups you add as viewers. When the form is filled by *selected user groups*, the person it is about sees it only once every part is signed, or once a section they sign is waiting for them |
 
 Managers find **Forms** under **Home** in the main menu. Every user finds the forms they have to fill under **My forms**, in the menu that opens from their name at the top right.
 
@@ -95,7 +96,23 @@ Example: *Refuel performed?* (Yes / No) → *Fuel slip photo*, shown only if the
 
 ### Sections signed by someone else
 
-A section can be **signed separately** by chosen user groups — for example an English-proficiency row assessed by a CTKI, while the Head of Training signs the rest. That section can only be filled and signed by those groups; nobody else (not even a manager) can sign it for them. The form is complete only when every section shown has been signed.
+A section can be **signed separately** instead of being part of the main signature. In the section's **Signed separately by** settings you can name any mix of:
+
+* **User groups** — anyone in them can sign it. For example, an English-proficiency row assessed by any CTKI.
+* **Specific people** — one or more named users, whatever their user group. Use this for post-holders who are nominated by name, such as the Head of Training, the Chief Flight Instructor or the Compliance Monitoring Manager: no one else in their user group can sign it.
+* **The person the form is about** — for example a student's acknowledgement at the end of a disciplinary record. They can open the copy and sign this section only once every part above it is signed. Until then, a copy filled in by staff stays hidden from them. Other students never see it.
+
+Only the groups and people named on the section can fill and sign it. Nobody else can sign it for them, not even a manager. The form is complete only when every section shown has been signed.
+
+When everything above a section is signed, the **specific people** and **the person the form is about** named on it get a notification with a link to the copy. If nothing comes before the section, the notification goes out when the copy is started. The copy also appears under their **My forms → To fill in**. User groups are not notified, so that a whole group is not messaged for one signature: their members find the copy under **My forms → To fill in**.
+
+<figure><img src="../.gitbook/assets/custom-forms-section-signers.png" alt="Signed separately by settings of a section, with a specific person picked and The person the form is about ticked"><figcaption><p>A section signed by one named person and, below it, an acknowledgement signed by the person the form is about.</p></figcaption></figure>
+
+A section signed by the person the form is about must come after the field that says who the form is about (see [Person fields](#person-fields-and-who-the-form-is-about)). The person is then fixed by the time they are asked to sign.
+
+{% hint style="info" %}
+A named person who later leaves the company or is deactivated cannot sign. When you next edit the form, the builder asks you to replace them. Copies already started keep the revision they were started on, so they still wait for that person. A manager can reopen or waive such a copy.
+{% endhint %}
 
 ## Who fills it in, who sees it
 
@@ -139,7 +156,7 @@ Some forms are about a person but are filled in by you, not by them — a discip
 
 <figure><img src="../.gitbook/assets/custom-forms-fill-for.png" alt="Fill in for someone window with a person picker"><figcaption><p>Start a copy about one person and fill it in yourself.</p></figcaption></figure>
 
-Unlike **Request**, the person is not asked to fill anything and gets no notification. As the person the form is about, they can still read it: once it is signed, the copy appears under their **My forms**, like any form about them. If they already have an open copy of that form, it is opened instead of a second one.
+Unlike **Request**, the person is not asked to fill anything and gets no notification. The exception is a section signed by [the person the form is about](#sections-signed-by-someone-else): they are notified, and can open the copy, once everything above that section is signed. As the person the form is about, they can still read it: once it is signed, the copy appears under their **My forms**, like any form about them. If they already have an open copy of that form, it is opened instead of a second one.
 
 Who can: managers (user groups 1, 100, 105, 110) and the groups the form names under *Who fills it in*. The form must be published.
 
