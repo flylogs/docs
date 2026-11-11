@@ -258,13 +258,17 @@ Deletes a `DRAFT` copy with its signatures, history and files. Allowed for the u
 
 Trigger types `PREFLIGHT`, `POSTFLIGHT`, `BOOKING` (scope `flight_type_ids`, `aircraft_ids`), `FIRST_FLIGHT_OF_DAY` (`aircraft_ids`) and `SOLO` (`training_ids`; applies when a training mission on the flight has `require_authorization > 0`). Stages: `PRE` = preflight, first flight of the day, solo; `POST` = post-flight; `BOOK` = booking creation.
 
+`PRE` triggers carry a `timing`: `DISPATCH` (default) — required by `schedules/flight` and `flights/dispatch` whoever dispatches, and by a new flight saved online; `FLIGHT` — not required at dispatch nor when saving a new flight; the crew fills it on the flight page. `flights/confirm` requires both. `timing` is accepted in `manager_save` triggers (ignored on other types) and returned by `manager_view`, `flight_definitions` and `flight_forms` (`null` on non-`PRE` offers).
+
 A scope id that does not belong to the company (flight type, aircraft, course) makes `manager_save` answer `{"result": false, "errors": {"triggers": [{"path": "triggers.0.scope.aircraft_ids", "code": "SCOPE_NOT_FOUND"}]}}`; nothing is saved. `CustomForm.fill_seat`: `PIC` (default), `SIC`, `SUPERVISOR`, `ANY_CREW`.
 
 ### Forms of a flight
 
 <mark style="color:blue;">`GET`</mark> `/custom_forms/flight_forms.json?stage=PRE|POST|BOOK&schedule_id=` · `&flight_id=` · `&token=<uuid>&aircraft_id=&flight_type_id=&date=YYYY-MM-DD&mission_ids[]=`
 
-`offered` (each with `type`, `mode`, `trigger_id`, open `response`) and `responses` (this stage's copies) for a booking, a flight, or a flight not saved yet (a client-generated uuid `token`). Staff above `user_group_id` 145 only for flights they crew. `stage=BOOK` needs a `token` (the booking dialog's).
+`offered` (each with `type`, `mode`, `timing`, `trigger_id`, open `response`) and `responses` (this stage's copies) for a booking, a flight, or a flight not saved yet (a client-generated uuid `token`). Staff above `user_group_id` 145 only for flights they crew. `stage=BOOK` needs a `token` (the booking dialog's).
+
+With `stage=PRE`, add `&timing=DISPATCH` for only the forms asked at dispatch, or `&timing=FLIGHT` for only those the crew fills on the flight page; `responses` is narrowed the same way. Without it, every preflight-stage form.
 
 ### Starting a flight form
 

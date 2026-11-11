@@ -30,10 +30,10 @@ The **Start from a template** panel, on the right of **Home → Forms**, holds r
 
 | Template | What it holds | Set up as |
 | --- | --- | --- |
-| Daily inspection | Walk-around checks, a fuel slip photo shown only when the aircraft was refuelled, and a defect description shown only when a defect was found | First flight of the day, mandatory, filled by the PIC |
-| Fitness to fly (IMSAFE) | The pilot's personal declaration: illness, medication, stress, alcohol, fatigue, eating | Preflight, mandatory, filled by the PIC |
+| Daily inspection | Walk-around checks, a fuel slip photo shown only when the aircraft was refuelled, and a defect description shown only when a defect was found | First flight of the day, before the flight, mandatory, filled by the PIC |
+| Fitness to fly (IMSAFE) | The pilot's personal declaration: illness, medication, stress, alcohol, fatigue, eating | Preflight, before the flight, mandatory, filled by the PIC |
 | Post-flight report | Fuel uplifted, technical issues and occurrences to report to safety | Post-flight, skippable, filled by the PIC |
-| Solo flight briefing | Weather and NOTAMs, aircraft, authorised exercise and limits, student fit to fly | Before a solo flight, mandatory, filled by the instructor / supervisor |
+| Solo flight briefing | Weather and NOTAMs, aircraft, authorised exercise and limits, student fit to fly | Before a solo flight, before dispatch, mandatory, filled by the instructor / supervisor |
 | Course application | Personal details, licence held, total flight time, medical certificate and a declaration | Course enrolment, skippable, filled by the student or on their behalf |
 | Disciplinary action record | The person concerned (a person field that sets who the record is about), what happened, the action taken (verbal, written or final warning, suspension), corrective action, review date and the person's statement | Not attached to anything; filled by managers and signed with their password |
 
@@ -42,7 +42,7 @@ The template's text appears in your language. Once saved, the form is yours like
 <figure><img src="../.gitbook/assets/custom-forms-template-builder.png" alt="Form builder opened from the Disciplinary action record template, with its sections and fields"><figcaption><p>The Disciplinary action record template opened in the builder, ready to review and save.</p></figcaption></figure>
 
 {% hint style="warning" %}
-A template attached to flights as **mandatory** blocks dispatch from the moment you publish it. Check the **Attached to** tab before you press **Publish**, and switch it to **Skippable** or narrow it to some aircraft if you want to try it out first.
+A template attached to flights as **mandatory** blocks dispatch (or, for *before the flight* forms, the flight page) from the moment you publish it. Check the **Attached to** tab before you press **Publish**, and switch it to **Skippable** or narrow it to some aircraft if you want to try it out first.
 {% endhint %}
 
 ## Building a form
@@ -160,25 +160,42 @@ On the **Attached to** tab you can also attach a form to flights:
 
 | Attached to | Asked | Can be limited to |
 | --- | --- | --- |
-| **Preflight** | in the dispatch window of a booking or flight, when a new flight is entered online, and again in the confirm window if still missing | flight types, aircraft |
-| **First flight of the day** | the same places, once per aircraft per day: whoever fills it, it covers that aircraft for the rest of the day | aircraft |
-| **Before a solo flight** | the same places, for flights on a training mission that needs a mission authorisation | courses |
+| **Preflight** | before every flight, at the moment chosen in **When** (see below), and again in the confirm window if still missing | flight types, aircraft |
+| **First flight of the day** | the same, once per aircraft per day: whoever fills it, it covers that aircraft for the rest of the day | aircraft |
+| **Before a solo flight** | the same, for flights on a training mission that needs a mission authorisation | courses |
 | **Post-flight** | in the confirm window | flight types, aircraft |
 | **Booking creation** | when someone books a flight for themselves | flight types, aircraft |
 
-<figure><img src="../.gitbook/assets/custom-forms-attached-first-flight.png" alt=""><figcaption><p>A form attached to the first flight of the day, as mandatory.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/custom-forms-attached-first-flight.png" alt="Attached to tab with a mandatory First flight of the day trigger, When set to Before the flight, for all aircraft"><figcaption><p>A form attached to the first flight of the day, as mandatory, filled before the flight.</p></figcaption></figure>
+
+### Before dispatch or before the flight
+
+*Preflight*, *first flight of the day* and *before a solo flight* forms have a **When** setting:
+
+| When | Asked | Who fills it |
+| --- | --- | --- |
+| **Before dispatch** (default) | in the dispatch window of a booking or flight — from the schedule, the manager's schedule review or the flight page — and when a new flight is entered online. **Dispatch** stays off until the mandatory ones are signed or waived | whoever dispatches, if allowed to fill it (the crew member in the form's seat, the form's filling groups, managers) |
+| **Before the flight** | not at dispatch. Once the flight exists, the flight page shows the form at the top. Until the mandatory ones are signed or waived, the crew sees only **Export**, **Cancel Flight** and, for a flight not dispatched yet, **Dispatch Flight**: no **Edit**, **Confirm**, preflight signature or delete | the crew member in the form's seat (or the form's filling groups and managers on their behalf) |
+
+Use **Before the flight** for forms the crew fills at the aircraft — a daily inspection, a fitness-to-fly declaration — so that a dispatcher who is not on the flight, for example a manager dispatching from the schedule review, is not held up by a form only the pilot can fill. Use **Before dispatch** for forms the person releasing the flight must see signed, such as a solo briefing.
+
+<figure><img src="../.gitbook/assets/custom-forms-flight-page-gate.png" alt="Flight page of a draft flight with the Forms to complete before the flight banner, a mandatory Daily inspection not started with Fill in and Waive, and only Dispatch Flight, Export and Cancel Flight in the top bar"><figcaption><p>A <em>before the flight</em> form still to sign: the crew can only dispatch, export or cancel the flight until it is filled in, or a manager waives it.</p></figcaption></figure>
+
+The flight page only holds back the flight's own crew (PIC, SIC, instructor / supervisor). Staff who are not on the flight keep their buttons and see the form at the top, which managers can fill or waive. **Confirm** asks for both kinds again, so a flight cannot be confirmed with either missing.
+
+Existing forms keep **Before dispatch**. The *Daily inspection* and *Fitness to fly* templates start as **Before the flight**, the *Solo flight briefing* as **Before dispatch**.
 
 **Who fills it**: on *Who fills & sees*, choose the crew member — PIC (default), SIC, instructor / supervisor, or any crew member. Managers and the form's filling groups can always fill it on the crew's behalf.
 
 <figure><img src="../.gitbook/assets/custom-forms-who-fills-flight.png" alt=""><figcaption><p>Who fills &amp; sees for a flight form: the PIC fills it in.</p></figcaption></figure>
 
-**Mandatory** flight forms block the step until they are signed or a manager waives them with a reason: the **Dispatch** button, saving a new flight, or **Confirm**. **Skippable** ones are offered and can be skipped.
+**Mandatory** flight forms block the step until they are signed or a manager waives them with a reason: the **Dispatch** button and saving a new flight (*before dispatch* forms), the flight page (*before the flight* forms), or **Confirm**. **Skippable** ones are offered and can be skipped.
 
 **Confirm** checks the preflight forms again, not only the post-flight ones. A flight cannot be confirmed (signed) while a mandatory *preflight*, *first flight of the day* or *before a solo flight* form that applies to it is still missing. This catches flights that got past dispatch without the form: a flight saved offline, a flight whose aircraft, flight type or training mission was changed after it was saved, or a flight dispatched before the form was attached. The confirm window lists the missing preflight forms above the post-flight ones, so the pilot can fill them in and sign them there, or a manager can waive them.
 
 <figure><img src="../.gitbook/assets/custom-forms-confirm-preflight.png" alt="Post-flight signature window with the Before the flight section listing a mandatory preflight form not started, and Sign and confirm disabled"><figcaption><p>A flight that never had its preflight form signed: <strong>Sign and confirm</strong> stays off until the form is filled in and signed, or waived.</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/custom-forms-dispatch-fill.png" alt="Before the flight section of the dispatch window with the daily inspection being filled in"><figcaption><p>The pilot fills in and signs the daily inspection in the dispatch window. Dispatch stays off until every mandatory form is signed.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/custom-forms-dispatch-fill.png" alt="Before the flight section of the dispatch window with the daily inspection being filled in"><figcaption><p>A <em>before dispatch</em> form filled in and signed in the dispatch window. Dispatch stays off until every mandatory one is signed.</p></figcaption></figure>
 
 What is never blocked:
 
@@ -186,7 +203,7 @@ What is never blocked:
 * flights already confirmed, imported flights and flights recorded from ADS-B;
 * bookings made by staff for someone else, bookings created by Auto Pilot and copied weeks.
 
-A form filled before the flight exists (for a new flight or a booking) is attached to the flight once it is saved or dispatched. The flight page lists its preflight and post-flight forms. The same form can be both preflight and post-flight: each is a separate copy.
+A form filled before the flight exists (for a new flight or a booking) is attached to the flight once it is saved or dispatched. The flight page lists its before-dispatch, before-the-flight and post-flight forms. The same form can be both preflight and post-flight: each is a separate copy.
 
 ### Booking forms
 
