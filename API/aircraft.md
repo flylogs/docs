@@ -442,7 +442,8 @@ a number returns `page: null`.
 - `layout`: `log_rows`, `min_empty_rows` (the PDF is always one page; a busier day gets more,
   shorter log rows).
 - `aircraft`: `registration`, `serial`, `manufacturer`, `model`, `fuel_unit` (the aircraft's
-  fuel tracking unit, which `fuel_start` / `fuel_end` are in).
+  fuel tracking unit, which `fuel_start` / `fuel_end` are in), `oil_unit` (the aircraft's oil
+  tracking unit, which `oil` is in; `null` when it tracks no oil).
 - `crs`: last signed CRS of the day (`date`, `reference`, `name`, `release_reference`) and
   the earliest limits it left running (`until_hours`, `until_date`), from the latest sign-off
   per maintenance plan.
@@ -452,7 +453,7 @@ a number returns `page: null`.
 - `company`: `name`, `phone`, `address`, `zip`, `city`, `state`, `country`, `logo`.
 - `flights`: the day's flights (`DRAFT`, `SCHEDULED`, `DELAYED`, `DISPATCHED`, `LANDED`, and
   `CANCELED` only when it was preflight-signed first), each with `departure_airport`,
-  `landing_airport`, `flight_type` (name), `fuel_start`, `fuel_end`, times (unix), `block_time`
+  `landing_airport`, `flight_type` (name), `fuel_start`, `fuel_end`, `oil` (oil added), times (unix), `block_time`
   and `flight_time` (seconds), `crs_hours_left`, `crew` (`pic`, `sic`, `supervisor`),
   `preflight` (the preflight signature, with `offline`) and `postflight` (the confirmation:
   who and when). Every crew member and signature carries `id`/`user_id`, `name`, `surname`
