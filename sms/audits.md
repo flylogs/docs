@@ -57,7 +57,28 @@ Each area has:
 | Audit frequency | 1, 2, 3, 6, 12 or 24 months |
 | Active | A retired area stays in the history but is never reported as overdue |
 
-Use **Add starter areas** to start from a list of common operator areas (flight operations, crew training and checking, flight and duty time limitations, operational control, ground operations, dangerous goods, continuing airworthiness, aircraft maintenance, training organisation, safety management system, emergency response and contracted services). They are examples: rename or remove what does not apply to your approval. Adding the list again only adds the names you do not have yet.
+### Area templates
+
+You do not have to type your areas one by one. **Templates** (managers only, also offered when the list is empty) adds a ready-made set of areas for your kind of organisation in one click:
+
+| Template | For |
+| --- | --- |
+| Air operator (AOC) | Commercial air transport: management system, flight operations (operational control, flight planning and fuel, performance, mass and balance), crew training and checking, flight and duty time, ground operations, dangerous goods, security, continuing airworthiness, records, emergency response, contracted activities |
+| Specialised operations (SPO) | Aerial work: risk assessments and SOPs, task specialists, operational control, crew training, flight and duty time, aircraft and special equipment |
+| Training organisation (ATO) | Flight schools: training programmes (theoretical knowledge, flight training), instructors and examiners, student records, training aircraft and simulators, aerodromes and operating sites |
+| Continuing airworthiness (CAMO) | Exposition, maintenance programme, airworthiness directives, defects and deferrals, maintenance planning and records, airworthiness reviews, personnel, contracted maintenance |
+| Maintenance organisation (Part-145) | Facilities, certifying staff, tools, components, maintenance data, production planning, performance of maintenance (critical tasks), certification of maintenance, records |
+| General starter list | The 12 common operator areas, all of medium criticality |
+
+![Area templates](../.gitbook/assets/audits-area-templates.png)
+
+Pick a template to see its areas before adding them. Each area comes with:
+
+* its **sub-areas**, where the template has them (for example *Operational control* under *Flight operations*);
+* a **safety criticality**, and the **suggested frequency** for it (high every 3 months, medium every 6, low every 12), so no reason is needed;
+* example **applicable requirements**. They are **EASA references**, given as examples: replace them with your own regulations and manuals.
+
+Area names are added in the language you use Flylogs in. A template **never adds a name you already have**, at any level, so you can add a second template later, or the same one again, without duplicates: areas already in your list show as *Already in your list* and are skipped. Sub-areas of a template area you already have are added under your existing area. Templates are examples, not requirements: rename, re-rate or retire whatever does not apply to your approval. Like any new area, nothing is written to the change history when a template adds it.
 
 ### Risk-based frequency
 

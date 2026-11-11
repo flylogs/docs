@@ -205,11 +205,36 @@ Response: `{ "result": true, "area": { … } }`.
 
 Access: managers. Same fields as create. A `reason` is **required** when `frequency_months` or `criticality` actually changes. Every changed field is appended to the area's change history with the reason. An area with sub-areas cannot become a sub-area; an area cannot be its own parent. Response: `{ "result": true, "area": { … } }`.
 
-### Seed the Starter Areas
+### Seed the Starter Areas or a Template
 
 <mark style="color:green;">`POST`</mark> `/audit_areas/seed_starter.json`
 
-Access: managers. Adds the starter areas (flight operations, crew training and checking, flight and duty time limitations, operational control, ground operations, dangerous goods, continuing airworthiness, aircraft maintenance, training organisation, safety management system, emergency response, contracted services) whose name the company does not have yet, as medium-criticality areas with a 6-month frequency. Nothing is logged: seeding is creation. They are examples to rename or remove. Response: `{ "result": true, "created": 12 }`.
+Access: managers. Two forms:
+
+* **Without a body**: adds the starter areas (flight operations, crew training and checking, flight and duty time limitations, operational control, ground operations, dangerous goods, continuing airworthiness, aircraft maintenance, training organisation, safety management system, emergency response, contracted services) whose name the company does not have yet, as medium-criticality areas with a 6-month frequency.
+* **With an `areas` body** (an area template, used by NEO's *Templates* dialog): creates the posted tree.
+
+```json
+{
+  "areas": [
+    { "name": "Flight operations", "criticality": "high", "requirements": "ORO.GEN, Part-CAT",
+      "children": [ { "name": "Operational control", "criticality": "high", "requirements": "ORO.GEN.110" } ] },
+    { "name": "Records and documentation", "criticality": "low" }
+  ]
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `areas` | **yes** | A list of 1 to 40 top-level areas. |
+| `areas[].name` | **yes** | 1 to 255 characters, trimmed. |
+| `areas[].criticality` | no | `low`, `medium` (default) or `high`. The frequency is always the suggestion for it: 3, 6 or 12 months. |
+| `areas[].requirements`, `areas[].description` | no | Free text. |
+| `areas[].children` | no | Up to 20 sub-areas with the same fields. Sub-areas cannot have `children` (`400`). |
+
+Names compare trimmed and case-insensitively against **every** live area of the company: a name the company already uses, at any level, is never created again. An existing top-level area receives the posted sub-areas; a posted top-level area whose name exists only as a sub-area is skipped together with its sub-areas. Malformed input is `400` with a `message`.
+
+Nothing is logged: seeding is creation. The areas are examples to rename or remove. Response: `{ "result": true, "created": 12 }` (`created` is `0` when everything already exists).
 
 ### Area Change History
 
