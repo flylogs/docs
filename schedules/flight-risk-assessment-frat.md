@@ -25,7 +25,7 @@ You can enable either gate on its own, or both together.
 
 ### When the FRAT appears
 
-The FRAT is shown in the **dispatch confirmation** on the schedule view, directly under the pre-dispatch checklist. It is required only when the **flight type** of the booking or flight has **Require Flight Risk Assessment (FRAT)** on **and** **the person dispatching is a crew member of that flight** — the assigned PIC, SIC or Supervisor. Operations staff who are not assigned to the flight can dispatch without completing it.
+The FRAT is shown in the **dispatch confirmation** on the schedule view, directly under the pre-dispatch checklist. It is required only when the **flight type** of the booking or flight has **Require Flight Risk Assessment (FRAT)** on **and** **the person dispatching is a crew member of that flight** — the assigned PIC, SIC or Supervisor. Operations staff who are not assigned to the flight can dispatch without completing it. Flights dispatched by a manager from **Schedules → Review** never ask for the FRAT, even when that manager is also crew on the booking: dispatching from that page is treated as the operation dispatching, not the crew.
 
 When both gates are enabled, the crew member sees the checklist first, then the FRAT:
 

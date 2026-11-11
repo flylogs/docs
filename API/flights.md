@@ -657,6 +657,71 @@ Checked in order, each returning `result: false` with its own message when it fa
 
 ---
 
+## Edit Dispatch
+
+<mark style="color:green;">`POST`</mark> `/flights/dispatch_edit/{id}.json`
+
+Changes the dispatch data of a flight that is already `DISPATCHED`, as the manager
+Schedule Review page does with **Edit dispatch**. The flight stays `DISPATCHED` and no
+dispatch gate runs again (FRAT, pre-flight forms, MEL/CDL, grounding, type rating).
+`GET` answers `405`.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Flight UUID |
+
+#### Authorization
+
+Only users with `user_group_id` ≤ 145 (Flight Dispatcher and more senior, see
+[User groups](users.md#user-groups)); anyone else gets `403`. The flight must belong to
+the caller's company (`404` otherwise).
+
+#### Request Body
+
+Only the fields posted are changed. For the optional ones, a posted blank clears the value.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| departure_airport | string | no | ICAO. A blank keeps the current value |
+| landing_airport | string | no | ICAO. A blank keeps the current value |
+| pax | number | conditional | A posted blank is refused for non-school companies |
+| pob | number | no | Persons on board |
+| endurance | integer | no | Fuel endurance in seconds |
+| alternate_airport | string | no | Alternate ICAO |
+| callsign | string | no | Max 12 characters |
+| flight_type_id | integer | no | Must be one of the company's flight types |
+| cargo | string | no | Cargo |
+| route | string | no | Route |
+| remarks | string | no | Remarks |
+| data[FlightPassenger][n][name\|surname\|document\|dob\|seat] | string | no | Passenger list, as in [Dispatch Schedule](schedules.md#dispatch-schedule) |
+| data[FlightPassengerSubmitted] | `1` | no | Send with the list (even empty) to replace the stored list; omit to leave it untouched |
+
+A save that changes something records a `FlightChange` row (`action: edit`) listing the
+changed fields, with a before-snapshot. A save that changes nothing records nothing.
+
+#### Errors
+
+All return `result: false` with the message below.
+
+| Condition | Message |
+|-----------|---------|
+| Flight is not `DISPATCHED` | "Only dispatched flights can have their dispatch edited." |
+| Non-school company and `pax` posted blank | "Number of passengers (PAX) is required to dispatch this flight." |
+| `flight_type_id` not one of the company's flight types | "Flight type not found." |
+
+#### Response
+
+```json
+{
+  "result": true,
+  "message": "Dispatch updated."
+}
+```
+
+---
+
 ## Flight ADS-B Track
 
 <mark style="color:blue;">`GET`</mark> `/flights/adsb/{id}.json`

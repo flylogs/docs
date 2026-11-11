@@ -41,20 +41,18 @@ This opens the _Create Flight Draft_ window.
 
 ### **2. Creating the Flight Draft**
 
-The **Create Flight Draft** pop-up allows you to specify operational details needed by pilots.\
-These fields may include:
+The **Dispatch Flight** window is the same dispatch box crews see when they dispatch their own flight, in manager mode. It shows the aircraft's open MEL items and due maintenance, any crew medical limitations, the pre-dispatch checklist (when the company requires it) and the mandatory [custom forms](../company-management/custom-forms.md) set to *before dispatch* (those set to *before the flight* are left for the crew on the flight page), then the dispatch data:
 
-* **Departure and Arrival airports**
-* **Callsign**
-* **Flight type** (e.g., Commercial, Dual, etc.)
-* **Passenger count**
-* **Cargo weight**
-* **Route**
-* **Remarks** (e.g., special cargo, restrictions, operational notes)
+* **Departure and Arrival airports** (required, pre-filled from the booking)
+* **PAX**, **POB**, **Endurance** and **Alternate**. PAX is required for operators that are not schools.
+* **Passenger list**: as soon as PAX is above 0, one row per passenger opens for their name and surname. The details icon on each row adds the document, date of birth and seat. Raising PAX adds rows; lowering it removes only empty rows, never a passenger you already named. Listing more passengers than PAX raises PAX to match. Leaving the rows empty is allowed.
+* **Callsign**, **Flight type**, **Cargo** (when Pax Cargo Fields is on), **Route** and **Remarks**
 
-<figure><img src="../.gitbook/assets/Screenshot 2025-11-14 at 12.58.59.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/manager-review-dispatch.png" alt="Dispatch Flight window on the Schedule Review page with PAX 2 and two passengers listed"><figcaption><p>Dispatching from Schedule Review: PAX 2 opens two passenger rows.</p></figcaption></figure>
 
-Once all required fields are completed, click **Create Draft**.\
+Dispatching from **Schedule Review** never asks for the [Flight Risk Assessment (FRAT)](flight-risk-assessment-frat.md), even when the manager is also crew on the booking: from this page the operation dispatches, not the crew.
+
+Once all required fields are completed, click **Dispatch**.\
 The system will generate a flight draft visible to the pilots assigned to the flight.
 
 ***
@@ -76,6 +74,35 @@ The pilot view includes:
 <figure><img src="../.gitbook/assets/flightDetailsView.png" alt=""><figcaption></figcaption></figure>
 
 This ensures pilots can review all important details immediately, without needing additional communication from operations.
+
+***
+
+### **4. Editing a dispatched flight**
+
+On **Schedule Review**, a dispatched booking shows an **Edit dispatch** button (pencil icon) next to its status. It opens the same window filled with the flight's current dispatch data: departure, arrival, alternate, PAX, POB, endurance, passenger list, callsign, flight type, cargo, route and remarks. Change what you need and click **Save**.
+
+<figure><img src="../.gitbook/assets/manager-review-dispatch-edit.png" alt="Edit dispatch window filled with the flight's current dispatch data"><figcaption><p>Editing the dispatch of a flight that is already dispatched.</p></figcaption></figure>
+
+* The flight stays **Dispatched**. The checks done at dispatch (checklist, FRAT, pre-flight forms, MEL and type rating) are not asked again.
+* A blank field clears that value on the flight. Setting PAX to 0 clears the passenger list.
+* Every saved change is recorded in the flight's change history, listing the fields that changed. A save with no changes records nothing.
+* Only Flight Dispatchers and more senior groups (user group ≤ 145) can edit a dispatch, and the button is shown only to users with full access to Schedule Review (group ≤ 140). Pilots and crew change their flight from the flight itself.
+
+***
+
+### **5. Exporting the flight's documents**
+
+Every dispatched or landed flight on **Schedule Review** has an **Export PDFs** button (download icon), for users with full access to the page (group ≤ 140). It lists the same documents as the **Export** menu on the flight itself:
+
+* **PDF**: the flight record
+* **GenDec**: the General Declaration (not for schools)
+* **Dispatch & authorization**
+* **Technical log**: the aircraft's technical log page for the day (when the company uses the technical log)
+* **Wx & NOTAMS**: the weather and NOTAM briefing, until the flight is confirmed
+
+<figure><img src="../.gitbook/assets/manager-review-export.png" alt="Export PDFs menu open on a dispatched flight in Schedule Review"><figcaption><p>The export menu of a dispatched flight on Schedule Review.</p></figcaption></figure>
+
+Hover any icon on a Schedule Review row to see what it does.
 
 ***
 

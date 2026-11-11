@@ -139,6 +139,8 @@ Create a flight record from a schedule (dispatch function). Converts the schedul
 
 When the schedule's flight type has `require_frat` enabled (see [Flight types](flight-types.md); this replaced the company setting `schedule_dispatch_frat`) **and** the authenticated user is a crew member of the schedule (PIC, SIC or Supervisor), a completed FRAT is **mandatory**. In that case call this endpoint with <mark style="color:green;">`POST`</mark> and include the FRAT fields below; the dispatch is rejected (`result: false`) if they are missing. When the flight type does not require it, the schedule has no flight type, or the dispatcher is not crew, the `GET` form is sufficient.
 
+Pass `manager_dispatch=1` when dispatching on behalf of the operation (this is what the manager schedule review page, `/manager/schedules/review`, sends). For users with `user_group_id` ≤ 145 (Flight Dispatcher and above, see [User groups](users.md#user-groups)) it skips the FRAT requirement even when the user is also crew on the schedule; for any other user the flag is ignored.
+
 The FRAT result is stored per flight and per user (one row per crew member).
 
 | Field       | Type    | Description                                   |
