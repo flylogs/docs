@@ -16,6 +16,8 @@ Under **Bill to**, the panel shows the selected pilot's current **Account Balanc
 
 <figure><img src="../.gitbook/assets/flight-billing-panel.png" alt="Flight Billing Panel"><figcaption><p>Flight Billing Panel, with the pilot's account balance under Bill to</p></figcaption></figure>
 
+To have customers pay by bank transfer, add your IBAN and payment instructions in [Bill notes](../company-management/company-settings/billing.md#bill-notes). They are printed on every bill and its email.
+
 If set in your company settings, your customer receives an instant email notification with the bill information and link. The balance is updated immediately and the bill — along with the customer's full running balance and transaction history — is available on their profile's Billing tab too.
 
 ![](../.gitbook/assets/pilot-billing-balance.png)

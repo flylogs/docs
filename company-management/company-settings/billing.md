@@ -21,6 +21,34 @@ Billing is available on **Club, Premium and Unlimited** plans. On the Free plan 
 * **VAT rate** — the tax percentage applied to billed items.
 * **Default cost values** — for each extra cost type (**fuel**, **handling**, **airport taxes**, **others**) you can set a default amount that is pre-filled on new flight bills, and tick whether VAT applies to that cost type.
 * **Notify by email new bills** — when enabled, the billed person receives an email each time the system creates a bill for them.
+* **Bill notes** — free text printed at the bottom of every bill your company issues to pilots and clients. Use it for your bank details: account holder, IBAN, BIC and how to reference the payment. See [Bill notes](#bill-notes) below.
+
+### Bill notes
+
+Pilots and clients who pay by bank transfer need to know where to send the money. Type it once in **Bill notes** and it appears on every bill:
+
+* on the bill page, at the bottom under the totals,
+* in the PDF downloaded from that page,
+* in the new-bill email, under **Payment information**.
+
+The text is printed exactly as you type it, line breaks included, and up to 2,000 characters. It applies to every bill, old and new, as soon as you save, because bills show the current text and do not keep a copy. If you change your bank account, bills already issued show the new details. Leave the field empty and nothing is printed.
+
+Like the rest of this page, only company managers can edit the field. Pilots and clients see the text on their own bills but cannot change it.
+
+A good bill note answers the questions customers usually ask before paying:
+
+```
+Please pay by bank transfer within 14 days.
+Account holder: Your Flight School B.V.
+IBAN: NL00 BANK 0123 4567 89 · BIC: BANKNL2A
+Payment reference: your bill number (e.g. F2026/115)
+```
+
+<figure><img src="../../.gitbook/assets/billNotesSetting.png" alt="Bill notes field in Settings, Billing, with account holder, IBAN, BIC and payment reference"><figcaption><p>Bill notes in Company → Settings → Billing.</p></figcaption></figure>
+
+<figure><img src="../../.gitbook/assets/billNotesOnBill.png" alt="Bottom of a bill showing the totals and the bank details box below them"><figcaption><p>The same text at the bottom of every bill.</p></figcaption></figure>
+
+Every bill already carries your company name, logo, address, VAT number and its own bill number (for example `F2026/115`), so customers can use the bill number as the transfer reference.
 
 ### Billing rates
 

@@ -106,7 +106,7 @@ Full detail for a single bill including client info, company billing settings, a
       "Company": {
         "name": "My FTO",
         "CompanyDetail": { "Country": { "name": "Spain" } },
-        "CompanyBillingSetting": { "tax": "21", "billed_person": "pilot", "send_notification": true }
+        "CompanyBillingSetting": { "tax": "21", "billed_person": "pilot", "send_notification": true, "bill_notes": "IBAN: NL00 BANK 0123 4567 89" }
       }
     },
     "Creator": {

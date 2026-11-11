@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[Bank details on every bill](bill-notes.md)** · Billing\
+A new **Bill notes** field in the billing settings prints your IBAN and payment instructions on every bill, its PDF and its email.\
+[Manual →](../company-management/company-settings/billing.md#bill-notes)
+
 **Schedules and classes offline for 7 days** · Schedules & Trainings\
 The bookings, pilot availability and training classes of the next 7 days are now kept on your device (it was 48 hours, without classes), so you can read them with no connection, class pages included.\
 [Manual →](../schedules/offline-schedules-and-classes.md)

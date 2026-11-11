@@ -76,10 +76,13 @@ Retrieve the full company profile, theme, operational settings, and billing conf
     "billed_person": "PIC",
     "tax": "21",
     "send_notification": true,
+    "bill_notes": "Account holder: My FTO\nIBAN: NL00 BANK 0123 4567 89",
     "stripe_public_key": "pk_..."
   }
 }
 ```
+
+`CompanyBillingSetting.bill_notes` (string | null, max 2,000 characters) is the free text printed at the bottom of every bill the company issues: bank details and payment instructions. Plain text with `\n` line breaks, no HTML. It is saved through `POST /manager/companies/settings.json` as `data[CompanyBillingSetting][bill_notes]` (company managers only) and returned on every bill by `GET /bills/view/{id}.json` under `Client.Company.CompanyBillingSetting.bill_notes`.
 
 #### CompanyDetail — training organisation fields (task #967)
 
