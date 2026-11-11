@@ -537,6 +537,8 @@ On paid plans the response's `adsb` field is the flight's ADS-B lookup (`status`
 
 Some refusals come back as HTTP `200`: when the aircraft needs a Hobbs or tach reading that the flight is missing, or an end reading is below its start, `result` carries a `message` and an `errors` object instead of `status: "LANDED"`. Treat a confirm as successful only when `result.status` is `LANDED`.
 
+When the company has the technical log on (`CompanySetting.techlog`) and `CompanySetting.techlog_require_preflight` set, a flight with no preflight signature is refused the same way, with `result.code: "PREFLIGHT_SIGNATURE_REQUIRED"` and a `message`. This applies to every caller, managers included, and to offline confirmations (`offline` / `client_id`). Dispatch the flight and give the [preflight signature](#preflight-signature) first; a late entry signs with `paper: 1` and the time the paper was signed.
+
 #### Overlap check
 
 Confirmation is blocked when the flight's block times overlap another **confirmed** (`status = LANDED`) flight on the **same aircraft**. The response is `400` with the usual `message`, plus a **`conflicts`** array naming the blocking flight(s) so a client can link to them:
@@ -777,7 +779,9 @@ signatures.
 
 When the technical log is on, [View Flight](#view-flight) returns `flight.PreflightSignature`
 (`user_id`, `created`, `hash`, `offline`, `name`, `surname`), or `null` while unsigned. Confirming the
-flight is the post-flight signature; [Confirm Flight](#confirm-flight) is unchanged.
+flight is the post-flight signature. With `CompanySetting.techlog_require_preflight` on,
+[Confirm Flight](#confirm-flight) refuses a flight that has no preflight signature
+(`result.code: "PREFLIGHT_SIGNATURE_REQUIRED"`).
 
 #### Path Parameters
 

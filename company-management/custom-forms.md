@@ -160,7 +160,7 @@ On the **Attached to** tab you can also attach a form to flights:
 
 | Attached to | Asked | Can be limited to |
 | --- | --- | --- |
-| **Preflight** | in the dispatch window of a booking or flight, and when a new flight is entered online | flight types, aircraft |
+| **Preflight** | in the dispatch window of a booking or flight, when a new flight is entered online, and again in the confirm window if still missing | flight types, aircraft |
 | **First flight of the day** | the same places, once per aircraft per day: whoever fills it, it covers that aircraft for the rest of the day | aircraft |
 | **Before a solo flight** | the same places, for flights on a training mission that needs a mission authorisation | courses |
 | **Post-flight** | in the confirm window | flight types, aircraft |
@@ -174,11 +174,15 @@ On the **Attached to** tab you can also attach a form to flights:
 
 **Mandatory** flight forms block the step until they are signed or a manager waives them with a reason: the **Dispatch** button, saving a new flight, or **Confirm**. **Skippable** ones are offered and can be skipped.
 
+**Confirm** checks the preflight forms again, not only the post-flight ones. A flight cannot be confirmed (signed) while a mandatory *preflight*, *first flight of the day* or *before a solo flight* form that applies to it is still missing. This catches flights that got past dispatch without the form: a flight saved offline, a flight whose aircraft, flight type or training mission was changed after it was saved, or a flight dispatched before the form was attached. The confirm window lists the missing preflight forms above the post-flight ones, so the pilot can fill them in and sign them there, or a manager can waive them.
+
+<figure><img src="../.gitbook/assets/custom-forms-confirm-preflight.png" alt="Post-flight signature window with the Before the flight section listing a mandatory preflight form not started, and Sign and confirm disabled"><figcaption><p>A flight that never had its preflight form signed: <strong>Sign and confirm</strong> stays off until the form is filled in and signed, or waived.</p></figcaption></figure>
+
 <figure><img src="../.gitbook/assets/custom-forms-dispatch-fill.png" alt="Before the flight section of the dispatch window with the daily inspection being filled in"><figcaption><p>The pilot fills in and signs the daily inspection in the dispatch window. Dispatch stays off until every mandatory form is signed.</p></figcaption></figure>
 
 What is never blocked:
 
-* flights saved **offline** — the forms are offered on the device (see below) but saving is never held up;
+* flights saved **offline** — the forms are offered on the device (see below) but saving is never held up. The flight still cannot be confirmed until its mandatory preflight forms are signed;
 * flights already confirmed, imported flights and flights recorded from ADS-B;
 * bookings made by staff for someone else, bookings created by Auto Pilot and copied weeks.
 
@@ -195,13 +199,13 @@ One copy covers everything booked in the same go: a booking repeated over severa
 The app keeps a copy of your company's flight forms on the device, so preflight and post-flight forms can be filled in without signal:
 
 * entering a **new flight offline**, the preflight forms that apply are offered before it is saved. You can fill them now or save the flight and fill them later;
-* **confirming offline**, the post-flight forms are shown in the confirm window.
+* **confirming offline**, the post-flight forms are shown in the confirm window, and so are any preflight forms not yet signed on this device.
 
 Answers, photos and PDFs stay on the device and are signed there. When the device is back online the flight is sent first, then its forms, then its confirmation, so the confirmation finds its forms already signed. The history of each copy notes that it was signed offline and when.
 
 A form that is signed **with a password** can be filled offline but is signed once you are back online. Forms *before a solo flight* are only offered online.
 
-If a mandatory post-flight form is still missing when an offline confirmation syncs, the confirmation is refused with the form named. The flight stays a draft; fill the form and confirm again online.
+If a mandatory preflight or post-flight form is still missing when an offline confirmation syncs, the confirmation is refused with the form named. The flight stays a draft; fill the form and confirm again online.
 
 Forms for exams, first login, document downloads and certificates will be added in later releases.
 

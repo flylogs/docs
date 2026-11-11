@@ -330,10 +330,10 @@ A copy filled offline is replayed after its flight is created:
 | `POST /schedules/flight.json` (dispatch a booking) | PRE | the booking | `{"result": false, "code": "FORM_REQUIRED", "message", "forms"}` |
 | `POST /flights/dispatch/{id}.json` | PRE | the flight | same |
 | `POST /flights/create.json` — new flight, no `client_id` | PRE | `data[form_token]` | same |
-| `POST /flights/confirm/{id}.json` | POST | the flight | `{"result": {"code": "FORM_REQUIRED", "message", "forms", …}}` |
+| `POST /flights/confirm/{id}.json` | PRE + POST | the flight | `{"result": {"code": "FORM_REQUIRED", "message", "forms", …}}` |
 | `POST /schedules/edit.json` — new booking made by the caller for themselves | BOOK | `data[form_token]` | `{"result": false, "code": "FORM_REQUIRED", "message", "forms"}` |
 
-A create carrying `client_id` (offline replay) is never refused. A booking counts as made for oneself when `self_schedule` is `1` or the caller is its `pic_id`, `sic_id` or `supervisor_id`; edits and bookings made for others are never asked. Every row of one booking dialog (repeat dates, legs) sends the same `form_token`: the first saved booking takes the copies, and the next rows are covered by them. On dispatch the booking's copies move to the new flight; on create the token's copies (the caller's) move to the new flight. `manager_waive` accepts `subject_model` `Schedule` | `Flight` with the `trigger_id` it answers.
+A create carrying `client_id` (offline replay) is never refused. Confirm checks the PRE stage again as well as POST, for every caller and for offline confirmations: a flight created offline, changed after dispatch (aircraft, flight type, missions) or dispatched before the form was attached cannot be confirmed until its mandatory preflight, first-flight-of-the-day and solo forms are `SUBMITTED` or `WAIVED`. `forms` then lists the missing forms of both stages. A booking counts as made for oneself when `self_schedule` is `1` or the caller is its `pic_id`, `sic_id` or `supervisor_id`; edits and bookings made for others are never asked. Every row of one booking dialog (repeat dates, legs) sends the same `form_token`: the first saved booking takes the copies, and the next rows are covered by them. On dispatch the booking's copies move to the new flight; on create the token's copies (the caller's) move to the new flight. `manager_waive` accepts `subject_model` `Schedule` | `Flight` with the `trigger_id` it answers.
 
 ## Course enrolment
 

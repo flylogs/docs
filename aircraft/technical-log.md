@@ -14,7 +14,7 @@ Turn it on in **Settings → Aircraft → Technical log** (Company Administrator
 |---|---|
 | Turn the technical log on or off | Users who can edit company settings |
 | Give the preflight signature | The pilot-in-command of the flight only, after the flight is dispatched (also offline). A flight already confirmed without one can still be signed with the time the paper technical log was signed, online only |
-| Give the post-flight signature (confirm the flight) | Whoever may confirm flights in your company, as before |
+| Give the post-flight signature (confirm the flight) | Whoever may confirm flights in your company, as before. With **Require the preflight signature to confirm a flight** on, only once the flight has its preflight signature |
 | Release an aircraft after an inspection or a defect rectification (sign the CRS) | Managers, mechanics and the aircraft's named managers, as before |
 | Download the technical log PDF | Every active user of the company |
 
@@ -67,6 +67,23 @@ The technical log shows the times you entered, marked as **(offline)**. The flig
 ### Post-flight signature
 
 Confirming the flight is the post-flight signature. While the technical log is on, the button reads **Sign and confirm** and the window says so.
+
+#### Require the preflight signature before confirming
+
+By default a flight can be confirmed without a preflight signature, for example a flight logged directly without dispatch. To stop that, switch on **Settings → Aircraft → Technical log → Require the preflight signature to confirm a flight**.
+
+With it on, **Sign and confirm** stays disabled on a flight that has no preflight signature, and says why. Flylogs refuses the confirmation for everyone, managers included, and also when a confirmation given offline syncs. A preflight signature given offline counts: the device sends it before the confirmation.
+
+<figure><img src="../.gitbook/assets/techlog-confirm-needs-preflight.png" alt="Flight page of a draft flight with Sign and confirm disabled and a tooltip saying the preflight signature is missing"><figcaption><p>A flight without its preflight signature cannot be confirmed.</p></figcaption></figure>
+
+A flight entered after the day was flown on the paper technical log goes through the same steps:
+
+1. Save the flight.
+2. Press **Dispatch Flight**.
+3. The pilot-in-command presses **Preflight signature**, ticks **I signed the paper technical log earlier** and enters when the paper was signed (see [Signed on paper, entered later](#signed-on-paper-entered-later)).
+4. **Sign and confirm**.
+
+A flight created offline has to sync and be dispatched before it can get its preflight signature, so with this option on it is confirmed online afterwards.
 
 ### Technical log PDF
 

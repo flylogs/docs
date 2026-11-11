@@ -15,6 +15,9 @@ The **Aircraft** tab holds the settings about your fleet itself rather than the 
 
   Off by default.
 * **CAMO / Part-M operator (M.A.306)** applies when your aircraft's continuing airworthiness is managed under Part-M, by a CAMO or by your own approved organisation. Every CRS must then carry its **release reference**: the approval number of the maintenance organisation or the licence number of the certifying staff. The technical log page states it. This option can only be switched on while the technical log is on.
+* **Require the preflight signature to confirm a flight**: no flight can be confirmed until its pilot-in-command has given the [preflight signature](../../aircraft/technical-log.md#preflight-signature). It applies to everyone, Company Administrators and managers included, and to flights confirmed offline when the device syncs. A flight entered afterwards must be dispatched and signed first, with the time the paper technical log was signed. Off by default; it can only be switched on while the technical log is on.
+
+<figure><img src="../../.gitbook/assets/techlog-require-preflight-setting.png" alt="Settings, Aircraft tab, Technical log section with the option Require the preflight signature to confirm a flight switched on"><figcaption><p>Settings → Aircraft → Technical log.</p></figcaption></figure>
 
 If your **Auto delete flight files** setting ([Flights](flights.md#logbook-settings) tab) keeps files for less than 36 months, a warning appears here. EASA asks for technical log records to be kept for 36 months after the last entry (M.A.306(c)).
 
