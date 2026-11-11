@@ -77,10 +77,13 @@ Retrieve the full company profile, theme, operational settings, and billing conf
     "tax": "21",
     "send_notification": true,
     "bill_notes": "Account holder: My FTO\nIBAN: NL00 BANK 0123 4567 89",
-    "stripe_public_key": "pk_..."
+    "stripe_public_key": "pk_...",
+    "stripe": true
   }
 }
 ```
+
+`CompanyBillingSetting.stripe` (boolean) is `true` when pilots can pay their balance by card ([`POST /bills/pay.json`](bills.md#pay-balance-by-card)): a valid publishable key and secret key of the same mode are stored. The secret key is never returned by this endpoint. In `GET /manager/companies/settings.json` it comes back as a mask (`••••…`) with `stripe_secret_set: true`. Posting the mask back keeps the stored key, an empty value removes it, and a new `sk_`/`rk_` key replaces it after Stripe accepts it. Anything else is refused with `{"save": false, "message": "..."}` before any setting is saved. The billing row is always the caller's own company's: posted `id`/`company_id` are ignored.
 
 `CompanyBillingSetting.bill_notes` (string | null, max 2,000 characters) is the free text printed at the bottom of every bill the company issues: bank details and payment instructions. Plain text with `\n` line breaks, no HTML. It is saved through `POST /manager/companies/settings.json` as `data[CompanyBillingSetting][bill_notes]` (company managers only) and returned on every bill by `GET /bills/view/{id}.json` under `Client.Company.CompanyBillingSetting.bill_notes`.
 

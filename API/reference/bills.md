@@ -288,52 +288,73 @@ Returns the current wallet balance for a pilot. Managers can query any billable 
 
 ---
 
-## Create Stripe Payment Intent
-
-<mark style="color:blue;">`GET`</mark> `/bills/pay.json`
+## Pay Balance by Card
 
 <mark style="color:green;">`POST`</mark> `/bills/pay.json`
 
-Initiate a Stripe Checkout session to allow a pilot to pay their balance. Requires Stripe to be enabled and configured for the company.
+Opens a Stripe Checkout session so the logged-in pilot can pay their balance by card into the company's own Stripe account. Requires company billing enabled, the pilot's own billing enabled, and a valid pair of Stripe keys in the company billing settings (`CompanyBillingSetting.stripe` is `true` in `/companies/settings.json`). Only card payments are offered. External auditors (group 250) are denied.
 
-#### Request Body (POST)
+#### Request Body (form-encoded)
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| amount | number | No | Amount to pay (defaults to current balance) |
+| amount | number | No | Amount to pay in the company currency, up to two decimals. Defaults to what the pilot owes; required when the balance is not negative |
+| ui | string | No | `embedded` returns the data to mount Stripe's embedded Checkout form; otherwise a hosted Checkout URL is returned |
 
-#### Response
+#### Response (`ui=embedded`)
 
 ```json
 {
-  "result": true,
-  "message": "Payment intent created, redirecting to Stripe checkout.",
-  "redirect_url": "https://checkout.stripe.com/..."
+  "result": {
+    "client_secret": "cs_test_..._secret_...",
+    "publishable_key": "pk_live_...",
+    "payment_id": "cs_test_..."
+  },
+  "message": "",
+  "amount": 795
 }
 ```
 
+#### Response (hosted)
+
+```json
+{
+  "result": {
+    "checkout_url": "https://checkout.stripe.com/c/pay/cs_...",
+    "payment_id": "cs_..."
+  },
+  "message": "",
+  "amount": 795
+}
+```
+
+`result` is `null` with a `message` when the amount is missing or invalid, or when Stripe refused to open the session. Returns `400` when online payments are not set up for the company and `403` when billing is off for the pilot. After a hosted payment Stripe returns the pilot to `/bills?stripe_session={id}`.
+
 ---
 
-## Complete Stripe Checkout
+## Confirm Card Payment
 
-<mark style="color:blue;">`GET`</mark> `/bills/checkout/{token}.json`
+<mark style="color:green;">`POST`</mark> `/bills/checkout/{sessionId}.json`
 
-Process a completed Stripe Checkout session. Called automatically via the Stripe `success_url` redirect. Verifies payment status, records the credit, and notifies company managers.
+Records a finished Checkout session on the pilot's account as a `Stripe payment` receipt and notifies the Company Administrators and Financial Managers. Only the pilot who opened the session can confirm it. Safe to call more than once: a session is recorded once. Paid sessions nobody confirms are recorded by an hourly job.
 
 #### Path Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| token | string | Stripe Checkout session ID |
+| sessionId | string | Stripe Checkout session id (`payment_id` from `/bills/pay.json`) |
 
 #### Response
 
 ```json
 {
   "result": true,
+  "pending": false,
   "message": "Payment received, thank you!"
 }
 ```
+
+`result` is `false` and `pending` is `true` while the session is not paid yet.
 
 ---
 

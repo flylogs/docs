@@ -62,9 +62,13 @@ For the full picture of how rates, packages and balances interact, read [Billing
 
 ### Stripe payments
 
-Connect your own Stripe account to let pilots and clients pay their bills and top up credit online, without leaving Flylogs.
+Connect your own Stripe account to let pilots pay their account balance online by card, without leaving Flylogs. The money goes straight into your Stripe account.
 
-* **Public key** (`pk_…`) and **Secret key** (`sk_…`) — copy both from your [Stripe dashboard](https://dashboard.stripe.com). The public key is validated (it must start with `pk_`); the secret key is stored securely and used server-side only.
-* Payments made through Stripe are credited automatically to the payer's Flylogs account balance.
+* **Public key** (`pk_live_…` or `pk_test_…`) and **Secret key** (`sk_…`, or a restricted `rk_…` key with write access to Checkout Sessions). Copy both from your [Stripe dashboard](https://dashboard.stripe.com/apikeys), and use two keys from the same mode (live or test).
+* Flylogs checks the keys with Stripe when you save. If either one is not a Stripe key, the two do not match, or Stripe rejects the secret key, the save is refused with a message.
+* The secret key is stored encrypted and never shown again. The field shows dots once a key is saved. Paste a new key to replace it, or clear the field to remove it.
+* Payments are added to the pilot's account balance automatically, as a numbered receipt with no VAT added.
 
-See [Online payments](../../billing/online-payments.md) for the pilot-facing flow.
+<figure><img src="../../.gitbook/assets/stripeSettingsKeys.png" alt="Stripe Payments section with the public key filled in and a saved secret key shown as dots"><figcaption><p>Stripe Payments with both keys saved.</p></figcaption></figure>
+
+See [Online payments](../../billing/online-payments.md) for the full setup and the pilot-facing flow.
