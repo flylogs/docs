@@ -48,6 +48,58 @@ That second number matters. Most remarks are not prose at all — `5T`, `NIL`, `
 
 The chips under the date, like `EC-ABC · 2`, count findings per aircraft for that day. They are counted from the records, not written by the assistant.
 
+## Possible hazards
+
+Below the findings, the page has a second section, **Possible hazards**. Where the findings above point at remarks that may deserve a report, this section points at **hazards that may deserve a place in your [hazard log](hazard-log.md)**: several reports describing the same thing, or a report that belongs with a hazard you already track.
+
+![Possible hazards section with the automatic-detection notice](../.gitbook/assets/hazard-suggestions-list.png)
+
+> These suggestions are detected automatically from text patterns and AI. They can be wrong or incomplete — review each one before acting.
+
+That notice is shown at the top of the page. Please take it literally: the assistant can misread a report, group together things that are not related, or miss a hazard altogether.
+
+### When it runs and what it reads
+
+Suggestions are prepared **once a night**, per company, and only when there is something new to read. If nothing new has come in, nothing is sent and nothing changes. A company on a busy night may be picked up the following night.
+
+It looks at:
+
+* **Safety reports** from the last 365 days that are not yet linked to any hazard and have not been looked at before (up to 40 per night, oldest first). Drafts, deleted reports and follow-up statements are left out.
+* **Safety-relevant remark findings** from the last 90 days of daily findings (up to 20 per night).
+* **Your open hazards**, so that it can propose linking to one instead of a duplicate.
+
+What is sent to the AI is the text of those reports and remarks (title, category, department, classification, description) and the title and description of your open hazards. **Reporter names and ids are never sent**, whether the report is anonymous or not. The AI is not asked to rate risk; use **Suggest initial risk** on the hazard for that.
+
+### What you see
+
+Each suggestion is a card with:
+
+* a badge: **New hazard**, or **Link to HZ-…** when it proposes adding the reports to an existing hazard;
+* a title and description, the suggested department, and the **cited reports** (click to open) and **cited flight remarks** (**Open flight**), with the passage that prompted it;
+* a **confidence** level (Low, Medium or High).
+
+Nothing the assistant says is taken on trust. A suggestion that cites a report or hazard that was not in what it was given is discarded, a quote that is not really in the cited text is discarded, and so is anything it is less than half sure of. You can judge a suggestion by reading the quote and opening the cited reports.
+
+Use the **Pending / Accepted / Dismissed** filter to see decided suggestions too. An empty list means nothing has been proposed yet; the page explains that suggestions are generated nightly.
+
+### Accept, link or dismiss
+
+* **Accept** (on a *New hazard* suggestion) opens a form prefilled with the title, description and department. Change anything you like, optionally set an initial risk, and press **Create hazard**. The hazard is added to the log and every cited report that is still live is linked to it.
+* **Link** (on a *Link to HZ-…* suggestion) asks you to confirm, then adds the cited reports to that existing hazard. Reports already linked are skipped.
+* **Dismiss** asks for an optional reason. The suggestion is kept in the *Dismissed* list and is not proposed again for the same reports.
+
+![Create hazard form opened from a suggestion](../.gitbook/assets/hazard-suggestions-accept.png)
+
+![Dismiss a suggestion with an optional reason](../.gitbook/assets/hazard-suggestions-dismiss.png)
+
+After a decision the card shows what happened, with an **Open hazard** link. If someone else already decided the suggestion, or the hazard was closed or deleted, or none of the reports can be linked any more, Flylogs tells you so and changes nothing.
+
+**Nothing is created or linked until a manager accepts.** Declining costs nothing, and a hazard you accept is an ordinary hazard: you own it, edit it and review it like any other.
+
+### Access
+
+Managers only, user groups **110 and below**, the same as the rest of this page. Auditors, pilots and students cannot see or act on suggestions. Possible hazards require the **Premium** or **Unlimited** plan. API: [Hazard suggestions](../API/hazard-suggestions.md).
+
 ## Who can see it
 
 Managers only — user groups **110 and below** (management, safety and maintenance roles). Pilots and students cannot open the page and the API refuses them.

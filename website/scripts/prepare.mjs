@@ -2,7 +2,7 @@
 //
 // The markdown stays in GitBook syntax in the repo (neo's in-app help reads it
 // raw from GitHub). This script writes the converted copy that Astro builds:
-//   src/content/docs/**   pages ({% hint %} -> asides, README -> index, links -> URLs)
+//   src/content/docs/**   pages ({% hint %} -> asides, mermaid -> diagrams, README -> index, links -> URLs)
 //   src/sidebar.json      navigation, from SUMMARY.md
 //   public/gitbook-assets images and files from .gitbook/assets
 //   public/fcom/**, public/api-docs/**  redirects from the old GitBook URLs
@@ -68,6 +68,10 @@ function convert(src, rel, fallbackTitle) {
   }
 
   body = body
+    // Starlight has no mermaid support: emit a raw <pre class="mermaid"> that
+    // MarkdownContent.astro renders client-side. Escaped so the HTML parser keeps the source intact.
+    .replace(/^```mermaid\n([\s\S]*?)\n```$/gm, (_, src) =>
+      `<pre class="mermaid">${src.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`)
     .replace(/\{%\s*embed\s+url="([^"]+)"\s*%\}/g, (_, url) => {
       const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{11})/);
       return yt

@@ -1,0 +1,31 @@
+---
+// Wraps Starlight's MarkdownContent to render the <pre class="mermaid"> blocks prepare.mjs emits.
+// mermaid is loaded only on pages that contain a diagram, and re-renders when the theme toggles.
+import Default from '@astrojs/starlight/components/MarkdownContent.astro';
+---
+
+<Default><slot /></Default>
+
+<script>
+  async function renderDiagrams() {
+    const blocks = [...document.querySelectorAll<HTMLElement>('.sl-markdown-content pre.mermaid')];
+    if (!blocks.length) return;
+    for (const b of blocks) b.dataset.source ??= b.textContent ?? '';
+    const { default: mermaid } = await import('mermaid');
+
+    const render = async () => {
+      const dark = document.documentElement.dataset.theme === 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'default', fontFamily: 'DM Sans, system-ui, sans-serif' });
+      for (const b of blocks) {
+        b.removeAttribute('data-processed');
+        b.textContent = b.dataset.source ?? '';
+      }
+      await mermaid.run({ nodes: blocks });
+    };
+
+    await render();
+    new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  }
+
+  renderDiagrams();
+</script>

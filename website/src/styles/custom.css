@@ -19,3 +19,8 @@
 .sl-markdown-content img { max-width: 100%; height: auto; border-radius: 0.5rem; }
 .sl-markdown-content figure { margin-inline: 0; }
 .sl-markdown-content figcaption { font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); text-align: center; }
+
+/* Mermaid diagrams (rendered by components/MarkdownContent.astro) */
+.sl-markdown-content pre.mermaid { background: transparent; border: 0; padding: 0; margin-block: 1.5rem; text-align: center; overflow-x: auto; }
+.sl-markdown-content pre.mermaid:not([data-processed]) { visibility: hidden; }
+.sl-markdown-content pre.mermaid svg { max-width: 100%; height: auto; }

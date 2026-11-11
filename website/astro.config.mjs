@@ -10,7 +10,11 @@ export default defineConfig({
       logo: { light: './src/assets/logo-dark.svg', dark: './src/assets/logo.svg', replacesTitle: true },
       favicon: '/favicon.svg',
       // News / Contact / Log in replace the social icons (no GitHub link, no "Edit page" link).
-      components: { SocialIcons: './src/components/HeaderLinks.astro' },
+      components: {
+        SocialIcons: './src/components/HeaderLinks.astro',
+        // Renders ```mermaid diagrams (Starlight shows them as code otherwise).
+        MarkdownContent: './src/components/MarkdownContent.astro',
+      },
       customCss: ['./src/styles/custom.css'],
       lastUpdated: true,
       head: [

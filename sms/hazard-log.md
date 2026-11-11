@@ -28,6 +28,10 @@ The page has two tabs: **Hazards** (opens first) and **Review register**, the li
 * Auditors cannot create or change anything, including hazards, links, reviews and actions.
 * The hazard **owner** must be an active user of your company, and cannot be an auditor.
 
+## Hazards suggested automatically
+
+Hazards can also come from **accepted AI suggestions**. Each night Flylogs looks at safety reports not yet linked to any hazard, and at safety-relevant flight remarks, and proposes either a new hazard or a link to one already in the log. They appear under **Safety → Remark Findings → Possible hazards**. Nothing enters the log until a manager accepts a suggestion, and the suggestions can be wrong or incomplete. See [Flight remark findings](flight-remark-findings.md#possible-hazards).
+
 ## The hazard list
 
 Columns: ID (`HZ-YYYY-NNN`, numbered per company), title, department, owner, initial to current risk, status, number of linked reports, open actions, and next review (shown red when overdue). Filter by year (created or reviewed in that year), department, classification, status and risk level, or search by ID or title.

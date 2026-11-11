@@ -35,6 +35,7 @@
 * [Reports](reference/reports.md)
 * [Safety Reports](reference/safety-reports.md)
 * [Audits](audits.md)
+* [Hazard Suggestions](hazard-suggestions.md)
 * [Schedules](reference/schedules.md)
 * [Trainings](reference/trainings.md)
 * [Uploads](reference/uploads.md)
