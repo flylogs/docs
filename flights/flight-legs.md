@@ -9,16 +9,16 @@ Each leg has the same, fixed columns, whatever the operation:
 | Column | What goes in it |
 |---|---|
 | **#** | The leg number, 1, 2, 3… in the order you recorded them. |
-| **Start / End** | When the sortie started and ended. Tap **Now** to stamp the current time. |
+| **Start / End** | When the sortie started and ended. Tap the green **Now** to stamp the start, the red **Now** to stamp the end. |
 | **Airborne** | Worked out for you from Start and End. |
 | **Altitude** | In feet (**ft**) or as a flight level (**FL**), for example the exit altitude of a lift. |
 | **Persons** | The people for this leg, for example jumpers dropped. |
 | **Uplift after this leg** | Fuel added after this leg, in your company's uplift unit (for example litres). Shown when the aircraft tracks fuel. |
 | **Fuel on board, start / end** | The fuel gauge reading when the leg started and ended, in the aircraft's gauge unit (for example lbs). Optional. Shown when the aircraft tracks fuel. |
 | **Fuel used** | Worked out for you from the fuel on board, never typed. See [Fuel](#fuel). |
-| **Notes** | Anything else about this leg. |
+| **Notes** | Anything else about this leg, for example "engine start, ITT 720 °C". |
 
-Legs are detail under the flight. The flight's own block times, landings and passengers stay exactly as you enter them on the flight, and **Remarks** is still there for any other comments.
+Legs fill in parts of the flight for you: its times, block time and landings (see [Legs and the flight's times](#legs-and-the-flights-times)). You can still change any of them on the flight. Passengers stay as you enter them, and **Remarks** is still there for any other comments.
 
 ## Who can use legs
 
@@ -32,13 +32,13 @@ If your company moves to the Free plan, legs already recorded stay visible on th
 
 ## Adding legs
 
-Legs have their own **Legs** card in the flight form, right below the flight times. If you don't use them, the card is a single line with a **+ Add leg** button and never gets in the way of saving a flight.
+Legs have their own **Legs** card in the flight form, right above the flight times. If you don't use them, the card is a single line with a **+ Add leg** button and never gets in the way of saving a flight.
 
 <figure><img src="../.gitbook/assets/flight-legs-empty.png" alt=""><figcaption><p>The Legs card on a flight with no legs yet.</p></figcaption></figure>
 
 1. Open the flight (or start a new one) and tap **+ Add leg**.
    * If the flight hasn't been saved yet, Flylogs saves it first. If something required is missing, the form shows what to complete and the leg is not added until the flight can be saved.
-2. Tap **Now** next to **Start** when the sortie begins, and next to **End** when it's over. You can also type the times.
+2. Tap the green **Now** next to **Start** when the sortie begins, and the red **Now** next to **End** when it's over. You can also type the times.
 3. Fill in altitude (pick **ft** or **FL**), persons, fuel and notes as needed.
 
 There is no Save button for legs: **every change is saved as you make it**, and a small message confirms it ("Leg 3 saved").
@@ -47,13 +47,36 @@ There is no Save button for legs: **every change is saved as you make it**, and 
 
 The form is built for phones and tablets in the cockpit: large buttons and number keypads, so a leg takes a few seconds at each ground stop.
 
-<figure><img src="../.gitbook/assets/flight-legs-editor-phone.png" alt="" width="390"><figcaption><p>Two legs on a phone.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/flight-legs-editor-phone.png" alt="Two legs on a phone, each with a green Now button for the start and a red Now button for the end" width="390"><figcaption><p>Two legs on a phone.</p></figcaption></figure>
+
+### Overlapping legs
+
+A leg can't start before the leg above it has ended. If you enter a start time that does, the leg shows a warning, for example "Starts at 08:35, before leg 2 ends (08:40)", with a button to fix it: **End leg 2 at 08:35** sets the end of the leg above to this leg's start. You can also correct either time yourself; the warning goes away once the times no longer overlap.
+
+If a leg starts even before the leg above it started, the legs are out of order: the warning asks you to check the times, with no automatic fix.
+
+<figure><img src="../.gitbook/assets/flight-legs-overlap.png" alt="Leg 3 starts at 08:35 while leg 2 ends at 08:40; a warning offers End leg 2 at 08:35" width="390"><figcaption><p>Leg 3 starts before leg 2 ends. One tap ends leg 2 at 08:35.</p></figcaption></figure>
 
 ### Deleting a leg
 
 Tap the bin icon on the leg. It disappears straight away and a message offers **Undo** for a few seconds; tap it to bring the leg back exactly as it was. The remaining legs are renumbered.
 
 <figure><img src="../.gitbook/assets/flight-legs-undo.png" alt="" width="390"><figcaption><p>A deleted leg, with Undo.</p></figcaption></figure>
+
+### Legs and the flight's times
+
+While you edit the flight, the legs fill in its times and landings. Remember to **Save** the flight to keep these changes (legs themselves save on their own).
+
+* **Off-blocks and takeoff**, when empty, take the first leg's start. **Landing and on-blocks**, when empty, take the last leg's end. They keep following the legs until you type a time of your own.
+* **Block time** becomes the total airborne time of the legs every time that total changes. The off-blocks and on-blocks times are not changed. A notice under the times tells you each time it happens.
+* **Flight time** is never longer than the block time: if it is, it is set equal to the block time, and the notice says so.
+* **Landings:** each leg added with **+ Add leg** counts one landing. The first leg is the flight's own landing, so a flight with 3 legs has 3 landings. Deleting a leg does not change the landings.
+
+You can still change the block time, flight time and landings by hand at any time.
+
+<figure><img src="../.gitbook/assets/flight-legs-times-from-legs.png" alt="Flight times filled from the legs: off-blocks and takeoff 08:00, landing and on-blocks 08:52, block and flight time 00:47, with a notice that block time was set from the legs"><figcaption><p>Times filled in from the legs, and the notice after block time was set to the legs' total.</p></figcaption></figure>
+
+Legs added through the API do not change the flight on their own; the times are filled in the next time someone edits the flight in Flylogs.
 
 ### Changing the flight date
 
@@ -112,6 +135,12 @@ The flight page shows a **Legs** table with every leg and the totals: number of 
 <figure><img src="../.gitbook/assets/flight-legs-view-fuel.png" alt="Legs table with a Fuel used column: each leg shows litres used, its gauge readings in lbs and, on leg 2, +400 L uplift" width="420"><figcaption><p>On an aircraft that tracks fuel, the Fuel used column carries each leg's gauge readings and the uplift after it.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/flight-view-fuel-details.png" alt="Flight details: fuel on board at start 2400 LBS, at end 2110 LBS, uplifts after legs 400 L, fuel used 563.61 L"><figcaption><p>The flight's fuel in its details.</p></figcaption></figure>
+
+## Confirming the flight
+
+When a flight has legs, the confirmation window is wider and lists every leg next to the flight's times: start and end, airborne time, altitude, persons and notes, with the totals underneath. Check them before you sign.
+
+<figure><img src="../.gitbook/assets/flight-legs-confirm.png" alt="Confirmation window with the flight times on the left and a table of 3 legs with totals on the right"><figcaption><p>The confirmation window of a flight with 3 legs.</p></figcaption></figure>
 
 ## In the PDF and the logbook export
 

@@ -18,7 +18,7 @@ Skydiving lifts, glider and banner tows, survey runs: some flights are many shor
 * **Deleted by mistake?** Tap **Undo**.
 * Large buttons and number keypads on iPhone and iPad.
 
-Legs never change the flight's own block times or landings, and **Remarks** is still there for anything else. Fuel on legs works as described in [Fuel used, worked out from the gauge](fuel-used-from-the-gauge.md).
+Legs fill in the flight's times, block time and landings while you edit it, and warn you when two legs overlap (see [Legs and the flight's times](../flights/flight-legs.md#legs-and-the-flights-times)). **Remarks** is still there for anything else. Fuel on legs works as described in [Fuel used, worked out from the gauge](fuel-used-from-the-gauge.md).
 
 ### Everywhere the flight goes
 

@@ -4,6 +4,8 @@
 
 A **leg** is one sortie inside a flight record: a skydiving lift, a banner or glider tow, a survey run. A flight can hold up to **99** legs, in the order they were recorded. Legs are detail under the flight: they never change the flight's own block times, landings, fuel fields or remarks, and the [Create or Update Flight](flights.md#create-or-update-flight) endpoint never reads or writes them. The fuel **uplifted** after a leg (`fuel`) is added to the flight's refuelling (see [Fuel](flight-legs.md#fuel)).
 
+The API never derives flight fields from legs. The NEO flight form does, when someone edits the flight there: an empty off-blocks / takeoff time takes the first leg's start, an empty landing / on-blocks time the last leg's end, a change in the legs' total airborne time becomes the block time (off/on blocks unchanged, flight time capped at block time), and each leg added with **+ Add leg** counts one landing. If your integration adds legs, send the flight's own times, block time and landings with [Create or Update Flight](flights.md#create-or-update-flight) as well.
+
 Legs are listed as `FlightLeg` (ordered by `sequence`) in the flight's view payload (see [View Flight](flights.md#view-flight)) and in every row of the flight lists `GET /flights/load/…json` and `GET /manager/flights/audit.json`. In the lists each leg carries only `id, flight_id, sequence, start_time, end_time, altitude, altitude_unit, persons, fuel, fuel_start, fuel_end, notes`, and `Aircraft` carries `fuel_tracking` and `fuel_type` for the fuel arithmetic; the uplift unit is the company's `CompanySetting.fuel_uplift_unit`.
 
 ## Access
@@ -113,6 +115,17 @@ Saving a leg exactly as it is already stored changes nothing and returns the sto
 <mark style="color:green;">`POST`</mark> `/flight_legs/delete/{id}.json`
 
 Deletes one leg. Deleting a leg that does not exist (already deleted, or never saved) also answers `{ "result": true }`, so a retry is always safe. The remaining legs keep their `sequence`; clients number them by position.
+
+## Adding legs from your own system
+
+A flight is identified by its `Flight.id`, a **UUID** returned when the flight is created. There is no separate flight number; the flight's **callsign** is what users see in the flight list.
+
+1. **Create the flight** with `POST /flights/create.json` (see [Create or Update Flight](flights.md#create-or-update-flight)) and keep `Flight.id` from the response. Add a `client_id` (for example your own load or manifest id) so a retry updates the same flight instead of creating another one.
+2. **Add each leg** with `POST /flight_legs/save.json`, `data[FlightLeg][flight_id]` = that `Flight.id`. Generate the leg `id` yourself and store it: sending the same `id` again updates the leg, so a retry never duplicates it. A UUID derived from your own record (for example a v5 UUID of your load number) gives the same `id` on every resend.
+3. **Attach documents** (passenger manifest, mass & balance report) to the flight with `POST /uploads/create.json` (see [Uploads](uploads.md)): `active` = `true`, `model` = `Flight`, `id` = the `Flight.id`. Files are attached to the flight, not to one leg, so put the leg or load number in the file name (`load-6-manifest.pdf`). They are listed in the flight's documents.
+4. **Confirm** the flight when it has been reviewed: `POST /flights/confirm/{id}.json`.
+
+Legs can be added at any time while the caller may still edit the flight (see [Access](#access)), before or after it is confirmed.
 
 ## Fuel
 
