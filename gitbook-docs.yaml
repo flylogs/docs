@@ -1,0 +1,11 @@
+$schema: https://api.gitbook.com/gitbook-docs.yaml
+site:
+  title: Flylogs Documentation Site
+  structure:
+    - type: space
+      key: space-2
+      title: API Docs
+      path: api-docs
+      default: true
+      content:
+        directory: ./API
