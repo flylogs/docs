@@ -6,6 +6,7 @@
 //   src/sidebar.json      navigation, from SUMMARY.md
 //   public/gitbook-assets images and files from .gitbook/assets
 //   public/fcom/**, public/api-docs/**  redirects from the old GitBook URLs
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -50,7 +51,32 @@ function rewriteTarget(target, fromRel) {
   return urlFor(resolved) + (md[2] || '');
 }
 
-function convert(src, rel, fallbackTitle) {
+// Last commit date per source file, from one `git log` walk (newest first, so the
+// first date seen for a path wins). The generated copies under src/content/docs
+// are gitignored, so Starlight's own lastUpdated lookup finds nothing; we pass the
+// source file's date through frontmatter instead. Needs full history in CI
+// (actions/checkout fetch-depth: 0), or every page gets the latest commit's date.
+function lastCommitDates() {
+  const dates = new Map();
+  let out;
+  try {
+    out = execFileSync('git', ['-c', 'core.quotePath=false', 'log', '--format=@@%cI', '--name-only', '--', '.'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      maxBuffer: 256 * 1024 * 1024,
+    });
+  } catch {
+    return dates;
+  }
+  let date = null;
+  for (const line of out.split('\n')) {
+    if (line.startsWith('@@')) date = line.slice(2);
+    else if (line && date && !dates.has(line)) dates.set(line, date);
+  }
+  return dates;
+}
+
+function convert(src, rel, fallbackTitle, lastUpdated) {
   let front = {};
   let body = src;
   const fm = body.match(/^---\n([\s\S]*?)\n---\n?/);
@@ -95,6 +121,7 @@ function convert(src, rel, fallbackTitle) {
 
   const data = { title };
   if (front.description) data.description = String(front.description).trim();
+  if (lastUpdated) data.lastUpdated = lastUpdated;
   return `---\n${YAML.stringify(data)}---\n\n${body.trimStart()}`;
 }
 
@@ -146,9 +173,11 @@ const { sidebar, titles } = sidebarFromSummary(path.join(ROOT, 'SUMMARY.md'));
 writeFile(path.join(SITE, 'src/sidebar.json'), JSON.stringify(sidebar, null, 2));
 
 const pages = listMarkdown();
+const commitDates = lastCommitDates();
 for (const rel of pages) {
   const fallback = titles.get(rel) || path.posix.basename(rel, '.md').replace(/[-_]/g, ' ');
-  writeFile(path.join(OUT, outPathFor(rel)), convert(fs.readFileSync(path.join(ROOT, rel), 'utf8'), rel, fallback));
+  const src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+  writeFile(path.join(OUT, outPathFor(rel)), convert(src, rel, fallback, commitDates.get(rel)));
 
   // Old GitBook URLs: /fcom/flights/flight-types, /fcom/flights (folder README), and the
   // API space at /api-docs/flights. GitHub Pages serves x.html for /x and dir/index.html for /dir.
