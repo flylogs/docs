@@ -24,6 +24,17 @@ The €390 fee is **recurring**: it is added to your subscription fee on every y
 
 Once activated, the tab shows the IP whitelist and the API keys manager.
 
+### If your company moves to the Free plan
+
+API access depends on a paid plan. If your subscription ends or you switch to the Free plan, your API access is **paused**, not removed:
+
+* The API tab shows an **API access paused** notice with an **Upgrade plan** button, and every active key is marked **Paused**.
+* Requests made with your API keys are refused while the company is on Free.
+* You can't create new keys while access is paused. You can still **revoke** existing keys at any time.
+* Your API activation is kept. When you move back to a paid plan, the same keys work again straight away: no new keys to issue and no new €390 activation fee.
+
+<figure><img src="../../.gitbook/assets/api-paused-free-plan.png" alt="API tab on the Free plan: an &#x22;API access paused&#x22; notice with an Upgrade plan button, and each API key marked Paused"><figcaption><p>API tab after moving to the Free plan: access paused, keys kept</p></figcaption></figure>
+
 ### IP whitelist
 
 A list of IP addresses that are trusted for API access. It plays two roles:

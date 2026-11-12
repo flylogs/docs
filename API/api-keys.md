@@ -21,7 +21,9 @@ curl https://fmc.flylogs.com/v1/flights.json \
   -H "Authorization: Bearer flk_3pQ8...Zr"
 ```
 
-Keys do not expire on inactivity and are not affected by logout. A key stops working only when it is **revoked** or, if an expiry date was set, after that date passes.
+Keys do not expire on inactivity and are not affected by logout. A key stops working permanently only when it is **revoked** or, if an expiry date was set, after that date passes.
+
+While the company is on the **Free plan** (or has not bought API access), every key is answered with **402 Payment Required**. The keys are not revoked: they work again unchanged once the company is back on a paid plan. See [Authentication](authentication.md) for the 402 response.
 
 ---
 
