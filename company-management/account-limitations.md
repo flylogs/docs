@@ -15,7 +15,7 @@ Flylogs offers an unlimited account type for bigger organizations, get in contac
 |                     | Free     | Premium   |
 | ------------------- | -------- | --------- |
 | Aircraft\*          | 5        | 20        |
-| Cloud Storage       | 10GB     | 50GB      |
+| Cloud Storage       | 3GB      | 50GB      |
 | Email notifications | 1000/mo. | 10000/mo. |
 | ADSB                | NO       | YES       |
 
@@ -26,6 +26,29 @@ Flylogs offers an unlimited account type for bigger organizations, get in contac
 These quota limitations for aircraft and storage and not hardly enforce. The system will inform you about the limit being reached but will not stop your operations.
 
 Our support team will contact you to correct the situation or increase your limits based on a commercial offer.
+
+### File retention on the Free plan
+
+Files uploaded by a company on the **Free** plan are kept for **3 years** from the day they were uploaded. Every night, files older than that are deleted permanently from Flylogs storage and cannot be restored.
+
+* It covers every uploaded file: pilot documents and certificates, flight and aircraft attachments, document library files, training material and safety report attachments.
+* Only the file is deleted. The record it was attached to (the flight, certificate, aircraft or document entry) stays, without its file. Flights, pilots, aircraft and the rest of your data are not affected.
+* The 3 years count from the upload date, not from the date the company moved to the Free plan. When a paid plan ends and the company is downgraded to Free, its files older than 3 years are deleted from the next night on.
+* Companies on a paid plan (Club, Premium or Unlimited) keep all their files. Upgrading from **Company > Subscription** stops the deletion from the next night on.
+
+{% hint style="warning" %}
+Download any file you must keep for regulatory reasons before it is 3 years old. Files that have already been deleted cannot be recovered, not even by Flylogs support.
+{% endhint %}
+
+This rule is part of the [terms and conditions](https://www.flylogs.com/static/legal) (section *Pricing and extra charges*).
+
+### Inactive accounts
+
+Under the GDPR, personal data may not be kept longer than necessary. A company account in which **no user has logged in for 5 years** is therefore deleted permanently, with all its data and uploaded files.
+
+* The company administrators receive a warning email before the account is deleted.
+* Any user logging in to the account cancels the deletion. Nothing else is required.
+* Deleted accounts cannot be restored.
 
 ### Free trial
 

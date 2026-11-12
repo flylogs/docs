@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**Files on the Free plan kept for 3 years** · Company management\
+Files uploaded by companies on the Free plan are now deleted automatically 3 years after upload; paid plans keep all their files. The terms and conditions also gained a section on how security incidents and data breaches are handled, and state that accounts with no login for 5 years are deleted under the GDPR.\
+[Manual →](../company-management/account-limitations.md#file-retention-on-the-free-plan)
+
 **A filled form as a PDF** · Company management\
 Download any filled form copy as a PDF: its questions and answers, the attached files by name, and each signature with who signed, when, on which revision and its fingerprint. The Excel export of responses now keeps full question wording, names the files and adds who signed each part and when.\
 [Manual →](../company-management/custom-forms.md#downloading-a-copy-as-a-pdf)
