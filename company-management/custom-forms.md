@@ -143,6 +143,28 @@ A manager can **reopen** a signed copy with a reason: its signatures are voided,
 
 A **draft** (a copy started but not every part signed yet) can be deleted with its answers and files: by the person who started it, as long as nobody has signed any part of it yet, and by managers at any time — from the copy itself or from the **Delete** button on its row in **Forms → Responses**. Requested, submitted, skipped and waived copies cannot be deleted.
 
+
+### Downloading a copy as a PDF
+
+A filled copy is a record you may have to keep for years and hand to an authority. Press **Download PDF** at the top of any copy to save it as a document you can file and send.
+
+<figure><img src="../.gitbook/assets/custom-forms-copy-download-pdf.png" alt="A submitted ATO entry assessment with the Download PDF button next to Open profile and Reopen"><figcaption><p>The <strong>Download PDF</strong> button at the top of a copy.</p></figcaption></figure>
+
+The PDF holds the copy as it is shown on screen, laid out as a document, without the app's menus or buttons:
+
+* the form name and the revision the copy was filled on (number, issue, revision, effective date) with the revision fingerprint;
+* who the copy is about, its status, when it was started, submitted (and by whom) and its due date, and the copy reference;
+* every question shown on the copy, with its full wording and help text, and its answer;
+* the files attached to each question, by file name, under that question. The files themselves stay in Flylogs: open the copy to download them;
+* under each signed part: who signed, their role, the date and time, the revision it was signed on and the **answers fingerprint** recorded at signing, with two checks: whether the answers in the copy still match that fingerprint, and whether the signature seal (signer, time and device) still verifies. A part not signed yet says who still has to sign it;
+* for managers, the copy's history (signed, submitted, reopened…), as shown on screen.
+
+<figure><img src="../.gitbook/assets/custom-forms-copy-pdf.png" alt="First page of the PDF of an ATO entry assessment: the copy's details, the questions and answers, the attached files by name and the signature with its fingerprint"><figcaption><p>The first page of the PDF of a copy.</p></figcaption></figure>
+
+A copy that is not submitted yet can be downloaded too: the PDF then says at the top that it is not complete and is not a signed record yet. Every page carries the copy reference, the time it was exported and the page number. Dates and times are in your company's time zone and date format.
+
+The same PDF can be downloaded without opening the copy, from the PDF icon on its row in **Forms → Responses** and in the **Forms** box of a person's **Manager Area** tab (see [Forms on a person's page](#forms-on-a-persons-page)). Anyone who can open a copy can download its PDF; nobody else can.
+
 ## Sending a form to people
 
 From **Forms → Responses → Request**, choose people and/or pilot groups, an optional due date and a note. Each person gets their own copy and a notification; anyone who already has an open copy of that form is not asked again. Overdue copies are shown in red to them and to you.
@@ -247,9 +269,11 @@ Forms for exams, first login, document downloads and certificates will be added 
 
 **Forms → Responses** lists every copy of a form: who it is about, its status, when it was started, submitted and due, and which required answers are still missing. The **Related to** column links to the record each copy belongs to: the flight, the booking, the student's enrolment (or the course, for a pre-entry form filled before enrolment) or the person. The same link is at the top of each filled copy.
 
-Who gets the link: flights and bookings link for everyone who can see the copy, and the flight or booking page still applies its own access. Enrolment, course and person pages link for managers (`user_group_id` ≤ 110); a student also gets a link to their own enrolment. Filter by status or name, open any copy, or export the list to Excel (one column per field).
+Who gets the link: flights and bookings link for everyone who can see the copy, and the flight or booking page still applies its own access. Enrolment, course and person pages link for managers (`user_group_id` ≤ 110); a student also gets a link to their own enrolment. Filter by status or name, open any copy, download a copy as a PDF from the PDF icon on its row, or export the list to Excel.
 
-<figure><img src="../.gitbook/assets/custom-forms-responses.png" alt="Responses of the Disciplinary action record form with one submitted copy"><figcaption><p>Responses of a form: status, dates and the record each copy belongs to.</p></figcaption></figure>
+The Excel export has one row per copy and covers every copy matching the current filter, not only the page on screen. It has one column per question, with the question's full wording. When two questions share the same wording, the column header starts with the section title (for example *Credit PPL › Min. t. DL*). Uploaded files are listed by file name, and each part of the form that is signed has a *Signed by* and a *Signed at* column.
+
+<figure><img src="../.gitbook/assets/custom-forms-responses-pdf.png" alt="Responses of the ATO entry assessment form with one submitted copy and the PDF icon at the end of its row"><figcaption><p>Responses of a form: status, dates, the record each copy belongs to and the PDF of each copy.</p></figcaption></figure>
 
 | Status | Meaning |
 | --- | --- |
@@ -268,7 +292,11 @@ In **Flight Crew**, open a person and go to the **Manager Area** tab. The **Form
 
 <figure><img src="../.gitbook/assets/custom-forms-pilot-profile.png" alt="Forms box in the Manager Area tab of a pilot, with a disciplinary record naming them as the person concerned"><figcaption><p>A disciplinary record that names this pilot as the person concerned.</p></figcaption></figure>
 
-Click a copy to open it. The box lists only the copies you are allowed to see: managers (user groups 1, 100, 105 and 110) see them all, and other groups with access to the Manager Area see the copies their own access lets them open. The box appears only on plans that include custom forms.
+Click a copy to open it, or the PDF icon at the end of its row to download it as a PDF.
+
+<figure><img src="../.gitbook/assets/custom-forms-person-box-pdf.png" alt="Forms box of a pilot with a PDF icon on each copy"><figcaption><p>Each copy in the Forms box can be downloaded as a PDF.</p></figcaption></figure>
+
+The box lists only the copies you are allowed to see: managers (user groups 1, 100, 105 and 110) see them all, and other groups with access to the Manager Area see the copies their own access lets them open. The box appears only on plans that include custom forms.
 
 ## Forms on the dashboard
 

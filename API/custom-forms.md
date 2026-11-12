@@ -142,7 +142,7 @@ Soft delete; refused with `HAS_RESPONSES` once anyone has a copy.
 
 <mark style="color:blue;">`GET`</mark> `/manager/custom_forms/responses/{formId}.json?status=&q=&page=`
 
-50 per page, newest change first. `q` searches the person's name. Each row: `id`, `status`, `origin`, `subject_user {id, name}`, `subject_label`, `subject_ref`, `answers`, `revision_id`, `created`, `submitted`, `due`, `missing [{key, label}]` (required answers still missing on that copy's own revision). Plus `people {user id: name}` for every user a `person` answer names, and `paging {page, limit, count, pageCount}`.
+50 per page, newest change first. `q` searches the person's name. Each row: `id`, `status`, `origin`, `subject_user {id, name}`, `subject_label`, `subject_ref`, `answers`, `revision_id`, `created`, `submitted`, `due`, `missing [{key, label}]` (required answers still missing on that copy's own revision), `signatures {unit: {user_id, time}}` (signed units only). Plus `people {user id: name}` for every user a `person` answer names or who signed a unit, `files {upload id: file name}` for the files attached to the listed copies, and `paging {page, limit, count, pageCount}`.
 
 ### Send a form to people
 
@@ -228,7 +228,7 @@ The bundle:
 | `form` | `id`, `name`, `description`, `require_password`, `retention_months` |
 | `revision` | the revision the copy is pinned to, with its `schema` and labels |
 | `units`, `unit_groups` | signing units and who signs each: `unit_groups[unit]` = `{subject, users, groups, waiting}`. `users` and `groups` are names. `waiting` = every unit above it is signed |
-| `signatures` | per unit: `user_id`, `name`, `group`, `time` |
+| `signatures` | per unit: `user_id`, `name`, `group`, `time`, `fingerprint` (sha256 of the unit's answers taken at signing, `null` on signatures older than fingerprints), `intact` (the stored answers still give `fingerprint`; `null` without one), `sealed` (the signature stamp verifies) |
 | `fillable_units` | units the caller may still write and sign |
 | `files` | the copy's uploads with signed URLs |
 | `can_skip`, `can_reopen`, `can_delete` | |

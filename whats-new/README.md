@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**A filled form as a PDF** · Company management\
+Download any filled form copy as a PDF: its questions and answers, the attached files by name, and each signature with who signed, when, on which revision and its fingerprint. The Excel export of responses now keeps full question wording, names the files and adds who signed each part and when.\
+[Manual →](../company-management/custom-forms.md#downloading-a-copy-as-a-pdf)
+
 **[Bank details on every bill](bill-notes.md)** · Billing\
 A new **Bill notes** field in the billing settings prints your IBAN and payment instructions on every bill, its PDF and its email.\
 [Manual →](../company-management/company-settings/billing.md#bill-notes)
