@@ -12,6 +12,31 @@ As part of the scheduled lesson management, the teacher or any manager, can acce
 
 This records are stored in the student's academic profile as part of the training progress.
 
+### Add or remove students after scheduling
+
+You can change who is on a class after you schedule it. Open the class and go to the **Attendance** tab.
+
+* **Add Student** (top right) adds another enrolled student to the class. Teachers and managers can do this.
+* The **remove icon** (a person with a minus sign) next to **Evaluate** on each student's row takes that student off the class. Only managers and the training office can see it. Teachers cannot.
+
+<figure><img src="../.gitbook/assets/remove-student-from-class-roster.png" alt="Attendance tab of a class: each student row has a status selector, a remove icon and an Evaluate button; Add Student is at the top right"><figcaption><p>The Attendance tab. The remove icon is on each student's row, just left of <strong>Evaluate</strong>.</p></figcaption></figure>
+
+Click the remove icon, then click **Remove** to confirm. The student no longer appears on the class register.
+
+<figure><img src="../.gitbook/assets/remove-student-from-class-modal.png" alt="Remove from class confirmation dialog with Cancel and Remove buttons"><figcaption><p>Confirming the removal.</p></figcaption></figure>
+
+Removing a student from a class does **not** remove them from the course and does not change their progress on the lesson. Progress belongs to the lesson, not to one class, and the student may have completed the lesson in another class. To take a student out of the whole course, change their enrolment from **Trainings → Students**.
+
+{% hint style="warning" %}
+You can only remove a student while the class register is still open. The remove icon is hidden on a student's row when any of these is true:
+
+* attendance has already been marked for that student (anything other than **Not marked**),
+* the student has signed their attendance for the class,
+* the attendance register has been signed, or the class is closed or cancelled.
+
+So if you add someone by mistake, remove them **before** you mark attendance or sign the register. If the register is already marked or signed, contact support and we will correct the class for you.
+{% endhint %}
+
 {% embed url="https://youtu.be/fgaZIQFwvnw" %}
 
 {% hint style="info" %}
