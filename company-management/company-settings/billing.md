@@ -67,6 +67,7 @@ Connect your own Stripe account to let pilots pay their account balance online b
 * **Public key** (`pk_live_…` or `pk_test_…`) and **Secret key** (`sk_…`, or a restricted `rk_…` key with write access to Checkout Sessions). Copy both from your [Stripe dashboard](https://dashboard.stripe.com/apikeys), and use two keys from the same mode (live or test).
 * Flylogs checks the keys with Stripe when you save. If either one is not a Stripe key, the two do not match, or Stripe rejects the secret key, the save is refused with a message.
 * The secret key is stored encrypted and never shown again. The field shows dots once a key is saved. Paste a new key to replace it, or clear the field to remove it.
+* If Stripe later stops accepting the saved secret key (rolled, expired or deleted), the field shows a red warning and the Company Administrator and Financial Manager get one urgent message about it. Paste a current key to fix it. See [When Stripe stops accepting your key](../../billing/online-payments.md#when-stripe-stops-accepting-your-key).
 * Payments are added to the pilot's account balance automatically, as a numbered receipt with no VAT added.
 
 <figure><img src="../../.gitbook/assets/stripeSettingsKeys.png" alt="Stripe Payments section with the public key filled in and a saved secret key shown as dots"><figcaption><p>Stripe Payments with both keys saved.</p></figcaption></figure>

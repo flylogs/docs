@@ -33,6 +33,16 @@ The secret key is stored encrypted and is never shown again. Afterwards the fiel
 Never type a password into these fields. Older versions of this page let some browsers autofill the manager's Flylogs login into the key fields. Flylogs now rejects anything that is not a Stripe key, and values saved that way have been removed. If your pilots no longer see **Pay online**, enter your Stripe keys again.
 {% endhint %}
 
+### When Stripe stops accepting your key
+
+A key that worked when you saved it can stop working later: you rolled it or deleted it in Stripe, it reached the expiry date you gave it when rolling, or a restricted key lost its **Checkout Sessions** permission. From then on pilots cannot pay online and paid sessions are no longer picked up by the hourly check.
+
+Flylogs notices the next time it talks to Stripe (the hourly check, or a pilot pressing **Pay online**). The Company Administrator and the Financial Manager then get one urgent inbox message, also sent by email, titled *Stripe rejected your secret key*, with a link to the billing settings. It is sent once per key, not every hour. The Secret key field shows the warning in red until you paste a new key.
+
+<figure><img src="../.gitbook/assets/stripeSecretRejected.png" alt="Stripe Payments section with a saved secret key and a red warning that Stripe rejected it"><figcaption><p>The warning under the Secret key field when Stripe no longer accepts the saved key.</p></figcaption></figure>
+
+To fix it, copy a current secret key from [Developers → API keys](https://dashboard.stripe.com/apikeys) in Stripe, paste it into **Secret key** and click **Save**. Payments pilots made in the last 48 hours are recorded at the next hourly check.
+
 ### Restricted keys
 
 Instead of the secret key you can use a [restricted key](https://docs.stripe.com/keys#limit-access) (`rk_live_…`) that can only do what Flylogs needs. Give it **Write** access to **Checkout Sessions** and leave everything else as **None**.
