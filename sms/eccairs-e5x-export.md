@@ -31,10 +31,14 @@ Open the report and choose **Edit**. People who may export see an extra card, **
 | **Operation type** | Optional. If empty, the [flight type mapping](#map-your-flight-types) is used, otherwise "Unknown". |
 | **State of occurrence (override)** | Optional. By default it is derived from the flight's airports or your company's country. |
 
-The aircraft, date, time, location, flight phase and description come from the report itself. When the report is linked to a flight, the aircraft model, mass category and number of engines are taken from the aircraft.
+The date, time, location, flight phase and description come from the report itself.
+
+* **Date and time**: the event date and time on the report are local time in your **company timezone** (as typed on the form). The file carries the local date plus the date and time converted to **UTC**, as ECCAIRS requires.
+* **Aircraft**: the aircraft selected on the report itself (not the one of a linked flight). From it the file takes the registration, serial number, manufacturer and model, and derives the **aircraft category**, **propulsion type** and **mass group** from the aircraft model (its ICAO type) and its maximum take-off mass. No engine count is exported.
+* **Flight**: when the report is linked to a flight, the flight adds the call sign and the departure and destination aerodromes.
 
 {% hint style="warning" %}
-**Do not type people's names in free-text fields** (description, events, actions, comments, file names). The XML is name-redacted by the server, and the PDF leaves out every person-name field (reporter, crew), but neither can detect a name written inside a narrative. Free text is exported exactly as you wrote it.
+**Do not type people's names in free-text fields** (description, events, actions, comments, file names). In the **XML**, the server redacts the names of the people on the report (reporter, reviewer, crew) from the title, location, narrative texts and attachment names, but it cannot recognise anybody else's name. The **PDF** leaves out every person-name field (reporter, crew), but prints the narrative texts exactly as you wrote them.
 {% endhint %}
 
 ## 2. Download the E5X

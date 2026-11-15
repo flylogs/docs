@@ -424,11 +424,11 @@ Managers only. Changes `title`, `description`, `owner_user_id` and `due_date` of
 | Move | Who | Requirements |
 |------|-----|--------------|
 | `open` → `done` | the owner, or a manager | optional `note` (stored as the completion note) |
-| `done` → `verified` | managers | `effective` (`1`/`0` or `true`/`false`) **and** a `note` |
+| `done` → `verified` | managers; an auditor (250) only on an action of an internal audit finding they raised (`raised_by_user_id` or `created_by`) that is not closed | `effective` (`1`/`0` or `true`/`false`) **and** a `note` |
 | `open` or `done` → `cancelled` | managers | `note` |
 | `done` → `open` (reopen) | managers | none |
 
-Any other move is `400`; a move another role could make is `403`. A concurrent change returns `400` ("changed by someone else"). A **not effective** verification keeps the action closed and flags it (`effective: 0`); create a follow-up action. Auditors cannot own or change actions. Response: `{ "result": true, "action": { … } }`.
+Any other move is `400`; a move another role could make is `403`. A concurrent change returns `400` ("changed by someone else"). A **not effective** verification keeps the action closed and flags it (`effective: 0`); create a follow-up action. Auditors cannot own actions and make no other move (`403`). Response: `{ "result": true, "action": { … } }`.
 
 Owners receive a reminder email 3 days before the due date and on the due date.
 

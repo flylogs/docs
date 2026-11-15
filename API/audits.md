@@ -26,6 +26,7 @@ Every endpoint requires a **premium** or **unlimited** company plan. On any othe
   * [Save an Assessment](#save-an-assessment) on that audit;
   * [Create a Finding](#create-finding) on that audit and [Edit](#edit-finding) the findings they created while `open`, with only `assessment_id`, `number`, `classification_id`, `requirement`, `title`, `details`, `area_id`, `raised_date` (any other key is `403`). `raised_by_user_id` is set to them; the owner and the CAP / target dates are left for a manager;
   * add files under `Audit` / `AuditFinding` of that audit and delete the ones they uploaded ([Files](#files)).
+* **Raising auditor.** On a finding of an internal audit that they raised and that is not closed, whatever the audit's status, a group 250 user may also verify its corrective actions (`done` → `verified` with [Safety Actions status](safety-assurance.md)) and [close it](#change-finding-status). Nothing else.
 
   Anywhere else, or once the audit is completed or cancelled, they get `403`. `audits/index.json` and `audits/view` return `can_conduct` for the caller; `audit_findings/view` returns `can_conduct_audit` and `can_edit_raised`.
 * The accountable manager is a company setting and may be in any group except 250. A missing or invalid group fails closed.
@@ -511,7 +512,7 @@ The **finding owner** may post only `root_cause` and `root_cause_category` (any 
 
 <mark style="color:green;">`POST`</mark> `/audit_findings/status/{id}.json`
 
-Access: managers. Done under the finding's row lock.
+Access: managers; or the auditor (250) who raised the finding (`raised_by_user_id` or `created_by`) of an **internal** audit, while it is not closed, and only `{ "status": "closed", "note" }` (no `authority`; any other move is `403`). The closing rules below apply to both. For that auditor, `audit_findings/view` returns `can_verify_raised: true` and `allowed_transitions: ["closed"]`. Done under the finding's row lock.
 
 ```json
 { "status": "cap_accepted", "date": "2026-07-01", "reference": "AUTH/2026/17", "note": "…" }

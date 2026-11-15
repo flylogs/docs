@@ -923,7 +923,13 @@ The filter is on the offered list only: it never rejects a `safety_report_depart
 
 Builds an ECCAIRS Aviation 5.1.0.0 (RIT) `.e5x` package for a report. Used by the neo "Download E5X (ECCAIRS)" button. The XML is validated against the official XSD; a file that fails validation is never returned.
 
-**Access:** `user_group_id` < 111, or the report's assigned reviewer (`reviewer_id`). **Auditors (250) never**, drafts and deleted reports excluded. No plan gating. The caller must also pass the ACL (`SafetyReports/e5x`, `SafetyReports/eccairs_options`), which needs the V5 `aco_sync`. Served by the V5 API only.
+**Access:** `user_group_id` < 111, or the report's assigned reviewer (`reviewer_id`). **Auditors (250) never**, drafts and deleted reports excluded. A session whose `user_group_id` is missing or not a positive integer is refused (fail closed). No plan gating. The caller must also pass the ACL (`SafetyReports/e5x`, `SafetyReports/eccairs_options`), which needs the V5 `aco_sync`. Served by the V5 API only.
+
+### What is mapped
+
+* **Date and time.** `SafetyReport.datetime` is the wall-clock time the user typed, i.e. local time in the **company timezone**. The XML carries `Local_Date` (that local date) and `UTC_Date` / `UTC_Time` (the same instant converted to UTC).
+* **Aircraft.** The report's own linked aircraft (`Aircraft`, the `safety_reports_aircraft` link), not the aircraft of the linked flight. Exported: registration, serial number, manufacturer/model, and the aircraft category, propulsion type and mass group derived from the aircraft model's ICAO type description and the aircraft's max take-off mass. No engine count. A report with no aircraft omits the Aircraft entity (and lists `aircraft` as missing only for accidents/incidents).
+* **Flight.** When linked, the flight adds the call sign and the departure/destination aerodromes.
 
 ### Check readiness
 
@@ -944,21 +950,21 @@ Builds an ECCAIRS Aviation 5.1.0.0 (RIT) `.e5x` package for a report. Used by th
 | Field | Type | Description |
 |-------|------|-------------|
 | pdf | file | Optional. De-identified PDF rendered by the client; must start with `%PDF-`. Included as `report.pdf` |
-| locale | string | Optional, e.g. `en` or `es_ES` (`^[a-z]{2}([_-][A-Za-z]{2})?$`). Sets the reporter language. Defaults to the user's language, then `en` |
+| locale | string | Optional, e.g. `en` or `es_ES` (`^[a-z]{2}([_-][A-Za-z]{2})?$`). The client UI locale, used for the reporter language (`Reporter_S_Language`) only as a fallback: the reporter's own language setting (`user_credentials.language` of the report's `user_id`) wins; an anonymous report (`user_id` null) skips it. Last fallback `en` |
 
-Success: `200`, `Content-Type: application/octet-stream`, `Content-Disposition: attachment; filename="2026-00012.e5x"` (slashes of the idn become `-`), `Cache-Control: private, no-store`. The zip holds `{idn}.xml`, `{idn}/report.pdf` and `{idn}/<each upload>`. Person-name fields are redacted from the XML; free text is exported as written. A successful export sets `reported = 1`, increments `export_count` and writes a change-history entry (`action` `edit`, comment "Exported to ECCAIRS (E5X)").
+Success: `200`, `Content-Type: application/octet-stream`, `Content-Disposition: attachment; filename="2026-00012.e5x"` (slashes of the idn become `-`), `Cache-Control: private, no-store`. The zip holds `{idn}.xml`, `{idn}/report.pdf` and `{idn}/<each upload>`. An upload is named by its `display_name` (else its stored `filename`); when the display name has no extension the stored file's extension is appended, and duplicates become `name (2).ext`. The XML never maps a person-name field, and the server redacts the names of the people on the report (reporter, reviewer, crew) from the XML narrative (`Headline`, `Location_Name`, the long texts) and from the attachment names; any other name typed into free text cannot be detected. The PDF is rendered by the client: it omits the person-name fields but prints the narrative as written. A successful export sets `reported = 1`, increments `export_count` and writes a change-history entry (`action` `edit`, comment "Exported to ECCAIRS (E5X)").
 
 | Code | Meaning |
 |------|---------|
 | 400 | `pdf` is not a PDF |
 | 403 | Caller is not allowed to export (policy or ACL) |
-| 404 | Report not found, belongs to another company, or is deleted |
+| 404 | Report not found, belongs to another company, is deleted, or is a draft of another user (drafts are private to their author, as in [view](#view-safety-report)) |
 | 405 | `GET` without `check=1` |
-| 409 | Report is a draft |
+| 409 | Report is the caller's own draft: submit it first |
 | 422 | `{ "result": false, "message": "...", "missing": [...] }` required data missing |
 | 500 | XSD validation or packaging failed (details only in the server log) |
 
-The export downloads every upload of the report from storage synchronously, so very large attachment sets can approach PHP time/memory limits. An upload missing from storage is skipped with a log warning.
+The export downloads every upload of the report from storage synchronously. The download path (`POST`, not `check=1`) raises PHP's `max_execution_time` to 300 s for that request; very large attachment sets can still approach the web server's own timeouts or memory limits. An upload missing from storage is skipped with a log warning.
 
 ### ECCAIRS options
 

@@ -183,6 +183,8 @@ A finding raised by the auditor records them as *raised by*. They do not choose 
 
 ![Raising a finding as the auditor](../.gitbook/assets/audits-auditor-finding.png)
 
+After the audit, the auditor who raised a finding of an internal audit also **verifies its corrective actions and closes it**, so the safety manager never verifies actions they own: see [Independent verification by the auditor](audit-findings.md#independent-verification-by-the-auditor).
+
 Everything else stays with your safety managers: the audit's title, scope, dates, areas and team, starting, completing, postponing or cancelling it, approving and issuing the report. On audits they are not assigned to, and once the audit is completed or cancelled, the auditor is read-only again. Everything they record appears in the audit's and the finding's history under their name.
 
 ![Choosing the audit team](../.gitbook/assets/audits-team-users.png)

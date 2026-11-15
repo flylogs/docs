@@ -15,7 +15,7 @@ A **safety action** is a tracked corrective or preventive measure with an owner,
 | Who | Safety actions |
 | --- | --- |
 | Compliance & Safety Manager and above (user group 110 or lower) | Create on reports and hazards, assign, edit, verify, cancel, reopen |
-| **Auditor** (user group 250) | **Read-only**. Cannot own actions or mark them done. |
+| **Auditor** (user group 250) | **Read-only**. Cannot own actions or mark them done. The one exception: they **verify** the completed corrective actions of an audit finding they raised (see [Independent verification](audit-findings.md#independent-verification-by-the-auditor)) |
 | Assigned reviewer **or author** of a report, any group | **Propose** actions on that report only (created as *open*, owner chosen by them) and see every action on it |
 | **Finding owner** (any group) | **Propose** corrective actions on **their own audit finding** (created as *open*) and see every action on it |
 | **Accountable manager** | Add resulting actions to a **management review**; read-only on findings |

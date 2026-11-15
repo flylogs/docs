@@ -20,7 +20,7 @@ An **audit finding** records something an [audit](audits.md) found, from an inte
 | --- | --- |
 | Compliance & Safety Manager and above (user group 110 or lower) | Everything: record findings (also on behalf of external auditors), set classification and dates, assign the owner, move the status, close, record authority decisions, link risks, create corrective actions and verify them |
 | **Accountable manager** | **Read-only** on every finding. Can add resulting actions only on a [management review](management-review.md) |
-| **Auditor** (user group 250) | **Read-only** on every finding and file. Never owns findings or actions. On an audit they lead or are on the team of, while it is not completed or cancelled, they can raise findings, correct the ones they raised while **Open**, and add evidence (see [When the auditor records the audit](audits.md#when-the-auditor-records-the-audit)) |
+| **Auditor** (user group 250) | **Read-only** on every finding and file. Never owns findings or actions. On an audit they lead or are on the team of, while it is not completed or cancelled, they can raise findings, correct the ones they raised while **Open**, and add evidence (see [When the auditor records the audit](audits.md#when-the-auditor-records-the-audit)). On the internal findings they raised, they verify the corrective actions and close the finding (see [Independent verification](#independent-verification-by-the-auditor)) |
 | **Finding owner** (any group) | Their own findings only: see the finding and its audit's header, write the **root cause** and its category, **propose corrective actions** and **authority decision proposals**, attach and remove **their own** evidence. Cannot close, change the classification, the dates or the owner |
 | **Action owner** (any group) | Only their own corrective actions: mark them done |
 | Everyone else | No access |
@@ -93,6 +93,17 @@ Managers move the status with **Move to**. Internal findings offer **Open**, **I
 * **Moving a finding back** needs a **note** and undoes what the later stages recorded (completion and verification dates, plan acceptance, closure).
 * **Closed by authority decision** is never set by hand: it follows an accepted decision.
 * Every move is stored in the history of the finding with who made it and the note.
+
+### Independent verification by the auditor
+
+Your procedures may require that corrective actions are not verified by the person who owns them, for example when the safety manager owns the actions of a finding. The auditor who raised a finding can then do the verification:
+
+* An **Auditor**-role user (user group 250) who **raised** a finding of an **internal** audit can **Verify** its completed corrective actions (effective or not effective, with a note) and **Close finding** once the [closing rules](#closing-rules) are met.
+* This stays available until the finding is closed, also after the audit itself is completed, because verification usually happens weeks after the audit.
+* It is the only status change the auditor makes: they cannot reopen, cancel or edit actions, move the finding to another status or record the authority's closure. Findings of authority audits are closed by the authority as usual.
+* The verification and the closure are stored under the auditor's name in the action and finding history.
+
+![The auditor verifying an action and closing the finding](../.gitbook/assets/audit-findings-auditor-verify.png)
 
 ### Closing rules
 
