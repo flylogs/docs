@@ -16,11 +16,18 @@ Every endpoint requires a **premium** or **unlimited** company plan. On any othe
 |-----|---------------------------------------------|----------|-------|
 | Manager: `user_group_id` ≤ 110 (Compliance & Safety Manager and above) | read | read all | everything, except recording the management review |
 | **Accountable manager**: the user stored in the company settings (`accountable_manager_user_id`), any group except 250 | read | read all | records the management review ([Review](#record-the-review)); adds actions to a management review |
-| Auditor: `user_group_id` = 250 | **read-only** | **read-only** | **never** |
+| Auditor: `user_group_id` = 250 | **read-only** | **read-only** | only as the **conducting auditor** of an audit (see below) |
 | Finding owner, any group | no | own findings only: list (`mine`), view (audit header only), root cause, authority decision proposals, corrective actions on that finding, evidence uploads | limited to those; on a closed finding only evidence uploads (no root cause, decision proposals or new actions) |
 | Everyone else | `403` | list: only their own findings (an empty list if they own none); view: `403` | `403` |
 
-* The rules are enforced in the controllers, object by object (company scope plus the rules above), not only by the ACL. **Every write endpoint rejects auditors with `403` (`Auditors have read-only access.`) before anything else runs**, so a group 250 key can never write, independent of the ACL. This includes uploads under the audit tags.
+* The rules are enforced in the controllers, object by object (company scope plus the rules above), not only by the ACL. **Every write endpoint rejects auditors with `403` (`Auditors have read-only access.`) before anything else runs**, independent of the ACL, except the four "conducting auditor" writes below.
+* **Conducting auditor.** A group 250 user who is the audit's `lead_auditor_user_id` or is in its `team_user_ids`, while the audit's `status` is `planned`, `in_progress` or `postponed`, may:
+  * [Edit Audit](#edit-audit) with **only** `auditor_independence_confirmed`, `auditor_independence_statement`, `auditor_competence`, `auditor_declaration_na` and `results` (any other key is `403`);
+  * [Save an Assessment](#save-an-assessment) on that audit;
+  * [Create a Finding](#create-finding) on that audit and [Edit](#edit-finding) the findings they created while `open`, with only `assessment_id`, `number`, `classification_id`, `requirement`, `title`, `details`, `area_id`, `raised_date` (any other key is `403`). `raised_by_user_id` is set to them; the owner and the CAP / target dates are left for a manager;
+  * add files under `Audit` / `AuditFinding` of that audit and delete the ones they uploaded ([Files](#files)).
+
+  Anywhere else, or once the audit is completed or cancelled, they get `403`. `audits/index.json` and `audits/view` return `can_conduct` for the caller; `audit_findings/view` returns `can_conduct_audit` and `can_edit_raised`.
 * The accountable manager is a company setting and may be in any group except 250. A missing or invalid group fails closed.
 * A finding owner never sees the audit's results, attached files, assessments or other findings, and sees no risk-link entries in a finding's history.
 * A wrong role is `403`, a missing, soft-deleted or foreign-company record is `404`, a bad value is `400` with a `message`. A wrong HTTP method is `405`.
@@ -265,7 +272,7 @@ An audit is the plan and the executed audit in one record. `idn` is `AU-YYYY-NNN
   "methodology_document_id": "8f0c…", "methodology_note": null,
   "planned_date": "2026-06-12", "original_planned_date": null,
   "start_date": null, "end_date": null,
-  "lead_auditor_name": "A. Smith", "lead_auditor_user_id": null, "team": null,
+  "lead_auditor_name": "A. Smith", "lead_auditor_user_id": null, "team": null, "team_user_ids": [412, 518],
   "auditor_independence_confirmed": 1,
   "auditor_independence_statement": "Not responsible for the audited activity.",
   "auditor_competence": "Lead auditor course 2024, 6 years in flight operations.",
@@ -304,6 +311,8 @@ Access: managers, auditors and the accountable manager. Returns `{ "audit": { �
 | `documents` | Issued document versions (see [Documents](#issued-documents)). |
 | `changes` | Append-only history: `action`, `fields` (`{ field: [old, new] }`), `comments`, user, `created`. |
 | `lead_auditor_user_name`, `approved_by_name` | Names, `null` when the user is gone. |
+| `team_members` | `[{ "id", "name" }]` for `team_user_ids` (`name` is `null` when the user is gone). |
+| `can_conduct` | `true` when the caller is an auditor (250) conducting this audit (lead or team, audit not completed or cancelled). Also on every row of the programme list. |
 
 Result files are uploads tagged `Audit`, see [Files](#files).
 
@@ -322,6 +331,7 @@ Access: managers. Created as `planned`.
 | `scope`, `criteria`, `requirements`, `methodology_note`, `team`, `results` | no | Free text. |
 | `methodology_document_id` | no | A live document of the company. |
 | `lead_auditor_user_id` | no | A user of the company. |
+| `team_user_ids` | no | Array of up to 20 user ids of the company (the audit team, besides the lead). An empty array clears it. An Auditor (250) here or as lead can conduct the audit. |
 | `start_date`, `end_date` | no | `end_date` cannot be before `start_date`. |
 | `auditor_independence_confirmed`, `auditor_independence_statement`, `auditor_competence` | no | The auditor declaration. |
 | `auditor_declaration_na` | no | `1` only on an `authority` audit ("authority inspector: not applicable"); otherwise `400`. |
@@ -333,7 +343,7 @@ Response: `{ "result": true, "audit": { … } }`.
 
 <mark style="color:green;">`POST`</mark> `/audits/edit/{id}.json`
 
-Access: managers. Same fields, only the posted ones change; a cancelled audit is `400`. The planned date moves only through [Postpone](#postpone-audit) (changing it here is `400`); status moves through [Status](#change-audit-status) and [Cancel](#cancel-audit). **Any real change clears the approval** (`approved_by` and `approved_at` become `null`), and it is logged.
+Access: managers, or the conducting auditor with the declaration fields and `results` only (see [Access Control](#access-control)). Same fields, only the posted ones change; a cancelled audit is `400`. The planned date moves only through [Postpone](#postpone-audit) (changing it here is `400`); status moves through [Status](#change-audit-status) and [Cancel](#cancel-audit). **Any real change clears the approval** (`approved_by` and `approved_at` become `null`), and it is logged.
 
 ### Postpone Audit
 
@@ -375,7 +385,7 @@ Access: managers. Sets `approved_by` and `approved_at`. Refused with `400` and `
 
 <mark style="color:green;">`POST`</mark> `/audits/assessment_save/{auditId}.json` (create) · `/audits/assessment_save/{auditId}/{assessmentId}.json` (edit)
 
-Access: managers. An assessment covers one area of the audit and optionally one process within it; there is one per (audit, area, process), so saving an existing combination updates it.
+Access: managers, or the conducting auditor of the audit. An assessment covers one area of the audit and optionally one process within it; there is one per (audit, area, process), so saving an existing combination updates it.
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -457,6 +467,7 @@ Access: managers, auditors, the accountable manager, or the finding's owner (`40
 | `allowed_transitions` | The statuses a manager may move to by hand (empty for others). |
 | `close_blocker` | Why the finding cannot be closed yet, `null` when it can: `needs_effective_action`, `actions_open` or `note_required`. |
 | `can` | `{ "manage": bool, "work": bool }` for the caller. |
+| `can_conduct_audit`, `can_edit_raised` | Auditors (250) only, `false` for everyone else: they conduct the finding's audit (may add evidence) / they raised this open finding and may still correct it. |
 | `changes` | Append-only history. An owner sees only entries about what they can see. |
 | `owner_name`, `raised_by_user_name` | Names. |
 
@@ -466,7 +477,7 @@ Corrective actions of a finding are listed with [Safety Actions](safety-assuranc
 
 <mark style="color:green;">`POST`</mark> `/audit_findings/add.json`
 
-Access: managers. The audit must not be cancelled. Created `open`.
+Access: managers, or the conducting auditor of the audit (limited fields, see [Access Control](#access-control)). The audit must not be cancelled. Created `open`.
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -494,7 +505,7 @@ Response: `{ "result": true, "finding": { … } }`.
 
 Managers can change any field above except `audit_id`; status, closure, plan acceptance and authority closure go through [Status](#change-finding-status) and [Decisions](#authority-decisions). A change of owner notifies the new owner. Changing the classification of an observation to a non-compliance class is `400` ("Use convert").
 
-The **finding owner** may post only `root_cause` and `root_cause_category` (any other key is `403`), and not once the finding is closed (`400`). Response: `{ "result": true, "finding": { … } }`.
+The **finding owner** may post only `root_cause` and `root_cause_category` (any other key is `403`), and not once the finding is closed (`400`). The **auditor who created the finding** may change its auditor fields while it is `open` and they still conduct the audit (`403` otherwise). Response: `{ "result": true, "finding": { … } }`.
 
 ### Change Finding Status
 
@@ -806,11 +817,11 @@ Result files, finding evidence and issued PDFs use the [Uploads API](uploads.md)
 
 | Tag | Read | Add | Remove or rename |
 |-----|------|-----|------------------|
-| `Audit` | managers, auditors, accountable manager | managers | managers |
-| `AuditFinding` | managers, auditors, accountable manager, the finding's owner | managers and the finding's owner | managers; the owner only files they uploaded |
+| `Audit` | managers, auditors, accountable manager | managers and the conducting auditor | managers; the conducting auditor only files they uploaded |
+| `AuditFinding` | managers, auditors, accountable manager, the finding's owner | managers, the finding's owner and the conducting auditor of its audit | managers; the owner and the conducting auditor only files they uploaded |
 | `AuditDocument` | managers, auditors, accountable manager | managers, only while the version has no PDF | **never** the issued PDF; managers may delete an orphan of a failed attach |
 
-* Auditors (250) never write, whatever the ACL says.
+* Auditors (250) write files only as the conducting auditor, and only under `Audit` / `AuditFinding`: every other upload tag is `403` for them (`sign`, `complete`, `rename`, `expiration`, `delete`). Renaming is for managers.
 * Adding files needs a premium or unlimited plan; reading remains possible after a downgrade.
 * Issued documents are immutable: an issued PDF cannot be renamed, re-tagged or deleted.
 

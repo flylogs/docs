@@ -132,6 +132,7 @@ Create a new flight type. Also returns the `flightClassification` reference data
 | FlightType.sic_flight_time | string | No | SIC time classification key |
 | FlightType.supervisor_flight_time | string | No | Supervisor time classification key. Defaults to `none` |
 | FlightType.require_frat | boolean | No | Crew dispatching a flight of this type must submit a completed FRAT (`frat_score`, `frat_band`, `frat_data`) — see [Dispatch Schedule](schedules.md#flight-risk-assessment-frat). Defaults to `false` |
+| FlightType.eccairs_operation_type | number or empty | No | ECCAIRS operation type id (attribute 390 value list, from [`/safety_reports/eccairs_options.json`](safety-reports.md#eccairs-options) `operationTypes`). Used as the operation type when a safety report on this flight type is exported to ECCAIRS. Empty stores `NULL`; an unknown id returns `400` `{ "errors": { "eccairs_operation_type": ... } }` |
 
 #### Aircraft restriction (optional)
 
@@ -241,7 +242,7 @@ Update a flight type. A `GET` to this endpoint returns the current record data p
 
 #### Request Body (POST/PUT)
 
-Same fields as create, wrapped under `FlightType`.
+Same fields as create (including `FlightType.eccairs_operation_type`), wrapped under `FlightType`. `GET` returns the column in the record data (`null` when unset).
 
 #### Response (POST/PUT)
 

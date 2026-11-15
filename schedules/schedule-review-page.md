@@ -8,9 +8,11 @@ The **Schedule Review** page is a list‑based companion to the [Schedule Manage
 
 What you can do on this page depends on your role:
 
-* **Full management** — Company Managers, Roster Managers and Aircraft Managers. If your company enables **Flight Instructor schedule management**, instructors also get full access. Full access shows every row action.
-* **Read‑only** — Flight Instructors (when FI management is off), and pilots when your company enables **allow pilots to see the master schedule**. They can browse and filter but see no action buttons.
-* **No access** — everyone else is blocked from the page.
+* **Full management** — Company Administrators and the management roles up to Crew Scheduling (Operations, Compliance & Safety, Human Resources, Financial and Trainings managers). Full access shows every row action.
+* **Read‑only** — Flight Dispatchers and Chief Pilots. They can browse and filter but see no action buttons.
+* **No access** — everyone else, including Flight Instructors, Theory Knowledge Instructors, Captains, pilots, students and mechanics.
+
+**Flight Instructor schedule management** opens the [Schedule Manager calendar](schedule-edit-page.md) to instructors, not this page. **All pilots see schedule** lets pilots read the master schedule on the **Schedule** page, not this one.
 
 Some actions are further limited to **top‑level managers** (see each action below).
 

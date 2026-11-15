@@ -175,6 +175,7 @@
 
 * [Safety Reports](sms/safety-reports.md)
 * [Create a Safety Report](sms/create-a-safety-report.md)
+* [Send a report to the authority (ECCAIRS / E5X)](sms/eccairs-e5x-export.md)
 * [Offline safety reports](sms/offline-safety-reports.md)
 * [ICAO risk matrix (Doc 9859)](sms/icao-8951-risk-matrix.md)
 * [Safety report analytics](sms/safety-report-analytics.md)

@@ -34,6 +34,10 @@ Additionally, the person writing the report or any manager can comment on the re
 
 
 
+### Notifying the authority
+
+Managers and the assigned reviewer can export a submitted report as an ECCAIRS **.e5x** file and email it to the authority (for example AESA within 72 hours). See [Send a report to the authority (ECCAIRS / E5X)](eccairs-e5x-export.md).
+
 ### Report classification (Occurrence vs Information)
 
 When creating a report, the reporter first chooses its **classification**, following the ICAO Annex 19 distinction between safety occurrences and safety information:

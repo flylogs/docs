@@ -34,12 +34,13 @@ Audit frequencies, finding classifications and finding deadlines are **company c
 | --- | --- |
 | Compliance & Safety Manager and above (user group 110 or lower) | Full: set up areas and settings, plan, record and complete audits, enter assessments, approve and issue reports, record findings (also on behalf of external auditors) |
 | **Accountable manager** (the user chosen in Audit settings, any group) | **Read-only** on the programme, areas, audits and issued documents. Records the [management review](management-review.md) |
-| **Auditor** (user group 250) | **Read-only everywhere**, including attached files and issued PDFs. Auditors never enter, change or upload anything |
+| **Auditor** (user group 250) | **Read-only** on the programme, areas, every audit, findings, management reviews, attached files and issued PDFs. On an audit they **lead or are on the team of**, while it is not completed or cancelled, they also record their own work: see [When the auditor records the audit](#when-the-auditor-records-the-audit) |
 | Finding owner (any group) | No access to the programme or to audits. Sees their own [findings](audit-findings.md#what-a-finding-owner-sees) only |
 | Everyone else | No access |
 
 * Requires the **Premium** or **Unlimited** plan. On other plans the pages show the usual "disabled on your subscription" message. Files already attached stay readable after a downgrade; nothing new can be written.
-* Read-only auditors do not stop you from using **external auditors**: a manager enters the external auditor's name as lead auditor, records their findings (raised by = the auditor's name) and attaches their report.
+* You can still use **external auditors without an account**: a manager enters the external auditor's name as lead auditor, records their findings (raised by = the auditor's name) and attaches their report.
+* An auditor who has an **Auditor** account (user group 250) can record the audit themselves once you name them as lead auditor or team auditor.
 * The **accountable manager** opens **Safety > Audits** like everyone else. If they are not a manager or an auditor, it opens on **My findings**, and the programme tabs are not shown to them there. They reach the programme and the review from the notification they receive when a management report is issued, or by the address of the page.
 
 ## Audit areas
@@ -138,7 +139,9 @@ Use **New audit** to plan one. The plan and the executed audit are the same reco
 | Methodology | A procedure from your document library and/or a note |
 | Planned date, start and end date | Dates of the plan and of the audit as carried out |
 | Areas | One or more audit areas covered |
-| Lead auditor | A user, or a free-text name for an external auditor, plus the audit team |
+| Lead auditor | A user, or a free-text name for an external auditor |
+| Team auditors (users) | Other users on the audit team. An **Auditor**-role user chosen here, or as lead auditor, records the audit themselves (see below) |
+| Other team members | Free text, for team members without an account |
 
 ### Status
 
@@ -161,7 +164,28 @@ For an **authority audit** you can instead tick *Authority inspector: not applic
 
 ### Results and files
 
-The **Results** field is free text for the audit report. Under **Result files** attach the audit report, the authority's letter or evidence, as many files as you need. Files are stored with the audit and are visible to managers, the accountable manager and auditors only, never to finding owners. They can be added and removed by managers only.
+The **Results** field is free text for the audit report. Under **Result files** attach the audit report, the authority's letter or evidence, as many files as you need. Files are stored with the audit and are visible to managers, the accountable manager and auditors only, never to finding owners. Managers can add and remove any file. The auditor conducting the audit can add files and remove only the files they added.
+
+### When the auditor records the audit
+
+An internal auditor who must stay independent of the SMS can get an **Auditor** account (user group 250): they read the safety reports, the Hazard Log, safety actions and the Safety Assurance dashboard, but cannot change any of them. To let them carry out an audit, name them as **lead auditor** or tick them under **Team auditors (users)** in the audit's form.
+
+While that audit is **planned, in progress or postponed**, the auditor sees a banner at the top of the audit and can:
+
+* record the **independence and competence declaration**;
+* fill in the **assessments by area** and their conclusions;
+* write the **results** and add **result files** (and remove the files they added themselves);
+* **raise findings** on the audit, from **Add finding** or from the prompt after a *non-compliant* assessment, and correct the findings they raised while they are still **Open**.
+
+![An auditor recording the audit they lead](../.gitbook/assets/audits-auditor-conducts.png)
+
+A finding raised by the auditor records them as *raised by*. They do not choose the owner or the dates: the **owner**, the **action plan due** and the **target** date are set by a safety manager, as are the status, corrective actions and authority decisions.
+
+![Raising a finding as the auditor](../.gitbook/assets/audits-auditor-finding.png)
+
+Everything else stays with your safety managers: the audit's title, scope, dates, areas and team, starting, completing, postponing or cancelling it, approving and issuing the report. On audits they are not assigned to, and once the audit is completed or cancelled, the auditor is read-only again. Everything they record appears in the audit's and the finding's history under their name.
+
+![Choosing the audit team](../.gitbook/assets/audits-team-users.png)
 
 ### Assessments by area
 

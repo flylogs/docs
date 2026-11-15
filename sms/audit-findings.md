@@ -20,7 +20,7 @@ An **audit finding** records something an [audit](audits.md) found, from an inte
 | --- | --- |
 | Compliance & Safety Manager and above (user group 110 or lower) | Everything: record findings (also on behalf of external auditors), set classification and dates, assign the owner, move the status, close, record authority decisions, link risks, create corrective actions and verify them |
 | **Accountable manager** | **Read-only** on every finding. Can add resulting actions only on a [management review](management-review.md) |
-| **Auditor** (user group 250) | **Read-only** on every finding and file. Never owns findings or actions |
+| **Auditor** (user group 250) | **Read-only** on every finding and file. Never owns findings or actions. On an audit they lead or are on the team of, while it is not completed or cancelled, they can raise findings, correct the ones they raised while **Open**, and add evidence (see [When the auditor records the audit](audits.md#when-the-auditor-records-the-audit)) |
 | **Finding owner** (any group) | Their own findings only: see the finding and its audit's header, write the **root cause** and its category, **propose corrective actions** and **authority decision proposals**, attach and remove **their own** evidence. Cannot close, change the classification, the dates or the owner |
 | **Action owner** (any group) | Only their own corrective actions: mark them done |
 | Everyone else | No access |
@@ -121,7 +121,7 @@ The owner (or a manager) writes the **root cause** and picks a **category**, whi
 
 Corrective actions are [safety actions](safety-actions.md) attached to the finding. Use **Add action** on the finding page. Managers and the finding owner can both add actions, and whoever adds an action sets its owner and due date; a new action always starts **open**. On a closed finding only a manager can add actions. Actions follow the usual lifecycle (open, done, verified as effective or not effective, cancelled) and appear in **My safety actions** and in the *overdue safety actions* indicator. A reminder email goes to the action owner 3 days before and on the due date.
 
-Attach **evidence** (documents or photos showing the corrective work) in the finding's evidence area. Owners can add evidence and remove only the files they uploaded; managers can remove any. Auditors and the accountable manager can only open them.
+Attach **evidence** (documents or photos showing the corrective work) in the finding's evidence area. Owners can add evidence and remove only the files they uploaded; managers can remove any. The auditor conducting the finding's audit can do the same as an owner (add, and remove their own files). Other auditors and the accountable manager can only open them.
 
 ## Authority decisions
 

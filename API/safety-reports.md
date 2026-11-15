@@ -322,6 +322,32 @@ Full details for a single report including flight, aircraft, and reporter.
 
 ---
 
+#### ECCAIRS additions
+
+`allowE5x` (boolean, sibling of `allowEdit`) is `true` when the caller may export the report to ECCAIRS: `user_group_id` below 111, or the report's assigned reviewer (`reviewer_id`). It is always `false` for auditors (250), drafts and deleted reports. Only when it is `true`, `report.SafetyReportEccair` is included: the stored ECCAIRS section, or `null` if never filled. When `allowE5x` is `false` the key is absent.
+
+```json
+{
+  "allowE5x": true,
+  "report": {
+    "SafetyReportEccair": {
+      "safety_report_id": "150",
+      "occurrence_class": null,
+      "event_types": [2060000, 3000000],
+      "operation_type": null,
+      "area_iso2": null,
+      "weather_relevant": "no",
+      "fatal_onboard": 0, "serious_onboard": 0, "minor_onboard": 0,
+      "fatal_ground": null, "serious_ground": null, "minor_ground": null,
+      "exported_at": null, "exported_by": null, "export_count": 0,
+      "modified": 1731500000
+    }
+  }
+}
+```
+
+---
+
 ## Export Safety Report (PDF)
 
 <mark style="color:blue;">`GET`</mark> `/safety_reports/view/{id}/pdf:true?token=<token>`
@@ -433,6 +459,21 @@ On save of a non-draft report, managers and the report owner are notified. If th
 #### Request Body
 
 Same fields as create (all optional on edit), wrapped under `SafetyReport`.
+
+#### ECCAIRS section
+
+`data[SafetyReportEccair][...]` carries the authority-reporting fields. It is stripped from the payload before the report is saved and stored separately, **only when the caller may export** (`user_group_id` < 111 or assigned reviewer; never auditors). For anyone else it is ignored.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| event_types | int[] or JSON string | ECCAIRS event type ids (from [`eccairs_options`](#eccairs-options)). Duplicates removed; an empty value clears the list |
+| occurrence_class | int | Occurrence class id; empty = derived from severity |
+| operation_type | int | Operation type id; empty = flight type mapping, then Unknown |
+| area_iso2 | string | ISO 3166 alpha-2 state of occurrence override |
+| weather_relevant | string | `yes`, `no` or `unknown` |
+| fatal_onboard, serious_onboard, minor_onboard, fatal_ground, serious_ground, minor_ground | int 0-9999 | Injury counts |
+
+Values that are not valid ECCAIRS ids/codes are silently stored as `null`. `safety_report_id` and the export bookkeeping columns cannot be posted. If the report saved but the ECCAIRS upsert failed the response is `400` with an explicit message.
 
 #### Response
 
@@ -875,3 +916,62 @@ The filter is on the offered list only: it never rejects a `safety_report_depart
   ]
 }
 ```
+
+---
+
+## ECCAIRS (E5X) export
+
+Builds an ECCAIRS Aviation 5.1.0.0 (RIT) `.e5x` package for a report. Used by the neo "Download E5X (ECCAIRS)" button. The XML is validated against the official XSD; a file that fails validation is never returned.
+
+**Access:** `user_group_id` < 111, or the report's assigned reviewer (`reviewer_id`). **Auditors (250) never**, drafts and deleted reports excluded. No plan gating. The caller must also pass the ACL (`SafetyReports/e5x`, `SafetyReports/eccairs_options`), which needs the V5 `aco_sync`. Served by the V5 API only.
+
+### Check readiness
+
+<mark style="color:blue;">`GET`</mark> `/safety_reports/e5x/{id}.json?check=1`
+
+```json
+{ "ok": false, "missing": ["event_types", "injury_counts", "weather_relevant"], "attachments": { "count": 4, "bytes": 25320016 } }
+```
+
+`missing` can contain `event_types`, `injury_counts`, `weather_relevant`, `aircraft`, `location`, `datetime`. `attachments.bytes` is the sum of the upload sizes and excludes the PDF, so a client can warn above the EASA 10 MB recommendation.
+
+### Download
+
+<mark style="color:green;">`POST`</mark> `/safety_reports/e5x/{id}`
+
+`multipart/form-data`, no `.json` suffix:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| pdf | file | Optional. De-identified PDF rendered by the client; must start with `%PDF-`. Included as `report.pdf` |
+| locale | string | Optional, e.g. `en` or `es_ES` (`^[a-z]{2}([_-][A-Za-z]{2})?$`). Sets the reporter language. Defaults to the user's language, then `en` |
+
+Success: `200`, `Content-Type: application/octet-stream`, `Content-Disposition: attachment; filename="2026-00012.e5x"` (slashes of the idn become `-`), `Cache-Control: private, no-store`. The zip holds `{idn}.xml`, `{idn}/report.pdf` and `{idn}/<each upload>`. Person-name fields are redacted from the XML; free text is exported as written. A successful export sets `reported = 1`, increments `export_count` and writes a change-history entry (`action` `edit`, comment "Exported to ECCAIRS (E5X)").
+
+| Code | Meaning |
+|------|---------|
+| 400 | `pdf` is not a PDF |
+| 403 | Caller is not allowed to export (policy or ACL) |
+| 404 | Report not found, belongs to another company, or is deleted |
+| 405 | `GET` without `check=1` |
+| 409 | Report is a draft |
+| 422 | `{ "result": false, "message": "...", "missing": [...] }` required data missing |
+| 500 | XSD validation or packaging failed (details only in the server log) |
+
+The export downloads every upload of the report from storage synchronously, so very large attachment sets can approach PHP time/memory limits. An upload missing from storage is skipped with a log warning.
+
+### ECCAIRS options
+
+<mark style="color:blue;">`GET`</mark> `/safety_reports/eccairs_options.json`
+
+Value lists for the form. Requires login. Sent with `Cache-Control: private, max-age=86400`.
+
+```json
+{
+  "eventTypes": [ { "id": 3000000, "parent": 0, "level": 1, "label": "Consequential Events" } ],
+  "operationTypes": [ { "id": 1, "parent": 0, "level": 1, "label": "Commercial Air Transport" } ],
+  "occurrenceClasses": [ { "id": 100, "label": "Accident" }, { "id": 200, "label": "Serious incident" } ]
+}
+```
+
+`eventTypes` (3144 entries) and `operationTypes` (72) are flat lists describing a tree (`parent` is the parent id, `0` for roots; `level` the depth); `occurrenceClasses` (9) has no hierarchy. Labels are in English.
