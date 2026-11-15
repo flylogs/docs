@@ -311,7 +311,7 @@ Response: `{ "result": true, "hazard": { … } }`.
 
 Creates a hazard with `source` `report` and links it to the report in one transaction. Access: managers, and the report's assigned reviewer or non-anonymous author (any group). The report must be submitted (not a draft) and not a follow-up statement.
 
-The hazard is prefilled from the report (title = report name, description = events, department, classification, initial risk). The body may override `title`, `description`, `safety_report_department_id`, `type`, `risk_probability` and `risk_severity`. Response: `{ "result": true, "hazard": { … } }`, or `{ "result": false, "message": … }` when nothing could be saved.
+The hazard is prefilled from the report: title = report name, description = the report's `events` converted to plain text (tags removed, paragraphs and `<br>` kept as line breaks, entities decoded), department, classification, initial risk (`risk_probability`, `risk_severity`), and residual risk from the report's mitigated risk (`mitigated_risk_probability`, `mitigated_risk_severity`). The body may override `title`, `description`, `safety_report_department_id`, `type`, `risk_probability`, `risk_severity`, `residual_risk_probability` and `residual_risk_severity`. Response: `{ "result": true, "hazard": { … } }`, or `{ "result": false, "message": … }` when nothing could be saved.
 
 ### Link / Unlink a Report
 

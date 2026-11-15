@@ -54,10 +54,12 @@ The hazard view returns the findings linked to it (number, title and status), se
 
 ## Two ways to create a hazard
 
-1. **From a report.** When a manager or the report's reviewer sets the reviewer outcome to *risk register* and saves, Flylogs offers **Create new hazard from this report** (title, description, department, classification and initial risk are prefilled) or **Link to an existing hazard**. The same options are always available from the report's manage actions (**Create / link hazard**). A report can be linked to more than one hazard, and the report view lists its linked hazards.
+1. **From a report.** When a manager or the report's reviewer sets the reviewer outcome to *risk register* and saves, Flylogs offers **Create new hazard from this report** or **Link to an existing hazard**. A new hazard is prefilled from the report: the title, the description (as plain text, keeping its paragraphs), the department, the classification, the initial risk, and the report's mitigated risk as the hazard's residual risk. The same options are always available from the report's manage actions (**Create / link hazard**). A report can be linked to more than one hazard, and the report view lists its linked hazards.
 2. **Manually**, with **New hazard**: for hazards that did not come from a report, such as a new route, aircraft type, base or season.
 
 ![Creating or linking a hazard from a report](../.gitbook/assets/hazard-log-report-link.png)
+
+![A hazard raised from a report: description, initial and residual risk carried over](../.gitbook/assets/hazard-log-from-report.png)
 
 ## The hazard page
 
