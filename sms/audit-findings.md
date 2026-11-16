@@ -96,6 +96,8 @@ Managers move the status with **Move to**. Internal findings offer **Open**, **I
 
 ### Independent verification by the auditor
 
+{% embed url="https://youtu.be/aRF3A7idlfA" %}
+
 Your procedures may require that corrective actions are not verified by the person who owns them, for example when the safety manager owns the actions of a finding. The auditor who raised a finding can then do the verification:
 
 * An **Auditor**-role user (user group 250) who **raised** a finding of an **internal** audit can **Verify** its completed corrective actions (effective or not effective, with a note) and **Close finding** once the [closing rules](#closing-rules) are met.

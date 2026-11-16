@@ -168,6 +168,8 @@ The **Results** field is free text for the audit report. Under **Result files** 
 
 ### When the auditor records the audit
 
+{% embed url="https://youtu.be/aRF3A7idlfA" %}
+
 An internal auditor who must stay independent of the SMS can get an **Auditor** account (user group 250): they read the safety reports, the Hazard Log, safety actions and the Safety Assurance dashboard, but cannot change any of them. To let them carry out an audit, name them as **lead auditor** or tick them under **Team auditors (users)** in the audit's form.
 
 While that audit is **planned, in progress or postponed**, the auditor sees a banner at the top of the audit and can:
