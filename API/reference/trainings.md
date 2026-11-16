@@ -2115,12 +2115,13 @@ Enroll one or more students (or whole pilot groups) in a training. Sent as `appl
 | students       | array   | Yes      | Array of identifiers. Numeric entries are treated as **user IDs**. Non-numeric entries are treated as **pilot group IDs** and expanded server-side to all member users. |
 | supervisor\_id | string  | No       | UUID of the supervisor/instructor assigned to each new enrollment.                                                                                                      |
 | finish\_before | integer | No       | Deadline as a Unix timestamp. Cast to int; falsy values mean "no deadline".                                                                                             |
+| notify\_urgent | boolean | No       | Send the enrollment message as urgent: emailed as well as in-app + push. Default `false`. |
 
 #### Behavior
 
 * A student already enrolled in the training is **skipped**, unless their prior enrollment is closed — any `status` other than `ACTIVE`, i.e. `COMPLETED`, `STOPPED`, `FAILED` or `EXPELLED` — in which case a fresh enrollment is created (re-take).
 * Pilot group entries are expanded to their members; members already enrolled are skipped.
-* For each successful enrollment on an `active` training, an in-app notification is sent to the student linking to the enrollment.
+* For each successful enrollment on an `active` training, an in-app message plus a push notification is sent to the student linking to the enrollment, written in the student's own language (en, es, de, fr, it, pt, pl; English otherwise). With `notify_urgent` the message is urgent and is also emailed to students who have a confirmed email address and have not turned off message or email alerts. No message is sent for an inactive training.
 
 #### Response
 

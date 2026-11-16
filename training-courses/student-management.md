@@ -20,6 +20,14 @@ Anyone who is already on the course is left alone: if a selected pilot group inc
 
 <figure><img src="../.gitbook/assets/trainingsEnrollUsers.png" alt=""><figcaption><p>Enroll new students pop up window.</p></figcaption></figure>
 
+#### Letting the students know
+
+Every student you enroll in an **active** training gets a message in the app, with a button that opens the course, and a push notification on the Flylogs mobile app. The message is written in the student's own app language. No message is sent when the training is inactive.
+
+To make sure nobody misses it, tick **Notify students immediately** at the bottom of the pop-up, next to the buttons, before you click **Enroll**. The message is then sent as **urgent**, so each student also receives it by email at their confirmed email address. Students who have turned off message or email alerts in their profile are still enrolled, but are not emailed. The box is greyed out while an inactive training is selected.
+
+<figure><img src="../.gitbook/assets/trainingsEnrollNotifyUrgent.png" alt="The bottom of the Enroll students pop-up, with the Notify students immediately box ticked next to the Close and Enroll buttons"><figcaption><p><em>Notify students immediately</em> also emails the enrollment message.</p></figcaption></figure>
+
 #### Choosing the course revision
 
 When a course has more than one course revision, the pop-up shows a **Course revision** field under the training. It is set to the current course revision; pick an earlier one when a student must train on the previous syllabus — a warning reminds you that it is not the current one. Draft course revisions are never offered. See [Course revisions](edit-a-training.md#course-revisions-minor-and-major-changes).
