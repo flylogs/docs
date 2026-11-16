@@ -161,14 +161,18 @@ Who can update what is the same as in the profile forms:
 
 ### Automatic Alerting
 
-Flylogs will mark highlight documents in orange and will start sending automatic alerts to the user's email address when the document's expiration date approaches. The alert threshold is different depending on the type of doc:
+Flylogs highlights documents in orange and starts emailing the user when the document's expiration date approaches. How early depends on the type of document:
 
-* Ratings and licences; 90 days.
-* Medical certificates: 45 days.
-* IDs; 180 days.
-* Passports; 365 days.
+* Medical certificates (any class, including LAPL): 45 days.
+* Licences, ratings (class, type, IR, night, FI and the rest), language proficiency, instructor and examiner certificates, and training certificates: 90 days.
+* IDs: 6 months.
+* Passports: 1 year.
 
-When this thresholds for expiration are reached, the document is highlighted in orange and reminder emails are sent to the user once a month or every 15 days if the expiration is within 45 days.
+Once inside that window, a reminder email goes out **every two weeks** (on the 1st and the 16th of the month). If the document is not renewed in time, the reminders carry on for **one month after it expired**, now saying it has expired, and then stop.
+
+<figure><img src="../.gitbook/assets/certificateExpiryEmails.png" alt=""><figcaption><p>The reminder before expiry (left) and after it (right).</p></figcaption></figure>
+
+Reminders stop as soon as the user **renews the document**, whether by editing its expiration date or by uploading the new certificate as a new document: a newer medical of any class replaces the old one, a class rating, IR, FI or other single rating is replaced by a newer one of the same kind, and a type rating, licence or training certificate by a newer one with the same name. Documents without an expiry date (logbook, MCC, AUPRT, other documents) and revoked documents are never reminded. The user must have a confirmed email address and alerts turned on in their notification preferences.
 
 ### Who can edit whose documents
 
