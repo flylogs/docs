@@ -24,6 +24,10 @@ Everything we have added or fixed in Flylogs, newest first. Each entry links to 
 
 ## November 2026
 
+**[Aerodrome and custom currency](aerodrome-currency-items.md)** · Crew management\
+Define airport qualifications and other currency items, see their status on each pilot and in bookings, and block pilots who are not current from scheduling and flight confirmation.\
+[Manual →](../company-management/company-settings/pilots.md#aerodrome-and-custom-currency)
+
 **Files on the Free plan kept for 3 years** · Company management\
 Files uploaded by companies on the Free plan are now deleted automatically 3 years after upload; paid plans keep all their files. The terms and conditions also gained a section on how security incidents and data breaches are handled, and state that accounts with no login for 5 years are deleted under the GDPR.\
 [Manual →](../company-management/account-limitations.md#file-retention-on-the-free-plan)

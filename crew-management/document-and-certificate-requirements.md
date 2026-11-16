@@ -25,7 +25,7 @@ The configuration lives in **Company Settings → Pilots → Documentation Compl
 * **Check pilot documentation validity** — the master switch for licence/rating/medical checks. Turned off, all checks below, the pilot dashboard, and self-booking are skipped.
 * **Block scheduling and flight dispatch with invalid documents** — requires the master switch above. When on, managers cannot save a schedule with an expired PIC document, pilots cannot dispatch a flight without valid documents, and crew cannot log or confirm a flight whose PIC lacks the certificates its flight type requires (see *Flight form* below). This does not affect self-booking, which has its own **Allow self-booking without valid documents** toggle in the Self-Scheduling tab.
 
-The two other toggles in this same panel are related but separate: **Block Pilots that do not meet established Currency** (recency of flight experience, not document validity) and **Allow pilots to edit their certificates**.
+The two other toggles in this same panel are related but separate: **Block Pilots that do not meet established Currency** (recency of flight experience, including aerodrome currency items, not document validity; see [Pilots settings](../company-management/company-settings/pilots.md)) and **Allow pilots to edit their certificates**.
 
 ![](../.gitbook/assets/pdcs-settings.png)
 

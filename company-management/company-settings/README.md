@@ -38,6 +38,7 @@ Some tabs are only available on certain subscription plans. When a tab is not in
 | Tab | Free | Club | Premium | Unlimited |
 | --- | --- | --- | --- | --- |
 | General, Flights, Aircraft, Pilots | ✓ | ✓ | ✓ | ✓ |
+| Pilots: aerodrome & custom currency items | — | — | ✓ | ✓ |
 | Schedule | — | — | ✓ | ✓ |
 | Duty Limits | — | — | ✓ | ✓ |
 | Billing | — | ✓ | ✓ | ✓ |

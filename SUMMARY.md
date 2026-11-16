@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Aerodrome and custom currency](whats-new/aerodrome-currency-items.md)
   * [Bank details on every bill](whats-new/bill-notes.md)
   * [Billing on the meter you read](whats-new/tach-billing-readings.md)
   * [Form templates and person fields](whats-new/form-templates.md)

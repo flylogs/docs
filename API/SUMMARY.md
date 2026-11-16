@@ -16,6 +16,7 @@
 * [Bills](reference/bills.md)
 * [Refuelings](reference/refuelings.md)
 * [Company](reference/company.md)
+* [Currency Items](reference/currency-items.md)
 * [Custom Forms](reference/custom-forms.md)
 * [Documents](reference/documents.md)
 * [Events](reference/events.md)
