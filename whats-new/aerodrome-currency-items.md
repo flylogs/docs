@@ -2,6 +2,8 @@
 
 **November 2026** · Crew management
 
+{% embed url="https://youtu.be/WUrXjbSSngQ" %}
+
 Some airports ask for more than a valid licence: a recent IFR approach and departure at Sion, a recent approach at Lugano. You can now define these requirements yourself, and Flylogs tracks them from the flight log.
 
 ***

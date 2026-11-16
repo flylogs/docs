@@ -30,6 +30,8 @@ Flylogs evaluates the three levels continuously against each pilot's logbook and
 
 ### Aerodrome and custom currency
 
+{% embed url="https://youtu.be/WUrXjbSSngQ" %}
+
 Besides the three fixed levels, you can define your own currency items, evaluated automatically from the flight log. The typical use is an **aerodrome qualification** at a demanding airport. This is on the same tab (**Flight Crew** in the app) under **Aerodrome & custom currency**.
 
 {% hint style="info" %}
