@@ -1,3 +1,8 @@
+---
+audience: [developers]
+plan: api
+---
+
 # Usage
 
 The usage of Flylogs API requires acceptance of our [Terms and conditions](https://www.flylogs.com/static/legal).\

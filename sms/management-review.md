@@ -3,6 +3,8 @@ description: >-
   The management audit report for the accountable manager, issued as numbered
   versions, and the accountable manager's recorded review, decisions and
   resulting actions.
+audience: [managers]
+plan: premium
 ---
 
 # Management review

@@ -1,5 +1,7 @@
 ---
 description: Classroom management and teacher tools
+audience: [instructors]
+plan: premium
 ---
 
 # Teacher tools

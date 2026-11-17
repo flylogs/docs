@@ -1,5 +1,6 @@
 ---
 description: Elevated pilot accounts with crew oversight and flight management capabilities
+audience: [managers, instructors]
 ---
 
 # Flight Instructor & Chief Pilot Accounts

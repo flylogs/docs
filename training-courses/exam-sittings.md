@@ -1,3 +1,8 @@
+---
+audience: [managers, instructors, students]
+plan: premium
+---
+
 # Exam sittings
 
 Exam sittings let your school put students forward for dated exams and keep track of how each attempt went. A sitting can be:
@@ -116,6 +121,23 @@ Entry requirements are about the student, not about a subject. They work alongsi
 A sitting with registrations cannot be deleted. Cancel it instead, so the students and their attempt history are kept.
 
 ## What students see
+
+The checks a student passes through when they register themselves, and what happens after the result:
+
+```mermaid
+flowchart TD
+    S["Published sitting"] --> R{"Ready for a subject it offers?<br/>active course with that subject's exams passed,<br/>or course completed"}
+    R -->|"No"| H["Sitting not shown<br/>to the student"]
+    R -->|"Yes"| E{"Meets the sitting's<br/>entry requirements?"}
+    E -->|"No"| X["Can't register<br/>checklist shows what is missing"]
+    E -->|"Yes"| A{"Attempt rules allow<br/>this subject?"}
+    A -->|"No"| B["Subject blocked<br/>e.g. no attempts left, too soon"]
+    A -->|"Yes"| P["Registration Pending<br/>until the school confirms it"]
+    P --> T{"Result entered"}
+    T -->|"Pass"| OK["Subject passed"]
+    T -->|"Fail or Absent"| U["Attempt used"]
+    U -->|"Register again<br/>in a later sitting"| S
+```
 
 A published sitting appears for a student only when it offers **at least one subject they are ready for**, and it lists only those subjects. If the sitting has [entry requirements](#entry-requirements), the student also sees the checklist of what they need, above the subjects. A student is ready for a subject when:
 

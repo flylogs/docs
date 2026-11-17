@@ -2,6 +2,8 @@
 description: >-
   Efficiently Track and Manage the Status, Lifecycle, and Requirements of Your
   Maintenance Warehouse Items
+audience: [mechanics, managers]
+plan: club
 ---
 
 # Inventory

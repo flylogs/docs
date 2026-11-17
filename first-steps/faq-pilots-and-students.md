@@ -1,3 +1,7 @@
+---
+audience: [pilots, students]
+---
+
 # FAQ pilots and students
 
 #### I did not receive the welcome email to access Flylogs.

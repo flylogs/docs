@@ -2,6 +2,8 @@
 description: >-
   Scheduled CSV exports of your Flylogs data into your own Dropbox or Google
   Drive account
+audience: [managers]
+plan: club
 ---
 
 # Cloud storage

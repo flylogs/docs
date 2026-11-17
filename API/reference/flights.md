@@ -645,7 +645,7 @@ dispatch gate runs again (FRAT, pre-flight forms, MEL/CDL, grounding, type ratin
 
 #### Authorization
 
-Only users with `user_group_id` ≤ 145 (Flight Dispatcher and more senior, see
+Only users with `user_group_id` ≤ 150 (Chief Pilot, Flight Dispatcher and more senior, see
 [User groups](users.md#user-groups)); anyone else gets `403`. The flight must belong to
 the caller's company (`404` otherwise).
 

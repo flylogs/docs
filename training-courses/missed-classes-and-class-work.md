@@ -1,5 +1,7 @@
 ---
 description: What happens when a student misses an onsite class — the email, class work, justifications and how it's reported.
+audience: [instructors, students]
+plan: premium
 ---
 
 # Missed classes and class work

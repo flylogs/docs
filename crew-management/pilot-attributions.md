@@ -2,6 +2,7 @@
 description: >-
   Ensure precise flight operations by restricting PIC attributions for aircraft
   and flight type selection.
+audience: [managers]
 ---
 
 # Pilot Attributions

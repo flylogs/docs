@@ -1,3 +1,8 @@
+---
+audience: [developers]
+plan: api
+---
+
 # Audits
 
 > Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).

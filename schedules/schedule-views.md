@@ -1,3 +1,8 @@
+---
+audience: [managers, instructors, pilots, students]
+plan: club
+---
+
 # Schedule Views
 
 There are several ways to see or manage the schedules. The **flight schedule calendar** view is the main management view available in which all schedulled flights appear and can be easily edited just by clicking on the record desired to edit.<br>

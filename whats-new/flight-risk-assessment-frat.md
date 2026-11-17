@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: Flight Risk Assessment (FRAT) at dispatch
 
 **June 2026** · Schedules & Dispatch

@@ -1,3 +1,7 @@
+---
+audience: [pilots, instructors]
+---
+
 # Offline flight data
 
 Flylogs lets you create and edit flights even when your device has no internet connection. The flight is stored locally in the browser, you keep working as if nothing changed, and the record syncs to the server automatically as soon as you are back online.

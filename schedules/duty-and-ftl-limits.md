@@ -1,5 +1,7 @@
 ---
 description: Check your legality today, on any past day, and against your roster — every duty, FDP, rest and flight time limit in one page
+audience: [managers, pilots]
+plan: club
 ---
 
 # Duty & FTL limits

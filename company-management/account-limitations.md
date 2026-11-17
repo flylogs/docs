@@ -1,3 +1,7 @@
+---
+audience: [managers]
+---
+
 # Account limitations
 
 To see a complete description of each account type services and limitations go to the pricing page: [https://www.flylogs.com/static/pricing](https://www.flylogs.com/static/pricing)
@@ -6,26 +10,46 @@ To read about the service agreement and guarantees, read the terms and condition
 
 
 
+Flylogs has four plans: **Free**, **Club Essentials**, **Premium** and **Unlimited**. Change plan at any time from **Company > Subscription**.
+
+### Features by plan
+
+|                                                        | Free | Club Essentials | Premium | Unlimited |
+| ------------------------------------------------------ | ---- | --------------- | ------- | --------- |
+| Flights, pilots, aircraft, documents                   | Yes  | Yes             | Yes     | Yes       |
+| Schedules and dispatch                                 | No   | Yes             | Yes     | Yes       |
+| Flight billing                                         | No   | Yes             | Yes     | Yes       |
+| Aircraft maintenance                                   | No   | Yes             | Yes     | Yes       |
+| Flight legs                                            | No   | Yes             | Yes     | Yes       |
+| Cloud storage sync (Dropbox, Google Drive)             | No   | Yes             | Yes     | Yes       |
+| ADS-B flight tracks                                    | No   | Yes             | Yes     | Yes       |
+| ADS-B live fleet map                                   | No   | No              | Yes     | Yes       |
+| Training courses                                       | No   | No              | Yes     | Yes       |
+| Safety management (SMS)                                | No   | No              | Yes     | Yes       |
+| Custom forms                                           | No   | No              | Yes     | Yes       |
+| Aerodrome and custom currency items                    | No   | No              | Yes     | Yes       |
+| API access                                             | No   | Add-on          | Add-on  | Yes       |
+| Phone and WhatsApp support                             | No   | No              | No      | Yes       |
+
+Each page of this manual shows the lowest plan that includes the feature it describes, under the page title.
+
+### Quotas
+
+|                                              | Free      | Club Essentials | Premium   | Unlimited  |
+| -------------------------------------------- | --------- | --------------- | --------- | ---------- |
+| Active aircraft                              | 3         | 5               | 30        | 200        |
+| Top-level folders in the document library    | 3         | No limit        | No limit  | No limit   |
+| Cloud storage                                | 3 GB      | 10 GB           | 50 GB     | 300 GB     |
+| Email notifications                          | 500/mo.   | 1,000/mo.       | 5,000/mo. | 10,000/mo. |
+| Instant notifications (push and WhatsApp)    | 1,000/mo. | 3,000/mo.       | 10,000/mo.| 100,000/mo.|
+
+**Aircraft and folders are hard limits.** Once a company has as many active aircraft as its plan allows, a new aircraft cannot be added until another one is archived or the plan is upgraded. Archived aircraft do not count. The same applies to new top-level folders in the document library; folders inside them are not limited.
+
+**Storage and notifications are not hard limits.** Flylogs keeps working when they are exceeded. Our support team will contact you to find the right plan or a commercial offer for your usage.
+
 {% hint style="info" %}
-Flylogs offers an unlimited account type for bigger organizations, get in contact with our support team to learn more about it.
+Need more than the Unlimited plan includes? Contact our support team for a tailored offer.
 {% endhint %}
-
-**Free and Premium Flylogs accounts have the following quota limitations:**
-
-|                     | Free     | Premium   |
-| ------------------- | -------- | --------- |
-| Aircraft\*          | 5        | 20        |
-| Cloud Storage       | 3GB      | 50GB      |
-| Email notifications | 1000/mo. | 10000/mo. |
-| ADSB                | NO       | YES       |
-
-\*Aircraft limitations are conditioned to active aircraft only.
-
-
-
-These quota limitations for aircraft and storage and not hardly enforce. The system will inform you about the limit being reached but will not stop your operations.
-
-Our support team will contact you to correct the situation or increase your limits based on a commercial offer.
 
 ### File retention on the Free plan
 

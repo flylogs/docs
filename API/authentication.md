@@ -1,3 +1,8 @@
+---
+audience: [developers]
+plan: api
+---
+
 # Authentication
 
 The Flylogs API authenticates with **API keys**. An API key is a long-lived secret, created by a Company Administrator, that you send on every request. There is **no login step** for API access — you do not exchange an email and password for a token.

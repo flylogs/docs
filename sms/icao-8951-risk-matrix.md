@@ -4,6 +4,8 @@ description: >-
   Management System (SMS). It helps organizations assess, document, and
   visualize safety risks using a standard 5×5 probability/severity grid, and
   supports the Annex 19 / Doc 9859 risk tolerability process.
+audience: [managers]
+plan: premium
 ---
 
 # ICAO risk matrix (Doc 9859)

@@ -1,5 +1,7 @@
 ---
 description: Track MEL and CDL items, their rectification deadlines, and their effect on flight dispatch
+audience: [managers, mechanics, pilots]
+plan: club
 ---
 
 # MEL / CDL items

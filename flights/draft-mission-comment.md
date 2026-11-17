@@ -1,3 +1,8 @@
+---
+audience: [instructors]
+plan: premium
+---
+
 # Draft a mission comment
 
 You have just graded a training mission exercise by exercise — a rating on each, a line of your own on the ones that needed it. Then you have to write the mission comment that says the same thing in prose.

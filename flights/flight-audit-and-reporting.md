@@ -1,3 +1,7 @@
+---
+audience: [managers]
+---
+
 # Flight audit and reporting
 
 ### Logbooks

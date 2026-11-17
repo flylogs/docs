@@ -1,5 +1,6 @@
 ---
 description: Company-wide read-receipt compliance, document status and staff acknowledgements
+audience: [managers]
 ---
 
 # Document Stats

@@ -1,5 +1,6 @@
 ---
 description: Document detail page and its features
+audience: [everyone]
 ---
 
 # View Document

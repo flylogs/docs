@@ -1,9 +1,34 @@
+---
+audience: [managers, pilots]
+plan: club
+---
+
 # Flight Dispatch Function
 
 The **Flight Dispatch** feature allows operations staff to provide pilots with all necessary operational details before a flight.\
 When a flight is dispatched, the system automatically creates a **Flight Draft** with the additional information entered, ensuring pilots have clear, accurate, and standardized pre-flight data.
 
 This article explains how the feature works, what each screen shows, and how the information flows into the pilot-visible flight draft.
+
+Before a flight is dispatched, Flylogs runs the checks below. Any check that fails stops the dispatch and says why; the optional ones apply only when your company or the flight type turns them on.
+
+```mermaid
+flowchart TD
+    A["Dispatch Flight"] --> B{"PIC has accepted the booking<br/>or is dispatching it?"}
+    B -->|"Yes"| C{"Aircraft not grounded and<br/>no expired MEL item?"}
+    C -->|"Yes"| D{"Pilot documents and<br/>type rating valid?"}
+    D -->|"Yes"| E{"Training mission<br/>authorized?"}
+    E -->|"Yes"| F{"Checklist, FRAT and<br/>before-dispatch forms done?"}
+    F -->|"Yes"| G{"Airports filled in<br/>and PAX for operators?"}
+    G -->|"Yes"| OK["Flight dispatched<br/>flight draft ready for the crew"]
+    B -->|"No"| X["Dispatch blocked<br/>reason shown"]
+    C -->|"No"| X
+    D -->|"No"| X
+    E -->|"No"| X
+    F -->|"No"| X
+    G -->|"No"| X
+    A -.-> W["Medical limitations and maintenance due<br/>shown as information, never block"]
+```
 
 ***
 
@@ -12,20 +37,18 @@ This article explains how the feature works, what each screen shows, and how the
 The Dispatch button is visible in the Schedule Review page when **all three** conditions are met:
 
 1. **Schedule status** — the record must be in **Scheduled** or **Confirmed** status and not yet have a linked flight.
-2. **Full schedule access** — the user must have write access to schedules:
-   - **Company Administrators and Operations Managers** (user group ≤ 140) always have full access.
-   - **Flight Dispatchers, Chief Pilots and Flight Instructors** have full access only when the company setting **Allow FI schedule management** is enabled.
-   - Pilots and Dispatchers (user groups above 170) can view the schedule but cannot dispatch.
-3. **Flight creation permission** — the user's account must be active and allowed to create flights. Users in groups above 150 additionally require an active pilot profile.
+2. **Full access to Schedule Review** — only the **Company Administrator, Operations Manager, Compliance & Safety Manager, Human Resources Manager, Financial Manager, Trainings Manager and Crew Scheduling** groups (user group ≤ 140) have it. **Flight Dispatchers and Chief Pilots** can open Schedule Review to view it only. Flight Instructors and pilots do not have access to Schedule Review.
+3. **Flight creation permission** — the user's account must be active.
 
-| User type | Can dispatch? |
+| User type | Dispatch from Schedule Review? |
 |---|---|
-| Company Administrator / Operations Manager | Yes |
-| Flight Instructor / Supervisor (FI management enabled) | Yes |
-| Flight Instructor / Supervisor (FI management disabled) | No |
-| Dispatcher / Pilot | No |
+| Company Administrator, Operations Manager and the other management groups up to Crew Scheduling | Yes |
+| Flight Dispatcher / Chief Pilot | No (view only) |
+| Flight Instructor / Pilot / Student Pilot | No (no access to the page) |
 
-> If the Dispatch button is not visible for a user who should have access, check that **Allow FI schedule management** is enabled under Company Settings and that the user's account is active.
+Outside Schedule Review, the crew of a booking (PIC, SIC or supervisor) dispatches it from the booking itself; see [Dispatching a flight from the schedule](schedules-for-pilots-and-flight-instructors.md#dispatching-a-flight-from-the-schedule). Chief Pilots, Flight Dispatchers and more senior groups (user group ≤ 150) can dispatch any booking of the company from the booking, without waiting for the crew to accept it.
+
+> If the Dispatch button is not visible for a user who should have access, check the user's group and that the account is active.
 
 ### **1. Opening the Dispatch Menu**
 
@@ -86,7 +109,7 @@ On **Schedule Review**, a dispatched booking shows an **Edit dispatch** button (
 * The flight stays **Dispatched**. The checks done at dispatch (checklist, FRAT, pre-flight forms, MEL and type rating) are not asked again.
 * A blank field clears that value on the flight. Setting PAX to 0 clears the passenger list.
 * Every saved change is recorded in the flight's change history, listing the fields that changed. A save with no changes records nothing.
-* Only Flight Dispatchers and more senior groups (user group ≤ 145) can edit a dispatch, and the button is shown only to users with full access to Schedule Review (group ≤ 140). Pilots and crew change their flight from the flight itself.
+* Only Chief Pilots, Flight Dispatchers and more senior groups (user group ≤ 150) can edit a dispatch, and the button is shown only to users with full access to Schedule Review (group ≤ 140). Pilots and crew change their flight from the flight itself.
 
 ***
 
@@ -170,8 +193,10 @@ Once an alternate is set, the booking briefing and the flight page show its weat
 ### **Remarks**
 
 1. If a schedule record is **published** and **dispatched** and the PIC is changed, the record will automatically be switched back to SCHEDULED and the associated flight will be unlinked.
-2. If a PIC or SIC tries to dispatch the flight, the system will check for required pilot certificates, and if the user lacks any of the required certificates (medical, license, rating), Flylogs will reject the flight dispatch function.
+2. When both **Check pilot documentation validity** and **Block scheduling and flight dispatch with invalid documents** are on (Company Settings → Flight Crew → Documentation Compliance), Flylogs checks the documents of the person dispatching the flight: a pilot from the Chief Pilot group down (Chief Pilot, Flight Instructor, Captain, Pilot…) needs a valid licence, rating and medical, and no expired training certificate, on the day of the flight, or the dispatch is refused. A Student Pilot only needs a valid medical. Management groups and Flight Dispatchers are not checked when they dispatch. The crew's type rating is checked separately, see [Type rating](#type-rating).
 3. If a PIC skips the Dispatch button entirely and logs the flight directly, Flylogs doesn't leave the schedule stranded: when that flight is **confirmed**, the system looks for the schedule it belongs to (same PIC, aircraft, and a time window overlapping the flight by up to 30 minutes) and links it automatically. See [Automatic schedule matching on confirm](../flights/audit-trails.md#automatic-schedule-matching-on-confirm) for the full details.
+
+<figure><img src="../.gitbook/assets/company-settings-documentation-compliance.png" alt="Documentation Compliance settings with Check pilot documentation validity on and Block scheduling and flight dispatch with invalid documents off"><figcaption><p>Company settings → Flight Crew → Documentation Compliance: both settings must be on for the documents check at dispatch (remark 2).</p></figcaption></figure>
 
 ***
 

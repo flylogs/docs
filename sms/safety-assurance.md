@@ -3,6 +3,8 @@ description: >-
   One screen for your safety manager, accountable manager or an auditor: safety
   performance indicators, the current risk picture, report handling and
   reviewer workload, with every number traceable to the records behind it.
+audience: [managers]
+plan: premium
 ---
 
 # Safety Assurance dashboard

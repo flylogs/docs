@@ -1,3 +1,8 @@
+---
+audience: [developers]
+plan: api
+---
+
 # Safety Assurance
 
 > Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).

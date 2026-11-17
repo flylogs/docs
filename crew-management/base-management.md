@@ -1,5 +1,6 @@
 ---
 description: Manage different flying locations from a single place
+audience: [managers]
 ---
 
 # Base management

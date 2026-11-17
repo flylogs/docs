@@ -1,5 +1,7 @@
 ---
 description: Change training properties, edit subjects and manage exams
+audience: [managers]
+plan: premium
 ---
 
 # Edit a training

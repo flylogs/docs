@@ -1,3 +1,8 @@
+---
+audience: [managers, mechanics]
+plan: club
+---
+
 # Scheduled maintenance windows
 
 ### **Basic aircraft maintenance job tracking**

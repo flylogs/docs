@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: a first draft of your mission comments
 
 **September 2026** · Flights & Training

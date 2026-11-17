@@ -1,3 +1,8 @@
+---
+audience: [everyone]
+plan: club
+---
+
 # Schedule notifications
 
 Every time the flight schedule is published by your Roster Manager, Flylogs will deliver all flights to each pilot in a single email summarizing all flights.

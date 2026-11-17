@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: aerodrome and custom currency
 
 **November 2026** · Crew management

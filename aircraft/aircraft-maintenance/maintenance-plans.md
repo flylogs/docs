@@ -1,5 +1,7 @@
 ---
 description: Set up your approved maintenance programme and let Flylogs schedule it
+audience: [managers, mechanics]
+plan: club
 ---
 
 # Maintenance plans

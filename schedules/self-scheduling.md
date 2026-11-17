@@ -1,5 +1,7 @@
 ---
 description: Pilot self scheduling for clubs and small schools
+audience: [students, pilots, managers]
+plan: club
 ---
 
 # Self scheduling
@@ -8,7 +10,7 @@ Flylogs enables you to establish automated scheduling with specific restrictions
 
 ### Initial setup
 
-Within your company settings page, you'll discover the general Schedule settings. Here, you can configure settings that will be applicable to all schedules and users. You have the option to specify the time frame before a flight during which pilots can cancel a schedule. Additionally, there are checkboxes that allow you to decide whether you require both the PIC (Pilot-in-Command) and SIC (Second-in-Command) to confirm the scheduled flight.
+Within your company settings page, the **Schedule** tab holds the general Schedule settings. Here, you can configure settings that apply to all schedules and users. Under **Schedule Cancellations**, the **Dispatch Cancel Limit** sets how close to a flight pilots can still cancel their own booking for personal or other reasons; aircraft, weather, maintenance and ATC cancellations are accepted at any time. See [Schedule cancellations](schedule-cancellations.md).
 
 [In the second part of this settings box, you can limit the self scheduling options. ](#user-content-fn-1)[^1]
 
@@ -16,7 +18,7 @@ Within your company settings page, you'll discover the general Schedule settings
 Remember that self scheduling has to be enabled on each aircraft!
 {% endhint %}
 
-You have the flexibility to decide whether you want to restrict the reservations times or prevent pilots with insufficient billing credit. Furthermore, you can set the maximum number of reservations per day, the default length of the slot and define minimum and maximum slot durations as well.
+Bookings are offered only inside your **Operating Hours** (same tab), and with billing enabled, **Block Pilots without Credit** (Company settings → Billing) prevents pilots with insufficient billing credit from booking. In the **Self Scheduling** section you can also set the maximum number of reservations per day (**Max Slots Day**), the default length of the slot (**Default Duration**) and the minimum and maximum slot durations (**Min Slot Duration**, **Max Slot Duration**).
 
 ![](<../.gitbook/assets/scheduleSettingsPage.png>)<br>
 
@@ -29,9 +31,9 @@ The self-booking widget itself is **always visible**, and a pilot with missing o
 * **Toggle OFF (default — stricter)**: the warning is shown in red and the **Book this Slot** button is disabled. The pilot has to update their documents on their profile page before they can book.
 * **Toggle ON (permissive)**: the same warning is shown in amber, for information only, and the pilot can go ahead and book. Use this option if your operation handles document checks outside Flylogs or you are still onboarding pilots that have yet to upload their paperwork.
 
-The toggle only has an effect when **Require pilot documents** is enabled in the company settings. If your company does not require pilot documents at all, self-booking is never blocked by certificates.
+The toggle only has an effect when **Check pilot documentation validity** is enabled in the company settings (Company settings → Flight Crew → Documentation Compliance). If your company does not check pilot documents at all, self-booking is never blocked by certificates.
 
-| Require pilot documents | Allow self-booking without valid documents | Pilot with invalid documents |
+| Check pilot documentation validity | Allow self-booking without valid documents | Pilot with invalid documents |
 | ----------------------- | ------------------------------------------ | ---------------------------- |
 | Off                     | (any)                                       | Warned, **can book**         |
 | On                      | On                                          | Warned, **can book**         |
@@ -42,7 +44,7 @@ The toggle only has an effect when **Require pilot documents** is enabled in the
 {% endhint %}
 
 {% hint style="info" %}
-This setting governs **self-booking only**. The separate `Block PIC without documents` setting applies to manager schedule edits and flight dispatch, not to the self-booking widget. Currency requirements and billing-credit checks continue to apply independently.
+This setting governs **self-booking only**. The separate **Block scheduling and flight dispatch with invalid documents** setting applies to manager schedule edits and flight dispatch, not to the self-booking widget. Currency requirements and billing-credit checks continue to apply independently.
 {% endhint %}
 
 <figure><img src="../.gitbook/assets/selfScheduleNoBalance.png" alt=""><figcaption><p>Pilots with insufficient balance see this warning and cannot book a flight.</p></figcaption></figure>
@@ -122,6 +124,22 @@ Those pilots now see one aircraft on the Schedules page and in **Book a Flight**
 
 ### Flight self-booking for pilots
 
+This is what happens when a pilot or student books a slot from **Book a Flight**:
+
+```mermaid
+flowchart TD
+    A["Pilot picks a date, an aircraft<br/>and a free slot"] --> B{"Booking rules met?<br/>credit, documents, slot limits"}
+    B -->|"No"| X["Booking refused<br/>reason shown in the modal"]
+    B -->|"Yes"| C{"Who is booking?"}
+    C -->|"Captain or Pilot"| D["Pilot is PIC<br/>booking Scheduled"]
+    C -->|"Flight Instructor"| E["Instructor is PIC, optional SIC<br/>booking Scheduled"]
+    C -->|"Student Pilot"| F{"Instructor available<br/>for the whole slot?"}
+    F -->|"Yes"| G["Instructor assigned as PIC<br/>booking Scheduled"]
+    F -->|"No"| H["Booking Pending<br/>slot shown yellow"]
+    H -->|"An instructor publishes<br/>matching availability"| G
+    H -->|"No instructor by the<br/>Dispatch Cancel Limit"| I["Canceled automatically<br/>watchlist pilots notified"]
+```
+
 As a pilot, on my dashboard, I can find a **Schedule a flight** box, see below:
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-03-31 at 17.55.06.png" alt=""><figcaption><p>Pilots automatically see the Schedule a flight option if they are entitled to do so.</p></figcaption></figure>
@@ -138,9 +156,20 @@ The self-booking modal behaves differently based on the user group of the person
 
 * **Captains and Pilots**: the process is unchanged — the pilot making the reservation is the PIC.
 * **Flight Instructors and staff (Flight Instructor and above, with the pilot flag)**: they fly as PIC and can optionally pick a **SIC** from the list of all active pilots of the company. The booking is saved directly as **SCHEDULED**.
-* **Student Pilots**: students can never be PIC, so they do not choose one. The system automatically selects an available **Flight Instructor** and assigns them as PIC (the student is stored as SIC). The chosen FI must: have published availability (AVAILABLE or ALWAYS — never MAYBE or UNAVAILABLE) covering the whole slot, have no conflicting schedule or class, be entitled to fly the selected aircraft (aircraft attributions — an empty list means all aircraft), and have the selected flight type attributed (empty list means all flight types). If the student has an **assigned instructor** (training supervisor), that instructor has priority over other available FIs.
+* **Student Pilots**: students can never be PIC, so they do not choose one. The system automatically selects an available **Flight Instructor** and assigns them as PIC (the student is stored as SIC). The chosen FI must: have **Available to act as PIC in self scheduled flights** switched on (see below), have published availability (AVAILABLE or ALWAYS — never MAYBE or UNAVAILABLE) covering the whole slot, have no conflicting schedule or class, be entitled to fly the selected aircraft (aircraft attributions — an empty list means all aircraft), and have the selected flight type attributed (empty list means all flight types). If the student has an **assigned instructor** (training supervisor), that instructor has priority over other available FIs.
 
-When a **student** opens the modal, Flylogs checks for an instructor in real time. If one is available it is shown in the **Flight instructor** box; if none is available, the modal warns that the booking will be saved as **pending** and confirmed automatically as soon as an instructor becomes available — and that it will be canceled automatically if no instructor is assigned before the company's cancellation deadline (flight start time minus the "minimum cancellation time" setting).
+#### Which instructors can be assigned automatically
+
+Only instructors with **Available to act as PIC in self scheduled flights** switched on are ever assigned to a student booking automatically, whether when the student books or later when a pending booking is filled. The setting is per person and is offered to Flight Instructors and above with flight privileges. New accounts have it switched on.
+
+<figure><img src="../.gitbook/assets/pilot-account-status-self-booking-pic.png" alt="Account status card of a pilot with the Available to act as PIC in self scheduled flights toggle switched on"><figcaption><p>Pilot edit page, Account tab: <strong>Available to act as PIC in self scheduled flights</strong>.</p></figcaption></figure>
+
+* A manager sets it from **Pilots**, by editing the pilot: **Account** tab, **Account status** card.
+* Instructors can also change it themselves from **Account Settings** in the user menu (top right), in the **Profile Photo & Personal** card.
+
+Switch it off for instructors who publish availability only so that managers can schedule them by hand: they stay available for manager-assigned flights but are never picked for student self-bookings.
+
+When a **student** opens the modal, Flylogs checks for an instructor in real time. If one is available it is shown in the **Flight instructor** box; if none is available, the modal warns that the booking will be saved as **pending** and confirmed automatically as soon as an instructor becomes available — and that it will be canceled automatically if no instructor is assigned before the company's cancellation deadline (flight start time minus the **Dispatch Cancel Limit**).
 
 <figure><img src="../.gitbook/assets/selfBookingPendingNoFi.png" alt=""><figcaption><p>Student booking modal when no instructor is available — the flight will be saved as pending.</p></figcaption></figure>
 
@@ -148,7 +177,7 @@ When a **student** opens the modal, Flylogs checks for an instructor in real tim
 
 Before a booking is saved, Flylogs validates the certificates of every crew member that will fly (the pilot booking, plus a SIC if an instructor selected one) against the **required certificates of the selected flight type**. If a required certificate is missing or expired, or **expires before the flight ends**, the modal shows a warning. The same warning appears on the flight detail card afterwards.
 
-This check follows the same rule as the toggle above: the warning blocks the booking only when **Require pilot documents** is on and **Allow self-booking without valid documents** is off. Otherwise it is shown in amber as information and the pilot can book. A flight type with no required certificates never produces a warning.
+This check follows the same rule as the toggle above: the warning blocks the booking only when **Check pilot documentation validity** is on and **Allow self-booking without valid documents** is off. Otherwise it is shown in amber as information and the pilot can book. A flight type with no required certificates never produces a warning.
 
 <figure><img src="../.gitbook/assets/scheduleFlightDetailModal.png" alt=""><figcaption><p>Flight detail card showing the PIC/SIC, the Dual flight type, and a certificate-expiry warning for the SIC.</p></figcaption></figure>
 
@@ -160,8 +189,8 @@ On an aircraft that [requires a type rating](../aircraft/type-rating-requirement
 
 If no Flight Instructor is available for the selected slot, the student's booking is stored with the new **PENDING** status: the slot is locked for the student, displayed like any scheduled flight, but it is not confirmed yet because it lacks an FI as PIC.
 
-* Whenever an FI publishes availability (AVAILABLE or ALWAYS) that matches a pending booking — same checks as above: time frame, attributions, conflicts — the booking is automatically updated to **SCHEDULED**, the FI is assigned as PIC with a pending confirmation request, and the usual schedule notifications are sent.
-* If no FI has been assigned when the confirmation deadline arrives (**flight start time minus the company "minimum cancellation time" setting, in hours**), the booking is automatically canceled by the system and the slot frees up for other users.
+* Whenever an FI with **Available to act as PIC in self scheduled flights** switched on publishes availability (AVAILABLE or ALWAYS) that matches a pending booking — same checks as above: time frame, attributions, conflicts — the booking is automatically updated to **SCHEDULED**, the FI is assigned as PIC with a pending confirmation request, and the usual schedule notifications are sent.
+* If no FI has been assigned when the confirmation deadline arrives (**flight start time minus the company's Dispatch Cancel Limit**), the booking is automatically canceled by the system and the slot frees up for other users.
 
 After the pilot clicks the "**Book this Slot**" button, the system locks the slot and sends a notification to the assigned PIC, requesting confirmation. Once the PIC confirms the flight, the SIC will no longer be able to modify the booking.
 

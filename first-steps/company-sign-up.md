@@ -1,5 +1,6 @@
 ---
 description: Create your company account easily and start your Flylogs premium
+audience: [managers]
 ---
 
 # Company Sign Up

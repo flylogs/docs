@@ -1,5 +1,6 @@
 ---
 description: Logbook protection, flight form options, pre-dispatch gates and flight permissions
+audience: [managers]
 ---
 
 # Flights

@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: flight legs
 
 **November 2026** · Flights

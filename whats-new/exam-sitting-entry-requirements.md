@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: entry requirements and official result reports for exam sittings
 
 **September 2026** · Training courses

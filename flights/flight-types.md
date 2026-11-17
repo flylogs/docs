@@ -1,5 +1,6 @@
 ---
 description: Classify your operations and control how each flight logs time, pre-fills, and checks crew
+audience: [managers]
 ---
 
 # Flight Types

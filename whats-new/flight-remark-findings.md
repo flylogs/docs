@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: Flylogs reads your flight remarks
 
 **September 2026** · Safety

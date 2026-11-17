@@ -1,5 +1,7 @@
 ---
 description: Receive directly into Flylogs your pilots availability
+audience: [pilots, instructors, managers]
+plan: club
 ---
 
 # Pilot availability records

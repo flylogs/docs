@@ -1,5 +1,7 @@
 ---
 description: Credit a student's training from one course towards another (for example LAPL(A) towards PPL(A)), keep how the two courses pair up as a course pathway, and check the combined flight experience against your own minimums.
+audience: [managers]
+plan: premium
 ---
 
 # Course pathways (LAPL to PPL)

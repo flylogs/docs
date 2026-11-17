@@ -3,6 +3,8 @@ description: Receive reports directly from any crew member
 cover: >-
   https://images.unsplash.com/photo-1478272798175-3e553cc43e67?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHwxfHxmYXN0ZW4lMjBzZWF0YmVsdHN8ZW58MHx8fHwxNjc0Nzc0NjQ3&ixlib=rb-4.0.3&q=80
 coverY: 0
+audience: [everyone]
+plan: premium
 ---
 
 # Safety Reports
@@ -56,14 +58,33 @@ This is why the old "Information" and "Hazard" severities now live under **Safet
 
 ### Report status
 
+The usual life of a report:
+
+```mermaid
+stateDiagram-v2
+    state "Draft<br/>only the author sees it" as Draft
+    state "Open<br/>submitted, safety team notified" as Open
+    state "Reviewed<br/>investigation, risk and actions" as Reviewed
+    state "Closed<br/>no further action expected" as Closed
+    state "Published<br/>visible to all members" as Published
+    [*] --> Draft: Save as draft
+    [*] --> Open: Submit
+    Draft --> Open: Submit
+    Open --> Reviewed: Review
+    Reviewed --> Closed: Close
+    Closed --> Published: Publish
+    Published --> [*]
+```
+
 A report can be in the following status.
 
-* **Draft.** A private working copy, visible only to the person who created it. It has no report number, is not counted in analytics, and does not notify anyone. When the author submits it, it becomes **New (Open)** and the safety team is notified. See [Create a Safety Report](create-a-safety-report.md#save-as-draft-or-submit) and [Offline safety reports](offline-safety-reports.md).
-* **New.** Default status when the report is submitted.
-* Reviewed. Initial review performed, waiting for more details or further processing.
+* **Draft.** A private working copy, visible only to the person who created it. It has no report number, is not counted in analytics, and does not notify anyone. When the author submits it, it becomes **Open** and the safety team is notified. See [Create a Safety Report](create-a-safety-report.md#save-as-draft-or-submit) and [Offline safety reports](offline-safety-reports.md).
+* **Open.** Default status when the report is submitted.
+* **Reviewed.** Initial review performed, waiting for more details or further processing.
 * **Closed.** Report is closed and no further actions are expected.
-* Deleted. Useful for test reports.
 * **Published.** The report is closed and published to all members in the organization.
+
+A **Compliance & Safety Manager or above** can also **delete** a report, for example one created as a test. Deleting is not a status: a deleted report disappears from the report list and the analytics. Auditors have read-only access and cannot delete reports.
 
 #### Published Reports
 

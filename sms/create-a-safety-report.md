@@ -1,3 +1,8 @@
+---
+audience: [everyone]
+plan: premium
+---
+
 # Create a Safety Report
 
 

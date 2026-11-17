@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: Flylogs tells you when the next check is due
 
 **September 2026** · Fleet & Maintenance

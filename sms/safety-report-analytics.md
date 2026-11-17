@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: premium
+---
+
 # Safety report analytics
 
 The Analytics page has two tabs:

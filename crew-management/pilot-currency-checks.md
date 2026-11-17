@@ -1,3 +1,7 @@
+---
+audience: [managers, pilots]
+---
+
 # Pilot currency checks
 
 Flylogs aims to give you the safety and compliance tools you need for your daily operations. This tools should be easy and accesible without much trouble.\

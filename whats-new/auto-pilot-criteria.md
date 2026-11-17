@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: Auto Pilot books the lessons your students really fly next
 
 **November 2026** · Schedules

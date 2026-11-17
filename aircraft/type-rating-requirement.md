@@ -2,6 +2,7 @@
 description: >-
   Require crew to hold a valid type rating for an aircraft before they can be
   booked on it or dispatched.
+audience: [managers]
 ---
 
 # Type rating requirement

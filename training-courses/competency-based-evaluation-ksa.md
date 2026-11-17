@@ -1,5 +1,7 @@
 ---
 description: Student Competency-Based Evaluation (KSA) in Flylogs Trainings
+audience: [instructors]
+plan: premium
 ---
 
 # Competency-Based Evaluation (KSA)

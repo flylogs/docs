@@ -1,5 +1,6 @@
 ---
 description: Configure how Flylogs behaves for your whole company
+audience: [managers]
 ---
 
 # Company Settings

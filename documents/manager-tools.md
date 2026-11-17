@@ -1,5 +1,6 @@
 ---
 description: Extra data and tools available to company managers on the Document Library
+audience: [managers]
 ---
 
 # Manager tools

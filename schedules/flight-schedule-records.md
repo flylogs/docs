@@ -2,6 +2,8 @@
 cover: >-
   https://images.unsplash.com/photo-1601342630314-8427c38bf5e6?crop=entropy&cs=srgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw5fHxjYWxlbmRhcnxlbnwwfHx8fDE2ODMxMDEyNDI&ixlib=rb-4.0.3&q=85
 coverY: 0
+audience: [managers, instructors, pilots, students]
+plan: club
 ---
 
 # Flight Schedule Records
@@ -10,16 +12,38 @@ Flylogs flight scheduling has been designed to fit precisely the needs of ATO or
 
 **Company Managers** and **Roster Managers** have a full access to al rostering options in all company aircraft. Aircraft managers have full access to the aircraft they manage, including maintenance records, logbooks and schedules.
 
-**Pilot or Student self booking** is available on demand, and requires the company to activate the flight billing functions.
+**Pilot or Student self booking** is available on demand: it is switched on aircraft by aircraft (see [Self scheduling](self-scheduling.md)). Billing does not have to be enabled for it; when it is, you can also block pilots without enough credit from booking.
 
 ### Schedule Record Lifecycle
 
-1. **Draft:** Unpublished schedule record. Only visible to schedule management users.
-2. **Active:** The schedule record is published and visible to crew members.
-3. **Confirmed:** The schedule record has been confirmed by the flight crew.
-4. **Rejected** The schedule record has been rejected by either one of the flight crew.
-5. **Cancelled:** The flight has been cancelled after the schedule was confirmed.
-6. **Deleted**
+The diagram below shows how a booking moves between the statuses shown on the schedule.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft : Saved unpublished
+    [*] --> Scheduled : Saved as Scheduled
+    [*] --> Pending : Student booking<br/>with no instructor free
+    Draft --> Scheduled : Published
+    Pending --> Scheduled : Instructor assigned
+    Pending --> Canceled : No instructor by the<br/>Dispatch Cancel Limit
+    Scheduled --> Dispatched : Flight dispatched
+    Dispatched --> Scheduled : PIC or SIC changed
+    Dispatched --> Landed : Flight confirmed
+    Scheduled --> Landed : Flight logged without<br/>dispatch and confirmed
+    Scheduled --> Canceled : Canceled or rejected by crew<br/>or not flown in time
+    Dispatched --> Canceled : Canceled
+    note right of Scheduled
+        Shown as Confirmed once all crew accept
+        and as Delayed once its end time has passed
+    end note
+```
+
+* **Draft:** unpublished. Only visible to schedule management users.
+* **Pending:** a student booked a flight and no instructor was free yet. Shown in yellow until an instructor is assigned.
+* **Scheduled:** published and visible to the crew. It is shown as **Confirmed** once every crew member has accepted it, and as **Delayed** once its end time has passed without the flight being logged.
+* **Dispatched:** the flight was dispatched. Changing the PIC or SIC sends it back to Scheduled.
+* **Landed:** the flight was logged and confirmed.
+* **Canceled:** canceled by the crew or a manager, rejected by a crew member, not flown in time, or still Pending when the Dispatch Cancel Limit was reached.
 
 ### Schedule Record Information
 
@@ -38,17 +62,22 @@ Each schedule record contains the following information and represents a schedul
 
 Each crew slot (PIC and SIC) on a schedule record carries its own acceptance status, independent of the overall record status.
 
+<figure><img src="../.gitbook/assets/schedule-crew-acceptance-status.png" alt="Crew card of a booking showing the PIC and the SIC both awaiting confirmation"><figcaption><p>The Crew tab of a booking: each seat shows its own acceptance status.</p></figcaption></figure>
+
 | Status | Meaning |
 |--------|---------|
 | **Pending** | The crew member has been assigned but has not yet accepted the flight. |
 | **Accepted** | The crew member has accepted (or was automatically accepted at creation). |
-| **None** | The slot is empty — no crew member assigned. |
+| **Rejected** | The crew member declined the flight. |
+| **None** | No acceptance is requested: either the seat is empty, or the crew member was assigned without being asked to confirm. A seat in **None** does not hold the booking back. |
 
 **How the status is set when a record is created:**
 
-* **Self-scheduled flights** (pilot or student booking their own flight): the current user is automatically set as PIC with status **Accepted**. No SIC is assigned (**None**).
-* **Flights created by an instructor or Flight Instructor (FI)**: the FI is set as PIC (**Accepted**) and the selected pilot becomes SIC (**None** — SIC acceptance is not required in this case).
-* **Flights created by management on behalf of crew**: both PIC and SIC (if assigned) are set to **Pending**. They must accept the flight through the notification they receive.
+* **Captains and Pilots booking their own flight** (Book a Flight): the pilot is PIC with status **None**, as there is nothing to confirm. No SIC is assigned (**None**).
+* **Student Pilots booking their own flight**: the student is SIC (**Accepted**). The Flight Instructor that Flylogs assigns as PIC is set to **Pending** and has to accept the flight. If no instructor is free, the booking is saved as **Pending** with no PIC until one is assigned (see [Self scheduling](self-scheduling.md#pending-bookings)).
+* **Flight Instructors booking their own flight**: the FI is PIC (**Accepted**). If they name a SIC, the SIC is set to **Pending** and has to accept the flight.
+* **Flights created by management on behalf of crew**: saved as **Draft**, the PIC and SIC (if assigned) are set to **Pending** and must accept the flight once it is published. Saved directly as **Scheduled**, the crew is set to **None** and no acceptance is requested.
+* **Changing the PIC or SIC of an existing booking** sets that seat to **Pending**, so the new crew member has to accept it.
 
 {% hint style="info" %}
 Crew members can accept all their pending flights at once from the **Upcoming Flights** panel on their home page, or individually from the schedule record.

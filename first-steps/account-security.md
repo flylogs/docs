@@ -1,5 +1,6 @@
 ---
 description: Password security and 2FA setup guidance
+audience: [everyone]
 ---
 
 # Account security

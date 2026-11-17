@@ -2,6 +2,8 @@
 cover: >-
   https://images.unsplash.com/photo-1616400619175-5beda3a17896?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHwxMHx8c3R1ZHl8ZW58MHx8fHwxNjc0ODU4ODY2&ixlib=rb-4.0.3&q=80
 coverY: -12
+audience: [managers, instructors]
+plan: premium
 ---
 
 # Training basics

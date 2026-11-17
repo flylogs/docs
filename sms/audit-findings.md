@@ -2,6 +2,8 @@
 description: >-
   Track every audit finding to closure: dates, root cause, corrective actions,
   verification, authority decisions and links to your hazard log.
+audience: [managers, auditors]
+plan: premium
 ---
 
 # Audit findings
@@ -65,6 +67,31 @@ The finding page suggests **possible repeat findings**: earlier findings in the 
 | Closed on | When the finding was closed in Flylogs. For authority findings it mirrors the authority's closure |
 
 ## Status
+
+The usual path of a finding. The action plan steps and the authority closure apply to authority audits only:
+
+```mermaid
+stateDiagram-v2
+    state "Open" as Open
+    state "Action plan submitted" as Submitted
+    state "Action plan accepted" as Accepted
+    state "In progress" as InProgress
+    state "Awaiting verification" as Verification
+    state "Awaiting authority closure" as AuthorityClosure
+    state "Closed" as Closed
+    [*] --> Open
+    Open --> Submitted: Plan sent to the authority
+    Submitted --> Accepted: Authority accepts the plan
+    Accepted --> InProgress: First corrective action
+    Open --> InProgress: First corrective action
+    Open --> Closed: Observation closed with a note
+    InProgress --> Verification: No action open any more
+    Verification --> InProgress: New open action
+    Verification --> Closed: Verified and closed
+    Verification --> AuthorityClosure: Verified on an authority audit
+    AuthorityClosure --> Closed: Authority closes it
+    Closed --> [*]
+```
 
 | Status | Meaning |
 | --- | --- |

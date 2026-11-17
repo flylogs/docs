@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: course revisions and approvals
 
 **September 2026** · Training courses

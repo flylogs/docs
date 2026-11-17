@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: class work and homework with grading
 
 **September 2026** · Training courses

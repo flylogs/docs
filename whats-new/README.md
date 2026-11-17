@@ -20,6 +20,8 @@ page in the manual. Also add the article to SUMMARY.md, under
 
 Everything we have added or fixed in Flylogs, newest first. Each entry links to the announcement and to the reference page in the manual.
 
+To be told about new features as they are published, add the [What's new RSS feed](https://docs.flylogs.com/whats-new/rss.xml) to your feed reader.
+
 ***
 
 ## November 2026

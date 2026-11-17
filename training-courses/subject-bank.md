@@ -1,5 +1,7 @@
 ---
 description: Share one subject between several courses, edit it once and push the changes to the other courses after reviewing them.
+audience: [managers]
+plan: premium
 ---
 
 # Subject Bank (linked subjects)

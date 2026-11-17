@@ -1,5 +1,6 @@
 ---
 description: How Flylogs alerts crew — push notifications first, WhatsApp as a backup, email for the record.
+audience: [everyone]
 ---
 
 # Notifications: push, WhatsApp and email

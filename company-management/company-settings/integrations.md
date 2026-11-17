@@ -1,5 +1,6 @@
 ---
 description: Automatic flight imports from Airbly and Fleet Manager (formerly Spidertracks)
+audience: [managers]
 ---
 
 # Integrations

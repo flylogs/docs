@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: fuel and excise tracking
 
 **September 2026** · Billing

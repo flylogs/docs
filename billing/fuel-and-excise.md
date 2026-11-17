@@ -1,5 +1,7 @@
 ---
 description: Track what you pay for fuel and work out how much excise duty you can reclaim
+audience: [managers]
+plan: club
 ---
 
 # Fuel & Excise

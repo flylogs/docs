@@ -1,3 +1,8 @@
+---
+audience: [pilots, managers]
+plan: club
+---
+
 # Flight legs
 
 {% embed url="https://youtu.be/xHmTY6UUn5c" %}

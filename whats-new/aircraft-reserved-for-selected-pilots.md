@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: reserve an aircraft for selected pilots
 
 **September 2026** · Schedules & Fleet

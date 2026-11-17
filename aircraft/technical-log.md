@@ -1,5 +1,6 @@
 ---
 description: Preflight and post-flight signatures and the numbered daily technical log of each aircraft
+audience: [pilots, mechanics, managers]
 ---
 
 # Technical log

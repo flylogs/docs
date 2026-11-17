@@ -1,9 +1,15 @@
 ---
-// Wraps Starlight's MarkdownContent to render the <pre class="mermaid"> blocks prepare.mjs emits.
+// Wraps Starlight's MarkdownContent to:
+//  - enable click-to-zoom on images (starlight-image-zoom; we override MarkdownContent
+//    ourselves, so the plugin's own override is skipped and its component goes here),
+//  - render the <pre class="mermaid"> blocks prepare.mjs emits,
+//  - load YouTube players only when the reader clicks a video thumbnail.
 // mermaid is loaded only on pages that contain a diagram, and re-renders when the theme toggles.
 import Default from '@astrojs/starlight/components/MarkdownContent.astro';
+import ImageZoom from 'starlight-image-zoom/components/ImageZoom.astro';
 ---
 
+<ImageZoom />
 <Default><slot /></Default>
 
 <script>
@@ -27,5 +33,26 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
     new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   }
 
+  // <a class="yt-facade" data-yt="ID"> (from prepare.mjs) -> privacy-enhanced player, autoplaying.
+  function wireVideos() {
+    for (const link of document.querySelectorAll<HTMLAnchorElement>('.sl-markdown-content a.yt-facade[data-yt]')) {
+      link.addEventListener('click', (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return; // let "open in new tab" work
+        event.preventDefault();
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${link.dataset.yt}?autoplay=1&rel=0`;
+        iframe.title = link.getAttribute('aria-label')?.replace(/^Play video: /, '') || 'Video';
+        iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+        iframe.allowFullscreen = true;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'video-embed';
+        wrapper.append(iframe);
+        link.replaceWith(wrapper);
+        iframe.focus();
+      });
+    }
+  }
+
+  wireVideos();
   renderDiagrams();
 </script>

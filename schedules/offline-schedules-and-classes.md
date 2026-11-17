@@ -1,3 +1,8 @@
+---
+audience: [pilots, instructors, students]
+plan: club
+---
+
 # Schedules and classes offline
 
 Flylogs keeps the **next 7 days** of your schedule on your device, so you can still check them without a connection: on a flight, in a hangar or at an airfield with no signal. This covers flight bookings, pilot availability and training classes.

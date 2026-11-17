@@ -5,6 +5,7 @@ description: >-
 cover: >-
   https://images.unsplash.com/photo-1474302770737-173ee21bab63?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw0fHxqZXR8ZW58MHx8fHwxNjc0NTg4NDY3&ixlib=rb-4.0.3&q=80
 coverY: 0
+audience: [managers, mechanics]
 ---
 
 # Aircraft management

@@ -1,5 +1,7 @@
 ---
 description: Automatic flight billing with custom rates and hour packages
+audience: [managers]
+plan: club
 ---
 
 # Billing System

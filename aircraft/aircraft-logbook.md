@@ -1,5 +1,6 @@
 ---
 description: How aircraft logs work and what each log entry means
+audience: [managers, mechanics, pilots]
 ---
 
 # Aircraft Logbook

@@ -1,3 +1,8 @@
+---
+audience: [managers, instructors]
+plan: premium
+---
+
 # Schedule a class or an exam
 
 Flylogs provides you with tools for the entire training cycle, including daily lessons for students.&#x20;

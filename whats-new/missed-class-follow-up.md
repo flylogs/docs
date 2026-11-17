@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: Missed-class follow-up
 
 **August 2026** · Training courses

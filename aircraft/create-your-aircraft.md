@@ -1,5 +1,6 @@
 ---
 description: Add to Flylogs your company aircraft and configure them
+audience: [managers]
 ---
 
 # Create your aircraft

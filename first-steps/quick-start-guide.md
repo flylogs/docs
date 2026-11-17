@@ -1,5 +1,6 @@
 ---
 description: Flylogs Company Account Setup Guide
+audience: [managers]
 ---
 
 # Quick start guide

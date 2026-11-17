@@ -3,6 +3,8 @@ description: >-
   Plan a risk-based audit programme, record internal and authority audits with
   the auditor's independence and competence, attach results and assess each
   area for compliance and effectiveness.
+audience: [managers, auditors]
+plan: premium
 ---
 
 # Audit programme
@@ -10,6 +12,22 @@ description: >-
 {% embed url="https://youtu.be/a1L2WyZRk1Q" %}
 
 **Safety > Audits** is where you plan and record the audits of your organisation: your own **internal audits** (compliance monitoring) and the audits carried out by your **competent authority**. It is built for any type of operation (AOC, SPO, ATO, CAMO or general aviation) and **supports** your compliance monitoring and safety assurance activities. It does not make an operator compliant by itself: it keeps the plan, the evidence, the findings and the decisions in one place so you can show them.
+
+From the programme to a closed finding:
+
+```mermaid
+flowchart TD
+    A["Audit areas<br/>criticality and frequency"] --> P["Audit programme<br/>the plan of the year"]
+    P --> AU["Audit<br/>Planned, In progress, Completed"]
+    AU --> AS["Assessment<br/>of each area"]
+    AS -->|"Non-compliance found"| F["Finding<br/>owner and deadlines"]
+    AU -->|"Add finding"| F
+    F --> CA["Corrective actions<br/>marked done by their owners"]
+    CA --> V["Actions verified<br/>as effective"]
+    V --> C["Finding closed<br/>by you or the authority"]
+    AU --> R["Audit report<br/>approved and issued"]
+    AU -.->|"A completed internal audit<br/>sets the next due date"| A
+```
 
 The Safety menu has one **Audits** entry. The audit pages share a tab bar at the top:
 

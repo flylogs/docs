@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: preview a certificate before you issue it, and put one right afterwards
 
 **September 2026** · Training courses

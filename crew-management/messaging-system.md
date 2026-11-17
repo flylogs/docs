@@ -1,3 +1,7 @@
+---
+audience: [everyone]
+---
+
 # Messaging System
 
 Flylogs includes an internal messaging System. This, allows you to send notifications internally to any of your users in a secure and ordered manner.

@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: bank details on every bill
 
 **November 2026** · Billing

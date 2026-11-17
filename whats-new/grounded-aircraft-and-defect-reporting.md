@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: grounded means grounded, and defects without a flight
 
 **November 2026** · Fleet & Maintenance

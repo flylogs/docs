@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: club
+---
+
 # Auto Pilot
 
 Auto Pilot drafts a schedule for a date range you choose. It starts from the lessons each student still has to fly. For every lesson it chooses the mission and flight type, then an aircraft that flies it, then an instructor or supervisor, then the earliest free slot. Your [criteria](#criteria) set the limits at every step. Everything it creates is a **DRAFT**. Nobody is notified until you publish.

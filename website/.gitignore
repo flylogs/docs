@@ -7,3 +7,4 @@ src/sidebar.json
 public/gitbook-assets/
 public/fcom/
 public/api-docs/
+.cache/

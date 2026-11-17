@@ -1,5 +1,6 @@
 ---
 description: Manage your flight crew in 2 easy steps
+audience: [managers]
 ---
 
 # Create Pilots or Students

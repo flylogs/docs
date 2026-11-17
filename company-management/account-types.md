@@ -1,3 +1,7 @@
+---
+audience: [managers]
+---
+
 # Account types
 
 Every time you create a new Flylogs user within your account, you need to carefully select the desired account type. The account type you select will determine the access level of the new user.

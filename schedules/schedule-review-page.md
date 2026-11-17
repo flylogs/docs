@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: club
+---
+
 # Schedule Review page
 
 The **Schedule Review** page is a list‑based companion to the [Schedule Manager calendar](schedule-edit-page.md). Instead of a grid, it shows your schedule records as a filterable, day‑grouped list with per‑flight actions — ideal for checking crew confirmations, publishing rosters, sending reminders, cancelling and dispatching flights.

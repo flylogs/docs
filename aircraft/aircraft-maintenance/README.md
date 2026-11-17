@@ -1,5 +1,7 @@
 ---
 description: Track and store all aircraft maintenance details
+audience: [managers, mechanics]
+plan: club
 ---
 
 # Aircraft maintenance

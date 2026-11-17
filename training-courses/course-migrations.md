@@ -1,5 +1,7 @@
 ---
 description: Move a student to another course, move a group to a new course revision, or credit a closed record into another course, keeping the training they have already done.
+audience: [managers]
+plan: premium
 ---
 
 # Course migrations

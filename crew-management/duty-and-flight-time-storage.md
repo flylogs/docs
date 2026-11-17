@@ -1,5 +1,6 @@
 ---
 description: Comply with your local authority flight time and duty time regulations
+audience: [managers, pilots]
 ---
 
 # Duty and Flight time storage

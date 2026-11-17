@@ -1,5 +1,7 @@
 ---
 description: Schedule visibility, calendar appearance, operating hours, self-scheduling limits and cancellations
+audience: [managers]
+plan: club
 ---
 
 # Schedule

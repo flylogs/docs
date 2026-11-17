@@ -1,5 +1,7 @@
 ---
 description: Evaluate flight training progress of your student pilots
+audience: [instructors, students]
+plan: premium
 ---
 
 # Flight Training

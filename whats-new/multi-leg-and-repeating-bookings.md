@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: multi-leg and repeating bookings
 
 **October 2026** · Schedules

@@ -1,5 +1,7 @@
 ---
 description: Record aircraft defects and observations, and group them into maintenance jobs
+audience: [pilots, mechanics, managers]
+plan: club
 ---
 
 # Aircraft reports
@@ -16,6 +18,23 @@ reports became **Defect** reports, automatically and once only.
 {% endhint %}
 
 Filing a report notifies the company's managers and maintenance staff by message.
+
+From the defect to the release of the aircraft:
+
+```mermaid
+flowchart TD
+    A["Defect found<br/>on a flight, a walk-around or a parked aircraft"] --> R["Aircraft report<br/>Open or Deferred"]
+    R -->|"Flyable"| F["Aircraft keeps flying"]
+    R -->|"Grounded"| G["Aircraft grounded<br/>cannot be dispatched"]
+    F --> J["Maintenance job<br/>one job can clear several reports"]
+    G --> J
+    J --> W["Work orders"]
+    W --> C["CRS signed"]
+    C -->|"automatically"| X["Report closed"]
+    R -.->|"Close report"| X
+    X -->|"if it grounded the aircraft"| S["Aircraft released<br/>once no open report grounds it"]
+    G -.->|"Set back to Flyable"| S
+```
 
 ## Reporting a defect without a flight
 
@@ -126,7 +145,8 @@ like, and each of those reports can be worked through as many work orders as the
 needs.
 
 When the job's **CRS** is signed, **every report attached to it is closed
-automatically**, with the date and the signing user recorded.
+automatically**. The report records the closing date and stays linked to the job,
+which shows who signed the CRS and when.
 
 ### Three ways to group reports
 
@@ -161,8 +181,14 @@ A report can be closed in two ways:
 * **Manually**, with the **Close report** button on the report. Use **Reopen** if it
   was closed by mistake.
 
-You never fill in a closing date. Flylogs records who closed the report and when, from
-the action itself. Reopening a report clears that record.
+You never fill in a closing date. When you close a report with **Close report**,
+Flylogs records who closed it and when, from the action itself. A report closed by the
+CRS records the closing date; its **Closed By** field stays empty, and the signer is
+shown on the CRS of the linked maintenance job. Reopening a report clears that record.
+
+<figure><img src="../../.gitbook/assets/aircraft-report-closed-by-crs.png" alt="Closed defect report with Closed By empty, the closing date filled in, and its completed maintenance job linked below"><figcaption><p>A report closed by the CRS: the closing date is recorded and the maintenance job is linked below.</p></figcaption></figure>
+
+<figure><img src="../../.gitbook/assets/maintenance-job-crs-signed.png" alt="Maintenance job with a green CRS signed by banner showing the signer and time, and the closed report listed under Aircraft Reports"><figcaption><p>The linked maintenance job shows who signed the CRS and when.</p></figcaption></figure>
 
 Reports that are still outstanding can also be parked as **Deferred**, with a
 reference (MEL / CDL number) and a deferral date, while the aircraft keeps operating
@@ -180,7 +206,7 @@ extend or close one.
 
 | Action | Who |
 |--------|-----|
-| File a report, view reports | Any user of a company on a **premium** or **unlimited** plan |
+| File a report, view reports | Any user of a company on a **Club**, **Premium** or **Unlimited** plan |
 | File a report without a flight | Everyone. With *Report defects without a flight* switched off: Company Administrators, Operations Managers, Compliance & Safety Managers, Chief Pilots, Mechanics and the aircraft's managers |
 | Ground an aircraft (mark a report Grounded) | Anyone who can file a report |
 | Release a grounded aircraft (set it back to Flyable, or close its report) — while *Grounded aircraft cannot be booked or dispatched* is on | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or a manager of the aircraft |
@@ -191,5 +217,5 @@ extend or close one.
 | Edit, extend or close a MEL/CDL item | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics only — the assigned-pilot exception does not apply |
 | Be the releaser on a MEL/CDL item | Company Administrators, Operations Managers, Compliance & Safety Managers and Mechanics, or the requesting user themselves — never a Student Pilot |
 
-Aircraft reports are part of the maintenance module and require a **premium** or
-**unlimited** subscription plan.
+Aircraft reports are part of the maintenance module and require a **Club**,
+**Premium** or **Unlimited** subscription plan.

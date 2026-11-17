@@ -1,3 +1,8 @@
+---
+audience: [managers, instructors]
+plan: premium
+---
+
 # Flight remark findings
 
 Pilots write things on flight records that never become a report. A brake that felt odd, a go-around because something was on the runway, a warning light that came on and went out again — written in the remarks box at the end of a long day, read by nobody afterwards.

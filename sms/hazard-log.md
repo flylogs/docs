@@ -2,6 +2,8 @@
 description: >-
   A register of hazards that lives independently of individual reports, linked
   to as many reports as needed and reviewed periodically with a full history.
+audience: [managers]
+plan: premium
 ---
 
 # Hazard log

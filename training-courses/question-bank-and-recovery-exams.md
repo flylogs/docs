@@ -1,5 +1,7 @@
 ---
 description: Tag exam questions by lesson code, build balanced recovery exams for missed lessons, give them to students online or on paper, and record the result in the enrollment.
+audience: [managers, instructors]
+plan: premium
 ---
 
 # Question bank and recovery exams

@@ -1,5 +1,7 @@
 ---
 description: Proactive FDP limit monitoring and fatigue risk management for scheduled flights
+audience: [managers]
+plan: club
 ---
 
 # FTL Compliance & Forecast

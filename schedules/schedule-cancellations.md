@@ -1,14 +1,37 @@
+---
+audience: [managers, instructors, pilots, students]
+plan: club
+---
+
 # Schedule cancellations
 
 Flight cancellations are something we can not avoid. The important thing about them, is to keep a good track to analyze the factors and avoid the unnecessary events due to a lack of information about our own operations.
 
 Flylogs is all about empowering you, the company manager, by giving you access to all the information in an easy to access and understand format.
 
+The diagram below sums up the ways a booking gets canceled, described in detail on this page.
+
+```mermaid
+flowchart TD
+    A["Crew member cancels<br/>their own booking"] --> Z{"Dispatch Cancel Limit<br/>set to Disabled?"}
+    Z -->|"Yes"| R["Refused<br/>ask a scheduling manager"]
+    Z -->|"No"| B{"Reason?"}
+    B -->|"Aircraft, weather,<br/>maintenance or ATC"| OK["Booking canceled<br/>a dispatched flight is canceled with it"]
+    B -->|"Personal or other"| C{"Still before the<br/>Dispatch Cancel Limit?"}
+    C -->|"Yes"| OK
+    C -->|"No"| R
+    M["Scheduling manager cancels<br/>from Schedule Review"] --> OK
+    N["Booking not dispatched or logged<br/>when the grace window ends"] -->|"Reason Not flown<br/>counted against the PIC"| OK
+    OK --> S["Shown in the Schedule<br/>cancellation analytics"]
+```
+
 
 
 Each scheduled flight, if confirmed by the pilots, is due to happen. A scheduled flight that is never dispatched or logged is treated as **not flown**. Once the company's *not-flown grace window* passes after the scheduled end time, Flylogs automatically cancels the booking, attributes the cancellation to the **PIC**, and records the reason **"Not flown"**. These appear in the Schedule cancellation analytics alongside manual cancellations. In the flight's history the action is shown as performed by **Flylogs Autopilot** (the system), while the count still goes against the PIC. The auto-cancellation is silent — no notification is sent. Logging the flight (even without dispatching it from the schedule) prevents it. The grace window is set per company under **Company settings → Schedule → Schedule cancellations**, and can be disabled.
 
-The PIC, SIC or supervisor can cancel their own booking manually, including a booking that has already been dispatched (its flight is cancelled with it), without having to dispatch it first. Aircraft, weather, maintenance and ATC cancellations are accepted at any time, even after departure. Personal and other reasons are accepted only until the company's *Dispatch cancel limit* (Company settings → Schedule → Schedule cancellations) is reached; inside that window, crew should ask a scheduling manager to cancel for any other reason. See [Cancelling a flight](schedules-for-pilots-and-flight-instructors.md#cancelling-a-flight). Staff with scheduling rights are not subject to this limit and can always cancel any booking from the [Schedule Review page](schedule-review-page.md). Either way, the system asks for a cancellation reason.
+The PIC, SIC or supervisor can cancel their own booking manually, including a booking that has already been dispatched (its flight is cancelled with it), without having to dispatch it first. Aircraft, weather, maintenance and ATC cancellations are accepted at any time, even after departure. Personal and other reasons are accepted only until the company's **Dispatch Cancel Limit** (Company settings → Schedule → Schedule Cancellations) is reached; inside that window, crew should ask a scheduling manager to cancel for any other reason. If the Dispatch Cancel Limit is set to **Disabled**, crew cannot cancel their own bookings at all, for any reason (aircraft, weather, maintenance and ATC included); every cancellation then goes through a scheduling manager. See [Cancelling a flight](schedules-for-pilots-and-flight-instructors.md#cancelling-a-flight). Staff with scheduling rights are not subject to this limit and can always cancel any booking from the [Schedule Review page](schedule-review-page.md). Either way, the system asks for a cancellation reason.
+
+<figure><img src="../.gitbook/assets/company-settings-dispatch-cancel-limit.png" alt="Schedule Cancellations settings with the Dispatch Cancel Limit set to 24 hours and the Not-flown grace in hours"><figcaption><p>Company settings → Schedule → Schedule Cancellations: the <strong>Dispatch Cancel Limit</strong>.</p></figcaption></figure>
 
 ![](../.gitbook/assets/cancel-dialog.png)
 

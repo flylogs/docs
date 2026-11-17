@@ -1,5 +1,7 @@
 ---
 description: Let pilots pay their account balance online by card, straight into your own Stripe account
+audience: [managers, pilots, students]
+plan: club
 ---
 
 # Online payments

@@ -1,5 +1,7 @@
 ---
 description: Learn how to add and manage students
+audience: [managers, instructors]
+plan: premium
 ---
 
 # Student management
@@ -111,7 +113,15 @@ They also won't appear on this training's student report or progress pages, sinc
 -->
 #### Marking a training as completed, and the completion date
 
-Most courses complete themselves: as soon as the last lesson, exam and flight mission is done, the enrollment is closed automatically and the certificate becomes available. When you need to close one by hand — a course finished on paper, or a student who finished before you set the course up in Flylogs — open their training progress page, click "**Manage enrollment**" and choose "**Mark as completed**".
+A course can complete itself. Tick "**Auto-finish training**" on the training's **Settings** page, in the **Student evaluation** card, and as soon as the student's last lesson, exam and flight mission is done the enrollment is marked completed and the certificate becomes available. With the option off, enrollments stay in progress until someone marks them completed.
+
+<figure><img src="../.gitbook/assets/training-settings-auto-finish.png" alt="Student evaluation card on the training Settings page with the Auto-finish training option ticked"><figcaption><p>The <strong>Auto-finish training</strong> option, in the Student evaluation card of the training's Settings page.</p></figcaption></figure>
+
+Automatic completion only happens while the course is open: on or after its start date and on or before its end date, when the course has those dates set under [Training availability](edit-a-training.md#training-availability-and-validity). A student who finishes the last activity outside that window stays **In progress** until someone marks the enrollment completed.
+
+When you need to close one by hand — the option is off, the student finished outside the course's availability dates, the course was finished on paper, or the student finished before you set the course up in Flylogs — open their training progress page, click "**Manage enrollment**" and choose "**Mark as completed**".
+
+On a course with [stage checks](stage-checks.md) switched on, every stage check must be passed and the student's **graduation approved** before the course completes, whether automatically or with **Mark as completed**. Until then **Mark as completed** is refused, and trying it places the student in the approval queue. See [Course Approvals](course-approvals.md#graduating-a-student). Likewise, a course with **Block completion until these are met** ticked on its [experience requirements](course-pathways.md#1-set-the-courses-experience-requirements) cannot be completed while one of them is missing.
 
 Flylogs then asks you for the **completion date**, prefilled with the date the records say the student actually finished: the latest of their last completed lesson, last passed exam and last completed flight mission. Change it if the real date was different.
 
@@ -208,6 +218,23 @@ A certificate that is still in a **Preview** state shows no number here at all: 
 The full training report — attendance, exams, flights and the personal details — is shown only to the student, their supervisor, and managers or instructors of the same company, after logging in.
 
 #### Enrollment status: stopping, failing or expelling a student
+
+This is how an enrollment moves between its statuses, from the day the student is enrolled:
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    state "In progress" as Active
+    state "Completed" as Completed
+    state "Stopped<br/>Not passed<br/>Expelled" as Closed
+    state "Moved" as Moved
+    [*] --> Active : Enrolled
+    Active --> Completed : Last lesson exam and mission done<br/>or Mark as completed
+    Active --> Closed : Stop training
+    Active --> Moved : Move to another course
+    Completed --> Active : Undo completed<br/>or Reopen enrollment
+    Closed --> Active : Reopen enrollment
+```
 
 Not every enrollment ends with a pass. When a student quits, is removed from the course, or does not pass, you can **close the enrollment without deleting any of their work** — every lesson, exam attempt and flight mission stays on record.
 

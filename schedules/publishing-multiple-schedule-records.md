@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: club
+---
+
 # Publishing multiple schedule records
 
 Flylogs schedule records have varying statuses. By default, when you create a new schedule record, it will be set to "Scheduled" but remain unpublished. Only you and other company managers will have access to the schedule records you've just created and not published.

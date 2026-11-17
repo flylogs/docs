@@ -3,6 +3,7 @@ description: >-
   How Flylogs stores, encrypts, replicates and backs up your data, what we
   commit to for recovery, and the evidence available for an EASA Part-IS,
   NIS2 or GDPR assessment
+audience: [managers]
 ---
 
 # Data security and continuity

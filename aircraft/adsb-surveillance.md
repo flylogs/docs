@@ -1,5 +1,7 @@
 ---
 description: Aircraft live location and automatic flight tracks from ADS-B
+audience: [managers]
+plan: club
 ---
 
 # ADSB surveillance

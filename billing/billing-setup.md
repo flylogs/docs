@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: club
+---
+
 # Billing setup
 
 Flylogs can create bills for your flights as soon as they are recorded in the system. You can adjust the billing settings for your entire company, and even set different rates for each pilot or aircraft.
@@ -27,7 +32,7 @@ By clicking in any of the rows, you will open the manual flight billing window w
 
 ### Automatic Billing
 
-Automatic billing happens 2 minutes after the flight was confirmed.
+Automatic billing runs as soon as the flight is confirmed, for aircraft that have billing and automatic billing switched on. The bill appears in the billing list right away.
 
 The bill will be issued to the selected pilot or the default billed pilot set in your company billing settings.
 

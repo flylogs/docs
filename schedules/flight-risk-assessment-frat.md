@@ -1,3 +1,8 @@
+---
+audience: [pilots, managers]
+plan: club
+---
+
 # Flight Risk Assessment (FRAT)
 
 The **Flight Risk Assessment Tool (FRAT)** is a short safety questionnaire shown when a crew member dispatches their own flight. It follows the FAA Safety Team **PAVE** model — **P**ilot, **A**ircraft, en**V**ironment, **E**xternal pressures — and turns the crew's answers into a single risk score and a colour-coded risk band, so the decision to fly is made deliberately and on the record.

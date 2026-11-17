@@ -1,3 +1,8 @@
+---
+audience: [managers, students]
+plan: premium
+---
+
 # Open trainings
 
 Open trainings let your school **publish a course** so students enrol themselves, instead of a manager adding them one by one.

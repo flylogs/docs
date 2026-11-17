@@ -1,5 +1,6 @@
 ---
 description: Index page, folder organization and group-based access
+audience: [everyone]
 ---
 
 # Document Library

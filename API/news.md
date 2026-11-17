@@ -1,3 +1,8 @@
+---
+audience: [developers]
+plan: api
+---
+
 # News
 
 > Role names and `user_group_id` values are listed in [User groups](users.md#user-groups).

@@ -1,3 +1,7 @@
+---
+audience: [managers]
+---
+
 # Audit trails
 
 Flylogs keeps track of all changes made to flights through an audit trail feature. Whenever a change is made to a flight, instead of modifying the original record, Flylogs creates a new record that replaces the old one. This means that there is always a complete history of all changes made to the flight, and none of the previous records are lost. By accessing the audit trail, you can view a timeline of all the changes made to the flight, including who made the change and when it was made. This feature ensures transparency and accuracy in flight data management, as well as providing a complete record of the flight's history.

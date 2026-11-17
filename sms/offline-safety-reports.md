@@ -1,3 +1,8 @@
+---
+audience: [everyone]
+plan: premium
+---
+
 # Offline safety reports
 
 Flylogs lets you create safety reports even when your device has no internet connection. The report is stored locally in the browser, you keep working as if nothing changed, and it syncs to the server automatically as soon as you are back online — exactly like [offline flight data](../flights/offline-flight-data.md).

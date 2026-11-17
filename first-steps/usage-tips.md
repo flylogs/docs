@@ -1,5 +1,6 @@
 ---
 description: How to access and use Flylogs on desktop and mobile, system requirements, and access restrictions.
+audience: [everyone]
 ---
 
 # How to use Flylogs

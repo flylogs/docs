@@ -1,5 +1,7 @@
 ---
 description: Sign a student out for a solo or any other mission that needs authorising
+audience: [instructors, managers]
+plan: premium
 ---
 
 # Mission Authorizations
@@ -11,6 +13,21 @@ It is not solo-only: any flight mission in a course can be marked as requiring a
 Mission authorizations are part of the stage-checks feature and are **off by default**. They apply only while [**Require stage checks**](stage-checks.md) is enabled on the course.
 
 {% embed url="https://youtu.be/m5M4VWQy6q4" %}
+
+The whole cycle, from the first attempt to fly the mission to the signature being used:
+
+```mermaid
+flowchart TD
+    M["Student's flight on a mission<br/>that requires authorization"] --> Q{"Signed authorization<br/>not yet used?"}
+    Q -->|"No"| R["Flight refused<br/>cannot be dispatched or logged"]
+    R --> N["People who may sign<br/>are notified"]
+    N --> S["Instructor signs<br/>limitations + password"]
+    S --> Q
+    S -.->|"Withdrawn before use"| W["Withdrawn<br/>with a reason"]
+    Q -->|"Yes"| F["Flight saved<br/>authorization used up"]
+    F -->|"Flight deleted<br/>or cancelled"| B["Authorization<br/>available again"]
+    F -->|"Next attempt at<br/>the same mission"| M
+```
 
 ### Marking a mission as requiring authorization
 
@@ -46,7 +63,7 @@ Until the mission is signed, the flight cannot be dispatched or logged. Whoever 
 
 <figure><img src="../.gitbook/assets/mission-blocked-error.png" alt=""><figcaption><p>Trying to log a mission that has not been signed</p></figcaption></figure>
 
-The block applies however the flight is created — flight record, schedule, or import — because it is enforced on the server, not in the screen you happen to be using.
+The block applies whether the mission is added to a flight on the flight form (on the web or in the mobile app) or a booking carrying the mission is dispatched, because it is enforced on the server, not in the screen you happen to be using. Flights brought in by a tracker [integration](../company-management/company-settings/integrations.md) arrive as drafts without a training mission; the check runs when someone adds the mission on the flight form.
 
 ### One authorization, one flight
 

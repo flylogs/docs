@@ -1,5 +1,7 @@
 ---
 description: Activate the Flylogs API, manage API keys and the IP whitelist
+audience: [managers]
+plan: api
 ---
 
 # API

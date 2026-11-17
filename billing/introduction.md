@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: club
+---
+
 # Introduction
 
 At Flylogs we strive to get what our customers really need, specially things to improve their flight data management efficiency.&#x20;
@@ -9,6 +14,22 @@ One of our most used tools to improve efficiency, and also customer engagement, 
 The flight price (hourly rate × flight time) is calculated automatically. On top of that you can add any number of itemized extra charges — Fuel, Airport fees, Ground handling, Catering, Permits & slots, Crew, De-icing or Other — each with its own description and amount, and each independently taxable per your company's VAT settings. Create the bill instantly: it only takes 30 seconds.
 
 Your customer will receive a notification of the new bill and the amount billed will be deducted from the customer's balance. If the customer holds a valid [Prepaid package](prepaid-packages.md) for that flight, it's used first and only the remainder, if any, comes off the balance.
+
+How a flight becomes a bill, and how the balance moves:
+
+```mermaid
+flowchart TD
+    F["Confirmed flight"] -->|"Automatic billing"| C["Flight price<br/>billing rate × billed time<br/>plus extra charges"]
+    F -->|"Flight Billing panel"| C
+    C --> Q{"Valid prepaid package<br/>for this flight?"}
+    Q -->|"Yes"| K["Package used first"]
+    Q -->|"No"| B["Bill"]
+    K -->|"Remainder, if any"| B
+    B -->|"Deducted from"| BAL["Pilot account balance"]
+    B --> N["Bill notification<br/>if enabled"]
+    OP["Pay online<br/>by card"] -->|"Added as a payment"| BAL
+    MP["Payment recorded<br/>by a manager"] -->|"Added to"| BAL
+```
 
 This is a great tool, because not only you have a single click billing solution in a single place, but also, your customers have full view of their expenses linked to their flights, creating a satisfying sensation of payment for a great service received.
 

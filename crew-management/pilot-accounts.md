@@ -3,6 +3,7 @@ description: Different pilot account types for different access levels
 cover: >-
   https://images.unsplash.com/photo-1532638269484-56c7aba0fe84?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHwxMHx8cGlsb3R8ZW58MHx8fHwxNjc0NzE4NTc4&ixlib=rb-4.0.3&q=80
 coverY: -32
+audience: [managers]
 ---
 
 # Pilot accounts

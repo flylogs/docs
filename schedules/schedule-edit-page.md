@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: club
+---
+
 # Schedule Edit page (Schedule Manager)
 
 The **Schedule Manager** is the main working view for building and editing your flight schedule. It shows a calendar of every aircraft and lets you create, move, edit and delete schedule records (bookings) directly on the grid.

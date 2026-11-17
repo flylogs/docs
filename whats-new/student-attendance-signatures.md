@@ -1,3 +1,7 @@
+---
+plan: premium
+---
+
 # New: Student attendance signatures
 
 **September 2026** · Training courses

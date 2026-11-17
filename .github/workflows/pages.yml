@@ -31,6 +31,13 @@ jobs:
           cache: npm
           cache-dependency-path: website/package-lock.json
       - run: npm ci
+      # WebP copies of the screenshots (scripts/images.mjs), keyed by content hash:
+      # only new or changed images are re-encoded on each build.
+      - uses: actions/cache@v4
+        with:
+          path: website/.cache/images
+          key: docs-images-${{ hashFiles('.gitbook/assets/**') }}
+          restore-keys: docs-images-
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

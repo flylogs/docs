@@ -2,6 +2,8 @@
 description: >-
   Track mitigations as real actions with an owner, a due date and a check that
   they worked.
+audience: [managers]
+plan: premium
 ---
 
 # Safety actions

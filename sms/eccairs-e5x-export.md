@@ -1,5 +1,7 @@
 ---
 description: Export a safety report as an ECCAIRS .e5x file to send to your aviation authority
+audience: [managers]
+plan: premium
 ---
 
 # Send a report to the authority (ECCAIRS / E5X)

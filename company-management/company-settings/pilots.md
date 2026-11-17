@@ -1,5 +1,6 @@
 ---
 description: Pilot currency requirements and documentation compliance
+audience: [managers]
 ---
 
 # Pilots

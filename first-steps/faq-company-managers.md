@@ -2,6 +2,7 @@
 description: >-
   Some of the most typical questions we get asked by our client managers when
   using Flylogs.
+audience: [managers]
 ---
 
 # FAQ company managers

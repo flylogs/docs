@@ -1,5 +1,7 @@
 ---
 description: Create packages to sell flight hour blocks and offer special prices
+audience: [managers]
+plan: club
 ---
 
 # Prepaid packages

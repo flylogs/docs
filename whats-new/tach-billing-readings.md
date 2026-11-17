@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: billing on the meter you actually read
 
 **November 2026** · Billing & Flights

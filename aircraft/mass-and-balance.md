@@ -1,5 +1,6 @@
 ---
 description: Set up an aircraft Mass & Balance profile and calculate, sign and print a loadsheet for each flight
+audience: [pilots, managers]
 ---
 
 # Mass & Balance

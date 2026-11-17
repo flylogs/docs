@@ -1,5 +1,7 @@
 ---
 description: Aircraft maintenance job work orders for your engineering team
+audience: [mechanics, managers]
+plan: club
 ---
 
 # Workorders

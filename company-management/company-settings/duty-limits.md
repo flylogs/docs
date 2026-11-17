@@ -1,5 +1,6 @@
 ---
 description: Duty time and flight time limitations, rest requirements and duty records
+audience: [managers]
 ---
 
 # Duty Limits

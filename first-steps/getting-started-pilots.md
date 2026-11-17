@@ -1,3 +1,7 @@
+---
+audience: [pilots, students]
+---
+
 # Getting Started - Pilots
 
 ### What to Expect

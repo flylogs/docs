@@ -1,5 +1,7 @@
 ---
 description: Gate a student's flight progression behind a stage check
+audience: [instructors, managers]
+plan: premium
 ---
 
 # Stage Checks
@@ -60,7 +62,7 @@ This is deliberate: an inspector should be able to see that a correction happene
 | Action | Who |
 | ------ | --- |
 | Enable stage checks, define and order stages, assign missions | Company Administrator, Operations Manager, Compliance & Safety Manager, Human Resources Manager, Financial Manager, Trainings Manager, or the training's own manager |
-| Record, override or void a stage check | The same people |
+| Record, override or void a stage check | Chief Pilot level or above: any management account type, or a Chief Pilot |
 | See a stage strip and its history | The above, plus the enrolled student for their own enrollment |
 
-An instructor who is not the training's manager can fly and record missions as before, but cannot sign a stage check. If you need instructors to sign individual missions out, see [Mission Authorizations](mission-authorizations.md).
+Flight Instructors can fly and record missions as before, but cannot sign a stage check, even when they are named as the training's manager. If you need instructors to sign individual missions out, see [Mission Authorizations](mission-authorizations.md).

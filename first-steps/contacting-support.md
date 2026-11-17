@@ -1,5 +1,6 @@
 ---
 description: How to reach the Flylogs support team directly from inside the application
+audience: [everyone]
 ---
 
 # Contacting Support

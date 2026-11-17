@@ -1,5 +1,7 @@
 ---
 description: Enable the billing system, set defaults, VAT, billing rates and Stripe payments
+audience: [managers]
+plan: club
 ---
 
 # Billing

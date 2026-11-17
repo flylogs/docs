@@ -2,6 +2,7 @@
 description: >-
   Give one person — or a few — full control of one aircraft: its record,
   maintenance, documents and bookings, without opening up the rest of the fleet.
+audience: [managers]
 ---
 
 # Aircraft manager

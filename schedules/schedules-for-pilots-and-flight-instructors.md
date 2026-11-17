@@ -1,3 +1,8 @@
+---
+audience: [pilots, instructors, students]
+plan: club
+---
+
 # Schedules for Pilots & Flight Instructors
 
 This guide explains how pilots and flight instructors see their assigned flights, confirm or reject assignments, cancel a scheduled flight, and dispatch a flight directly from the schedule.

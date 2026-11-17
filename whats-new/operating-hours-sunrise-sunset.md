@@ -1,3 +1,7 @@
+---
+plan: club
+---
+
 # New: Sunrise and sunset operating hours
 
 **October 2026** · Company settings & Schedules

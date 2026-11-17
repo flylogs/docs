@@ -1,3 +1,7 @@
+---
+audience: [pilots, managers]
+---
+
 # Flight records
 
 > Flying several sorties in one record (skydiving lifts, tows, survey runs)? Record each one as a [flight leg](flight-legs.md).

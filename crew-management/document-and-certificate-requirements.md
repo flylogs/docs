@@ -1,5 +1,6 @@
 ---
 description: Store licenses or certificates and get notified before they expire
+audience: [managers]
 ---
 
 # Document & Certificate Requirements
@@ -20,7 +21,7 @@ Student pilots will only be required to upload a valid medical certificate in or
 
 **What the general check requires:** one valid licence, one valid rating and one valid medical. Pilots normally hold several ratings (type rating, IR, SEP, MEP, FI…), and only one of them needs to be valid for this general check to pass — a lapsed rating you no longer use, or one that only becomes effective in a few weeks, no longer blocks the pilot. Whether a *specific* rating is required for a given flight is decided by the flight type's [required certificates](#per-flight-type-certificate-requirements) for each seat, which are checked individually.
 
-The configuration lives in **Company Settings → Pilots → Documentation Compliance**. Two toggles control the PDCS itself:
+The configuration lives in **Company Settings → Flight Crew → Documentation Compliance**. Two toggles control the PDCS itself:
 
 * **Check pilot documentation validity** — the master switch for licence/rating/medical checks. Turned off, all checks below, the pilot dashboard, and self-booking are skipped.
 * **Block scheduling and flight dispatch with invalid documents** — requires the master switch above. When on, managers cannot save a schedule with an expired PIC document, pilots cannot dispatch a flight without valid documents, and crew cannot log or confirm a flight whose PIC lacks the certificates its flight type requires (see *Flight form* below). This does not affect self-booking, which has its own **Allow self-booking without valid documents** toggle in the Self-Scheduling tab.

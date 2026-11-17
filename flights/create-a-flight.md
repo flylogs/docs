@@ -1,3 +1,7 @@
+---
+audience: [pilots, instructors, managers]
+---
+
 # Create a flight
 
 Our flight create form has been designed to be clear, easy to use, avoid mistakes and at the same time, be 100% usable on mobile devices.

@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: premium
+---
+
 # Create a training
 
 To create, manage or edit any training, navigate to your trainings tab, and click on EDIT.

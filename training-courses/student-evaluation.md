@@ -1,5 +1,7 @@
 ---
 description: Evaluate progress of your students, both in the classroom and in the air.
+audience: [instructors]
+plan: premium
 ---
 
 # Student evaluation

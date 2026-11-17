@@ -1,3 +1,8 @@
+---
+audience: [managers, mechanics]
+plan: club
+---
+
 # Next maintenance forecast
 
 Flylogs estimates when each aircraft's next check will fall due, from its own flying history, and shows that estimate wherever the aircraft is about to be used.

@@ -1,5 +1,7 @@
 ---
 description: Build your own forms, decide who fills them in, and keep every filled copy as a signed record
+audience: [managers]
+plan: premium
 ---
 
 # Custom forms

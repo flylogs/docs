@@ -1,3 +1,8 @@
+---
+audience: [managers]
+plan: club
+---
+
 # Billing Rates
 
 Before you can start billing your flights, you will need to do some setup in your new Flylogs account.

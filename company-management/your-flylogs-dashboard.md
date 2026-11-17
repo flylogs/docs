@@ -1,5 +1,6 @@
 ---
 description: All your company data in just a click
+audience: [managers]
 ---
 
 # Your Flylogs dashboard
