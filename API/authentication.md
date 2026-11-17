@@ -36,7 +36,7 @@ Don't have a key yet? See **[API Keys](api-keys.md)** for how a Company Administ
 For file-download endpoints that open in a new window (XLS, PDF), the key may also be supplied as a `?token=` query parameter:
 
 ```
-https://fmc.flylogs.com/v1/safety_reports/view/150/pdf:true?token=<api-key>
+https://fmc.flylogs.com/v1/safety_reports/index/excel:true?token=<api-key>
 ```
 
 ## Error responses

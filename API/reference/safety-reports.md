@@ -315,14 +315,6 @@ Full details for a single report including flight, aircraft, and reporter.
 
 ***
 
-## Export Safety Report (PDF)
-
-<mark style="color:blue;">`GET`</mark> `/safety_reports/view/{id}/pdf:true?token=<token>`
-
-Download a safety report as PDF.
-
-***
-
 ## Export Safety Reports (XLS)
 
 <mark style="color:blue;">`GET`</mark> `/safety_reports/index/from:{from}/to:{to}/status:{status}/report_category:{category}/severity:{severity}/excel:true?token=<token>`
