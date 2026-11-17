@@ -53,6 +53,31 @@ Three reasons appear only this way, because nobody can choose them in the cancel
 
 This is an automated reading: the reason the person chose is never changed, and a note that does not clearly say why stays under *Others*.
 
+### Completing a cancellation reason afterwards
+
+Some cancellations have no useful reason: a booking cancelled automatically as **Not flown**, a booking cancelled together with its flight, or an older cancellation saved without a reason. You can give or correct the reason later, without changing anything else about the booking.
+
+* In **Schedule → Review**, filter by status *Canceled* (or find the flight) and click **Edit cancellation reason** 💬 on its row.
+* In **Schedule → Cancellations**, click the pencil next to a cancellation in the **Cancellation log**.
+
+<figure><img src="../.gitbook/assets/cancellation-reason-edit-review.png" alt="Schedule Review list with a canceled booking and its Edit cancellation reason button"><figcaption><p>Schedule → Review: <strong>Edit cancellation reason</strong> on a canceled booking.</p></figcaption></figure>
+
+The dialog shows the same reasons as the cancel dialog, filled in with what is recorded today. Pick the reason and write a comment (required for the reasons that always ask for one, optional for aircraft and weather), then click **Save**.
+
+<figure><img src="../.gitbook/assets/cancellation-reason-edit-dialog.png" alt="Edit cancellation reason dialog with the reason list and the comment box"><figcaption><p>The <strong>Edit cancellation reason</strong> dialog.</p></figcaption></figure>
+
+What happens when you save:
+
+* Only the **reason** and the **comment** change. The booking (aircraft, crew, times, status) stays as it is and nobody is notified.
+* The cancellation keeps its date and the person it is credited to, so it stays in the same month of the analytics, and the charts show the new reason.
+* The booking **History** gets a *Change* entry with who edited the reason, when, and what the reason and comment were before.
+
+<figure><img src="../.gitbook/assets/cancellation-reason-edit-history.png" alt="Booking history showing the canceled entry with its new reason and a Change entry recording the previous reason"><figcaption><p>The booking history keeps the previous reason in a <strong>Change</strong> entry.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/cancellation-reason-edit-log.png" alt="Cancellation log with the edit pencil next to each cancellation"><figcaption><p>Schedule → Cancellations: the pencil in the <strong>Cancellation log</strong>.</p></figcaption></figure>
+
+**Who can do this:** the same staff who can cancel a flight from the Schedule Review page. Flight Instructors, Theory Knowledge Instructors, pilots and students cannot, and do not see the button.
+
 
 ### Repeating bookings
 

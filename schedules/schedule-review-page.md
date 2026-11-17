@@ -58,6 +58,7 @@ Depending on a flight's status and your role, these buttons appear at the end of
 * **Notify crew** ✉️ — sends an email reminder to the crew of a **Scheduled** flight.
 * **Dispatch** ✉️➤ — for **Scheduled / Confirmed** flights without a flight yet, opens the dispatch form to create the flight draft. Requires flight‑creation permission. See [Flight Dispatch Function](flight-dispatch-function.md).
 * **Cancel** 🚫 — cancels a **Scheduled** flight. You must pick a **cancellation reason**; some reasons require a short explanation. Unlike a crew member cancelling their own booking, this action is not restricted by the company's *Dispatch cancel limit* — staff with scheduling rights can cancel any flight at any time up to departure. See [Schedule cancellations](schedule-cancellations.md).
+* **Edit cancellation reason** 💬 — on a **Canceled** flight, gives or corrects its cancellation reason and comment afterwards, for example for a flight cancelled automatically as *Not flown* or cancelled without a reason. Only the reason and comment change. See [Completing a cancellation reason afterwards](schedule-cancellations.md#completing-a-cancellation-reason-afterwards).
 * **Attachments** 📎 — view and add files to the record; the icon shows the attachment count and turns green when files are present.
 * **History** 🕘 — opens the audit trail of status changes, with who made each change, the reason/notes and the timestamp.
 

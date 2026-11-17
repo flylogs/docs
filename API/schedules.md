@@ -245,6 +245,44 @@ On success the booking becomes `CANCELED`, a `ScheduleHistory` row is written, t
 
 ---
 
+## Edit Cancellation Reason
+
+<mark style="color:green;">`POST`</mark> `/manager/schedules/cancellation_reason/{id}.json`
+
+Gives or corrects the reason and comment of a booking that is **already cancelled**. Nothing else about the booking changes.
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Booking id. Must be `CANCELED`; the call edits its latest `CANCELED` history row |
+
+#### Body Parameters (form-encoded)
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| reason | string | Required. `AIRCRAFT`, `MET`, `MAINT`, `ATC`, `ME` (stored as `OTHERS`) or `OTHERS`. Anything else (`NOT_FLOWN`, `PIC`, `DUPLICATE`, empty) returns `400` |
+| text | string | Optional comment, trimmed, up to 2,000 characters. Replaces the previous comment (send it again to keep it) |
+| history_id | integer | Optional. Edit this `CANCELED` history row instead of the latest one (the row ids of `listOfCancellations` in `/manager/schedules/cancellations.json`). When given, the `{id}` in the path is ignored and the booking need not still be `CANCELED` |
+
+#### Who and what changes
+
+* **Caller**: the same groups as `/manager/schedules/cancel` (ACL `Schedules/manager_cancellation_reason`). Flight Instructors, Theory Knowledge Instructors, pilots and students are denied (`403`). Other companies' bookings and history rows return `404`.
+* **Method**: `POST` only (`405` otherwise).
+* The history row keeps its `user_id` and `created`, so the cancellation statistics still count it in the same month and against the same person. Its `inferred_reason` / `inferred_confidence` are cleared; `OTHERS` rows are read again by the hourly job.
+* The booking itself is not modified and nobody is notified.
+* A new `CHANGE` history row by the caller records the edit, e.g. `Cancellation reason updated: Meteorology (was: Not flown)`, followed by the previous comment when it changed.
+* A cancelled booking with no `CANCELED` history row (older records) gets one, credited to the caller and dated with the booking's last modification time.
+* Sending the same reason and comment again is a no-op that still returns `result: true`.
+
+#### Response
+
+```json
+{ "result": true }
+```
+
+---
+
 ## FRAT Prefill
 
 <mark style="color:blue;">`GET`</mark> `/schedules/frat_prefill/{scheduleId}.json`
