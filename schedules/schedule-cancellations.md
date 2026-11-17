@@ -57,10 +57,10 @@ This is an automated reading: the reason the person chose is never changed, and 
 
 Some cancellations have no useful reason: a booking cancelled automatically as **Not flown**, a booking cancelled together with its flight, or an older cancellation saved without a reason. You can give or correct the reason later, without changing anything else about the booking.
 
-* In **Schedule → Review**, filter by status *Canceled* (or find the flight) and click **Edit cancellation reason** 💬 on its row.
+* In **Schedule → Review**, filter by status *Canceled* (or find the flight) and click **Edit reason** on its row.
 * In **Schedule → Cancellations**, click the pencil next to a cancellation in the **Cancellation log**.
 
-<figure><img src="../.gitbook/assets/cancellation-reason-edit-review.png" alt="Schedule Review list with a canceled booking and its Edit cancellation reason button"><figcaption><p>Schedule → Review: <strong>Edit cancellation reason</strong> on a canceled booking.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/cancellation-reason-edit-review.png" alt="Schedule Review list with canceled bookings and their Edit reason buttons"><figcaption><p>Schedule → Review: <strong>Edit reason</strong> on canceled bookings.</p></figcaption></figure>
 
 The dialog shows the same reasons as the cancel dialog, filled in with what is recorded today. Pick the reason and write a comment (required for the reasons that always ask for one, optional for aircraft and weather), then click **Save**.
 

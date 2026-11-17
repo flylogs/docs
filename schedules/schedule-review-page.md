@@ -51,16 +51,32 @@ Records are grouped under date headers. Each row shows the **status**, **time**,
 
 ### Row actions
 
-Depending on a flight's status and your role, these buttons appear at the end of each row:
+Each row ends with two buttons:
 
-* **View flight** ✈️ — opens the linked flight record once one exists.
-* **Publish** 👁️ — publishes a **Draft** record to crew. *(Top‑level managers.)*
-* **Notify crew** ✉️ — sends an email reminder to the crew of a **Scheduled** flight.
-* **Dispatch** ✉️➤ — for **Scheduled / Confirmed** flights without a flight yet, opens the dispatch form to create the flight draft. Requires flight‑creation permission. See [Flight Dispatch Function](flight-dispatch-function.md).
-* **Cancel** 🚫 — cancels a **Scheduled** flight. You must pick a **cancellation reason**; some reasons require a short explanation. Unlike a crew member cancelling their own booking, this action is not restricted by the company's *Dispatch cancel limit* — staff with scheduling rights can cancel any flight at any time up to departure. See [Schedule cancellations](schedule-cancellations.md).
-* **Edit cancellation reason** 💬 — on a **Canceled** flight, gives or corrects its cancellation reason and comment afterwards, for example for a flight cancelled automatically as *Not flown* or cancelled without a reason. Only the reason and comment change. See [Completing a cancellation reason afterwards](schedule-cancellations.md#completing-a-cancellation-reason-afterwards).
-* **Attachments** 📎 — view and add files to the record; the icon shows the attachment count and turns green when files are present.
-* **History** 🕘 — opens the audit trail of status changes, with who made each change, the reason/notes and the timestamp.
+* A labelled button with the **next step for that flight's status**:
+
+  | Status | Button |
+  |--------|--------|
+  | Draft | **Publish** — publishes the record to crew. *(Top‑level managers.)* |
+  | Scheduled / Confirmed, no flight yet | **Dispatch** — opens the dispatch form to create the flight draft. Requires flight‑creation permission. See [Flight Dispatch Function](flight-dispatch-function.md). |
+  | Dispatched | **Edit dispatch** — changes the dispatch data of the flight. |
+  | Landed | **View flight** — opens the flight record. |
+  | Canceled | **Edit reason** — gives or corrects the cancellation reason and comment afterwards, for example for a flight cancelled automatically as *Not flown*. Only the reason and comment change. See [Completing a cancellation reason afterwards](schedule-cancellations.md#completing-a-cancellation-reason-afterwards). |
+  | Anything else, or a role without that action | **Open** — opens the booking. |
+
+* **⋯ (more actions)** — every other action the flight offers:
+  * **Open booking** and **View flight** (once a flight exists).
+  * **Notify crew** — sends an email reminder to the crew of a **Scheduled** flight.
+  * **Attachments** — view and add files to the record; the count of files is shown next to it.
+  * **Change history** — the audit trail of status changes, with who made each change, the reason/notes and the timestamp.
+  * **Export PDFs** — on dispatched and landed flights, the same documents as the flight's own Export menu. See [Exporting the flight's documents](flight-dispatch-function.md#5-exporting-the-flights-documents).
+  * **Cancel booking** — cancels a **Scheduled** flight. You must pick a **cancellation reason**; some reasons require a short explanation. Unlike a crew member cancelling their own booking, this action is not restricted by the company's *Dispatch cancel limit* — staff with scheduling rights can cancel any flight at any time up to departure. See [Schedule cancellations](schedule-cancellations.md).
+
+A record with attachments also shows a green 📎 button with the file count before the other two, so you can see at a glance which flights carry files.
+
+Users with view‑only access to the page see **Open** and the read‑only items of the menu; actions that change a record are not shown to them. Without a connection, the actions that need the server (notify, attachments, history, exports, cancel, edit reason) are hidden.
+
+<figure><img src="../.gitbook/assets/manager-review-row-menu.png" alt="Schedule Review rows with Dispatch and Edit dispatch buttons and the more actions menu open on a scheduled flight"><figcaption><p>The next step on each row, and the <strong>⋯</strong> menu of a scheduled flight.</p></figcaption></figure>
 
 ### Dispatch form
 

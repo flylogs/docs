@@ -115,7 +115,7 @@ On **Schedule Review**, a dispatched booking shows an **Edit dispatch** button (
 
 ### **5. Exporting the flight's documents**
 
-Every dispatched or landed flight on **Schedule Review** has an **Export PDFs** button (download icon), for users with full access to the page (group ≤ 140). It lists the same documents as the **Export** menu on the flight itself:
+Every dispatched or landed flight on **Schedule Review** has an **Export PDFs** section in its **⋯** (more actions) menu, for users with full access to the page (group ≤ 140). It lists the same documents as the **Export** menu on the flight itself:
 
 * **PDF**: the flight record
 * **GenDec**: the General Declaration (not for schools)
@@ -123,9 +123,9 @@ Every dispatched or landed flight on **Schedule Review** has an **Export PDFs** 
 * **Technical log**: the aircraft's technical log page for the day (when the company uses the technical log)
 * **Wx & NOTAMS**: the weather and NOTAM briefing, until the flight is confirmed
 
-<figure><img src="../.gitbook/assets/manager-review-export.png" alt="Export PDFs menu open on a dispatched flight in Schedule Review"><figcaption><p>The export menu of a dispatched flight on Schedule Review.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/manager-review-export.png" alt="Export PDFs menu open on a dispatched flight in Schedule Review"><figcaption><p>The <strong>⋯</strong> menu of a dispatched flight on Schedule Review, with its PDF exports.</p></figcaption></figure>
 
-Hover any icon on a Schedule Review row to see what it does.
+Each Schedule Review row shows its next step as a labelled button (for example **Dispatch** or **Edit dispatch**); everything else is in the **⋯** menu.
 
 ***
 
