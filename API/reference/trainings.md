@@ -3640,7 +3640,7 @@ The generator is instructed to use only the gradings given and **never** to deci
 | 400  | Not a POST, or the cooldown is still active   |
 | 403  | `user_group_id` above 170 (Captain and below) |
 
-Two cases answer `200` with `result: false` rather than failing: nothing has been graded yet, and no AI provider is configured on the installation.
+Two cases answer `200` with `result: false` rather than failing: nothing has been graded yet, and no AI processor is configured on the installation.
 
 ***
 

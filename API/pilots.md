@@ -873,13 +873,13 @@ On a licence, `ratings` lists what it endorses, each one a certificate the form 
 | reading.limitations | On a medical: its limitation codes (see [Medical Limitations](#medical-limitations-dispatch)); `[]` otherwise |
 | reading.identity | `document_number` (passport/ID number, or the licence number on a licence), `nationality` (ISO 3166-1 alpha-3) and `dob` (`Y-m-d`), each `null` when not printed or implausible. For [Update Identity](#update-identity) |
 | reading.ratings | On a licence: up to 20 `{type, name, issue, expiration}`, known types only (never `licence`, `id`, `passport`, `logbook`, `other`), each type and name once |
-| reason | When `reading` is `null`: `type` (file type not accepted), `size` (empty or over 10 MB), `disabled` (feature not enabled on the installation), `unavailable` (the AI provider did not answer, e.g. an expired key) or `unreadable` |
+| reason | When `reading` is `null`: `type` (file type not accepted), `size` (empty or over 10 MB), `disabled` (feature not enabled on the installation), `unavailable` (the AI processor did not answer, e.g. an expired key) or `unreadable` |
 
 #### Authorization
 
 Same audience as [Add Certificate](#add-certificate): anyone for their own profile; Flight Instructors and above (`user_group_id <= 170`) for any user of their company. Others get `403`, and a user outside the caller's company `404`. One read every 3 seconds per session (`400` otherwise).
 
-The document is sent to the installation's AI provider (OpenCode Zen, an OpenAI model) with `store: false`. Setting `documentModel` to `''` in `app/Config/ai.php` turns the endpoint off (`reason: "disabled"`).
+The document is sent to the installation's AI processor (OpenCode Zen, an OpenAI model) with `store: false`. Setting `documentModel` to `''` in `app/Config/ai.php` turns the endpoint off (`reason: "disabled"`).
 
 ### Update Identity
 

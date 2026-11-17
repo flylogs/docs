@@ -3737,7 +3737,7 @@ person, never as an assessment.
 | 403 | `user_group_id` above 170 (Captain and below) |
 
 Two cases answer `200` with `result: false` rather than failing: nothing has been
-graded yet, and no AI provider is configured on the installation.
+graded yet, and no AI processor is configured on the installation.
 
 ---
 

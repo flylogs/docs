@@ -6,7 +6,7 @@ The Hazard Suggestions endpoints back the **Possible hazards** section of the **
 
 Suggestions are generated automatically from text patterns and AI. They can be wrong or incomplete, so show them to a person who reviews each one before acting. The endpoints below only read and decide suggestions; they do not generate them.
 
-Generation is **off by default** per company: it sends the text of the company's safety reports and remark findings to an AI provider for processing, so a manager must switch on `ai_hazard_suggestions` in the company settings first (**Company settings → General → Safety management**; `data[CompanySetting][ai_hazard_suggestions]=1` on `/manager/companies/settings.json`). The list returns the current value as `enabled`.
+Generation is **off by default** per company: it sends the text of the company's safety reports and remark findings to an AI processor, so a manager must switch on `ai_hazard_suggestions` in the company settings first (**Company settings → General → Safety management**; `data[CompanySetting][ai_hazard_suggestions]=1` on `/manager/companies/settings.json`). The list returns the current value as `enabled`.
 
 Every endpoint requires a **premium** or **unlimited** company plan. On any other plan the call fails with `400` and the message `Not a premium account`.
 

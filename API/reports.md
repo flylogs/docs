@@ -474,5 +474,5 @@ Each finding:
 |------|---------|
 | 403 | `user_group_id` above 110 (Human Resources Manager and below) |
 
-An installation with no AI provider configured simply has no digests; the endpoint
+An installation with no AI processor configured simply has no digests; the endpoint
 still answers `200` with an empty list.

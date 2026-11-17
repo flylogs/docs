@@ -52,7 +52,7 @@ When you edit an aircraft, under **Expiration Dates** you can attach a scan or P
 
 If the registration printed on the document isn't this aircraft's, Flylogs warns you. For a weighing report, apply the empty mass and arm on the [Mass & Balance](mass-and-balance.md#reading-a-weighing-report) page.
 
-The document is sent to our AI provider to be read, only when you press the button. The same people who can edit the aircraft can use it: staff editors and the aircraft's managers.
+The document is sent to our AI processor to be read, only when you press the button. The same people who can edit the aircraft can use it: staff editors and the aircraft's managers.
 
 ### Aircraft ADSB location tracking
 

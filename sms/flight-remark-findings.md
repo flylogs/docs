@@ -65,7 +65,7 @@ That notice is shown at the top of the page. Please take it literally: the assis
 
 ### Switching it on
 
-Possible hazards are **off by default**. To prepare them, Flylogs sends the text of your safety reports and remarks to an **AI provider** for processing, so a Company Administrator or Operations Manager has to switch it on first: **Company settings → General → Safety management → AI hazard suggestions**. Until then, the section shows *"AI hazard suggestions are off — enable them in Company settings"* with a link to that page. Switching it off again stops the nightly run from the next night on; suggestions already made stay in the list.
+Possible hazards are **off by default**. To prepare them, Flylogs sends the text of your safety reports and remarks to an **AI processor**, so a Company Administrator or Operations Manager has to switch it on first: **Company settings → General → Safety management → AI hazard suggestions**. Until then, the section shows *"AI hazard suggestions are off — enable them in Company settings"* with a link to that page. Switching it off again stops the nightly run from the next night on; suggestions already made stay in the list.
 
 See [Company settings → General](../company-management/company-settings/general.md#safety-management).
 
@@ -79,9 +79,9 @@ It looks at:
 * **Safety-relevant remark findings** from the last 90 days of daily findings (up to 20 per night).
 * **Your open hazards**, so that it can propose linking to one instead of a duplicate.
 
-If the AI provider cannot answer for two nights in a row, the following nights send smaller batches until it can. A single report it still cannot read is set aside (it gets no suggestion) so that it never holds up the rest.
+If the AI processor cannot answer for two nights in a row, the following nights send smaller batches until it can. A single report it still cannot read is set aside (it gets no suggestion) so that it never holds up the rest.
 
-What is sent to the AI provider, and processed there, is the text of those reports and remarks (title, category, department, classification, description) and the title and description of your open hazards. **Reporter names and ids are never sent**, whether the report is anonymous or not. The AI is not asked to rate risk; use **Suggest initial risk** on the hazard for that.
+What is sent to the AI processor, and processed there, is the text of those reports and remarks (title, category, department, classification, description) and the title and description of your open hazards. **Reporter names and ids are never sent**, whether the report is anonymous or not. The AI is not asked to rate risk; use **Suggest initial risk** on the hazard for that.
 
 ### What you see
 

@@ -55,7 +55,7 @@ When you attach a PDF or a photo of the certificate (JPEG, PNG or WebP, up to 10
 * The button appears only while you are online, and anyone who can add the certificate can use it.
 
 {% hint style="warning" %}
-To be read, the document is sent to our AI provider, and Flylogs asks the provider not to store it. Medical certificates contain health data: if you would rather not send them, type the dates by hand as before. The file is only sent when you press **Read the document**.
+To be read, the document is sent to our AI processor, and Flylogs asks the processor not to store it. Medical certificates contain health data: if you would rather not send them, type the dates by hand as before. The file is only sent when you press **Read the document**.
 {% endhint %}
 
 ### Type ratings: aircraft covered

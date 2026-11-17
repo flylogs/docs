@@ -78,7 +78,7 @@ While you write to Flylogs support, the form suggests a help article that may al
 
 {% embed url="https://youtu.be/yil5qknKvIU" %}
 
-When you attach a certificate, **Read the document** reads its type, description, issue date and expiration date from the PDF or photo, so you don't have to type them from the scan. Check them and apply them to the form. Flylogs warns you when the document is a specimen or carries another person's name. The document is sent to our AI provider only when you press the button.
+When you attach a certificate, **Read the document** reads its type, description, issue date and expiration date from the PDF or photo, so you don't have to type them from the scan. Check them and apply them to the form. Flylogs warns you when the document is a specimen or carries another person's name. The document is sent to our AI processor only when you press the button.
 
 <figure><img src="../.gitbook/assets/ai-certificate-reading.png" alt=""><figcaption><p>A medical read from its PDF.</p></figcaption></figure>
 
