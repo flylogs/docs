@@ -6,6 +6,8 @@ audience: [managers]
 
 **November 2026** · Documents
 
+{% embed url="https://youtu.be/hQyyWFui87c" %}
+
 The Document Library now lets you decide which documents need a read receipt, give a document a date by which it must be read, address it to specific people, and chase the people who have not read it — with a button, or automatically twice a month.
 
 ***

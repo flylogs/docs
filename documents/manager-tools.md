@@ -5,6 +5,8 @@ audience: [managers]
 
 # Manager tools
 
+{% embed url="https://youtu.be/hQyyWFui87c" %}
+
 Company managers have access to extra data on top of the regular document view, designed to help track who has read each document and to audit compliance with company publications.
 
 > Manager tools are available to users in **group level 150 or lower** (administrators and managers). Pilots and other regular members do not see them.
