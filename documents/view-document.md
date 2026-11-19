@@ -7,7 +7,7 @@ audience: [everyone]
 
 The document view page is where you open a single document to read its details, download the latest file and interact with the document — check expiration and review the file history.
 
-> Access to the page itself is restricted by the document's recipient list and, for `flying_only` documents, to active pilots. Soft-deleted documents return a "document has been deleted" error.
+> Access to the page itself is restricted by the document's recipient list: its user groups (for `flying_only` documents, pilots only) and the people named on it. A named person can always open it, whatever the `flying_only` setting. Soft-deleted documents return a "document has been deleted" error.
 
 ### Document details
 
@@ -16,6 +16,7 @@ The view page shows:
 * Folder location and document name
 * Description and current version caption
 * Expiration date (if any)
+* **Read by** date (if any), in red once it has passed
 * Latest file with size, type and uploader
 * Authorized user groups (recipient list)
 
@@ -25,8 +26,10 @@ The latest file is always shown first, prominently, as the current version to re
 
 Click the file to download the current version. Each download is recorded against your user, the document and the specific upload version. Re-downloading the same version is recorded only the first time, so the registry reflects who has actually seen the file rather than how many times they clicked.
 
-The view page also shows the date you personally last downloaded the current version, so you know whether you are up to date with the latest publication.
+The view page also shows the date you personally last downloaded the current version, so you know whether you are up to date with the latest publication. On a document that requires a read receipt, an **Unread** badge shows until you open the current version; reference documents that require no receipt never show it.
 
 ### Notifications
 
-When a new version is published, the system can notify all authorized users by message and email. Each notification links straight to the document view page so recipients can read and download the new file in one click.
+When a new version is published, the system can notify all recipients — the user groups and the named people — by message and email. Each notification links straight to the document view page so recipients can read and download the new file in one click, and gives the read-by date when there is one.
+
+A manager can also send a **reminder** to the people who have not read the current version yet, and the company can turn on an automatic reminder on the 1st and 16th of each month. See [Manager tools → Reminders](manager-tools.md#reminders).

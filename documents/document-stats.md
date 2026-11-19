@@ -18,9 +18,14 @@ The summary at the top shows the headline figures for the whole company:
 * **Receipts requested** — how many read acknowledgements are expected in total.
 * **Receipts read** — how many have actually been completed.
 * **Pending** — the remaining acknowledgements still outstanding.
+* **Overdue** — pending acknowledgements on documents whose **Read by** date has passed. Shown only when there are some.
 * **Overall compliance** — the percentage of requested receipts that have been read, with a chart of read versus pending.
 
-A receipt is requested once per document for every active user in the document's authorized groups (`flying crew only` documents count pilots only), and counts as read when the user has opened the **current** version. Publishing a new version resets those receipts, exactly like the per-document registry. Deactivated and deleted accounts are excluded.
+A receipt is requested once per document for every active user in the document's recipient groups (`flying crew only` documents count pilots only) and for every person named on it, and counts as read when the user has opened the **current** version. Publishing a new version resets those receipts, exactly like the per-document registry. Deactivated and deleted accounts are excluded.
+
+Documents that do not **require a read receipt** — manuals, posters, textbooks and other reference material — are left out of every figure on this page. Switch the setting off on those documents so the compliance figure only measures what must actually be read. See [Read receipts and read-by date](document-library.md#read-receipts-and-read-by-date).
+
+![](../.gitbook/assets/doc-stats-overdue.png)
 
 ### Breakdowns
 
@@ -28,8 +33,10 @@ The figures can be broken down three ways using the tabs:
 
 * **By group** — requested vs read per user group, ordered by group level, with a compliance bar. Each group can be expanded to list the individual users inside it.
 * **By user** — a searchable list, with a group filter, showing each person's requested vs read counts in alphabetical order.
-* **By document** — requested vs read for each document, in alphabetical order, with its publication and expiration dates.
+* **By document** — requested vs read for each document, in alphabetical order, with its publication, expiration and read-by dates.
+
+In every tab, the **Pending** column adds how many of those receipts are overdue.
 
 ### User breakdown
 
-Clicking any user — either inside an expanded group or in the **By user** tab — opens that person's breakdown: how many of their documents are read versus pending, a chart, and the full list of documents required of them. The list can be filtered to **read** or **not read**, and each entry links straight to the document.
+Clicking any user — either inside an expanded group or in the **By user** tab — opens that person's breakdown: how many of their documents are read versus pending, a chart, and the full list of documents required of them. The list can be filtered to **read** or **not read**, and each entry links straight to the document. Unread documents show their read-by date, in red once it has passed.

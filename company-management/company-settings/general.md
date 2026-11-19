@@ -41,12 +41,18 @@ Users who belong to more than one company are only blocked from **your** company
 
 ![Safety management settings with the AI hazard suggestions switch](../../.gitbook/assets/company-settings-ai-hazard-suggestions.png)
 
+### Document library
+
+* **Remind unread documents on the 1st and 16th** — **off by default.** When on, on the 1st and 16th of each month every user who has not read a document that [requires a read receipt](../../documents/document-library.md#read-receipts-and-read-by-date) gets **one** message listing all of them, overdue ones first, with a link to each. A document drops out of the reminder as soon as the person opens its current version. Documents that require no receipt, and documents with a future publication date, are never included.
+
+![Document library settings with the reminder switch](../../.gitbook/assets/company-settings-document-reminders.png)
+
 ### Training organisation
 
 These fields are printed on the **course completion certificate** so the document reads as issued by your organisation rather than by Flylogs. They are company-wide: one legal entity per Flylogs account. Leave a field empty and that line is simply left off the certificate.
 
 * **Legal name** — the legal entity name printed in the certificate header. Falls back to the company name.
-* **Approval type** and **Approval reference** — e.g. `ATO` and `SI.ATO.041`, or your DTO reference. Printed together under the legal name and address.
+* **Approval type** and **Approval reference** — e.g. `ATO` and `ES.ATO.123`, or your DTO reference. Printed together under the legal name and address.
 * **Regulatory basis (default)** — e.g. `Regulation (EU) No 1178/2011, Part-FCL`. Each course can override it from its own settings (see [Edit a training](../../training-courses/edit-a-training.md)).
 
 #### Certificate numbering

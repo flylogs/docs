@@ -11,7 +11,8 @@ Flylogs Company Document Library is an embedded system in your Flylogs account t
 
 The main features of the system are:
 
-* Group level access privileges
+* Group level access privileges, plus named people
+* Read receipts with an optional read-by date, and reminders
 * File version control
 * Download registry
 * File folders
@@ -63,20 +64,37 @@ On the Free plan, once you reach 3 top-level folders the **New Folder** button i
 
 ### Group level access privileges
 
-For each document you publish you choose which **user groups** can access it. Permissions are evaluated when the index page is rendered, so users only see documents their group is authorized to read.
+For each document you publish you choose who can access it: **user groups**, **named people**, or both. Permissions are evaluated when the index page is rendered, so users only see documents addressed to them.
 
-* Users outside the recipient groups will not see the document at all in the index.
-* Documents marked as `flying_only` are hidden from non-pilots, even if their group is in the recipient list.
+* Users outside the recipient groups, and not named on the document, will not see it at all in the index.
+* Documents marked as `flying_only` are hidden from non-pilots of the recipient groups. A person named on the document always sees it.
 * Document owners always see their own documents in the index, regardless of the recipient list.
 * Top-level company administrators (group level 105 or below) see every document in the company.
 
 This filtering is applied **before pagination**, so search results and folder counts always reflect what the current user is allowed to see.
 
+#### Named people
+
+Under **Named people** on the New Document and Edit Document forms, type a name and pick the person from the list. Use it for an instruction meant for a few specific people, so it is not published to a whole group. A document needs at least one user group or one named person. Named people are notified, can open the document and owe a read receipt exactly like group members.
+
+![](../.gitbook/assets/doc-edit-named-people-receipt.png)
+
+### Read receipts and read-by date
+
+Each document says whether it **Requires a read receipt** (on by default, and on for every document published before this setting existed).
+
+* **On** — every recipient must open the current version. Until they do, they are on the document's pending list, in [Document Stats](document-stats.md) and in the reminders, and they see the document marked **Unread**.
+* **Off** — for reference material such as aircraft manuals, posters or textbooks. Recipients can still open it, but nobody is asked for a receipt: the document stays out of the pending list, the Stats figures and the reminders.
+
+A document that requires a receipt can also have a **Read by** date. Once that day has passed, every recipient who has not opened the current version is **overdue**: the document list, the document page and the Stats page show it in red. Publishing a new version resets everyone to unread, so set a new read-by date when you upload it.
+
+To chase the people who have not read a document, see [Manager tools → Reminders](manager-tools.md#reminders).
+
 ### File version control
 
 Each time you update a published document you can publish the new version. Flylogs keeps old versions listed underneath the latest one, so they stay available for anyone with access to the document.
 
-Every new version renews the cycle: every authorized member needs to download the file again, and the download registry is reset for the new version.
+Every new version renews the cycle: every recipient needs to open the file again, and the download registry is reset for the new version.
 
 ### File size limit
 

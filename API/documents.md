@@ -52,6 +52,8 @@ Retrieve documents and subfolders within a specific folder.
         "deleted": false,
         "download": true,
         "flying_only": false,
+        "requires_receipt": true,
+        "read_by": "2026-12-01",
         "expiration": "2026-01-15",
         "created": "2024-06-01",
         "modified": "2025-01-10"
@@ -108,17 +110,46 @@ Retrieve a single document with its file attachments.
 |-----------|------|-------------|
 | id | string | Document ID |
 
+A user above group 150 can open the document only when it is addressed to them: their user group (pilots only on a `flying_only` document) or them by name.
+
 #### Response
 
 ```json
 {
   "document": {
-    "Document": { ... },
+    "Document": {
+      "id": "a1b…",
+      "name": "Safety Notice 12-26",
+      "flying_only": true,
+      "requires_receipt": true,
+      "read_by": "2026-12-01",
+      "read_by_passed": false,
+      ...
+    },
+    "DocumentRecipient": [
+      { "user_group_id": "190", "user_id": null, "UserGroup": { "id": "190", "name": "Pilot" }, "User": null },
+      { "user_group_id": null, "user_id": "805", "UserGroup": null, "User": { "UserDetail": { "name": "Ada", "surname": "Lovelace" } } }
+    ],
     "DocumentDownload": [ ... ],
     "Upload": [ ... ]
-  }
+  },
+  "remainingusers": [
+    {
+      "User": { "id": 805, "reminded_at": 1795110734 },
+      "UserDetail": { "name": "Ada", "surname": "Lovelace" },
+      "UserGroup": { "name": "Flight Dispatcher" }
+    }
+  ]
 }
 ```
+
+| Field | Description |
+|-------|-------------|
+| `Document.requires_receipt` | `false` = the document is distributed but requests no read receipt (reference material). |
+| `Document.read_by` | Company calendar day (`YYYY-MM-DD`) by which the latest version must be read, or `null`. |
+| `Document.read_by_passed` | `true` once `read_by` is before today on the company calendar: every pending receipt is overdue. |
+| `DocumentRecipient[]` | One row per recipient: a user group (`user_group_id`) **or** a named person (`user_id`). Above group 150 only the caller's own rows are returned. |
+| `remainingusers` | Managers (group ≤ 150) only: who has not opened the latest version. Same audience as [Document Statistics](#document-statistics). Empty when `requires_receipt` is `false`. `User.reminded_at` is the unix time of the last reminder about this document, or `null`. |
 
 ---
 
@@ -130,6 +161,49 @@ Upload a new document. Uses `multipart/form-data`.
 
 > **Access:** management groups — users with **`user_group_id` ≤ 150** (up to and including the Chief Pilot). The same limit applies to editing and deleting documents and to folder management below; higher groups get `403 Forbidden`.
 
+#### Read-receipt and recipient fields
+
+These fields are accepted by `POST /documents/add.json` (multipart) and `POST /documents/edit/{id}.json`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `data[Document][requires_receipt]` | `1` / `0` | Request a read receipt from every recipient. Default `1`. |
+| `data[Document][read_by]` | `YYYY-MM-DD` | Read-by date; empty clears it. Anything that is not a real calendar date is stored as no date. |
+| `data[DocumentRecipient][user_group_id][]` | int | Recipient user groups. |
+| `data[DocumentRecipient][user_id][]` | int | Named recipients. Only users of your company are kept; others are ignored. |
+
+At least one group or one named person is expected. On edit, each list replaces the stored rows **only when it is sent**: posting groups without `user_id` keeps the named people, and the other way round. A field of `Document` that is not sent keeps its stored value.
+
+`POST /documents/upload.json` (new version) also accepts `data[Upload][read_by]`, which replaces the document's read-by date when present.
+
+`GET /documents/add.json` and `GET /documents/edit/{id}.json` return, besides `usergroups` and `folders`, a `users` list of the people that can be named (`id`, `name`, `surname`, `user_group_id`, `group_name`, `pilot`). The edit response gives the stored named people as `document.RecipientUser` (user ids); `document.DocumentRecipient` stays the list of group ids.
+
+---
+
+## Remind Pending Readers
+
+<mark style="color:green;">`POST`</mark> `/documents/remind/{id}.json`
+
+Send a reminder message (in-app, push and e-mail) to the users who have not opened the document's latest version.
+
+> **Access:** management groups — users with **`user_group_id` ≤ 150**, the same users who receive `remainingusers` from View Document. Higher groups get `403 Forbidden`.
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `user_id` | int[] | No | Remind only these users (ignored unless they are pending). Omit to remind everybody pending. |
+
+Users reminded about the same document in the **last 12 hours** are skipped. A document with `requires_receipt` = `false`, or without a file, has nobody to remind (`result: false`).
+
+#### Response
+
+```json
+{ "result": true, "message": "Reminder sent to 2 people.", "sent": 2, "skipped": 1 }
+```
+
+The automatic reminder on the 1st and 16th of each month is the company setting `CompanySetting.document_receipt_reminders` (off by default, saved with the other company settings). It sends each user one message listing every document that requests a read receipt and that they have not read.
+
 ---
 
 ## Document Statistics
@@ -140,28 +214,28 @@ Company-wide read-receipt compliance across all documents.
 
 > **Access:** staff only — users with **`user_group_id` ≤ 145 (Flight Dispatcher and above)**. Requests from any higher group return `403 Forbidden`.
 
-A read receipt is **requested** once per document for each active user in one of the document's recipient groups (`flying_only` documents only count pilots). It is counted as **read** when that user has opened the document's **latest active upload**. Publishing a new version therefore resets everyone to unread. Deactivated and deleted users are excluded from the requested pool.
+A read receipt is **requested** once per document for each active user in one of the document's recipient groups (`flying_only` documents only count pilots) and for each active user named on it. Documents with `requires_receipt` = `false` request none and are left out. A receipt is counted as **read** when that user has opened the document's **latest active upload**. Publishing a new version therefore resets everyone to unread. Deactivated and deleted users are excluded from the requested pool. An unread receipt is **overdue** once the document's `read_by` date has passed on the company calendar.
 
 #### Response
 
 | Field | Type | Description |
 |-------|------|-------------|
-| totals | object | `{ requested, read }` across the whole company |
-| groups | array | Per user group: `user_group_id`, `name`, `requested`, `read` |
-| users | array | Per user: `id`, `name`, `surname`, `user_group_id`, `group_name`, `requested`, `read` |
-| documents | array | Per document: `id`, `name`, `created`, `expiration`, `flying_only`, `requested`, `read` |
+| totals | object | `{ requested, read, overdue }` across the whole company |
+| groups | array | Per user group (the user's own group): `user_group_id`, `name`, `requested`, `read`, `overdue` |
+| users | array | Per user: `id`, `name`, `surname`, `user_group_id`, `group_name`, `requested`, `read`, `overdue` |
+| documents | array | Per document: `id`, `name`, `created`, `expiration`, `flying_only`, `read_by`, `requested`, `read`, `overdue` |
 
 ```json
 {
-  "totals": { "requested": 320, "read": 268 },
+  "totals": { "requested": 320, "read": 268, "overdue": 7 },
   "groups": [
-    { "user_group_id": "120", "name": "Pilots", "requested": 210, "read": 180 }
+    { "user_group_id": 190, "name": "Pilot", "requested": 210, "read": 180, "overdue": 5 }
   ],
   "users": [
-    { "id": "9f3…", "name": "Ada", "surname": "Lovelace", "user_group_id": "120", "group_name": "Pilots", "requested": 14, "read": 12 }
+    { "id": 805, "name": "Ada", "surname": "Lovelace", "user_group_id": 190, "group_name": "Pilot", "requested": 14, "read": 12, "overdue": 1 }
   ],
   "documents": [
-    { "id": "a1b…", "name": "Operations Manual", "created": "1717000000", "expiration": null, "flying_only": true, "requested": 42, "read": 39 }
+    { "id": "a1b…", "name": "Operations Manual", "created": "1717000000", "expiration": null, "flying_only": true, "read_by": "2026-12-01", "requested": 42, "read": 39, "overdue": 0 }
   ]
 }
 ```
@@ -172,7 +246,7 @@ A read receipt is **requested** once per document for each active user in one of
 
 <mark style="color:blue;">`GET`</mark> `/documents/user_stats/{userId}.json`
 
-Per-user drilldown: every document required of that user (their group is a recipient, respecting `flying_only`) and whether they have read the latest active version.
+Per-user drilldown: every document that requests a read receipt of that user (their group is a recipient, respecting `flying_only`, or they are named on it) and whether they have read the latest active version.
 
 > **Access:** staff only — users with **`user_group_id` ≤ 145 (Flight Dispatcher and above)**. Returns `403 Forbidden` above 145, and `404` if the user is not in the caller's company.
 
@@ -187,16 +261,16 @@ Per-user drilldown: every document required of that user (their group is a recip
 | Field | Type | Description |
 |-------|------|-------------|
 | user | object | `id`, `name`, `surname`, `user_group_id`, `group_name` |
-| totals | object | `{ requested, read, pending }` for this user |
-| documents | array | Per document: `id`, `name`, `created`, `expiration`, `flying_only`, `read` (bool), `read_at` (timestamp or `null`) |
+| totals | object | `{ requested, read, pending, overdue }` for this user |
+| documents | array | Per document: `id`, `name`, `created`, `expiration`, `flying_only`, `read_by`, `read` (bool), `read_at` (timestamp or `null`), `overdue` (bool) |
 
 ```json
 {
   "user": { "id": "9f3…", "name": "Ada", "surname": "Lovelace", "user_group_id": "120", "group_name": "Pilots" },
-  "totals": { "requested": 14, "read": 12, "pending": 2 },
+  "totals": { "requested": 14, "read": 12, "pending": 2, "overdue": 1 },
   "documents": [
-    { "id": "a1b…", "name": "Operations Manual", "created": "1717000000", "expiration": null, "flying_only": true, "read": true, "read_at": "1717500000" },
-    { "id": "c4d…", "name": "Safety Bulletin 2026-03", "created": "1718000000", "expiration": null, "flying_only": false, "read": false, "read_at": null }
+    { "id": "a1b…", "name": "Operations Manual", "created": "1717000000", "expiration": null, "flying_only": true, "read_by": null, "read": true, "read_at": "1717500000", "overdue": false },
+    { "id": "c4d…", "name": "Safety Bulletin 2026-03", "created": "1718000000", "expiration": null, "flying_only": false, "read_by": "2026-11-10", "read": false, "read_at": null, "overdue": true }
   ]
 }
 ```

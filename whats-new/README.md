@@ -26,6 +26,10 @@ To be told about new features as they are published, add the [What's new RSS fee
 
 ## November 2026
 
+**[Read receipts, read-by dates and reminders](document-read-receipts.md)** · Documents\
+Choose which documents need a read receipt, set a read-by date, address documents to named people, and remind the people who have not read them — with a button or automatically on the 1st and 16th.\
+[Manual →](../documents/document-library.md#read-receipts-and-read-by-date)
+
 **[Aerodrome and custom currency](aerodrome-currency-items.md)** · Crew management\
 Define airport qualifications and other currency items, see their status on each pilot and in bookings, and block pilots who are not current from scheduling and flight confirmation.\
 [Manual →](../company-management/company-settings/pilots.md#aerodrome-and-custom-currency)
