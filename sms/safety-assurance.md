@@ -80,7 +80,12 @@ The four built-in indicators have a target of **zero**. They are computed live f
 
 Each tile shows the count, the colour, a breakdown by band (high, medium, low, unassessed) and a monthly trend line for the selected year with the previous year overlaid.
 
-> **History starts when the feature is switched on.** A daily job records each month's value, so earlier months show **No data** rather than a misleading zero. The trend points show counts only; the tile number itself opens the list. A month's value is the one recorded on its last day. Each trend point uses the same year rule as the tile: the current-year line counts pending items dated in or before the selected year, the previous-year line those dated in or before the year before, so the latest point matches the tile.
+**Click anywhere on a tile** (or its **View list** link) to open the records behind it. A band chip opens only that band.
+
+* **Overdue safety actions** opens [Safety > My safety actions > All actions](safety-actions.md#all-safety-actions) filtered to *Overdue*, where you can filter further and export to Excel. For a past year it also limits the list to actions due by the end of that year. When a department or classification filter is set, the tile opens the matching list on the dashboard instead, so the number and the list always agree.
+* **Untracked risks**, **Unmitigated risks** and **Reports overdue for closure** open the reports and hazards they count, on the dashboard.
+
+> **History starts when the feature is switched on.** A daily job records each month's value, so earlier months show **No data** rather than a misleading zero. The trend points show counts only; the tile itself opens the list. A month's value is the one recorded on its last day. Each trend point uses the same year rule as the tile: the current-year line counts pending items dated in or before the selected year, the previous-year line those dated in or before the year before, so the latest point matches the tile.
 
 ### The 14 and 30 day deadlines
 
@@ -156,7 +161,7 @@ Auditors (group 250) read this section too; the finding owner and the accountabl
 
 Every number on the dashboard, except the built-in trend points, opens a list: type (report, hazard or action), ID, title, department, risk badge, status and age, with a link to the record. The audit tiles list findings and areas instead; see [Audits and findings](#audits-and-findings). Lists can be filtered by band.
 
-A **safety action** has no page of its own: in the list its title starts with the number of the report or hazard it belongs to (for example `HZ-2026-004 · Trim the grass near the threshold`), its risk badge is the current risk of that report or hazard, and the link opens that report or hazard, where the action is listed.
+A **safety action** has no page of its own (the company-wide list is [All safety actions](safety-actions.md#all-safety-actions)): in the list its title starts with the number of the report or hazard it belongs to (for example `HZ-2026-004 · Trim the grass near the threshold`), its risk badge is the current risk of that report or hazard, and the link opens that report or hazard, where the action is listed.
 
 ![Records behind a tile](../.gitbook/assets/safety-assurance-drilldown.png)
 

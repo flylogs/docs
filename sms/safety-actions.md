@@ -16,11 +16,11 @@ A **safety action** is a tracked corrective or preventive measure with an owner,
 
 | Who | Safety actions |
 | --- | --- |
-| Compliance & Safety Manager and above (user group 110 or lower) | Create on reports and hazards, assign, edit, verify, cancel, reopen |
-| **Auditor** (user group 250) | **Read-only**. Cannot own actions or mark them done. The one exception: they **verify** the completed corrective actions of an audit finding they raised (see [Independent verification](audit-findings.md#independent-verification-by-the-auditor)) |
+| Compliance & Safety Manager and above (user group 110 or lower) | Create on reports and hazards, assign, edit, verify, cancel, reopen. See **every action of the company** in [All safety actions](#all-safety-actions) |
+| **Auditor** (user group 250) | **Read-only**, including [All safety actions](#all-safety-actions). Cannot own actions or mark them done. The one exception: they **verify** the completed corrective actions of an audit finding they raised (see [Independent verification](audit-findings.md#independent-verification-by-the-auditor)) |
 | Assigned reviewer **or author** of a report, any group | **Propose** actions on that report only (created as *open*, owner chosen by them) and see every action on it |
 | **Finding owner** (any group) | **Propose** corrective actions on **their own audit finding** (created as *open*) and see every action on it |
-| **Accountable manager** | Add resulting actions to a **management review**; read-only on findings |
+| **Accountable manager** (set in Company settings), any group | Add resulting actions to a **management review**; read-only on findings. See **every action of the company** in [All safety actions](#all-safety-actions) |
 | Action owner, any group | See and update **only their own** actions: mark done with a note |
 | Everyone else | No access |
 
@@ -63,9 +63,23 @@ When an action is assigned, or its owner changed, the new owner receives an in-a
 
 ## My safety actions
 
-Everyone with an active account sees **Safety > My safety actions**: the actions assigned to them, open ones first, ordered by due date. Owners use **Mark done** to complete an action with an optional note. Each action names its source report or hazard; a hazard source is a link only for safety managers and auditors (the hazard log is theirs), everyone else sees its title as plain text.
+Everyone with an active account sees **Safety > My safety actions**: the actions assigned to them, open ones first, ordered by due date. Safety managers, auditors and the accountable manager find this list under the **My actions** tab, next to [All actions](#all-safety-actions). Owners use **Mark done** to complete an action with an optional note. Each action names its source report or hazard; a hazard source is a link only for safety managers and auditors (the hazard log is theirs), everyone else sees its title as plain text.
 
 ![My safety actions](../.gitbook/assets/safety-actions-my.png)
+
+## All safety actions
+
+Safety managers (user group 110 or lower), auditors and the company's accountable manager see a second tab on the same page, **All actions**: every safety action of the company, whoever owns it and wherever it was raised. It is the working list for monitoring whether corrective and preventive actions are carried out and effective, and for a Safety Review Board paper. Everyone else sees only the **My actions** list.
+
+![All safety actions, filtered to open or awaiting verification](../.gitbook/assets/safety-actions-all.png)
+
+* **Columns**: the action with its completion and verification notes, the source type (safety report, hazard, audit finding or management review) and the source record, the owner, the due date and the status. Open actions past their due date show **Overdue** in red.
+* **Order**: open first, then awaiting verification (*done*), verified and cancelled; within each, the earliest due date first.
+* **Filters**: status (*All statuses*, *Open or awaiting verification*, *Open*, *Overdue*, *Done*, *Verified*, *Cancelled*), owner (including *No owner*), source type and a due date range. Actions without a due date are left out when a date range is set. The filters are kept in the page address, so a filtered view can be bookmarked; **Clear** removes them all.
+* **Export** downloads the list exactly as filtered to Excel: action, description, source type and record, owner, due date, status, done and verified dates, completion note, whether it was effective, verification note and creation date. The header records who exported it, when, and which filters were applied.
+* **From the list**, safety managers mark done, verify, reopen and cancel actions without opening each source; owners mark their own actions done. Editing an action (title, owner, due date) is still done on its source.
+* The source is a link for safety managers and auditors. For an accountable manager who is not a safety manager, audit findings and management reviews are links and reports and hazards are plain text.
+* The **Overdue safety actions** tile of the [Safety Assurance dashboard](safety-assurance.md#built-in-indicators) opens this list filtered to *Overdue*.
 
 ## Verifying an action
 

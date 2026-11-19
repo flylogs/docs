@@ -384,7 +384,7 @@ An action belongs to a report (`source_model` `SafetyReport`), a hazard (`Safety
 
 <mark style="color:blue;">`GET`</mark> `/safety_actions/index.json`
 
-Returns `{ "actions": [ … ] }`, newest first. Managers and auditors see every action of the company. Everyone else sees only the actions they own, except that the assigned reviewer or non-anonymous author of a report sees **every action on that report** when `source_model=SafetyReport&source_id={reportId}` is given.
+Returns `{ "actions": [ … ] }`, newest first. Managers, auditors and the company's accountable manager see every action of the company. Everyone else sees only the actions they own, except that the assigned reviewer or non-anonymous author of a report sees **every action on that report** when `source_model=SafetyReport&source_id={reportId}` is given.
 
 | Parameter | Description |
 |-----------|-------------|
@@ -396,6 +396,8 @@ Returns `{ "actions": [ … ] }`, newest first. Managers and auditors see every 
 <mark style="color:blue;">`GET`</mark> `/safety_actions/mine.json`
 
 Any group. The caller's own actions, open ones first then by due date. Each entry has `id`, `title`, `description`, `status`, `due_date`, `source_model`, `source_id`, `source_title`, `done_note`, `effective` and `verification_note`. Never the reporter.
+
+The response also carries `can_see_all` (boolean): `true` when `index.json` returns every action of the company to the caller (managers, auditors, the accountable manager).
 
 ### Create Action
 
