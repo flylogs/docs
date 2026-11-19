@@ -39,11 +39,29 @@ For file-download endpoints that open in a new window (XLS, PDF), the key may al
 https://fmc.flylogs.com/v1/safety_reports/index/excel:true?token=<api-key>
 ```
 
+## Session tokens are not an API credential
+
+The Flylogs apps (web and mobile) sign in with an email and password and receive a **session token**. That token is tied to the kind of device and app that signed in. It is not meant for scripts, and it cannot be used in place of an API key:
+
+* A request carrying a session token from an HTTP library or API tool (curl, Python, Node.js, Postman and similar) is refused with **401**, unless the company has API access.
+* A session token presented from a different kind of device than the one that signed in (for example, a token from a Linux browser replayed from Windows) is refused with **401**, unless the company has API access.
+* For companies with API access, these requests are still served, and are recorded in the security log.
+
+```json
+{
+  "code": 401,
+  "error": "SESSION_INVALID",
+  "message": "This session can only be used from the app or browser that signed in. Automated access needs API access enabled for your company and an API key (Company Settings > API)."
+}
+```
+
+For any integration, script or automation, enable API access and use an **[API key](api-keys.md)**.
+
 ## Error responses
 
 | Status | Meaning |
 |--------|---------|
-| 401 | API key missing, invalid, expired or revoked |
+| 401 | API key missing, invalid, expired or revoked, or a session token used from a script or another device ([see above](#session-tokens-are-not-an-api-credential)) |
 | 402 | The company has no API access: it is on the Free plan, or the API add-on was never purchased |
 | 403 | The bound user lacks permission for this endpoint |
 | 429 | Rate limited — reduce request frequency |

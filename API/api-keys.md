@@ -147,5 +147,7 @@ A key can only be bound to a user in the **same company** as the administrator c
 | Identity | Bound user | Logged-in user |
 | Best for | Unattended server-to-server integrations | Interactive clients (e.g. the NEO app) |
 | 2FA / IP allowlist | Not applicable | Applies to interactive logins |
+| Usable from scripts and API tools | Yes | No: refused with 401 unless the company has API access ([details](authentication.md#session-tokens-are-not-an-api-credential)) |
+| Requires API access on the company | Yes | No, but only for the Flylogs apps |
 
 See also: [Authentication](authentication.md).
