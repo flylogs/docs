@@ -95,7 +95,7 @@ Present on both `GET /companies/settings.json` and `GET /manager/companies/prefe
 |-------|------|-------------|
 | `legal_name` | string \| null | Legal entity name printed on course completion certificates; falls back to `Company.name`. |
 | `approval_type` | string \| null | e.g. `ATO`, `DTO`. |
-| `approval_reference` | string \| null | e.g. `SI.ATO.041`. |
+| `approval_reference` | string \| null | e.g. `ES.ATO.123`. |
 | `regulatory_basis` | string \| null | Default regulatory basis; `trainings.regulatory_basis` overrides it per course. |
 | `certificate_prefix` | string \| null | Substituted for `{prefix}`. |
 | `certificate_pattern` | string | Certificate number pattern. Tokens `{prefix}` `{year}` `{seq}` `{seq:N}`; must contain a `{seq}` token (validation error otherwise). Default `{prefix}{year}-{seq:4}`. |
