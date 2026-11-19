@@ -202,7 +202,7 @@ Retrieve flight billing data (GET) or create/update a flight bill (POST). Flight
 | handling | number | No | Handling charges |
 | others | number | No | Other charges |
 | rate_id | UUID | No | Rate record to use |
-| notify | boolean | No | Send notification email to pilot |
+| notify | boolean | No | Email the receipt to the billed person. `false` saves the bill without emailing. When omitted, follows the company's `send_notification` setting |
 | use_packages | boolean | No | Deduct from pilot's package balance |
 | created | string | No | Bill date (defaults to onblocks_time) |
 
@@ -251,7 +251,7 @@ Delete a bill and recalculate the pilot's balance.
 
 <mark style="color:green;">`POST`</mark> `/bills/autobill.json`
 
-Automatically generate a bill for a flight using the aircraft's default rate. Any existing bill for the flight is replaced. Optionally override which pilot to bill.
+Automatically generate a bill for a flight using the aircraft's default rate. Any existing bill for the flight is replaced. Optionally override which pilot to bill. The receipt is emailed to the billed person only when the company's `send_notification` setting is on.
 
 #### Request Body (POST)
 

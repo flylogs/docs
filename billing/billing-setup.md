@@ -26,6 +26,10 @@ By clicking in any of the rows, you will open the manual flight billing window w
 
 <figure><img src="../.gitbook/assets/Screenshot 2023-04-13 at 15.46.38.png" alt=""><figcaption><p>Flight billing list</p></figcaption></figure>
 
+At the bottom of the flight billing window, **Send notification** (ticked by default) emails the receipt to the billed person when you save. Untick it to save the bill without emailing anyone. This choice applies to that save only, whatever your company's **Notify by email new bills** setting.
+
+<figure><img src="../.gitbook/assets/flight-bill-send-notification.png" alt="Flight billing window with the bill date, billed pilot, rate, extra charges and totals, and the Send notification box ticked next to Save"><figcaption><p>Flight billing window: Send notification next to Save</p></figcaption></figure>
+
 
 
 
@@ -50,7 +54,7 @@ The process takes into consideration all billing rates, company settings and ava
 2. Flylogs will check if the BILL TO user has any available packages, and if these, are valid for the aircraft used in the flight.
    1. If there are packages available, these will be used in order of purchase.
    2. Otherwise, default user/aircraft billing rates will be used combined with company extra expenses and taxes.
-3. Last, if the company settings require user notification, a quick email notification will be delivered to the user confirmed email address.
+3. Last, if **Notify by email new bills** is on in your company billing settings, the receipt is emailed to the billed person's confirmed email address. With it off, the bill is created without an email. The same applies when the bill is recalculated after the flight is edited.
 
 
 

@@ -71,7 +71,7 @@ Once the keys are saved, every pilot whose own billing is enabled sees a **Pay o
 
 <figure><img src="../.gitbook/assets/payOnlineReceived.png" alt="Confirmation banner Payment received above the updated account balance"><figcaption><p>Payment received and added to the balance.</p></figcaption></figure>
 
-The payment appears in the pilot's transactions as **Stripe payment**, with a bill number and receipt, like a payment you record yourself. It credits exactly the amount charged: no VAT is added on top. If **Email notification on new bills** is on, the pilot also gets the receipt by email. The Company Administrator and the Financial Manager get an inbox message for every payment received.
+The payment appears in the pilot's transactions as **Stripe payment**, with a bill number and receipt, like a payment you record yourself. It credits exactly the amount charged: no VAT is added on top. The pilot always gets the receipt by email as confirmation of the payment, whatever your **Notify by email new bills** setting. The Company Administrator and the Financial Manager get an inbox message for every payment received.
 
 If a pilot pays and closes the page before coming back to Flylogs, the payment is still recorded: Flylogs checks your Stripe account every hour and adds any paid balance payment it has not recorded yet.
 
