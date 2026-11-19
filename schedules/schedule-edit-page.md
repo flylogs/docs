@@ -150,6 +150,7 @@ The green **Actions** menu (top‑right) gives bulk and utility tools. The first
 * **Clear week** — delete every record in a date range in one step. It opens on the current week, starting on the **Start of week** set in [Company Settings → General](../company-management/company-settings/general.md). Pick another week or range in the calendar the same way as in Auto Pilot.
 
 <figure><img src="../.gitbook/assets/clear-week-range-picker.png" alt="The Clear Week window with its date range calendar open on November and December 2026, weeks starting on Monday and the week of 2 to 8 November selected"><figcaption><p>Clear Week uses the same date range calendar as Auto Pilot. The weeks follow the company's Start of week.</p></figcaption></figure>
+
 * **Auto‑pilot** — draft a schedule for a date range from your recent bookings and the lessons students still owe. See [Auto Pilot](auto-pilot.md).
 
 Available to anyone who can edit:

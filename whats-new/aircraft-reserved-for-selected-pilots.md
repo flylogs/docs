@@ -29,6 +29,7 @@ Open **Aircraft → edit → Scheduling**. **Who can self-schedule** has a fourt
 * **An empty list means nobody.** The reverse of the attributions convention, and deliberately so: the whole point is that the list says who is in, not who is out. The form says so in red when nothing is ticked.
 
 <figure><img src="../.gitbook/assets/aircraftSelfSchedulePilotsEmpty.png" alt="The same card with nothing ticked and a red warning"><figcaption><p>Nothing ticked means nobody — never everybody.</p></figcaption></figure>
+
 * The list is kept when you switch to another access mode, so an aircraft can be opened to the school for a weekend and closed again without rebuilding it.
 * Deactivating a pilot takes them out of self-booking without anyone editing the aircraft.
 
