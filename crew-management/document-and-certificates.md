@@ -142,7 +142,7 @@ The codes are the ones in EASA AMC2 MED.B.001:
 
 A pilot licence lists several ratings and endorsements, each with its own validity: class or type ratings, instrument, instructor and night ratings, and language proficiency. When you read a licence with **Read the document**, Flylogs lists them under **Ratings on this licence**:
 
-* a rating you already have on file is **updated** with the new validity (useful after a revalidation, when the examiner has signed a new entry on the licence);
+* a rating you already have on file is **updated** with the new validity (useful after a revalidation, when the examiner has signed a new entry on the licence). Its previous validity is kept in the [certificate history](#renewals-and-certificate-history) as a renewal;
 * a rating you don't have yet is added as a **new certificate**.
 
 Untick any line you don't want, then press **Add or update certificates**. They are saved straight away, one certificate each. The licence itself is still filed with the form's **Save**.
@@ -159,6 +159,41 @@ Who can update what is the same as in the profile forms:
 
 * on **your own profile**: nationality, date of birth and licence number. The passport number only for user group 150 and below (managers and the Chief Pilot);
 * on **someone else's profile**: user groups 150 and below.
+
+### Renewals and certificate history
+
+A certificate stays one entry, but Flylogs keeps what it was before every change. When the issue date, expiry date, type, description, status, comments, medical limitations or aircraft covered change, the previous values are kept as a **revision** of the same certificate, together with:
+
+* what each field was and what it became;
+* the files that were attached at that moment;
+* who made the change and when.
+
+Deleting a certificate keeps its last state, and its files, the same way. History starts with the first change made after November 2026: values overwritten before then cannot be recovered.
+
+#### Renewal or correction
+
+When you change the dates of a certificate already on file, the form asks what the change is:
+
+* **A renewal or revalidation**: the previous period was genuine. It is kept and still counts as valid for the dates it covered (see [Certificates on a date](#certificates-on-a-date)).
+* **A correction of a typing mistake**: the previous dates were wrong. They are kept on record but never count as valid.
+
+Flylogs pre-selects the answer from the dates: a later expiry, or a later issue date without an earlier expiry, is a renewal; anything else is a correction. Change it if it is wrong. Ratings updated from a licence reading are saved as renewals when their expiry moves later.
+
+<figure><img src="../.gitbook/assets/cert-renewal-question.png" alt=""><figcaption><p>A medical renewed: the dates changed, so the form asks whether it is a renewal or a correction. The file of the previous period is locked.</p></figcaption></figure>
+
+#### Files and the period they belong to
+
+Every file attached to a certificate is listed, not only the newest one, each labelled with the validity it was filed against: **Current** for the certificate as it is now, **Previous** with the expiry of the earlier period. A file that belongs to a previous period is part of that record: it shows a lock and **cannot be deleted** by anyone.
+
+<figure><img src="../.gitbook/assets/cert-history-list.png" alt=""><figcaption><p>A renewed medical with both files, each labelled with its period, and the history button with one earlier revision.</p></figcaption></figure>
+
+#### Viewing the history
+
+A certificate with earlier revisions shows a history button (<i class="fa fa-clock-rotate-left"></i>) with the number of revisions. It opens them newest first: the validity each one had, whether it was replaced by a renewal, corrected, edited or deleted, the old and new value of each field, its files, who changed it and when.
+
+<figure><img src="../.gitbook/assets/cert-history-modal.png" alt=""><figcaption><p>The previous period of a Class 1 medical: replaced by a renewal on 3 June 2026, with the file filed against it.</p></figcaption></figure>
+
+**Who sees it:** everyone who can see the certificate. Medical limitations in the history follow the same rule as on the certificate: only the certificate holder and user groups 170 and below (managers, Chief Pilot, Flight Instructors). External auditors (group 250) see the history but cannot open the files.
 
 ### Automatic Alerting
 
@@ -189,6 +224,18 @@ Company managers have an overall view of all documents and upcoming expirations.
 
 ### Pilot audit tool
 
-All company managers have access to the pilot audit tool which allows a quick view of all pilot certificates and training courses.
+All company managers have access to the pilot audit tool (**Flight Crew > Audit**) which allows a quick view of all pilot certificates and training courses: how many people have expired certificates or certificates expiring within 45 days, which types have expired, how recently each person flew, and per person the certificates with their expiry and the active training courses.
 
-<figure><img src="../.gitbook/assets/Screenshot 2023-04-18 at 21.01.44.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/pilots-audit-page.png" alt=""><figcaption><p>The pilot audit tool, here showing certificates as they stood on 22 December 2025.</p></figcaption></figure>
+
+#### Certificates on a date
+
+Pick a day in **Certificates on** to see each person's certificates as they stood on that day, for example to show an inspector what a student held on a past date. For each certificate Flylogs takes the current values when they covered that day, otherwise the kept revision that did. A revision replaced as a **correction** never counts. Expiry colours and remaining days are counted from the chosen day, and a certificate that had already expired by then is shown in red. A small history icon marks a value taken from a revision, and a certificate deleted since is struck through. Clear the date (<i class="fa fa-xmark"></i>) to go back to today.
+
+The list of people is still today's (active users of the company), and the dates come from the certificates themselves, not from when they were entered: a medical filed today with last year's issue date counts for last year.
+
+<figure><img src="../.gitbook/assets/pilots-audit-on-date-filter.png" alt=""><figcaption><p>Certificates on 22 December 2025.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/pilots-audit-on-date-row.png" alt=""><figcaption><p>On that day the Class 1 medical was the previous period, valid to 16 June 2026 (history icon).</p></figcaption></figure>
+
+The same answer is available per person in the API: `GET /pilots/certificates/{userId}.json?on=YYYY-MM-DD` (see the [Pilots API](../API/pilots.md)).

@@ -651,8 +651,9 @@ Returns the canonical certificate type catalogue used across the app.
 ### List Certificates
 
 <mark style="color:blue;">`GET`</mark> `/pilots/certificates/{userId}.json`
+<mark style="color:blue;">`GET`</mark> `/pilots/certificates/{userId}.json?on=YYYY-MM-DD`
 
-Retrieve all certificates for a pilot plus the validity summary. JSON-only.
+Retrieve all certificates for a pilot plus the validity summary. JSON-only. With `on`, the certificates **valid on that day** instead (see [Certificates valid on a date](#certificates-valid-on-a-date)).
 
 {% hint style="info" %}
 **Callers with `user_group_id` 250 (External Auditor)** get the full certificate list, but each `Uploads` entry has `url` (and `thumb_url` for photos) omitted — the file itself cannot be fetched, only its metadata (filename, mime, size). This applies to this endpoint and to `GET /uploads/index/UserCertificate/{certId}.json`.
@@ -661,6 +662,8 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
 `PilotLimitation` (the medical limitations of each certificate) is present only when the caller is the pilot themselves or has `user_group_id <= 170` (Flight Instructor and above, the people who can edit the pilot's certificates). Other colleagues get the list without it.
 
 `AircraftModel` (the aircraft models a Type Rating, TRI or TRE covers) is present on every certificate, for everyone who can read the list. It is `[]` for the other types. See [Aircraft models](#aircraft-models).
+
+`Uploads` holds **every** file of the certificate, newest first (until November 2026 only the newest one was returned). Each file carries `period`, the validity it was filed against, and `protected`; each certificate carries `revision_count`. See [Certificate revisions](#certificate-revisions).
 
 #### Response
 
@@ -674,8 +677,12 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only.
       "name": "Class 1 Medical",
       "issue": "2024-06-01",
       "expiration": "2025-06-01",
+      "revision_count": 1,
       "Uploads": [
-        { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678", "url": "https://cdn.../signed..." }
+        { "id": "502", "filename": "...", "display_name": "Class 1 medical 2024.pdf", "type": "document", "mime": "application/pdf", "size": "245678", "created": "1717232400", "url": "https://cdn.../signed...",
+          "period": { "revision": null, "issue": "2024-06-01", "expiration": "2025-06-01" }, "protected": false },
+        { "id": "501", "filename": "...", "display_name": "Class 1 medical 2023.pdf", "type": "document", "mime": "application/pdf", "size": "198112", "created": "1685610000", "url": "https://cdn.../signed...",
+          "period": { "revision": 1, "issue": "2023-06-01", "expiration": "2024-06-01" }, "protected": true }
       ],
       "PilotLimitation": [
         { "id": "8c1a…", "code": "VML", "detail": null },
@@ -740,18 +747,95 @@ Special cases:
 
 <mark style="color:blue;">`GET`</mark> `/pilots/certificate/{certId}.json`
 
-Retrieve a single certificate with up to 5 attached uploads. The certificate must belong to a user of the caller's company (`404` otherwise). `PilotLimitation` (its medical limitations) is included only for the certificate's owner and callers with `user_group_id <= 170`. `AircraftModel` (the models a Type Rating, TRI or TRE covers) is always included, `[]` for other types.
+Retrieve a single certificate with all its uploads (each with `period` and `protected`) and its kept `Revisions`, newest first. The certificate must belong to a user of the caller's company (`404` otherwise). `PilotLimitation` (its medical limitations) is included only for the certificate's owner and callers with `user_group_id <= 170`. `AircraftModel` (the models a Type Rating, TRI or TRE covers) is always included, `[]` for other types. External auditors (`user_group_id` 250) get the uploads without `url`.
 
 ```json
 {
   "cert": {
-    "UserCertificate": { "id": "300", "name": "Class 1 Medical", "...": "..." },
+    "UserCertificate": { "id": "300", "name": "Class 1 Medical", "revision_count": 1, "...": "..." },
     "Uploads": [
-      { "id": "501", "filename": "...", "type": "document", "mime": "application/pdf", "size": "245678" }
+      { "id": "502", "filename": "...", "display_name": "Class 1 medical 2024.pdf", "type": "document", "mime": "application/pdf", "size": "245678", "created": "1717232400",
+        "period": { "revision": null, "issue": "2024-06-01", "expiration": "2025-06-01" }, "protected": false },
+      { "id": "501", "filename": "...", "display_name": "Class 1 medical 2023.pdf", "type": "document", "mime": "application/pdf", "size": "198112", "created": "1685610000",
+        "period": { "revision": 1, "issue": "2023-06-01", "expiration": "2024-06-01" }, "protected": true }
     ],
     "PilotLimitation": [ { "id": "8c1a…", "code": "VML", "detail": null } ],
-    "AircraftModel": []
+    "AircraftModel": [],
+    "Revisions": [
+      {
+        "user_certificate_id": "300",
+        "revision": 1,
+        "action": "renewal",
+        "type": "medical_class_1", "status": "valid", "name": "Class 1 Medical",
+        "issue": "2023-06-01", "expiration": "2024-06-01", "comments": null,
+        "limitations": [ { "code": "VDL", "detail": null } ],
+        "aircraft_models": [],
+        "uploads": [ { "id": "501", "filename": "...", "display_name": "Class 1 medical 2023.pdf", "created": 1685610000 } ],
+        "changes": {
+          "issue": { "from": "2023-06-01", "to": "2024-06-01" },
+          "expiration": { "from": "2024-06-01", "to": "2025-06-01" },
+          "limitations": { "from": [ { "code": "VDL", "detail": null } ], "to": [ { "code": "VML", "detail": null } ] }
+        },
+        "recorded_from": 1685610000,
+        "superseded_at": 1717232400,
+        "superseded_by": { "id": 3, "name": "Jane Manager" }
+      }
+    ]
   }
+}
+```
+
+### Certificate revisions
+
+A certificate is one record. Every change made through [Add / Edit Certificate](#add--edit-certificate) to one of its tracked fields keeps the state it **replaced** as a revision of the same certificate: `type`, `name`, `status`, `issue`, `expiration`, `comments`, the medical limitations and the aircraft models. Attaching a file, or saving without changing a tracked field, writes no revision. [Delete Certificate](#delete-certificate) keeps the last state as a revision too. Revisions are append-only and start with the first change made after November 2026; earlier overwrites cannot be recovered.
+
+Each entry of `Revisions`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| revision | number | 1 = the first state that was replaced; the current values are `revision_count + 1` |
+| action | string | What replaced this state: `renewal` (new validity period; this one was genuine), `correction` (its dates were a typing mistake), `edit` (any other tracked field changed), `delete` |
+| type, status, name, issue, expiration, comments | | The values this state had (`issue`/`expiration` `Y-m-d` or `null`) |
+| limitations | array | Its medical limitations `{code, detail}`. **Omitted**, together with `changes.limitations`, for callers who may not read limitations (only the owner and `user_group_id <= 170` may) |
+| aircraft_models | array | `{id, name, manufacturer}` it covered |
+| uploads | array | The files attached when it was replaced: `{id, filename, display_name, created}` |
+| changes | object | `field → {from, to}` for each field that changed (`{}` on `delete`) |
+| recorded_from | number \| null | When this state had been written (epoch seconds, the certificate's previous `modified`) |
+| superseded_at | number | When it was replaced (epoch seconds) |
+| superseded_by | object \| null | `{id, name}` of who replaced it |
+
+**Files and their period.** Each upload of a certificate carries `period` = `{revision, issue, expiration}`: the oldest revision whose `uploads` list holds the file (it was attached while that state was current), or `revision: null` with the current dates. A file listed by any revision has `protected: true`: `POST /uploads/delete/{id}.json` refuses it with `403` ("This file is kept as the record of a previous validity period and can not be deleted."), for every user group.
+
+**Access.** Revisions are returned to everyone who can read the certificate (the same company); they open no new endpoint and need no new permission.
+
+### Certificates valid on a date
+
+<mark style="color:blue;">`GET`</mark> `/pilots/certificates/{userId}.json?on=2025-12-22`
+
+The certificates of that person valid on that calendar day, for audits of past dates. For each certificate, Flylogs takes the current values when they cover the day, otherwise the newest kept revision that does; a revision whose `action` is `correction` never counts. A certificate covers a day when it was issued on or before it and expires after it (the same rule as `valid`: a certificate is no longer valid on its expiry date), and its status is not `pending` or `revoked`. Deleted certificates are included when a kept revision covers the day. Validity comes from the certificate dates, not from when they were entered.
+
+The response has the same shape as without `on`, plus `on` (the day) and, on each row:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| revision | number \| null | The revision the row was built from; `null` = the current values |
+| revision_action | string | (revision rows) what replaced that state |
+| superseded_at | number | (revision rows) when it was replaced |
+| deleted | boolean | The certificate has been deleted since |
+
+Rows built from a revision carry that revision's `PilotLimitation` (same audience rule), `AircraftModel` and the files it kept in `Uploads` (without `url`; open them with `GET /uploads/download/{id}`, company-scoped). `valid` is evaluated at noon of that day. An `on` that is not a `Y-m-d` date returns `400`.
+
+```json
+{
+  "UserCertificate": [
+    { "id": "300", "user_id": "123", "type": "medical_class_1", "name": "Class 1 Medical",
+      "issue": "2023-06-01", "expiration": "2024-06-01", "revision": 1, "revision_action": "renewal",
+      "superseded_at": 1717232400, "deleted": false, "AircraftModel": [],
+      "Uploads": [ { "id": "501", "filename": "...", "display_name": "Class 1 medical 2023.pdf", "created": 1685610000,
+        "period": { "revision": 1, "issue": "2023-06-01", "expiration": "2024-06-01" }, "protected": true } ] }
+  ],
+  "valid": { "result": true, "medical": true, "...": "..." },
+  "on": "2023-12-22"
 }
 ```
 
@@ -937,7 +1021,10 @@ UserCertificate[expiration]=2025-06-01
 UserCertificate[photo]=@/path/to/scan.pdf
 UserCertificate[limitations]=[{"code":"VML","detail":null},{"code":"SSL","detail":"Not valid for aerobatic flight"}]
 UserCertificate[aircraft_model_ids]=[571,573,574]
+UserCertificate[change_reason]=renewal
 ```
+
+- **Change reason** (`UserCertificate[change_reason]`, `renewal` or `correction`, optional): only read when `issue` or `expiration` of an existing certificate changes. It sets the `action` of the [revision](#certificate-revisions) that keeps the replaced dates: `renewal` keeps them as a genuine past period, `correction` as a typing mistake that never counts as valid. When omitted, the dates decide: a later expiry, or a later issue without an earlier expiry, is a `renewal`; anything else a `correction`.
 
 - **Limitations** (`UserCertificate[limitations]`, a JSON array): the medical's limitation codes, which replace the stored set for this certificate. Unknown codes and duplicates are dropped, and `detail` is cut to 255 characters. When the field is **omitted**, the stored limitations are left as they are. They are **always cleared** when the certificate type is not a medical. Rows that stay keep their `id`. The response's `result.PilotLimitation` holds the stored set.
 - **Aircraft models** (`UserCertificate[aircraft_model_ids]`, a JSON array of [aircraft model](#aircraft-models) ids; a comma list or `aircraft_model_ids[]` form fields are also accepted): the models a `type_rating`, `tri` or `tre` covers. They replace the stored set for this certificate. Ids that are not in the aircraft model catalogue and duplicates are dropped, and at most 50 models are kept. When the field is **omitted**, the stored models are left as they are. They are **always cleared** when the certificate type is anything else. Models that stay are not rewritten. The response's `result.AircraftModel` holds the stored set.
@@ -952,18 +1039,20 @@ UserCertificate[aircraft_model_ids]=[571,573,574]
 
 ```json
 {
-  "result": { "UserCertificate": { "id": "301", "...": "..." }, "Upload": { "id": "502" } },
+  "result": { "UserCertificate": { "id": "301", "...": "..." }, "Upload": { "id": "502" }, "revision": 1, "revision_action": "renewal" },
   "errors": []
 }
 ```
 
-`errors` is populated on validation failure or upload errors.
+`errors` is populated on validation failure or upload errors. On an update that changed a tracked field, `result.revision` is the number of the revision that keeps the replaced state and `result.revision_action` its `action`; both are absent otherwise.
 
 ### Delete Certificate
 
 <mark style="color:green;">`POST`</mark> `/pilots/delete_certificate/{id}.json`
 
 Delete a certificate. Callers with `user_group_id > 150` (Flight Instructor and below) can only delete their own certificates; managers can delete any certificate within their company.
+
+The certificate's last state is kept as a [revision](#certificate-revisions) with `action: "delete"`, and its files are **kept** (they used to be deleted with it) as the evidence of that record.
 
 ```json
 { "result": true }
@@ -1084,6 +1173,7 @@ Paginated audit view of pilots and instructors with their latest flight, trainin
 | pilot | Truthy to restrict to pilots only |
 | pilot_group | Pilot group ID |
 | all_certs | If absent or false, certificates are filtered to `licence`, `rating`, `medical` only |
+| on | `YYYY-MM-DD`: each person's certificates as they stood on that day (see below) |
 
 JSON or AJAX requests return:
 
@@ -1095,6 +1185,8 @@ JSON or AJAX requests return:
 ```
 
 The HTML version of this endpoint also returns `userGroups` and `pilotGroups` for filter dropdowns.
+
+With `on`, `filters.on` echoes the day and each `UserCertificate` is `{id, type, name, issue, expiration, revision, deleted, valid}`: the state that was valid that day (current values or the kept revision, as in [Certificates valid on a date](#certificates-valid-on-a-date)) with `valid: true`, otherwise the newest state already issued by that day (expired by then) with `valid: false`. Certificates issued after that day are left out. `revision` is `null` for the current values. The people listed are still the current active users.
 
 ### Monthly Duties Report
 

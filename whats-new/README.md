@@ -26,6 +26,10 @@ To be told about new features as they are published, add the [What's new RSS fee
 
 ## November 2026
 
+**[Certificate history and certificates on a date](certificate-history.md)** · Crew management\
+Renewing a certificate keeps its previous validity as a dated revision, with the files of each period; the pilot audit tool and the API show anyone's certificates as they stood on a past date.\
+[Manual →](../crew-management/document-and-certificates.md#renewals-and-certificate-history)
+
 **[Read receipts, read-by dates and reminders](document-read-receipts.md)** · Documents\
 Choose which documents need a read receipt, set a read-by date, address documents to named people, and remind the people who have not read them — with a button or automatically on the 1st and 16th.\
 [Manual →](../documents/document-library.md#read-receipts-and-read-by-date)
