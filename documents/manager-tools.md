@@ -26,6 +26,10 @@ Re-downloads by the same user are not duplicated — the registry reflects uniqu
 
 Together with the download list, the view page shows a **Pending users** list — the recipients who have not yet opened the current version. The list is built from the document's recipient groups (pilots only, on a `Flying crew only` document) and its named people, minus the users that already opened it, excluding inactive and deleted accounts.
 
+When the receipt is requested from **only some recipients**, the list holds only those people, and the document page says who they are (**Receipt from: …**). The others can still open the document, and their reads still appear under **Read**, but they are never pending. See [Request the receipt from some recipients only](document-library.md#request-the-receipt-from-some-recipients-only).
+
+<figure><img src="../.gitbook/assets/doc-receipt-from-pending.png" alt="Document page showing Receipt from: Chief Pilot, Flight Instructor and a read receipts panel with 5 pending"><figcaption><p>Published to 40 people, receipt requested from 5: the pending list and the reminders count those 5.</p></figcaption></figure>
+
 A document that does not **require a read receipt** has no pending list: the panel only says how many people opened it. See [Read receipts and read-by date](document-library.md#read-receipts-and-read-by-date).
 
 ### Read-by date and overdue receipts

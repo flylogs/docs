@@ -26,7 +26,7 @@ The latest file is always shown first, prominently, as the current version to re
 
 Click the file to download the current version. Each download is recorded against your user, the document and the specific upload version. Re-downloading the same version is recorded only the first time, so the registry reflects who has actually seen the file rather than how many times they clicked.
 
-The view page also shows the date you personally last downloaded the current version, so you know whether you are up to date with the latest publication. On a document that requires a read receipt, an **Unread** badge shows until you open the current version; reference documents that require no receipt never show it.
+The view page also shows the date you personally last downloaded the current version, so you know whether you are up to date with the latest publication. On a document that requests a read receipt from you, an **Unread** badge shows until you open the current version. Reference documents that require no receipt never show it, and neither does a document whose receipt is requested from other recipients only: you can open it, but you are not asked to acknowledge it.
 
 ### Notifications
 

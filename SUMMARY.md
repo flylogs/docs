@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Read receipt from some recipients](whats-new/document-receipt-from.md)
   * [Certificate history](whats-new/certificate-history.md)
   * [Read receipts and reminders](whats-new/document-read-receipts.md)
   * [Aerodrome and custom currency](whats-new/aerodrome-currency-items.md)

@@ -83,10 +83,32 @@ Under **Named people** on the New Document and Edit Document forms, type a name 
 
 Each document says whether it **Requires a read receipt** (on by default, and on for every document published before this setting existed).
 
-* **On** — every recipient must open the current version. Until they do, they are on the document's pending list, in [Document Stats](document-stats.md) and in the reminders, and they see the document marked **Unread**.
+* **On** — every recipient must open the current version, or only some of them if you choose so under **Request the receipt from** (below). Until they do, they are on the document's pending list, in [Document Stats](document-stats.md) and in the reminders, and they see the document marked **Unread**.
 * **Off** — for reference material such as aircraft manuals, posters or textbooks. Recipients can still open it, but nobody is asked for a receipt: the document stays out of the pending list, the Stats figures and the reminders.
 
 A document that requires a receipt can also have a **Read by** date. Once that day has passed, every recipient who has not opened the current version is **overdue**: the document list, the document page and the Stats page show it in red. Publishing a new version resets everyone to unread, so set a new read-by date when you upload it.
+
+#### Request the receipt from some recipients only
+
+The recipients decide who can **open** a document. **Request the receipt from** decides who must **acknowledge** it, so a document can be open to many people and acknowledged by a few. A typical case: a standard operating procedure every student pilot must be able to read, where the receipt only matters from the instructors and the post holders.
+
+When **Requires a read receipt** is on, choose under **Request the receipt from**:
+
+* **Every recipient** — the default, and how every document published before this option behaves.
+* **Only some recipients** — then tick the **Recipient groups** and add the **Recipients by name** the receipt is requested from. Only the groups and people already chosen as recipients are offered.
+
+The form shows how many people owe a receipt, for example *5 of 40 recipients owe a read receipt*, so you can check the choice before saving.
+
+<figure><img src="../.gitbook/assets/doc-receipt-from-form.png" alt="Edit Document form with Request the receipt from set to Only some recipients, Chief Pilot and Flight Instructor ticked"><figcaption><p>Student Pilot, Chief Pilot and Flight Instructor can open the procedure; only the Chief Pilots and Flight Instructors owe a receipt.</p></figcaption></figure>
+
+Everyone addressed keeps opening the document as before, and their reads are still recorded in the download registry. Only the people the receipt is requested from:
+
+* are on the document's pending list and counted in [Document Stats](document-stats.md);
+* receive the reminders, manual and automatic;
+* see the document marked **Unread** and its read-by date;
+* are told the read-by date in the new-version notification (every recipient is still notified).
+
+On the document page, managers see who the receipt is requested from next to the read-by date.
 
 To chase the people who have not read a document, see [Manager tools → Reminders](manager-tools.md#reminders).
 

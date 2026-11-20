@@ -21,7 +21,7 @@ The summary at the top shows the headline figures for the whole company:
 * **Overdue** — pending acknowledgements on documents whose **Read by** date has passed. Shown only when there are some.
 * **Overall compliance** — the percentage of requested receipts that have been read, with a chart of read versus pending.
 
-A receipt is requested once per document for every active user in the document's recipient groups (`flying crew only` documents count pilots only) and for every person named on it, and counts as read when the user has opened the **current** version. Publishing a new version resets those receipts, exactly like the per-document registry. Deactivated and deleted accounts are excluded.
+A receipt is requested once per document for every active user in the document's recipient groups (`flying crew only` documents count pilots only) and for every person named on it — or, when the document requests the receipt from only some recipients, for those recipients only — and counts as read when the user has opened the **current** version. Publishing a new version resets those receipts, exactly like the per-document registry. Deactivated and deleted accounts are excluded.
 
 Documents that do not **require a read receipt** — manuals, posters, textbooks and other reference material — are left out of every figure on this page. Switch the setting off on those documents so the compliance figure only measures what must actually be read. See [Read receipts and read-by date](document-library.md#read-receipts-and-read-by-date).
 

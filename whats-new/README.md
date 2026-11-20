@@ -26,6 +26,10 @@ To be told about new features as they are published, add the [What's new RSS fee
 
 ## November 2026
 
+**[Request a read receipt from some recipients only](document-receipt-from.md)** · Documents\
+Keep a document open to everyone addressed and ask only some groups or people for the read receipt; the pending list, reminders and Stats count only them.\
+[Manual →](../documents/document-library.md#request-the-receipt-from-some-recipients-only)
+
 **[Certificate history and certificates on a date](certificate-history.md)** · Crew management\
 Renewing a certificate keeps its previous validity as a dated revision, with the files of each period; the pilot audit tool and the API show anyone's certificates as they stood on a past date.\
 [Manual →](../crew-management/document-and-certificates.md#renewals-and-certificate-history)

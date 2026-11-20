@@ -54,6 +54,7 @@ Retrieve documents and subfolders within a specific folder.
         "flying_only": false,
         "requires_receipt": true,
         "read_by": "2026-12-01",
+        "receipt_from_me": true,
         "expiration": "2026-01-15",
         "created": "2024-06-01",
         "modified": "2025-01-10"
@@ -110,7 +111,7 @@ Retrieve a single document with its file attachments.
 |-----------|------|-------------|
 | id | string | Document ID |
 
-A user above group 150 can open the document only when it is addressed to them: their user group (pilots only on a `flying_only` document) or them by name.
+A user above group 150 can open the document only when it is addressed to them: their user group (pilots only on a `flying_only` document) or them by name. Whether they also owe a read receipt is a separate question, answered by `Document.receipt_from_me` (see [Who owes a read receipt](#who-owes-a-read-receipt)).
 
 #### Response
 
@@ -124,12 +125,14 @@ A user above group 150 can open the document only when it is addressed to them: 
       "requires_receipt": true,
       "read_by": "2026-12-01",
       "read_by_passed": false,
+      "receipt_from_me": false,
       ...
     },
     "DocumentRecipient": [
       { "user_group_id": "190", "user_id": null, "UserGroup": { "id": "190", "name": "Pilot" }, "User": null },
       { "user_group_id": null, "user_id": "805", "UserGroup": null, "User": { "UserDetail": { "name": "Ada", "surname": "Lovelace" } } }
     ],
+    "DocumentReceiptFrom": { "user_group_id": [150, 170], "user_id": [] },
     "DocumentDownload": [ ... ],
     "Upload": [ ... ]
   },
@@ -148,8 +151,23 @@ A user above group 150 can open the document only when it is addressed to them: 
 | `Document.requires_receipt` | `false` = the document is distributed but requests no read receipt (reference material). |
 | `Document.read_by` | Company calendar day (`YYYY-MM-DD`) by which the latest version must be read, or `null`. |
 | `Document.read_by_passed` | `true` once `read_by` is before today on the company calendar: every pending receipt is overdue. |
+| `Document.receipt_from_me` | `true` when the caller owes a read receipt for this document: they are a recipient, they are in the receipt pool, and the document requests a receipt. Also returned per document by `GET /documents.json`. |
 | `DocumentRecipient[]` | One row per recipient: a user group (`user_group_id`) **or** a named person (`user_id`). Above group 150 only the caller's own rows are returned. |
-| `remainingusers` | Managers (group ≤ 150) only: who has not opened the latest version. Same audience as [Document Statistics](#document-statistics). Empty when `requires_receipt` is `false`. `User.reminded_at` is the unix time of the last reminder about this document, or `null`. |
+| `DocumentReceiptFrom` | Managers (group ≤ 150) only: who the read receipt is requested from, as `user_group_id` and `user_id` lists. Both empty = every recipient. See [Who owes a read receipt](#who-owes-a-read-receipt). |
+| `remainingusers` | Managers (group ≤ 150) only: who in the receipt pool has not opened the latest version. Same pool as [Document Statistics](#document-statistics). Empty when `requires_receipt` is `false`. `User.reminded_at` is the unix time of the last reminder about this document, or `null`. |
+
+#### Who owes a read receipt
+
+Two lists on a document answer two different questions:
+
+* **Recipients** (`DocumentRecipient`) decide who may **open** the document.
+* **Receipt from** (`DocumentReceiptFrom`) decides who **owes a read receipt** for it, as a subset of the recipients. It holds the same two kinds of row: user groups and named people.
+
+A user owes a receipt when the document has `requires_receipt` = `true`, the user is a recipient, and either `DocumentReceiptFrom` is empty (every recipient owes one) or the user belongs to one of its groups or is named in it. A row that does not match any recipient brings nobody in: a user outside the recipients can never owe a receipt. Membership of a receipt group ignores `flying_only`, which has already narrowed the recipients.
+
+This one pool drives `remainingusers`, [Remind Pending Readers](#remind-pending-readers), the 1st/16th reminder, [Document Statistics](#document-statistics), [User Document Statistics](#user-document-statistics) and `receipt_from_me`. The new-version notification still goes to every recipient; only the people in the pool are told the read-by date.
+
+Example: a procedure every student pilot must be able to open, acknowledged by the instructors and post holders only. Recipients: groups 150, 170 and 200. Receipt from: groups 150 and 170.
 
 ---
 
@@ -171,12 +189,14 @@ These fields are accepted by `POST /documents/add.json` (multipart) and `POST /d
 | `data[Document][read_by]` | `YYYY-MM-DD` | Read-by date; empty clears it. Anything that is not a real calendar date is stored as no date. |
 | `data[DocumentRecipient][user_group_id][]` | int | Recipient user groups. |
 | `data[DocumentRecipient][user_id][]` | int | Named recipients. Only users of your company are kept; others are ignored. |
+| `data[DocumentReceiptFrom][user_group_id][]` | int | Request the read receipt only from the recipients in these groups. |
+| `data[DocumentReceiptFrom][user_id][]` | int | Request the read receipt only from these recipients. Only users of your company are kept. |
 
-At least one group or one named person is expected. On edit, each list replaces the stored rows **only when it is sent**: posting groups without `user_id` keeps the named people, and the other way round. A field of `Document` that is not sent keeps its stored value.
+At least one group or one named person is expected as recipient. Both `DocumentReceiptFrom` lists empty (or never sent) = the receipt is requested from every recipient, which is how every document published before this setting behaves. On edit, each of the four lists replaces its stored rows **only when it is sent**: posting recipient groups without `user_id` keeps the named people, posting the recipients without `DocumentReceiptFrom` keeps who the receipt is requested from, and so on. To go back to every recipient, send both `DocumentReceiptFrom` lists empty (`data[DocumentReceiptFrom][user_group_id]=` and `data[DocumentReceiptFrom][user_id]=`, or `[]` in a JSON body). A field of `Document` that is not sent keeps its stored value.
 
 `POST /documents/upload.json` (new version) also accepts `data[Upload][read_by]`, which replaces the document's read-by date when present.
 
-`GET /documents/add.json` and `GET /documents/edit/{id}.json` return, besides `usergroups` and `folders`, a `users` list of the people that can be named (`id`, `name`, `surname`, `user_group_id`, `group_name`, `pilot`). The edit response gives the stored named people as `document.RecipientUser` (user ids); `document.DocumentRecipient` stays the list of group ids.
+`GET /documents/add.json` and `GET /documents/edit/{id}.json` return, besides `usergroups` and `folders`, a `users` list of the people that can be named (`id`, `name`, `surname`, `user_group_id`, `group_name`, `pilot`). The edit response gives the stored named people as `document.RecipientUser` (user ids); `document.DocumentRecipient` stays the list of group ids; `document.DocumentReceiptFrom` gives who the receipt is requested from in the shape it is posted (`{"user_group_id": [150, 170], "user_id": []}`).
 
 ---
 
@@ -192,7 +212,7 @@ Send a reminder message (in-app, push and e-mail) to the users who have not open
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `user_id` | int[] | No | Remind only these users (ignored unless they are pending). Omit to remind everybody pending. |
+| `user_id` | int[] | No | Remind only these users (ignored unless they are pending). Omit to remind everybody pending. Pending = in the [receipt pool](#who-owes-a-read-receipt) and not yet read the latest version. |
 
 Users reminded about the same document in the **last 12 hours** are skipped. A document with `requires_receipt` = `false`, or without a file, has nobody to remind (`result: false`).
 
@@ -214,7 +234,7 @@ Company-wide read-receipt compliance across all documents.
 
 > **Access:** staff only — users with **`user_group_id` ≤ 145 (Flight Dispatcher and above)**. Requests from any higher group return `403 Forbidden`.
 
-A read receipt is **requested** once per document for each active user in one of the document's recipient groups (`flying_only` documents only count pilots) and for each active user named on it. Documents with `requires_receipt` = `false` request none and are left out. A receipt is counted as **read** when that user has opened the document's **latest active upload**. Publishing a new version therefore resets everyone to unread. Deactivated and deleted users are excluded from the requested pool. An unread receipt is **overdue** once the document's `read_by` date has passed on the company calendar.
+A read receipt is **requested** once per document for each active user in one of the document's recipient groups (`flying_only` documents only count pilots) and for each active user named on it, narrowed to the document's `DocumentReceiptFrom` when it has one (see [Who owes a read receipt](#who-owes-a-read-receipt)). Documents with `requires_receipt` = `false` request none and are left out. A receipt is counted as **read** when that user has opened the document's **latest active upload**. Publishing a new version therefore resets everyone to unread. Deactivated and deleted users are excluded from the requested pool. An unread receipt is **overdue** once the document's `read_by` date has passed on the company calendar.
 
 #### Response
 
@@ -246,7 +266,7 @@ A read receipt is **requested** once per document for each active user in one of
 
 <mark style="color:blue;">`GET`</mark> `/documents/user_stats/{userId}.json`
 
-Per-user drilldown: every document that requests a read receipt of that user (their group is a recipient, respecting `flying_only`, or they are named on it) and whether they have read the latest active version.
+Per-user drilldown: every document that requests a read receipt of that user (their group is a recipient, respecting `flying_only`, or they are named on it, and they are in the document's [receipt pool](#who-owes-a-read-receipt)) and whether they have read the latest active version.
 
 > **Access:** staff only — users with **`user_group_id` ≤ 145 (Flight Dispatcher and above)**. Returns `403 Forbidden` above 145, and `404` if the user is not in the caller's company.
 
