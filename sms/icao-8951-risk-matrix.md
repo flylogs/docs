@@ -58,9 +58,11 @@ The matrix follows the ICAO Doc 9859 risk matrix: **severity** (A Catastrophic �
 * 🟨 Yellow/Orange: Medium risk
 * 🟥 Red: High risk
 
-Your report's assessed risk is then marked on top of that reference grid — a red badge for the **initial risk** cell, and a green badge for the **mitigated risk** cell once mitigation has been recorded. When both are set, a before → after summary is shown underneath the grid.
+Your report's assessed risk is then marked on top of that reference grid: a **B** badge on the **initial risk** cell, and an **A** badge on the **mitigated risk** cell once mitigation has been recorded. The badges themselves are neutral; the cell under each one carries the colour of its band.
 
-![](../.gitbook/assets/safety-report-risk-matrix.png)
+Once an initial risk is recorded, the rest of the reference grid fades to a pale tint, so only the assessed cells stand out at full colour. Before an assessment exists, the full grid is shown. When both risks are set, a before → after summary underneath the grid shows each cell in its own band colour.
+
+<figure><img src="../.gitbook/assets/safety-report-risk-matrix.png" alt="Risk matrix on a closed report: 3C initial risk and 2E mitigated risk at full colour, the rest of the grid pale"><figcaption><p>Initial risk 3C (medium) and mitigated risk 2E (low) at full colour; every other cell is muted.</p></figcaption></figure>
 
 #### Who can see it
 

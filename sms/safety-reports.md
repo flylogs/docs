@@ -30,7 +30,9 @@ Each report can be associated to a flight. If it is, the flight information will
 
 All other report information is displayed below and only the safety manager or other, higher level managers can edit or delete the stored information.
 
-![](../.gitbook/assets/safety-report-flight-view.png)
+The colours on a report only ever describe the report itself. The header is blue, and its badges show the status (Open, Reviewed, Closed, Published) and the severity (Information, Incident, Accident, Hazard). The header turns red only for an **accident that is still open or under review**. Section icons are neutral; the **Damages** icon is the one exception and takes its colour from the recorded values: amber for light injuries, red for important damage, an aircraft destroyed, serious injuries or loss of life, and neutral for none or minimal damage. Red elsewhere on the page is kept for the high-risk band of the [risk matrix](icao-8951-risk-matrix.md).
+
+<figure><img src="../.gitbook/assets/safety-report-flight-view.png" alt="A closed incident report linked to a flight, with a blue header and grey and yellow status and severity badges"><figcaption><p>A closed incident linked to a flight: neutral header, with the status and severity carried by the badges.</p></figcaption></figure>
 
 Additionally, the person writing the report or any manager can comment on the report and upload files as needed that will be attached to the existing report.
 
