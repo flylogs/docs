@@ -131,7 +131,7 @@ Restricted aircraft show as green tags under the type in the flight types list, 
 
 #### Editing it from the aircraft instead
 
-The same links can be edited from the other end, on the aircraft's own page — see [Which flight types an aircraft can fly](../aircraft/create-your-aircraft.md#which-flight-types-an-aircraft-can-fly). It is one relationship seen from two sides, so a change made there shows up here and vice versa.
+Each aircraft's edit page shows the same restriction from the aircraft's side: every flight type, and whether that aircraft may fly it — including the flight types that are restricted to *other* aircraft. There you can add or remove the aircraft on a flight type that is already restricted; opening a flight type to every aircraft, or restricting an open one, is done here. See [Which flight types an aircraft can fly](../aircraft/create-your-aircraft.md#which-flight-types-an-aircraft-can-fly).
 
 #### Where the restriction is applied
 

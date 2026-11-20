@@ -96,24 +96,27 @@ A live counter under the dropdown shows how many pilots would have self-schedule
 
 ### Which flight types an aircraft can fly
 
-Under **Scheduling** on the aircraft edit page there is a **Flight types** card. It is the aircraft's side of the aircraft restriction that lives on the [flight type](../flights/flight-types.md#aircraft) — the same setting, edited from whichever end is more convenient. Restricting one simulator type to two simulators is quicker from the flight type; setting up a newly delivered twin for the three types it may fly is quicker from here.
+Under **Scheduling** on the aircraft edit page there is a **Flight types this aircraft can fly** card. It shows the [aircraft restriction set on each flight type](../flights/flight-types.md#aircraft) from the aircraft's point of view: every flight type in the company, and whether this aircraft may be used for it. It is the same answer the flight form and the Schedule Manager give, so when an aircraft cannot be picked for a flight type, this is the place to look.
 
-<figure><img src="../.gitbook/assets/aircraft-flight-types.png" alt="The Flight types card on the aircraft edit page, with the limit switch on and the ME flight type ticked"><figcaption><p>FL-YME, a Seneca, attributed to the <em>ME</em> flight type. Every flight type in the company is listed; tick the ones this aircraft should be attributed to.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/aircraft-flight-types.png" alt="The Flight types this aircraft can fly card on FL-172: 5 of 6 flight types, a yellow note that it cannot be used for ME, and the list of flight types with their restriction"><figcaption><p>FL-172 can fly five of the six flight types. <em>ME</em> is restricted to the twins, so FL-172 cannot be used for it.</p></figcaption></figure>
 
-The important part is what an **empty** selection means, because it is not what it first looks like:
+Each flight type shows one of these lines under its name:
 
-| Nothing ticked | This aircraft flies **every flight type that has no aircraft attributed to it at all** |
-|---|---|
-| **Something ticked** | Those flight types become restricted to this aircraft (plus any other aircraft already attributed to them) |
+| Line under the flight type | What it means | Can you change it here? |
+|---|---|---|
+| **Open to any aircraft** | The flight type has no aircraft selected, so every aircraft can fly it. | No — to restrict it, edit the flight type. |
+| **Restricted to this aircraft and …** | The flight type is limited to a list of aircraft, and this one is on it. | Yes — untick to take this aircraft off the list. |
+| **Not allowed — restricted to …** (amber) | The flight type is limited to other aircraft. This aircraft cannot be used for it. | Yes — tick to add this aircraft to the list. |
+| **Restricted to this aircraft only** | This is the only aircraft on the flight type's list. | No — edit the flight type. |
 
-So an aircraft with nothing ticked is **not grounded** — that is the normal state for most of a fleet, and it is why the card starts empty on every existing aircraft. The reading of an empty list belongs to the flight type, not to the aircraft: a flight type nobody has restricted is open to everything.
+When one or more flight types are not allowed, a yellow note at the top of the card names them, so you don't need to scroll the list to find the one that is blocking a flight.
 
-Two things follow from that, and the card says so in the note under it:
+Some boxes are locked on purpose. Ticking or unticking them here would change the flight type for the **whole fleet**:
 
-* **Ticking a flight type here restricts that flight type.** If *Night* was open to the whole fleet and you tick it on one aircraft, *Night* is now flyable on that aircraft only. That is a company-wide change made from an aircraft page — deliberate, but worth knowing before you tick.
-* **Unticking the last aircraft reopens the flight type.** Remove the only aircraft attributed to a type and the type goes back to "any aircraft", not "no aircraft".
+* Restricting an open flight type from one aircraft would limit it to that aircraft only and take it away from every other aircraft.
+* Removing the last aircraft from a flight type would leave its list empty, and an empty list means **any aircraft**, not none.
 
-If you want an aircraft simply excluded from one flight type, do it from the [flight type](../flights/flight-types.md#aircraft) instead: tick the aircraft that *may* fly it, and everything else is excluded by construction.
+To make those changes, open the [flight type](../flights/flight-types.md#aircraft) and choose the aircraft that may fly it. Everything else is excluded.
 
 Your aircraft can also be configured for rental individually. You can specify different rental rates for different services. This rates at the same time, can also be customized for each pilot later on.
 
