@@ -414,6 +414,8 @@ Response: `{ "result": true, "assessment": { … }, "prompt": "create_finding" }
   "id": "e91a…",
   "audit_id": "c3b2…",
   "assessment_id": null,
+  "source": "audit",
+  "source_ref": null,
   "number": "AU-2026-004-1",
   "classification_id": 2,
   "requirement": "REQ-FTL-04 (rev. 2025-03)",
@@ -448,7 +450,10 @@ Managers, auditors and the accountable manager see every finding of the company.
 | `mine` | `1`: **My findings**, for any caller: only the findings the caller owns, **of any year**, closed ones left out unless `include_closed=1`. `year` is ignored. |
 | `include_closed` | `1` with `mine=1`. |
 | `overdue` | `1`: every finding raised up to the end of `year` that is **overdue** (instead of the year's findings). With `open=1`: the overdue findings of any year. |
-| `kind` | `internal` or `authority` (the audit's kind). |
+| `kind` | `internal` or `authority` (the audit's kind). A finding without an audit is `internal`. |
+| `source` | `audit`, `safety_report`, `management_review`, `authority` or `other`. |
+| `audit` | `none`: only the findings without an audit. |
+| `report` | UUID of a safety report: the findings linked to it, **of any year** (`year` is ignored unless `open` / `mine` / `overdue` is set). |
 | `classification_id`, `status`, `root_cause_category` | Exact match. |
 | `area_id` | The area and its sub-areas. |
 | `owner` | Owner user id. |
@@ -456,7 +461,7 @@ Managers, auditors and the accountable manager see every finding of the company.
 
 **Overdue** is the same rule everywhere (list, dashboard, reminders): the finding is `open`, `cap_submitted`, `cap_accepted` or `in_progress` and is past `target_date`, or is `open` and past `cap_due_date`. Closed findings and findings in `pending_verification` or `pending_closure` are never overdue.
 
-Returns `{ "year": 2026, "mine": false, "findings": [ … ] }`. Each row has the finding's number, title, status, dates, `classification_name`, `classification_rank`, `is_non_compliance`, `area_name`, `owner_name`, `audit_id`, `audit_idn`, `audit_title`, `audit_kind`, `root_cause_category`, `repeat_of_finding_id` and `overdue`. `mine` is `true` when the caller is not a viewer, so the list was narrowed to their own findings.
+Returns `{ "year": 2026, "mine": false, "findings": [ … ] }`. Each row has the finding's number, title, status, dates, `classification_name`, `classification_rank`, `is_non_compliance`, `area_name`, `owner_name`, `audit_id`, `audit_idn`, `audit_title`, `audit_kind`, `source`, `source_ref`, `root_cause_category`, `repeat_of_finding_id` and `overdue`. `mine` is `true` when the caller is not a viewer, so the list was narrowed to their own findings.
 
 ### View Finding
 
@@ -466,13 +471,13 @@ Access: managers, auditors, the accountable manager, or the finding's owner (`40
 
 | Key | Description |
 |-----|-------------|
-| `audit` | The audit header: `id`, `idn`, `kind`, `authority_name`, `title` and dates; viewers also get `status` and `lead_auditor_name`. |
+| `audit` | The audit header: `id`, `idn`, `kind`, `authority_name`, `title` and dates; viewers also get `status` and `lead_auditor_name`. `null` for a finding without an audit. |
 | `classification`, `area` | The classification (with its default days) and the area. |
 | `decisions` | The [authority decisions](#authority-decisions). |
 | `hazards`, `reports`, `repeat_of`, `repeat_candidates` | Viewers only (empty for an owner): linked hazards (`ineffective_control`, `control_note`, `next_review_date`), linked safety reports, the finding this one repeats, and possible repeats (same area and requirement in the last 24 months). |
 | `allowed_transitions` | The statuses a manager may move to by hand (empty for others). |
 | `close_blocker` | Why the finding cannot be closed yet, `null` when it can: `needs_effective_action`, `actions_open` or `note_required`. |
-| `can` | `{ "manage": bool, "work": bool }` for the caller. |
+| `can` | `{ "view": bool, "manage": bool, "work": bool }` for the caller. `view`: the full picture (managers, auditors, the accountable manager); `false` for an owner's reduced view. |
 | `can_conduct_audit`, `can_edit_raised` | Auditors (250) only, `false` for everyone else: they conduct the finding's audit (may add evidence) / they raised this open finding and may still correct it. |
 | `changes` | Append-only history. An owner sees only entries about what they can see. |
 | `owner_name`, `raised_by_user_name` | Names. |
@@ -485,19 +490,24 @@ Corrective actions of a finding are listed with [Safety Actions](safety-assuranc
 
 Access: managers, or the conducting auditor of the audit (limited fields, see [Access Control](#access-control)). The audit must not be cancelled. Created `open`.
 
+A finding **without an audit** (managers only; an auditor always needs an audit they conduct) is internal: no authority statuses, decisions or closure. It is numbered `FN-YYYY-NNN` (the year of `raised_date`), company-wide.
+
 | Field | Required | Description |
 |-------|----------|-------------|
-| `audit_id` | **yes** | UUID of the audit. |
+| `audit_id` | no | UUID of the audit. Leave it out (or `null`) for a finding without an audit. |
+| `source` | without an audit | `audit`, `safety_report`, `management_review`, `authority` or `other`. Default `audit` on an audit; required without one, where `audit` is `400`. |
+| `source_ref` | no | Up to 255 characters: the report number, letter reference, review… |
+| `safety_report_id` | no | Managers: a submitted safety report of the company (not a draft or a follow-up statement) the finding is raised from. It is linked to the finding in the same request; `source` defaults to `safety_report` and `source_ref` to the report number. |
 | `title` | **yes** | Up to 255 characters. |
 | `classification_id` | **yes** | An **active** classification of the company. |
-| `number` | no | Up to 32 characters, unique within the audit. Default `<audit idn>-N`. |
+| `number` | no | Up to 32 characters, unique within the audit (or, without an audit, within the company). Default `<audit idn>-N`, or `FN-YYYY-NNN` without an audit. |
 | `requirement`, `raised_by_name` | no | Up to 500 / 255 characters. |
 | `details`, `root_cause` | no | Free text. |
 | `raised_date` | no | Default today. |
 | `cap_due_date`, `target_date` | no | Default from the classification's `default_cap_days` / `default_implementation_days` counted from `raised_date`; always overridable. |
 | `completed_date`, `verified_date` | no | Normally set automatically. |
 | `area_id` | no | A live area of the company. |
-| `assessment_id` | no | An assessment of the same audit. |
+| `assessment_id` | no | An assessment of the same audit. `400` without an audit. |
 | `raised_by_user_id` | no | A user of the company. |
 | `owner_user_id` | no | An active user of the company who is not an auditor. The owner is notified in-app and by email. |
 | `root_cause_category` | no | |
@@ -509,7 +519,9 @@ Response: `{ "result": true, "finding": { … } }`.
 
 <mark style="color:green;">`POST`</mark> `/audit_findings/edit/{id}.json`
 
-Managers can change any field above except `audit_id`; status, closure, plan acceptance and authority closure go through [Status](#change-finding-status) and [Decisions](#authority-decisions). A change of owner notifies the new owner. Changing the classification of an observation to a non-compliance class is `400` ("Use convert").
+Managers can change any field above; status, closure, plan acceptance and authority closure go through [Status](#change-finding-status) and [Decisions](#authority-decisions). A change of owner notifies the new owner. Changing the classification of an observation to a non-compliance class is `400` ("Use convert").
+
+**Moving a finding** (managers): post `audit_id` with another audit, with an audit for a finding that had none, or `null` / `""` to detach it. Posting the current `audit_id` is ignored for every caller; anyone else changing it is `403`. On a move the finding takes the next number of its new series (unless `number` is posted), `assessment_id` is cleared (unless an assessment of the new audit is posted), the change is logged as `move`, and the approval of both audits is withdrawn. A move is `400` onto a cancelled audit, off an authority audit to a non-authority one while the finding is `cap_submitted`, `cap_accepted`, `pending_closure` or has an authority closure, off every audit while the finding has decisions, and off every audit while `source` stays `audit`.
 
 The **finding owner** may post only `root_cause` and `root_cause_category` (any other key is `403`), and not once the finding is closed (`400`). The **auditor who created the finding** may change its auditor fields while it is `open` and they still conduct the audit (`403` otherwise). Response: `{ "result": true, "finding": { … } }`.
 
@@ -575,7 +587,7 @@ A finding can carry authority decisions: proposals sent to the authority and its
 
 <mark style="color:green;">`POST`</mark> `/audit_findings/decision_save/{findingId}.json` (create) · `/audit_findings/decision_save/{findingId}/{decisionId}.json` (edit)
 
-Access: managers; the finding's owner may create and edit **pending proposals** only (`type`, `proposal`, `mitigations`, `submitted_date`; any other key is `403`, and a closed finding is `400`). Done under the finding's row lock.
+Access: managers; the finding's owner may create and edit **pending proposals** only (`type`, `proposal`, `mitigations`, `submitted_date`; any other key is `403`, and a closed finding is `400`). A finding without an audit takes no decisions: `400` with `error: "no_audit"`. Done under the finding's row lock.
 
 | Field | Description |
 |-------|-------------|

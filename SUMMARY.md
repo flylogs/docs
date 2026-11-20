@@ -5,6 +5,7 @@
 ## What's new
 
 * [Latest updates](whats-new/README.md)
+  * [Findings without an audit](whats-new/findings-without-an-audit.md)
   * [Recurring transactions](whats-new/recurring-transactions.md)
   * [Read receipt from some recipients](whats-new/document-receipt-from.md)
   * [Certificate history](whats-new/certificate-history.md)

@@ -153,6 +153,14 @@ One place to change a report's evidence means one place those changes are record
 
 ***
 
+### Compliance findings
+
+On the **Premium** and **Unlimited** plans, a submitted report shows a **Compliance findings** box to managers (user group 110 or lower) and auditors: the [audit findings](audit-findings.md) linked to the report, with their number, classification and status. Managers raise a new one with **Raise finding**, here or in the **Manage** menu: the finding is recorded with the report as its source and linked to it. See [Raising a finding from a safety report](audit-findings.md#raising-a-finding-from-a-safety-report).
+
+![Compliance findings on a safety report](../.gitbook/assets/safety-report-compliance-findings.png)
+
+***
+
 ### Change history
 
 Every report keeps a record of what was changed on it, by whom, and when. Open a

@@ -1,7 +1,8 @@
 ---
 description: >-
-  Track every audit finding to closure: dates, root cause, corrective actions,
-  verification, authority decisions and links to your hazard log.
+  Track every compliance finding to closure, from an audit or raised on its own:
+  dates, root cause, corrective actions, verification, authority decisions and
+  links to your hazard log.
 audience: [managers, auditors]
 plan: premium
 ---
@@ -10,7 +11,7 @@ plan: premium
 
 {% embed url="https://youtu.be/a1L2WyZRk1Q" %}
 
-An **audit finding** records something an [audit](audits.md) found, from an internal audit or from your competent authority, and follows it until it is closed. Every finding has an owner, a full set of dates, a root cause, [corrective actions](safety-actions.md) that must be verified as effective, and, where your authority is involved, the authority's decisions. Findings feed the causes of non-compliance back into your [hazard log](hazard-log.md). The tools **support** your compliance monitoring; they do not make the operator compliant by themselves.
+An **audit finding** records a compliance finding and follows it until it is closed. Most findings come from an [audit](audits.md), internal or by your competent authority, but a finding can also be raised **without an audit**: from a safety report or an occurrence investigation, a management review, a letter from the authority, or anything else (see [Findings without an audit](#findings-without-an-audit)). All of them sit in one register, with the same classifications, dates and closing rules. Every finding has an owner, a full set of dates, a root cause, [corrective actions](safety-actions.md) that must be verified as effective, and, where your authority is involved, the authority's decisions. Findings feed the causes of non-compliance back into your [hazard log](hazard-log.md). The tools **support** your compliance monitoring; they do not make the operator compliant by themselves.
 
 ![Finding page](../.gitbook/assets/audits-finding-view.png)
 
@@ -22,7 +23,7 @@ An **audit finding** records something an [audit](audits.md) found, from an inte
 | --- | --- |
 | Compliance & Safety Manager and above (user group 110 or lower) | Everything: record findings (also on behalf of external auditors), set classification and dates, assign the owner, move the status, close, record authority decisions, link risks, create corrective actions and verify them |
 | **Accountable manager** | **Read-only** on every finding. Can add resulting actions only on a [management review](management-review.md) |
-| **Auditor** (user group 250) | **Read-only** on every finding and file. Never owns findings or actions. On an audit they lead or are on the team of, while it is not completed or cancelled, they can raise findings, correct the ones they raised while **Open**, and add evidence (see [When the auditor records the audit](audits.md#when-the-auditor-records-the-audit)). On the internal findings they raised, they verify the corrective actions and close the finding (see [Independent verification](#independent-verification-by-the-auditor)) |
+| **Auditor** (user group 250) | **Read-only** on every finding and file. Never owns findings or actions. On an audit they lead or are on the team of, while it is not completed or cancelled, they can raise findings, correct the ones they raised while **Open**, and add evidence (see [When the auditor records the audit](audits.md#when-the-auditor-records-the-audit)). On the internal findings they raised, they verify the corrective actions and close the finding (see [Independent verification](#independent-verification-by-the-auditor)). Their rights hang off an audit, so they cannot raise, correct or verify a [finding without an audit](#findings-without-an-audit) |
 | **Finding owner** (any group) | Their own findings only: see the finding and its audit's header, write the **root cause** and its category, **propose corrective actions** and **authority decision proposals**, attach and remove **their own** evidence. Cannot close, change the classification, the dates or the owner |
 | **Action owner** (any group) | Only their own corrective actions: mark them done |
 | Everyone else | No access |
@@ -33,21 +34,63 @@ An **audit finding** records something an [audit](audits.md) found, from an inte
 
 ## Recording a finding
 
-A manager records a finding from the audit page (**Add finding**) or from **Safety > Audits > Findings > New finding**, or from the **Create finding** prompt of a *non-compliance* assessment.
+A manager records a finding from the audit page (**Add finding**), from **Safety > Audits > Findings > New finding**, from the **Create finding** prompt of a *non-compliance* assessment, or from a safety report with **Raise finding** (see [Raising a finding from a safety report](#raising-a-finding-from-a-safety-report)).
 
 | Field | Meaning |
 | --- | --- |
-| Audit | The audit the finding belongs to. A cancelled audit cannot get findings |
-| Number | Assigned automatically (the audit number plus a sequence, for example `AU-2026-004-2`). You can change it; it must be unique within the audit |
+| Audit | The audit the finding belongs to, or **No audit** for a finding raised on its own. A cancelled audit cannot get findings |
+| Source | Where the finding came from: **Audit**, **Safety report**, **Management review**, **Authority correspondence** or **Other**. Required when there is no audit; on an audit it defaults to *Audit*. *Audit* is only possible on an audit |
+| Source reference | Optional: the report number, the authority's letter reference, the review, your own reference |
+| Number | Assigned automatically: on an audit, the audit number plus a sequence (for example `AU-2026-004-2`); without an audit, the company series `FN-YYYY-NNN` of the year it was raised (for example `FN-2026-001`). You can change it, for example to keep your own reference. It must be unique within the audit, or within the company for a finding without an audit |
 | Classification | One of your [classifications](audits.md#audit-settings) |
 | Requirement | The requirement concerned, with its revision |
 | Title and details | What was found |
 | Area | The audit area (optional, but needed for repeat detection and for the area's planning inputs) |
 | Raised by, raised on | Defaults to today. For an external auditor, type their name |
 | Owner | The person who will deal with it. They are notified |
-| Linked assessment | The assessment it came from (optional) |
+| Linked assessment | The assessment it came from (optional, findings on an audit only) |
 
 The **action plan due** and **target** dates are filled from the classification's default number of days, counted from the raised date. Leave a date empty to use the default, or enter your own: defaults are always overridable on each finding.
+
+### Findings without an audit
+
+Your management system may treat a finding the same way whatever found it. A finding raised from an occurrence investigation, a management review or the authority's correspondence is recorded with **No audit** and its **source**, and then works like any other finding:
+
+* it has a **classification**, and its action plan due and target dates come from that classification;
+* it is numbered in the company series **FN-YYYY-NNN**, so every finding has a number in one register;
+* it counts in its **area's open findings** and so in the area's suggested audit frequency, appears in the findings list, the [management report](management-review.md), the reminders, the [Safety Assurance dashboard](safety-assurance.md) and **All safety actions**;
+* it is **internal**: its statuses are Open, In progress, Awaiting verification and Closed. Authority statuses, [authority decisions](#authority-decisions) and the authority closure belong to findings of an authority audit;
+* there is no audit report to approve, so changing it never withdraws an approval.
+
+![A finding without an audit, raised from a safety report](../.gitbook/assets/audit-findings-without-audit-view.png)
+
+The finding page shows **Audit: No audit (raised on its own)** and the **Source** with its reference. If the finding later turns out to belong to an audit, [move it](#moving-a-finding-to-another-audit).
+
+### Raising a finding from a safety report
+
+On a submitted safety report, managers open **Manage > Raise finding**, or use **Raise finding** in the report's **Compliance findings** box.
+
+![Raise finding on a safety report](../.gitbook/assets/safety-report-raise-finding-menu.png)
+
+The new-finding form opens with the source set to **Safety report**, the report number as the source reference and the report's title as the finding title. Choose the classification, area and owner, and save. The report is **linked** to the finding (its risk assessment comes with it, as with [Link safety report](#links-to-risk-management)), and the finding is listed in the report's **Compliance findings** box.
+
+![The new-finding form, raised from a safety report](../.gitbook/assets/audit-findings-raise-from-report-form.png)
+
+![Compliance findings on a safety report](../.gitbook/assets/safety-report-compliance-findings.png)
+
+A report still in draft, or a follow-up statement, cannot raise a finding.
+
+### Moving a finding to another audit
+
+A finding filed against the wrong audit can be moved. Managers open **Edit** on the finding and choose another audit, or **No audit**, or an audit for a finding that had none. On save:
+
+* the finding takes the **next number** of its new series (the audit's, or `FN-YYYY-NNN`), unless you type a number yourself. The previous number stays in the finding's history;
+* its **linked assessment** is cleared, as it belonged to the old audit;
+* the approval of **both** audit reports is withdrawn, as one loses the finding and the other gains it.
+
+![Moving a finding to an audit](../.gitbook/assets/audit-findings-move-audit.png)
+
+A finding at an authority stage (action plan submitted or accepted, awaiting authority closure, or closed by the authority) can only move to another authority audit. A finding with authority decisions stays on an audit, and a finding whose source is *Audit* needs a different source before it can leave its audit.
 
 ### Repeat findings
 
@@ -216,12 +259,16 @@ Issued versions are immutable and listed in the finding's **Issued documents** p
 
 **Safety > Audits > Findings** opens on **Open, all years**: every finding that is not closed, whatever year it was raised in, so nothing still open drops out of view when the year changes. Pick a year instead to see all the findings raised in that year (by raised date), closed ones included. Filter by:
 
-* **Open, all years** or a **year**, **audit type** (internal or authority), **classification**, **status**, **area** (an area includes its sub-areas) and **owner**;
+* **Open, all years** or a **year**, **audit type** (internal or authority; findings without an audit count as internal), **source** (or **No audit** for only the findings without one), **classification**, **status**, **area** (an area includes its sub-areas) and **owner**;
 * **Root cause category**;
 * **Repeat findings only** or **Not repeat**;
 * **Overdue**: every unfinished finding past its dates, of any year with **Open, all years**, or raised up to the end of the selected year.
 
 ![Audit findings list](../.gitbook/assets/audits-findings-list.png)
+
+The **Audit / source** column shows the audit number, or, for a finding without an audit, its source and reference.
+
+![Findings without an audit in the list](../.gitbook/assets/audit-findings-without-audit-list.png)
 
 ### What counts as overdue
 
@@ -232,7 +279,7 @@ A finding is **overdue** when it is still being worked on (open, action plan sub
 Anyone can be made the owner of a finding, in any user group. The owner receives a message when a finding is assigned and sees only **their own** findings:
 
 * the finding with all its dates, classification, status, root cause, corrective actions and decisions;
-* the **header** of its audit (kind, authority name, title and dates), **never** the audit's results, attached files, assessments or its other findings;
+* the **header** of its audit if it has one (kind, authority name, title and dates), **never** the audit's results, attached files, assessments or its other findings, and the finding's source;
 * a history limited to entries about what they can see, with no risk-link entries and no repeat link.
 
 They can write the root cause and category, propose corrective actions and authority decision proposals, and attach evidence. Everything else is read-only for them.

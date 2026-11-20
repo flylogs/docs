@@ -26,6 +26,10 @@ To be told about new features as they are published, add the [What's new RSS fee
 
 ## November 2026
 
+**[Findings without an audit](findings-without-an-audit.md)** · Safety\
+Record a compliance finding without an audit, from a safety report, a management review or the authority's correspondence, in one register numbered FN-YYYY-NNN. Raise a finding from a safety report, and move a finding to another audit.\
+[Manual →](../sms/audit-findings.md#findings-without-an-audit)
+
 **[Recurring transactions](recurring-transactions.md)** · Billing\
 Set up charges such as membership or hangar fees once and Flylogs posts them on every due date, reminds the pilot beforehand and sends the receipt. Receipts for automatic flight bills and package purchases are now always emailed.\
 [Manual →](../billing/billing-setup.md#recurring-transactions)
