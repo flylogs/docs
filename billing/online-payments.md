@@ -59,6 +59,8 @@ Once the keys are saved, every pilot whose own billing is enabled sees a **Pay o
 
 <figure><img src="../.gitbook/assets/myBillsPayOnline.png" alt="My Billing page with a negative account balance and a Pay online button under it"><figcaption><p>My Billing with the Pay online button.</p></figcaption></figure>
 
+Pilots can also reach the same window from a message: the reminder and the receipt of a [recurring charge](billing-setup.md#recurring-transactions) include a **Pay now** link that opens the payment window straight away, with what they owe already filled in. It only appears when your company takes card payments.
+
 1. The pilot clicks **Pay online**. The amount starts as what they owe. They can change it, for example to pay part of it or to add credit for future flights.
 
 <figure><img src="../.gitbook/assets/payOnlineAmount.png" alt="Pay by card window with the amount to pay filled in and a Pay button"><figcaption><p>Choosing the amount.</p></figcaption></figure>
@@ -71,7 +73,7 @@ Once the keys are saved, every pilot whose own billing is enabled sees a **Pay o
 
 <figure><img src="../.gitbook/assets/payOnlineReceived.png" alt="Confirmation banner Payment received above the updated account balance"><figcaption><p>Payment received and added to the balance.</p></figcaption></figure>
 
-The payment appears in the pilot's transactions as **Stripe payment**, with a bill number and receipt, like a payment you record yourself. It credits exactly the amount charged: no VAT is added on top. The pilot always gets the receipt by email as confirmation of the payment, whatever your **Notify by email new bills** setting. The Company Administrator and the Financial Manager get an inbox message for every payment received.
+The payment appears in the pilot's transactions as **Stripe payment**, with a bill number and receipt, like a payment you record yourself. It credits exactly the amount charged: no VAT is added on top. The pilot always gets the receipt by email as confirmation of the payment. The Company Administrator and the Financial Manager get an inbox message for every payment received.
 
 If a pilot pays and closes the page before coming back to Flylogs, the payment is still recorded: Flylogs checks your Stripe account every hour and adds any paid balance payment it has not recorded yet.
 

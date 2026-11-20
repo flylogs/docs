@@ -4,6 +4,8 @@
 
 Billing and wallet management. Requires a **non-free** company plan. Pilots need `billing: true` on their user record to appear in billing operations.
 
+> `CompanyBillingSetting.send_notification` is still returned in some responses but is no longer used: whether a receipt is emailed depends on the kind of bill (see `notify` and `receipt` below).
+
 ---
 
 ## List Bills (Pilot Wallet)
@@ -154,6 +156,8 @@ Create a manual wallet transaction for one or more pilots. If `id` is provided, 
 | assign_number | boolean | No | Give the bill a bill number (`n_id`). `false`/`0` stores it without number and removes an existing one. When omitted, the bill is numbered |
 | id | UUID | No | Existing bill ID to update |
 
+To post a charge on a schedule instead, see [Recurring charges](#manager-recurring-charges).
+
 #### Response
 
 ```json
@@ -202,7 +206,7 @@ Retrieve flight billing data (GET) or create/update a flight bill (POST). Flight
 | handling | number | No | Handling charges |
 | others | number | No | Other charges |
 | rate_id | UUID | No | Rate record to use |
-| notify | boolean | No | Email the receipt to the billed person. `false` saves the bill without emailing. When omitted, follows the company's `send_notification` setting |
+| notify | boolean | No | Email the receipt to the billed person. `false` saves the bill without emailing. Defaults to `true` when omitted |
 | use_packages | boolean | No | Deduct from pilot's package balance |
 | created | string | No | Bill date (defaults to onblocks_time) |
 
@@ -251,7 +255,7 @@ Delete a bill and recalculate the pilot's balance.
 
 <mark style="color:green;">`POST`</mark> `/bills/autobill.json`
 
-Automatically generate a bill for a flight using the aircraft's default rate. Any existing bill for the flight is replaced. Optionally override which pilot to bill. The receipt is emailed to the billed person only when the company's `send_notification` setting is on.
+Automatically generate a bill for a flight using the aircraft's default rate. Any existing bill for the flight is replaced. Optionally override which pilot to bill. The receipt is always emailed to the billed person.
 
 #### Request Body (POST)
 
@@ -515,6 +519,8 @@ Paginated list of all company bills. `type` is `transactions` (default, every no
 | pilot | Filter by pilot user ID |
 | excel | Append `excel:true` for XLS download (requires token) |
 
+Each `UserBill` includes `recurring_bill_id`: the ID of the recurring charge that posted it, or `null` for any other transaction. Charges posted by a schedule are ordinary manual transactions otherwise.
+
 ---
 
 ## Manager: Bill Stats
@@ -573,6 +579,107 @@ Aggregated stats over the **full** filtered set (not paginated). Same `type` and
 ```
 
 For `type=flights`, `totalSeconds` reflects flight billed time across the filtered set.
+
+---
+
+## Manager: Recurring Charges
+
+A recurring charge posts a manual transaction (a charge) on a schedule to a set of pilots and/or pilot groups. Restricted to `user_group_id ≤ 145` and to companies with billing enabled; otherwise `403`. The four endpoints below live under `/manager/bills/`.
+
+<mark style="color:blue;">`GET`</mark> `/manager/bills/recurring.json`
+
+List the company's recurring charges.
+
+```json
+{
+  "RecurringBills": [
+    {
+      "id": "b15c0c4e-5b7e-4a58-9d2a-0d6f2f3e8a11",
+      "name": "Club membership",
+      "amount": 60,
+      "total": 72.6,
+      "assign_number": 1,
+      "interval_unit": "month",
+      "interval_count": 1,
+      "start_date": "2026-12-01",
+      "end_date": null,
+      "next_due": "2026-12-01",
+      "notify": 1,
+      "active": 1,
+      "status": "active",
+      "last_posted_due": null,
+      "posted_count": 0,
+      "recipients": [
+        { "type": "pilot", "id": 100, "label": "John Doe" },
+        { "type": "group", "id": "5f998959-90b4-4677-b5b3-097585fac858", "label": "Cadet students", "color": "#1954cf", "count": 24, "ended": false }
+      ]
+    }
+  ]
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| amount | Amount before taxes, always positive |
+| total | Amount including taxes, always positive |
+| status | `active`, `paused` or `ended` (stopped and past its end date) |
+| next_due / last_posted_due | Company-local dates (`YYYY-MM-DD`) |
+| recipients[].ended | For groups: `true` when the group's end date has passed, so it charges nobody |
+
+<mark style="color:green;">`POST`</mark> `/manager/bills/recurring_save.json`
+
+Create a recurring charge, or update one when `id` is sent. Form-encoded.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | UUID | Edit only | Recurring charge to update |
+| name | string | Yes | Concept shown on each transaction |
+| amount | number | Yes | Amount before taxes per charge, greater than zero. Posted as a negative transaction (a charge) |
+| user_id[] | array | Yes | Pilot IDs and/or pilot group UUIDs. At least one |
+| interval_unit | string | Yes | `week` or `month` |
+| interval_count | number | Yes | 1 to 24 |
+| start_date | string | New only | First charge date (`YYYY-MM-DD`, company time) |
+| next_due | string | Edit only | Date of the next charge. Must be after the last posted charge |
+| end_date | string | No | Last date a charge can be posted. On or after the first charge |
+| notify | boolean | No | Reminder 24 to 48 hours before each charge and the receipt when it posts. Default `true` |
+| assign_number | boolean | No | Give each posted transaction a bill number |
+
+When `start_date` is today, the first charge is posted before the response is sent.
+
+```json
+{
+  "result": true,
+  "RecurringBill": { "id": "b15c0c4e-5b7e-4a58-9d2a-0d6f2f3e8a11", "status": "active", "...": "same shape as the list" },
+  "posted": { "posted": 1, "skipped": 0, "duplicates": 0, "failed": 0 }
+}
+```
+
+<mark style="color:green;">`POST`</mark> `/manager/bills/recurring_toggle.json`
+
+Pause or resume a recurring charge. Form fields: `id`, `active` (`0` pauses, `1` resumes). Resuming never charges the paused period. Returns `{ "result": true }`.
+
+<mark style="color:green;">`POST`</mark> `/manager/bills/recurring_delete.json`
+
+Delete a recurring charge. Form field: `id`. Transactions it already posted are kept. Returns `{ "result": true }`.
+
+#### Errors
+
+Errors use the usual `400` body, with the reason in `message`:
+
+| Status | Message |
+|--------|---------|
+| 400 | Enter a concept. |
+| 400 | The amount must be greater than zero. |
+| 400 | Choose at least one pilot or group. |
+| 400 | Choose how often to charge: every 1 to 24 weeks or months. |
+| 400 | Choose the date of the first charge. / Choose the date of the next charge. |
+| 400 | Choose a valid end date. |
+| 400 | The end date must be on or after the first charge. |
+| 400 | The next charge must be after the last charge on `{date}`. |
+| 400 | This recurring charge has ended. Create a new one to charge again. (saving or pausing an ended charge) |
+| 400 | One of the recipients is not in this company. |
+| 404 | Recurring charge not found. |
+| 403 | Not a manager, or billing is not enabled |
 
 ---
 

@@ -26,6 +26,10 @@ To be told about new features as they are published, add the [What's new RSS fee
 
 ## November 2026
 
+**[Recurring transactions](recurring-transactions.md)** · Billing\
+Set up charges such as membership or hangar fees once and Flylogs posts them on every due date, reminds the pilot beforehand and sends the receipt. Receipts for automatic flight bills and package purchases are now always emailed.\
+[Manual →](../billing/billing-setup.md#recurring-transactions)
+
 **[Certificate history and certificates on a date](certificate-history.md)** · Crew management\
 Renewing a certificate keeps its previous validity as a dated revision, with the files of each period; the pilot audit tool and the API show anyone's certificates as they stood on a past date.\
 [Manual →](../crew-management/document-and-certificates.md#renewals-and-certificate-history)
