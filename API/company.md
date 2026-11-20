@@ -88,6 +88,8 @@ Retrieve the full company profile, theme, operational settings, and billing conf
 }
 ```
 
+`CompanyBillingSetting.send_notification` is no longer used: receipts are emailed according to the kind of bill, not a company setting.
+
 `CompanyBillingSetting.stripe` (boolean) is `true` when pilots can pay their balance by card ([`POST /bills/pay.json`](bills.md#pay-balance-by-card)): a valid publishable key and secret key of the same mode are stored. The secret key is never returned by this endpoint. In `GET /manager/companies/settings.json` it comes back as a mask (`••••…`) with `stripe_secret_set: true`. `stripe_secret_rejected` (boolean) is `true` when Stripe has refused the stored secret key since it was saved (expired, rolled, revoked, or a restricted key without the Checkout Sessions permission); it goes back to `false` when a new key is saved or Stripe accepts the key again. It is read-only: a posted value is ignored. Posting the mask back keeps the stored key, an empty value removes it, and a new `sk_`/`rk_` key replaces it after Stripe accepts it. Anything else is refused with `{"save": false, "message": "..."}` before any setting is saved. The billing row is always the caller's own company's: posted `id`/`company_id` are ignored.
 
 `CompanyBillingSetting.bill_notes` (string | null, max 2,000 characters) is the free text printed at the bottom of every bill the company issues: bank details and payment instructions. Plain text with `\n` line breaks, no HTML. It is saved through `POST /manager/companies/settings.json` as `data[CompanyBillingSetting][bill_notes]` (company managers only) and returned on every bill by `GET /bills/view/{id}.json` under `Client.Company.CompanyBillingSetting.bill_notes`.

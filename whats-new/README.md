@@ -26,6 +26,10 @@ To be told about new features as they are published, add the [What's new RSS fee
 
 ## November 2026
 
+**[Recurring transactions](recurring-transactions.md)** · Billing\
+Set up charges such as membership or hangar fees once and Flylogs posts them on every due date, reminds the pilot beforehand and sends the receipt. Receipts for automatic flight bills and package purchases are now always emailed.\
+[Manual →](../billing/billing-setup.md#recurring-transactions)
+
 **[Request a read receipt from some recipients only](document-receipt-from.md)** · Documents\
 Keep a document open to everyone addressed and ask only some groups or people for the read receipt; the pending list, reminders and Stats count only them.\
 [Manual →](../documents/document-library.md#request-the-receipt-from-some-recipients-only)
