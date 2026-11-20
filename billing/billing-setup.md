@@ -88,7 +88,7 @@ If the first charge date is today, the first charge is posted as soon as you sav
 
 #### What each charge looks like
 
-Every charge is posted as a normal manual transaction in the pilot's account, with a bill number when **Create bill and assign correlative number** is ticked. In the transactions list it is marked with a recurring icon, so you can tell it from the ones you create by hand.
+Every charge is posted as a normal manual transaction in the pilot's account. With **Create a bill and assign the next correlative number to each charge** ticked, each posted charge gets the next bill number when it is posted. In the transactions list it is marked with a recurring icon, so you can tell it from the ones you create by hand.
 
 * **Pilots and groups.** You can pick pilots, pilot groups, or both. A group is read again on each due date, so the charge goes to whoever is a member of the group that day: pilots who join the group later are charged from then on, and pilots who left are not. A pilot who is in two of the chosen groups, or who is chosen directly and also through a group, is charged once. Only pilots with billing enabled are charged. A group whose end date has passed charges nobody, and the list shows a warning icon next to it.
 * **End of the month.** A charge that starts on the 31st is posted on the last day of shorter months (the 28th or 29th in February) and goes back to the 31st when the month allows it.
@@ -107,12 +107,12 @@ When your company takes [card payments](online-payments.md), the reminder tells 
 In the manager **Bills** page, the **Recurring** view lists all your recurring transactions: the concept, the recipients (pilots and groups with their number of members), the amount including taxes, how often it repeats, the date of the next charge, and its status:
 
 * **Active**: it will be posted on the next charge date.
-* **Paused**: it is not posted until you resume it.
-* **Ended**: it passed its end date and will not be posted again.
+* **Paused**: it is not posted until you resume it. The next charge shows a dash, because resuming picks a new date.
+* **Ended**: it passed its end date and will not be posted again. A paused charge also shows as ended when resuming it today would put the next charge after its end date.
 
 <figure><img src="../.gitbook/assets/recurring-list.png" alt="Recurring view in the Bills page with five recurring charges, their recipients, amount, frequency, next charge date and status"><figcaption><p>The Recurring view in Billing.</p></figcaption></figure>
 
-Click a row to open it. You can change the concept, the amount, how often it repeats, the next charge date (it must be after the last charge already posted), the end date, **Notify pilot**, and the pilots and groups. Changes apply to the charges that have not been posted yet; the transactions already posted keep their values.
+Click a row to open it. You can change the concept, the amount, how often it repeats, the next charge date (it must be after the last charge already posted), the end date, **Notify pilot**, and the pilots and groups. Pilots who left the company and deleted groups are no longer listed, and saving removes them from the charge. Changes apply to the charges that have not been posted yet; the transactions already posted keep their values.
 
 <figure><img src="../.gitbook/assets/recurring-edit.png" alt="Edit recurring charge window with the next charge date, repeat interval, end date, Notify pilot, concept, amount, recipients, and Delete, Pause, Cancel and Save buttons"><figcaption><p>Editing a recurring charge, with Pause and Delete.</p></figcaption></figure>
 

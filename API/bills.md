@@ -622,9 +622,10 @@ List the company's recurring charges.
 |-------|-------------|
 | amount | Amount before taxes, always positive |
 | total | Amount including taxes, always positive |
-| status | `active`, `paused` or `ended` (stopped and past its end date) |
+| status | `active`, `paused` or `ended`. Ended means the charge stopped after its end date, or it is paused and resuming it now would charge after its end date |
 | next_due / last_posted_due | Company-local dates (`YYYY-MM-DD`) |
 | recipients[].ended | For groups: `true` when the group's end date has passed, so it charges nobody |
+| recipients | Deleted pilots, pilots who left the company and deleted groups are not listed. They are never charged, and the next save drops them |
 
 <mark style="color:green;">`POST`</mark> `/manager/bills/recurring_save.json`
 
@@ -633,9 +634,10 @@ Create a recurring charge, or update one when `id` is sent. Form-encoded.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | id | UUID | Edit only | Recurring charge to update |
+| client_id | UUID | No (new only) | A UUID your client makes once per new charge. It becomes the charge's `id`: if the same save is sent again (for example after a timeout), the charge it already created is returned with nothing posted, instead of a second charge. A value that is not a UUID is refused |
 | name | string | Yes | Concept shown on each transaction |
 | amount | number | Yes | Amount before taxes per charge, greater than zero. Posted as a negative transaction (a charge) |
-| user_id[] | array | Yes | Pilot IDs and/or pilot group UUIDs. At least one |
+| user_id[] | array | Yes | Pilot IDs and/or pilot group UUIDs. At least one. On edit, pilots and groups that have left the company since they were added are dropped from the charge |
 | interval_unit | string | Yes | `week` or `month` |
 | interval_count | number | Yes | 1 to 24 |
 | start_date | string | New only | First charge date (`YYYY-MM-DD`, company time) |
@@ -644,7 +646,7 @@ Create a recurring charge, or update one when `id` is sent. Form-encoded.
 | notify | boolean | No | Reminder 24 to 48 hours before each charge and the receipt when it posts. Default `true` |
 | assign_number | boolean | No | Give each posted transaction a bill number |
 
-When `start_date` is today, the first charge is posted before the response is sent.
+When `start_date` is today, the first charge is posted before the response is sent. Its receipts are sent just after the response. Saving can take several seconds for a large group, so allow at least a minute before timing out, and send the same `client_id` if you retry.
 
 ```json
 {
@@ -656,7 +658,7 @@ When `start_date` is today, the first charge is posted before the response is se
 
 <mark style="color:green;">`POST`</mark> `/manager/bills/recurring_toggle.json`
 
-Pause or resume a recurring charge. Form fields: `id`, `active` (`0` pauses, `1` resumes). Resuming never charges the paused period. Returns `{ "result": true }`.
+Pause or resume a recurring charge. Form fields: `id`, `active` (`0` pauses, `1` resumes). Resuming never charges the paused period. If the next charge after resuming would fall after the end date, the charge ends instead and you get the "has ended" error. Returns `{ "result": true }`.
 
 <mark style="color:green;">`POST`</mark> `/manager/bills/recurring_delete.json`
 
@@ -678,7 +680,8 @@ Errors use the usual `400` body, with the reason in `message`:
 | 400 | The end date is before the next charge. (the next charge, once calculated, falls after the end date; a past start date is not back-charged) |
 | 400 | The next charge must be after the last charge on `{date}`. |
 | 400 | This recurring charge has ended. Create a new one to charge again. (saving, pausing or resuming an ended charge) |
-| 400 | One of the recipients is not in this company. |
+| 400 | One of the recipients is not in this company. (a pilot or group added in this save) |
+| 400 | Invalid client id. (`client_id` is not a UUID) |
 | 404 | Recurring charge not found. |
 | 403 | Not a manager, or billing is not enabled |
 
