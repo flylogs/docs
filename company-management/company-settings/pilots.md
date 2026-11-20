@@ -100,6 +100,10 @@ You can create up to 50 items per company. See the [Currency items API](../../AP
 These switches control how pilot certificates (licence, ratings, medical) affect daily operations. Certificates themselves are managed on each pilot profile — see [Documents & Certificates](../../crew-management/document-and-certificates.md).
 
 * **Allow pilots to edit their certificates** — whether pilots can add and update their own certificates and flight documentation. Disable it if you want only managers to maintain crew records (common in AOC operations where the CAMO/crew office owns the paperwork).
+* **Keep certificate files whose period was not recorded** — files attached to crew certificates before certificate history began (November 2026) are labelled *period not recorded*. When this is on, nobody can delete them, so they stay as records, as ORA.ATO.120 requires of a training organisation. When it is off (the default) they can be deleted as before. Files of a previous validity period are always kept, whatever this switch says. See [Files and the period they belong to](../../crew-management/document-and-certificates.md#files-and-the-period-they-belong-to).
+
+<figure><img src="../../.gitbook/assets/company-settings-lock-cert-files.png" alt=""><figcaption><p>Flight Crew tab, Documentation Compliance: the switch that keeps certificate files whose period was not recorded.</p></figcaption></figure>
+
 * **Require pilot documentation** — marks documentation as mandatory: pilots with missing or expired documents have limited flight capabilities and both the pilot and the schedulers see prominent warnings.
 * **Block pilots without certificates** — the strictest option: pilots without a valid licence, rating and medical cannot be scheduled as PIC nor log flights. Combined with *Require pilot documentation*, scheduling a non-compliant pilot as PIC is rejected outright for non-staff users.
 

@@ -23,7 +23,7 @@ A certificate is a single record: renewing a medical or accepting a revalidated 
 
 <figure><img src="../.gitbook/assets/cert-renewal-question.png" alt=""><figcaption><p>Renewing a medical: the form asks whether the new dates are a renewal or a correction.</p></figcaption></figure>
 
-* **Every file, with its period.** The certificate list shows all files of a certificate, not only the newest, each labelled *Current* or *Previous* with the expiry it was filed against. A file of a previous period is locked and cannot be deleted.
+* **Every file, with its period.** All files of a certificate are kept, not only the newest, behind a files button with their number. Each is labelled *Current* or *Previous* with the expiry it was filed against. A file attached before this update reads *period not recorded* with its upload date, and a manager can enter the period it covers. Files of a previous period are locked; a company setting keeps the files whose period was not recorded too.
 * **History button.** A certificate with earlier revisions shows a history button with their number. It opens the revisions newest first, with the old and new value of each field.
 
 <figure><img src="../.gitbook/assets/cert-history-modal.png" alt=""><figcaption><p>The previous period of a Class 1 medical, replaced by a renewal.</p></figcaption></figure>

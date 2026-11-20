@@ -183,9 +183,29 @@ Flylogs pre-selects the answer from the dates: a later expiry, or a later issue 
 
 #### Files and the period they belong to
 
-Every file attached to a certificate is listed, not only the newest one, each labelled with the validity it was filed against: **Current** for the certificate as it is now, **Previous** with the expiry of the earlier period. A file that belongs to a previous period is part of that record: it shows a lock and **cannot be deleted** by anyone.
+Every file attached to a certificate is kept, not only the newest one. When a certificate has more than one, the list shows a files button (<i class="fa fa-paperclip"></i>) with their number, next to the history button. It opens the files newest first, the current one marked, each labelled with what it evidences:
 
-<figure><img src="../.gitbook/assets/cert-history-list.png" alt=""><figcaption><p>A renewed medical with both files, each labelled with its period, and the history button with one earlier revision.</p></figcaption></figure>
+* **Current, to** the expiry: the file belongs to the certificate as it is now.
+* **Previous, to** the expiry: the file belongs to an earlier validity period.
+* **Uploaded** the date, **period not recorded**: the file was attached before certificate history began (November 2026), so Flylogs does not know which period it was filed against and does not claim one. Its upload date is shown instead.
+
+<figure><img src="../.gitbook/assets/cert-files-list.png" alt=""><figcaption><p>The certificate list: Class 1 has five files, SEP(L) three files and one earlier revision.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/cert-files-modal.png" alt=""><figcaption><p>The files of a revalidated SEP(L): the current file, the file of the previous period, and an older file whose period was not recorded.</p></figcaption></figure>
+
+Files of a previous validity period are records, so they are locked (<i class="fa fa-lock"></i>) and **cannot be deleted** by anyone. A file attached during the current validity period can be deleted, for example when it was attached to the wrong certificate.
+
+Files whose period was not recorded can be deleted unless your company keeps them: a manager turns on **Keep certificate files whose period was not recorded** in the company settings, [Flight Crew tab](../company-management/company-settings/pilots.md#documentation-compliance). With it on, they are locked like the files of a previous period.
+
+##### Entering the period of an older file
+
+If you know which period an older file covers (you hold the paper, for example), you can enter it. Open the certificate with the edit button, find the file marked **period not recorded** and press **Set period**. Enter the issue and expiry dates the file evidences and **Save** the certificate.
+
+<figure><img src="../.gitbook/assets/cert-file-period-edit.png" alt=""><figcaption><p>Edit Certificate: three files with a period entered, one being entered, and one still not recorded.</p></figcaption></figure>
+
+The file is then labelled **Current** when the dates you entered are the certificate's dates now, otherwise **Previous**, and shows who entered the period and when. To fix a mistake press **Change period**: the new entry replaces the label, and the earlier one stays on record. **Clear period** sets the file back to not recorded. Entering a period does not change whether the file can be deleted.
+
+Only files attached before certificate history began can have their period entered. The period of a file attached since then is recorded automatically and cannot be changed. Anyone who can edit the certificate can enter periods: the certificate holder, and user groups 170 and below (managers, Chief Pilot, Flight Instructors).
 
 #### Viewing the history
 

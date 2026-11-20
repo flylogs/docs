@@ -219,7 +219,8 @@ Retrieve full pilot details including certificates, pilot groups, attributed air
           "filename": "med_class1_2024.pdf",
           "type": "document",
           "mime": "application/pdf",
-          "size": "245678"
+          "size": "245678",
+          "created": "1717232400"
         }
       }
     ],
@@ -234,6 +235,8 @@ Retrieve full pilot details including certificates, pilot groups, attributed air
   }
 }
 ```
+
+`UserCertificate[].Upload` is the newest file of each certificate only, with its upload time (`created`, epoch seconds). For every file and the period each one evidences, use [`GET /pilots/certificates/{userId}.json`](#certificate-revisions).
 
 Returns `404` if the pilot is not in the viewer's company.
 
@@ -663,7 +666,7 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only. With
 
 `AircraftModel` (the aircraft models a Type Rating, TRI or TRE covers) is present on every certificate, for everyone who can read the list. It is `[]` for the other types. See [Aircraft models](#aircraft-models).
 
-`Uploads` holds **every** file of the certificate, newest first (until November 2026 only the newest one was returned). Each file carries `period`, the validity it was filed against, and `protected`; each certificate carries `revision_count`. See [Certificate revisions](#certificate-revisions).
+`Uploads` holds **every** file of the certificate, newest first (until November 2026 only the newest one was returned). Each file carries `period`, what it evidences (current, previous or not recorded), and `protected`; each certificate carries `revision_count`. See [Certificate revisions](#certificate-revisions).
 
 #### Response
 
@@ -680,9 +683,9 @@ Retrieve all certificates for a pilot plus the validity summary. JSON-only. With
       "revision_count": 1,
       "Uploads": [
         { "id": "502", "filename": "...", "display_name": "Class 1 medical 2024.pdf", "type": "document", "mime": "application/pdf", "size": "245678", "created": "1717232400", "url": "https://cdn.../signed...",
-          "period": { "revision": null, "issue": "2024-06-01", "expiration": "2025-06-01" }, "protected": false },
+          "period": { "state": "current", "source": "recorded", "revision": null, "issue": "2024-06-01", "expiration": "2025-06-01", "uploaded": "2024-06-01", "entered": null }, "protected": false },
         { "id": "501", "filename": "...", "display_name": "Class 1 medical 2023.pdf", "type": "document", "mime": "application/pdf", "size": "198112", "created": "1685610000", "url": "https://cdn.../signed...",
-          "period": { "revision": 1, "issue": "2023-06-01", "expiration": "2024-06-01" }, "protected": true }
+          "period": { "state": "unknown", "source": null, "revision": null, "issue": null, "expiration": null, "uploaded": "2023-06-01", "entered": null }, "protected": true }
       ],
       "PilotLimitation": [
         { "id": "8c1a…", "code": "VML", "detail": null },
@@ -755,9 +758,9 @@ Retrieve a single certificate with all its uploads (each with `period` and `prot
     "UserCertificate": { "id": "300", "name": "Class 1 Medical", "revision_count": 1, "...": "..." },
     "Uploads": [
       { "id": "502", "filename": "...", "display_name": "Class 1 medical 2024.pdf", "type": "document", "mime": "application/pdf", "size": "245678", "created": "1717232400",
-        "period": { "revision": null, "issue": "2024-06-01", "expiration": "2025-06-01" }, "protected": false },
+        "period": { "state": "current", "source": "recorded", "revision": null, "issue": "2024-06-01", "expiration": "2025-06-01", "uploaded": "2024-06-01", "entered": null }, "protected": false },
       { "id": "501", "filename": "...", "display_name": "Class 1 medical 2023.pdf", "type": "document", "mime": "application/pdf", "size": "198112", "created": "1685610000",
-        "period": { "revision": 1, "issue": "2023-06-01", "expiration": "2024-06-01" }, "protected": true }
+        "period": { "state": "unknown", "source": null, "revision": null, "issue": null, "expiration": null, "uploaded": "2023-06-01", "entered": null }, "protected": true }
     ],
     "PilotLimitation": [ { "id": "8c1a…", "code": "VML", "detail": null } ],
     "AircraftModel": [],
@@ -804,7 +807,18 @@ Each entry of `Revisions`:
 | superseded_at | number | When it was replaced (epoch seconds) |
 | superseded_by | object \| null | `{id, name}` of who replaced it |
 
-**Files and their period.** Each upload of a certificate carries `period` = `{revision, issue, expiration}`: the oldest revision whose `uploads` list holds the file (it was attached while that state was current), or `revision: null` with the current dates. A file listed by any revision has `protected: true`: `POST /uploads/delete/{id}.json` refuses it with `403` ("This file is kept as the record of a previous validity period and can not be deleted."), for every user group.
+**Files and their period.** Each upload of a certificate carries `period`, what the file evidences, and `protected`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| state | string | `current` (the certificate as it is now), `previous` (an earlier period) or `unknown` (no period is known for the file) |
+| source | string \| null | `recorded`: the file was attached after certificate history began (November 2026), so the state it was attached in is known from the revisions. Through `edit` and `correction` revisions it follows to the state that kept those dates. `entered`: a person entered the period (see `file_periods` under [Add / Edit Certificate](#add--edit-certificate)). `null` when `state` is `unknown` |
+| revision | number \| null | For a recorded `previous` file, the revision it belongs to |
+| issue, expiration | string \| null | The period's dates (`Y-m-d`); both `null` when `unknown`. Never the certificate's current dates unless the file evidences them |
+| uploaded | string \| null | The upload day (`Y-m-d`, UTC); the raw time is the upload's `created` |
+| entered | object \| null | For `source: entered`: `{by: {id, name}, at}` (epoch seconds) of the latest entry |
+
+`protected: true` means the file may not be deleted: `POST /uploads/delete/{id}.json` refuses it with `403` ("This file is kept as the record of a validity period and can not be deleted."), for every user group. A file a revision lists, and a recorded `previous` file, are always protected. A file with `state: current` and `source: recorded` that no revision lists can be deleted (a file attached by mistake). A file whose period was not recorded (`source` `null` or `entered`) is protected only when the company setting `lock_unrecorded_certificate_files` is on (`GET`/`POST /manager/companies/settings.json`, default off).
 
 **Access.** Revisions are returned to everyone who can read the certificate (the same company); they open no new endpoint and need no new permission.
 
@@ -832,7 +846,8 @@ Rows built from a revision carry that revision's `PilotLimitation` (same audienc
       "issue": "2023-06-01", "expiration": "2024-06-01", "revision": 1, "revision_action": "renewal",
       "superseded_at": 1717232400, "deleted": false, "AircraftModel": [],
       "Uploads": [ { "id": "501", "filename": "...", "display_name": "Class 1 medical 2023.pdf", "created": 1685610000,
-        "period": { "revision": 1, "issue": "2023-06-01", "expiration": "2024-06-01" }, "protected": true } ] }
+        "period": { "state": "previous", "source": "entered", "revision": null, "issue": "2023-06-01", "expiration": "2024-06-01", "uploaded": "2023-06-01",
+          "entered": { "by": { "id": 2960, "name": "A. Manager" }, "at": 1795400000 } }, "protected": true } ] }
   ],
   "valid": { "result": true, "medical": true, "...": "..." },
   "on": "2023-12-22"
@@ -1022,7 +1037,10 @@ UserCertificate[photo]=@/path/to/scan.pdf
 UserCertificate[limitations]=[{"code":"VML","detail":null},{"code":"SSL","detail":"Not valid for aerobatic flight"}]
 UserCertificate[aircraft_model_ids]=[571,573,574]
 UserCertificate[change_reason]=renewal
+UserCertificate[file_periods]={"501":{"issue":"2023-06-01","expiration":"2024-06-01"}}
 ```
+
+- **File periods** (`UserCertificate[file_periods]`, a JSON object, existing certificates only): the period each listed file evidences, by upload id, as `{issue, expiration}` (`Y-m-d`, or empty). Only accepted for files whose `period.source` is not `recorded`, that is files attached before certificate history began; a recorded period cannot be overridden. Each change is kept as a new entry with who entered it and when (the earlier entry stays on record); an unchanged entry is skipped, and both dates empty clears it. A file of another certificate, an invalid date, an issue after the expiry or a recorded file is reported in `errors` and skipped; the rest of the save goes ahead. Entering a period does not change `protected`.
 
 - **Change reason** (`UserCertificate[change_reason]`, `renewal` or `correction`, optional): only read when `issue` or `expiration` of an existing certificate changes. It sets the `action` of the [revision](#certificate-revisions) that keeps the replaced dates: `renewal` keeps them as a genuine past period, `correction` as a typing mistake that never counts as valid. When omitted, the dates decide: a later expiry, or a later issue without an earlier expiry, is a `renewal`; anything else a `correction`.
 
