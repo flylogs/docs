@@ -59,7 +59,7 @@ Once the keys are saved, every pilot whose own billing is enabled sees a **Pay o
 
 <figure><img src="../.gitbook/assets/myBillsPayOnline.png" alt="My Billing page with a negative account balance and a Pay online button under it"><figcaption><p>My Billing with the Pay online button.</p></figcaption></figure>
 
-Pilots can also reach the same window from a message: the reminder and the receipt of a [recurring charge](billing-setup.md#recurring-transactions) include a **Pay now** link that opens the payment window straight away, with what they owe already filled in. It only appears when your company takes card payments.
+Pilots can also reach the same window from a message: the reminder of a [recurring charge](billing-setup.md#recurring-transactions) links to the payment window, and its receipt email has a **Pay now** button that opens it with what they owe already filled in. These only appear when your company takes card payments.
 
 1. The pilot clicks **Pay online**. The amount starts as what they owe. They can change it, for example to pay part of it or to add credit for future flights.
 

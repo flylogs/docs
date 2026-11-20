@@ -77,7 +77,7 @@ Recurring transactions are available to managers who can edit billing, on the **
 #### Create one
 
 1. In the manager **Bills** page, click **Add Transaction** and choose the pilots and/or pilot groups to charge.
-2. In **Repeat**, choose **Every…**, then a number (1 to 24) of **weeks** or **months**. Leave it on **Does not repeat** for a normal, one-off transaction.
+2. In **Repeat**, choose **Every…**, then a number (1 to 24) and **weeks** or **months**. Leave it on **Does not repeat** for a normal, one-off transaction.
 3. Set the **First charge** date and, if the charge should stop by itself, an **End date**.
 4. Fill in the concept and enter the amount as a charge, with a minus sign (for example `-60` for a 60 EUR charge before taxes), as in any other transaction.
 5. Leave **Notify pilot** on if the pilot should get a reminder and the receipt (see below), then click **Save**.
@@ -98,7 +98,7 @@ Every charge is posted as a normal manual transaction in the pilot's account, wi
 
 With **Notify pilot** on, each pilot receives a reminder (inbox message, email and push notification) between 24 and 48 hours before the charge is posted, and the receipt when it is posted. The reminder is never sent earlier than 48 hours before, and a charge that is created, or moved to a new date, less than 24 hours before its date gets no reminder for that date. With **Notify pilot** off, the pilot receives neither.
 
-When your company takes [card payments](online-payments.md), the reminder and the receipt include a **Pay now** link that opens the payment window, so the pilot can pay in advance or right away.
+When your company takes [card payments](online-payments.md), the reminder tells the pilot the charge can be paid in advance online, and the message's link opens the payment window. The receipt email includes a **Pay now** button that opens the same window while the pilot still owes money.
 
 <figure><img src="../.gitbook/assets/recurring-reminder-message.png" alt="Inbox message reminding the pilot that the hangar fee will be charged on a given date, with a note that it can be paid in advance online"><figcaption><p>The reminder as it appears in the pilot's inbox.</p></figcaption></figure>
 

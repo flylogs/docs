@@ -640,7 +640,7 @@ Create a recurring charge, or update one when `id` is sent. Form-encoded.
 | interval_count | number | Yes | 1 to 24 |
 | start_date | string | New only | First charge date (`YYYY-MM-DD`, company time) |
 | next_due | string | Edit only | Date of the next charge. Must be after the last posted charge |
-| end_date | string | No | Last date a charge can be posted. On or after the first charge |
+| end_date | string | No | Last date a charge can be posted. On create: on or after `start_date`. Also checked after saving (create or edit): it must not be before the next charge |
 | notify | boolean | No | Reminder 24 to 48 hours before each charge and the receipt when it posts. Default `true` |
 | assign_number | boolean | No | Give each posted transaction a bill number |
 
@@ -674,9 +674,10 @@ Errors use the usual `400` body, with the reason in `message`:
 | 400 | Choose how often to charge: every 1 to 24 weeks or months. |
 | 400 | Choose the date of the first charge. / Choose the date of the next charge. |
 | 400 | Choose a valid end date. |
-| 400 | The end date must be on or after the first charge. |
+| 400 | The end date must be on or after the first charge. (creating) |
+| 400 | The end date is before the next charge. (the next charge, once calculated, falls after the end date; a past start date is not back-charged) |
 | 400 | The next charge must be after the last charge on `{date}`. |
-| 400 | This recurring charge has ended. Create a new one to charge again. (saving or pausing an ended charge) |
+| 400 | This recurring charge has ended. Create a new one to charge again. (saving, pausing or resuming an ended charge) |
 | 400 | One of the recipients is not in this company. |
 | 404 | Recurring charge not found. |
 | 403 | Not a manager, or billing is not enabled |

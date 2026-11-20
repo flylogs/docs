@@ -22,7 +22,7 @@ Each charge is posted as a normal transaction in the pilot's account, with a bil
 
 ### Reminders before, receipt after
 
-With **Notify pilot** on, each pilot gets a reminder between 24 and 48 hours before the charge, and the receipt when it is posted. If your company takes card payments, both include a **Pay now** link.
+With **Notify pilot** on, each pilot gets a reminder between 24 and 48 hours before the charge, and the receipt when it is posted. If your company takes card payments, the reminder says the charge can be paid in advance online, and its link opens the payment window; the receipt email has a **Pay now** button when the pilot owes money.
 
 <figure><img src="../.gitbook/assets/recurring-reminder-message.png" alt="Inbox message reminding the pilot that the hangar fee will be charged on a given date, with a note that it can be paid in advance online"><figcaption><p>The reminder in the pilot's inbox.</p></figcaption></figure>
 
@@ -38,7 +38,7 @@ The new **Recurring** view in the manager **Bills** page lists every recurring t
 
 ### Receipts follow the kind of bill
 
-The company setting **Notify by email new bills** has been removed. Automatic flight bills (also when recalculated after a flight edit) and prepaid package purchases now always email the receipt. For manual flight bills, **Send notification** decides; for manual transactions, **Send this receipt to the user** decides; online card payments always send the receipt.
+Receipts now follow the kind of bill, and the company-wide switch for emailing new bills is gone. Automatic flight bills (also when recalculated after a flight edit) and prepaid package purchases now always email the receipt. For manual flight bills, **Send notification** decides; for manual transactions, **Send this receipt to the user** decides; online card payments always send the receipt.
 
 ***
 
