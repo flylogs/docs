@@ -6,15 +6,15 @@ plan: club
 
 **November 2026** · Billing
 
-Charges that come back every month or every few weeks, such as club membership, hangar fees or insurance, can now be set up once. Flylogs posts them to your pilots on every due date, reminds them beforehand and sends the receipt.
+Charges that come back every week, month or year, such as club membership, hangar fees or insurance, can now be set up once. Flylogs posts them to your pilots on every due date, reminds them beforehand and sends the receipt.
 
 ***
 
 ### Set it once
 
-In **Add Transaction**, choose **Repeat → Every…** and pick how often (every 1 to 24 weeks or months), the first charge date and, if you want, an end date. You can charge pilots, pilot groups, or both. A group is read again on each due date, so new members are charged from the day they join.
+In **Add Transaction**, set **Repeat** to **Monthly**, **Weekly** or **Yearly** and enter how many months, weeks or years go between charges (1 to 24), then the first charge date and, if you want, an end date. You can charge pilots, pilot groups, or both. A group is read again on each due date, so new members are charged from the day they join.
 
-<figure><img src="../.gitbook/assets/recurring-repeat-new-transaction.png" alt="Transaction window with Repeat set to every 1 months, first charge date, optional end date, Notify pilot ticked, concept and amount"><figcaption><p>Add Transaction with Repeat set to every month.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/recurring-repeat-new-transaction.png" alt="Transaction window with Repeat set to Monthly, every 1 month, first charge date, concept, optional end date, Notify pilot ticked and amount"><figcaption><p>Add Transaction with Repeat set to every month.</p></figcaption></figure>
 
 Each charge is posted as a normal transaction in the pilot's account, with a bill number if you want one, and marked with a recurring icon.
 

@@ -638,7 +638,7 @@ Create a recurring charge, or update one when `id` is sent. Form-encoded.
 | name | string | Yes | Concept shown on each transaction |
 | amount | number | Yes | Amount before taxes per charge, greater than zero. Posted as a negative transaction (a charge) |
 | user_id[] | array | Yes | Pilot IDs and/or pilot group UUIDs. At least one. On edit, pilots and groups that have left the company since they were added are dropped from the charge |
-| interval_unit | string | Yes | `week` or `month` |
+| interval_unit | string | Yes | `week`, `month` or `year` |
 | interval_count | number | Yes | 1 to 24 |
 | start_date | string | New only | First charge date (`YYYY-MM-DD`, company time) |
 | next_due | string | Edit only | Date of the next charge. Must be after the last posted charge |
@@ -673,7 +673,7 @@ Errors use the usual `400` body, with the reason in `message`:
 | 400 | Enter a concept. |
 | 400 | The amount must be greater than zero. |
 | 400 | Choose at least one pilot or group. |
-| 400 | Choose how often to charge: every 1 to 24 weeks or months. |
+| 400 | Enter how often to charge: a number from 1 to 24. |
 | 400 | Choose the date of the first charge. / Choose the date of the next charge. |
 | 400 | Choose a valid end date. |
 | 400 | The end date must be on or after the first charge. (creating) |

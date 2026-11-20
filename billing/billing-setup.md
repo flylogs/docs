@@ -70,19 +70,19 @@ The transaction window is available to managers who can edit billing, from the m
 
 ### Recurring transactions
 
-Some charges come back every month or every few weeks: club membership, hangar fee, insurance. Instead of creating each one by hand, set it up once as a **recurring transaction** and Flylogs posts it for you on every due date.
+Some charges come back every week, month or year: club membership, hangar fee, insurance. Instead of creating each one by hand, set it up once as a **recurring transaction** and Flylogs posts it for you on every due date.
 
 Recurring transactions are available to managers who can edit billing, on the **Club, Premium and Unlimited** plans (they need the billing system). Pilots see each charge on their own balance, like any other transaction.
 
 #### Create one
 
 1. In the manager **Bills** page, click **Add Transaction** and choose the pilots and/or pilot groups to charge.
-2. In **Repeat**, choose **Every…**, then a number (1 to 24) and **weeks** or **months**. Leave it on **Does not repeat** for a normal, one-off transaction.
+2. In **Repeat**, choose **Monthly**, **Weekly** or **Yearly**, then enter how many months, weeks or years go between charges (1 to 24): **Monthly** every **6** months charges twice a year. Leave it on **Does not repeat** for a normal, one-off transaction.
 3. Set the **First charge** date and, if the charge should stop by itself, an **End date**.
 4. Fill in the concept and enter the amount as a charge, with a minus sign (for example `-60` for a 60 EUR charge before taxes), as in any other transaction.
 5. Leave **Notify pilot** on if the pilot should get a reminder and the receipt (see below), then click **Save**.
 
-<figure><img src="../.gitbook/assets/recurring-repeat-new-transaction.png" alt="Transaction window with Repeat set to every 1 months, first charge date, optional end date, Notify pilot ticked, concept and amount"><figcaption><p>Add Transaction with Repeat set to every month.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/recurring-repeat-new-transaction.png" alt="Transaction window with Repeat set to Monthly, every 1 month, first charge date, concept, optional end date, Notify pilot ticked and amount"><figcaption><p>Add Transaction with Repeat set to every month.</p></figcaption></figure>
 
 If the first charge date is today, the first charge is posted as soon as you save. Otherwise it is posted on its date.
 
