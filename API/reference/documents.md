@@ -257,6 +257,37 @@ A read receipt is **requested** once per document for each active user in one of
 
 ---
 
+## Documents To Read
+
+<mark style="color:blue;">`GET`</mark> `/documents/to_read.json`
+
+The documents the **caller** still has to read: every document that requests a read receipt from them (they are a recipient by group or by name, respecting `flying_only` for groups, and they are in the document's [receipt pool](#who-owes-a-read-receipt)) whose latest active version they have not opened. Same rule as `receipt_from_me` on the list, [Document Statistics](#document-statistics) and the reminders on the 1st and 16th. Documents not yet published (`created` in the future), and documents without an active version, are left out.
+
+> **Access:** every user who can open the Document Library; always about the caller, it takes no user id. A deactivated account gets an empty list.
+
+Ordered overdue first (oldest read-by date first), then by read-by date (soonest first), then documents without a read-by date, each group by name.
+
+#### Response
+
+| Field | Type | Description |
+|-------|------|-------------|
+| totals | object | `{ pending, overdue }` — documents to read, and how many of them are past their read-by date |
+| documents | array | Per document: `id`, `name`, `folder_id` and `folder_name` (both `null` for the Main Folder), `read_by` (`YYYY-MM-DD` company calendar day, or `null`), `overdue` (bool) |
+
+```json
+{
+  "totals": { "pending": 2, "overdue": 1 },
+  "documents": [
+    { "id": "c4d…", "name": "OM Part A — Revision 14", "folder_id": "7e1…", "folder_name": "Operations Manual", "read_by": "2026-11-14", "overdue": true },
+    { "id": "a1b…", "name": "Safety Notice 11-26", "folder_id": null, "folder_name": null, "read_by": "2026-11-28", "overdue": false }
+  ]
+}
+```
+
+The count alone is also returned as `documents_to_read` by `GET /users/badges.json` (the menu badges of the signed-in user).
+
+---
+
 ## User Document Breakdown
 
 <mark style="color:blue;">`GET`</mark> `/documents/user_stats/{userId}.json`

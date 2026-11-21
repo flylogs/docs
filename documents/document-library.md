@@ -19,9 +19,32 @@ The main features of the system are:
 
 ### How the index page works
 
-The index page is the entry point of the library. It lists the documents and subfolders inside the current folder, with the **Main Folder** shown by default. Click any folder card to open it, or use the search box to look up a document by name across the whole library.
+The index page is the entry point of the library. It lists the documents and subfolders inside the current folder, with the **Main Folder** shown by default. Click any folder in the sidebar to open it, or use the search box to look up a document by name across the whole library.
 
-Each row shows the document name, description, latest version uploader and creation date. A quick download button is offered for the current version.
+On the Main Folder, the page leads with **Documents you need to read** (below), followed by **Most downloaded**: the five documents opened by the most people over the last 90 days, among those you can see. Most downloaded is shown once at least three documents have been downloaded.
+
+Each row shows the document name, its files and size, and a download marker when the document can be downloaded. A document you owe a read receipt for is highlighted and marked **Unread**, with its read-by date.
+
+### Documents you need to read
+
+The Main Folder view opens with the list of every document you still have to read, from whichever folder it is filed in, so you never have to open each folder to find the **Unread** ones.
+
+<figure><img src="../.gitbook/assets/documents-to-read-library.png" alt="Document Library Main Folder: Documents you need to read lists five documents with their folder and read-by date, one overdue in red, followed by Most downloaded"><figcaption><p>Overdue first, then by read-by date, then by name. Most downloaded follows.</p></figcaption></figure>
+
+A document is on the list when it [requires a read receipt](#read-receipts-and-read-by-date), it is addressed to you (your user group, or you by name), the receipt is requested from you, and you have not opened its current version. That is the same rule as the **Unread** marker, [Document Stats](document-stats.md) and the reminders on the 1st and 16th.
+
+* The header shows how many documents you have to read and how many are overdue.
+* Each row shows the folder the document is filed in and its read-by date; an overdue one is in red, *Overdue: was due by …*. Documents without a read-by date say *No read-by date*.
+* Select a row to open the document. Opening its current version records your read receipt and takes it off the list.
+* When a new version of a document is published, it comes back on the list until you open the new version.
+
+The list is the same for every user group and only ever shows your own documents. When you have nothing to read, it is not shown.
+
+The same documents appear on your [dashboard](../company-management/your-flylogs-dashboard.md#documents-to-read), and the **Documents** item of the left menu carries their count:
+
+<figure><img src="../.gitbook/assets/menu-documents-badge.png" alt="Left menu with a badge of 5 on the Documents item"><figcaption><p>The count on Documents is the number of documents you still have to read.</p></figcaption></figure>
+
+The count refreshes when you leave the Document Library, and every few minutes while Flylogs is open.
 
 ### File folders
 

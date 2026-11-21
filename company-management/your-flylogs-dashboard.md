@@ -15,6 +15,24 @@ Each user type has a different dashboard, pilots dashboard are more focused on f
 
 Student dashboards are optimized to display training calendar, company news and upcoming classes, exams and flights.
 
+Every dashboard also tells you which company documents you still have to read (see [Documents to read](#documents-to-read)).
+
+***
+
+### Documents to read
+
+When you owe a read receipt for one or more documents of the [Document Library](../documents/document-library.md#documents-you-need-to-read), your dashboard says so as soon as you log in:
+
+* **Company Administrators**, **Operations Managers** and **Trainings Managers** get a **Documents to read** chip in the **Needs attention** card, with the count and how many are overdue. It opens the Document Library, which leads with the list.
+
+<figure><img src="../.gitbook/assets/dashboard-documents-to-read-chip.png" alt="Needs attention card with a Documents to read chip showing 5, 1 overdue, next to the Aircraft certificates and Pilot certificates chips"><figcaption><p>The chip is outlined in red while a document is overdue.</p></figcaption></figure>
+
+* **Every other user group** — pilots, student pilots, instructors, cabin crew, dispatchers and the other staff roles — gets a **Documents to read** card right under the welcome banner. It lists the first five documents, overdue first, each with its folder and read-by date; select one to open it, or **View all** to open the Document Library.
+
+<figure><img src="../.gitbook/assets/dashboard-documents-to-read.png" alt="Documents to read card on a pilot dashboard listing five documents with their folders and read-by dates, the first one overdue"><figcaption><p>Overdue first, then by read-by date.</p></figcaption></figure>
+
+A document counts when it requires a read receipt, it is addressed to you (your user group, or you by name), the receipt is requested from you and you have not opened its current version. Nothing is shown when you have nothing to read. The chip and the card only ever show your own documents, whatever your user group.
+
 ***
 
 ### Dashboard evolution

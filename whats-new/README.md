@@ -26,6 +26,10 @@ To be told about new features as they are published, add the [What's new RSS fee
 
 ## November 2026
 
+**[See the documents you still have to read](documents-to-read.md)** · Documents\
+Your dashboard, the top of the Document Library and a count on the Documents menu item now list the documents you still owe a read receipt for, overdue first.\
+[Manual →](../documents/document-library.md#documents-you-need-to-read)
+
 **[Findings without an audit](findings-without-an-audit.md)** · Safety\
 Record a compliance finding without an audit, from a safety report, a management review or the authority's correspondence, in one register numbered FN-YYYY-NNN. Raise a finding from a safety report, and move a finding to another audit.\
 [Manual →](../sms/audit-findings.md#findings-without-an-audit)
