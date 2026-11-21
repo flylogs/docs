@@ -28,7 +28,7 @@ The page is organized in ten tabs. Each one is described in detail on its own pa
 | [Pilots](pilots.md) | Pilot currency requirements and documentation compliance rules |
 | [Duty Limits](duty-limits.md) | Duty time and flight time limitations, rest requirements and duty record policies |
 | [Billing](billing.md) | The internal billing system: defaults, VAT, billing rates and Stripe online payments |
-| [Integrations](integrations.md) | Airbly and Fleet Manager (formerly Spidertracks) automatic flight imports |
+| [Integrations](integrations.md) | Airbly and Fleet Manager (formerly Spidertracks) automatic flight imports, and FlySto flight analysis links |
 | [Cloud storage](cloud-storage.md) | Scheduled CSV exports of your data to Dropbox or Google Drive |
 | [API](api.md) | Flylogs API activation, API keys and the IP address whitelist |
 

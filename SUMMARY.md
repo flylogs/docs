@@ -117,6 +117,7 @@
 * [Draft a mission comment](flights/draft-mission-comment.md)
 * [Offline flight data](flights/offline-flight-data.md)
 * [Flight legs](flights/flight-legs.md)
+* [Flight analysis](flights/flight-analysis.md)
 * [Flight audit and reporting](flights/flight-audit-and-reporting.md)
 * [Audit trails](flights/audit-trails.md)
 
